@@ -8,6 +8,14 @@ export const ThemeContext = createContext();
 const lightTheme = createTheme({
   palette: {
     mode: 'light',
+    background: {
+      default: '#f4f6f8',
+      paper: '#ffffff',
+    },
+    text: {
+      primary: '#212B36',
+      secondary: '#637381',
+    },
   },
 });
 
@@ -15,6 +23,14 @@ const lightTheme = createTheme({
 const darkTheme = createTheme({
   palette: {
     mode: 'dark',
+    background: {
+      default: '#161C24',
+      paper: '#212B36',
+    },
+    text: {
+      primary: '#FFFFFF',
+      secondary: '#919EAB',
+    },
   },
 });
 

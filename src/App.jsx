@@ -5,7 +5,7 @@ import { Dashboard as DashboardIcon, SwapHoriz as TradeIcon, AccountCircle as Ac
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
-import { ThemeContext } from './context/ThemeContext';
+import { ThemeContext, CustomThemeProvider } from './context/ThemeContext';
 import Dashboard from './pages/Dashboard';
 import Trade from './pages/Trade';
 import Account from './pages/Account';
@@ -17,20 +17,24 @@ function AppContent() {
 
   return (
     <Router>
-      <Box sx={{ display: 'flex', height: '100vh', width: '100vw', overflow: 'hidden', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}>
+      <Box sx={{ display: 'flex' }}>
         <CssBaseline />
         <AppBar
           position="fixed"
           sx={{
             width: `calc(100% - ${drawerWidth}px)`,
             ml: `${drawerWidth}px`,
+            bgcolor: 'background.paper',
+            boxShadow: 'none',
+            borderBottom: '1px solid',
+            borderColor: 'divider',
           }}
         >
           <Toolbar>
             <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
               Trading Panel
             </Typography>
-            <IconButton sx={{ ml: 1 }} onClick={toggleTheme} color="inherit">
+            <IconButton sx={{ ml: 1, color: 'text.primary' }} onClick={toggleTheme}>
               {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
             </IconButton>
           </Toolbar>
@@ -42,15 +46,16 @@ function AppContent() {
             '& .MuiDrawer-paper': {
               width: drawerWidth,
               boxSizing: 'border-box',
-              backgroundColor: '#171c28',
-              borderRight: '1px solid rgba(255, 255, 255, 0.12)',
+              bgcolor: 'background.paper',
+              borderRight: '1px solid',
+              borderColor: 'divider',
             },
           }}
           variant="permanent"
           anchor="left"
         >
           <Toolbar>
-            <Typography variant="h6" sx={{ color: 'white' }}>
+            <Typography variant="h6">
               Trading Panel
             </Typography>
           </Toolbar>
@@ -66,20 +71,21 @@ function AppContent() {
                   to={item.path}
                   end={item.path === '/'}
                   sx={{
-                    color: 'rgba(255, 255, 255, 0.7)',
+                    color: 'text.secondary',
                     '&:hover': {
                       backgroundColor: 'rgba(255, 255, 255, 0.08)',
                     },
                     '&.active': {
-                      backgroundColor: 'rgba(67, 122, 255, 0.2)',
-                      color: 'white',
-                      borderRight: '3px solid #437AFF',
+                      color: 'text.primary',
+                      backgroundColor: 'action.selected',
+                      borderRight: '3px solid',
+                      borderColor: 'primary.main',
                       '& .MuiListItemIcon-root': {
-                        color: 'white',
+                        color: 'text.primary',
                       },
                     },
                     '& .MuiListItemIcon-root': {
-                      color: 'rgba(255, 255, 255, 0.7)',
+                      color: 'text.secondary',
                     },
                   }}
                 >
@@ -94,15 +100,13 @@ function AppContent() {
           component="main"
           sx={{
               flexGrow: 1,
-              background: 'linear-gradient(135deg, #1d2333 0%, #171c28 100%)',
+              bgcolor: 'background.default',
               height: '100vh',
               overflow: 'auto',
-              display: 'flex',
-              flexDirection: 'column'
           }}
         >
           <Toolbar />
-          <Box sx={{ p: 3, flexGrow: 1 }}>
+          <Box sx={{ p: 3 }}>
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/trade" element={<Trade />} />
@@ -116,10 +120,17 @@ function AppContent() {
 }
 
 function App() {
+  return (
+    <CustomThemeProvider>
+      <AppWrapper />
+    </CustomThemeProvider>
+  );
+}
+
+function AppWrapper() {
   const { theme } = useContext(ThemeContext);
   return (
     <MuiThemeProvider theme={theme}>
-      <CssBaseline />
       <AppContent />
     </MuiThemeProvider>
   );
