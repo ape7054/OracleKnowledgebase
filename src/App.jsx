@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, NavLink } from 'react-router-dom';
-import { Box, CssBaseline, AppBar, Toolbar, Typography, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, IconButton } from '@mui/material';
-import { Dashboard as DashboardIcon, SwapHoriz as TradeIcon, AccountCircle as AccountIcon } from '@mui/icons-material';
+import { Box, CssBaseline, AppBar, Toolbar, Typography, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, IconButton, useTheme, useMediaQuery } from '@mui/material';
+import { Dashboard as DashboardIcon, SwapHoriz as TradeIcon, AccountCircle as AccountIcon, Menu as MenuIcon } from '@mui/icons-material';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
@@ -14,6 +14,59 @@ const drawerWidth = 240;
 
 function AppContent() {
   const { mode, toggleTheme } = useContext(ThemeContext);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
+  const drawerContent = (
+    <div>
+      <Toolbar>
+        <Typography variant="h6">
+          Trading Panel
+        </Typography>
+      </Toolbar>
+      <List>
+        {[
+          { text: 'Dashboard', icon: <DashboardIcon />, path: '/' },
+          { text: 'Trade', icon: <TradeIcon />, path: '/trade' },
+          { text: 'Account', icon: <AccountIcon />, path: '/account' },
+        ].map((item) => (
+          <ListItem key={item.text} disablePadding>
+            <ListItemButton
+              component={NavLink}
+              to={item.path}
+              end={item.path === '/'}
+              sx={{
+                color: 'text.secondary',
+                '&:hover': {
+                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                },
+                '&.active': {
+                  color: 'text.primary',
+                  backgroundColor: 'action.selected',
+                  borderRight: '3px solid',
+                  borderColor: 'primary.main',
+                  '& .MuiListItemIcon-root': {
+                    color: 'text.primary',
+                  },
+                },
+                '& .MuiListItemIcon-root': {
+                  color: 'text.secondary',
+                },
+              }}
+            >
+              <ListItemIcon>{item.icon}</ListItemIcon>
+              <ListItemText primary={item.text} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+    </div>
+  );
 
   return (
     <Router>
@@ -22,8 +75,8 @@ function AppContent() {
         <AppBar
           position="fixed"
           sx={{
-            width: `calc(100% - ${drawerWidth}px)`,
-            ml: `${drawerWidth}px`,
+            width: { md: `calc(100% - ${drawerWidth}px)` },
+            ml: { md: `${drawerWidth}px` },
             bgcolor: 'background.paper',
             boxShadow: 'none',
             borderBottom: '1px solid',
@@ -31,6 +84,15 @@ function AppContent() {
           }}
         >
           <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              edge="start"
+              onClick={handleDrawerToggle}
+              sx={{ mr: 2, display: { md: 'none' }, color: 'text.primary' }}
+            >
+              <MenuIcon />
+            </IconButton>
             <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
               Trading Panel
             </Typography>
@@ -39,70 +101,44 @@ function AppContent() {
             </IconButton>
           </Toolbar>
         </AppBar>
-        <Drawer
-          sx={{
-            width: drawerWidth,
-            flexShrink: 0,
-            '& .MuiDrawer-paper': {
-              width: drawerWidth,
-              boxSizing: 'border-box',
-              bgcolor: 'background.paper',
-              borderRight: '1px solid',
-              borderColor: 'divider',
-            },
-          }}
-          variant="permanent"
-          anchor="left"
+        <Box
+          component="nav"
+          sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}
+          aria-label="mailbox folders"
         >
-          <Toolbar>
-            <Typography variant="h6">
-              Trading Panel
-            </Typography>
-          </Toolbar>
-          <List>
-            {[
-              { text: 'Dashboard', icon: <DashboardIcon />, path: '/' },
-              { text: 'Trade', icon: <TradeIcon />, path: '/trade' },
-              { text: 'Account', icon: <AccountIcon />, path: '/account' },
-            ].map((item) => (
-              <ListItem key={item.text} disablePadding>
-                <ListItemButton
-                  component={NavLink}
-                  to={item.path}
-                  end={item.path === '/'}
-                  sx={{
-                    color: 'text.secondary',
-                    '&:hover': {
-                      backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                    },
-                    '&.active': {
-                      color: 'text.primary',
-                      backgroundColor: 'action.selected',
-                      borderRight: '3px solid',
-                      borderColor: 'primary.main',
-                      '& .MuiListItemIcon-root': {
-                        color: 'text.primary',
-                      },
-                    },
-                    '& .MuiListItemIcon-root': {
-                      color: 'text.secondary',
-                    },
-                  }}
-                >
-                  <ListItemIcon>{item.icon}</ListItemIcon>
-                  <ListItemText primary={item.text} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-        </Drawer>
+          <Drawer
+            variant="temporary"
+            open={mobileOpen}
+            onClose={handleDrawerToggle}
+            ModalProps={{
+              keepMounted: true,
+            }}
+            sx={{
+              display: { xs: 'block', md: 'none' },
+              '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            }}
+          >
+            {drawerContent}
+          </Drawer>
+          <Drawer
+            variant="permanent"
+            sx={{
+              display: { xs: 'none', md: 'block' },
+              '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            }}
+            open
+          >
+            {drawerContent}
+          </Drawer>
+        </Box>
         <Box
           component="main"
           sx={{
-              flexGrow: 1,
-              bgcolor: 'background.default',
-              height: '100vh',
-              overflow: 'auto',
+            flexGrow: 1,
+            bgcolor: 'background.default',
+            height: '100vh',
+            overflow: 'auto',
+            width: { md: `calc(100% - ${drawerWidth}px)` },
           }}
         >
           <Toolbar />
