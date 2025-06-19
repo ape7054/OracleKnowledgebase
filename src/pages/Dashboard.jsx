@@ -1,5 +1,5 @@
 import { Box, Grid, Card, Typography, Paper } from '@mui/material';
-import { styled } from '@mui/system';
+import { styled, useTheme } from '@mui/system';
 import { LineChart, Line, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const GlassmorphicPaper = styled(Paper)(({ theme }) => ({
@@ -44,6 +44,8 @@ const StatCard = ({ title, value }) => (
   );
 
 function Dashboard() {
+  const theme = useTheme();
+
   return (
       <Box>
         <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold' }}>
@@ -60,10 +62,15 @@ function Dashboard() {
                 <Typography variant="h6" gutterBottom>Price Trends</Typography>
                 <ResponsiveContainer width="100%" height="90%">
                     <LineChart data={data}>
-                        <XAxis dataKey="name" stroke={'text.secondary'} />
-                        <YAxis stroke={'text.secondary'} />
-                        <Tooltip contentStyle={{ backgroundColor: 'background.paper', border: 'none' }}/>
-                        <Legend />
+                        <XAxis dataKey="name" stroke={theme.palette.text.secondary} />
+                        <YAxis stroke={theme.palette.text.secondary} />
+                        <Tooltip 
+                            contentStyle={{ 
+                                backgroundColor: theme.palette.background.paper, 
+                                border: 'none' 
+                            }}
+                        />
+                        <Legend wrapperStyle={{ color: theme.palette.text.secondary, paddingTop: '10px' }}/>
                         <Line type="monotone" dataKey="BTC" stroke="#f7931a" strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 8 }} />
                         <Line type="monotone" dataKey="ETH" stroke="#8884d8" strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 8 }} />
                         <Line type="monotone" dataKey="SOL" stroke="#00FFA3" strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 8 }} />
