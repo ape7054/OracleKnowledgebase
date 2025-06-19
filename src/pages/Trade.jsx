@@ -1,122 +1,131 @@
 import { useState, useEffect } from 'react';
 import { Box, Grid, Typography, TextField, Select, MenuItem, Button, Slider, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-import { styled } from '@mui/system';
+import { styled, useTheme } from '@mui/system';
 
 const GlassmorphicPaper = styled(Paper)(({ theme }) => ({
     padding: '20px',
-    background: 'rgba(255, 255, 255, 0.05)',
+    backgroundColor: theme.palette.mode === 'dark' 
+      ? 'rgba(33, 43, 54, 0.7)' 
+      : 'rgba(255, 255, 255, 0.7)',
     backdropFilter: 'blur(10px)',
     borderRadius: '15px',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    color: '#fff',
+    border: `1px solid ${theme.palette.divider}`,
+    color: theme.palette.text.primary,
     height: '100%',
 }));
 
-const StyledTextField = styled(TextField)({
+const StyledTextField = styled(TextField)(({ theme }) => ({
   '& .MuiInputBase-root': {
-    color: 'white',
+    color: theme.palette.text.primary,
     '&:before': {
-      borderBottomColor: 'rgba(255, 255, 255, 0.7)',
+      borderBottomColor: theme.palette.divider,
     },
     '&:hover:not(.Mui-disabled):before': {
-      borderBottomColor: 'white',
+      borderBottomColor: theme.palette.text.primary,
     },
   },
   '& .MuiInputLabel-root': {
-    color: 'rgba(255, 255, 255, 0.7)',
+    color: theme.palette.text.secondary,
   },
-});
+}));
 
-const StyledSelect = styled(Select)({
-    color: 'white',
+const StyledSelect = styled(Select)(({ theme }) => ({
+    color: theme.palette.text.primary,
     '& .MuiOutlinedInput-notchedOutline': {
-        borderColor: 'rgba(255, 255, 255, 0.7)',
+        borderColor: theme.palette.divider,
     },
     '&:hover .MuiOutlinedInput-notchedOutline': {
-        borderColor: 'white',
+        borderColor: theme.palette.text.primary,
     },
     '& .MuiSvgIcon-root': {
-        color: 'white',
+        color: theme.palette.text.primary,
     },
-});
+}));
 
-const OrderBook = ({ asks, bids }) => (
-  <GlassmorphicPaper>
-    <Typography variant="h6" gutterBottom>Order Book</Typography>
-    <TableContainer sx={{ maxHeight: 250 }}>
-      <Table stickyHeader size="small">
-        <TableHead>
-          <TableRow>
-            <TableCell sx={{ color: '#f44336', border: 0 }}>Price (USDT)</TableCell>
-            <TableCell sx={{ color: 'white', border: 0 }}>Amount (BTC)</TableCell>
-            <TableCell sx={{ color: 'white', border: 0 }}>Total</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {asks.map((ask, index) => (
-            <TableRow key={index} sx={{ '& td': { border: 0 }}}>
-              <TableCell sx={{ color: '#f44336' }}>{ask.price}</TableCell>
-              <TableCell>{ask.amount}</TableCell>
-              <TableCell>{ask.total}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-    <Typography variant="h6" align="center" sx={{ my: 2 }}>BTC 63500 USDT</Typography>
-    <TableContainer sx={{ maxHeight: 250 }}>
-      <Table stickyHeader size="small">
-        <TableHead>
-          <TableRow>
-            <TableCell sx={{ color: '#4caf50', border: 0 }}>Price (USDT)</TableCell>
-            <TableCell sx={{ color: 'white', border: 0 }}>Amount (BTC)</TableCell>
-            <TableCell sx={{ color: 'white', border: 0 }}>Total</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {bids.map((bid, index) => (
-            <TableRow key={index} sx={{ '& td': { border: 0 }}}>
-              <TableCell sx={{ color: '#4caf50' }}>{bid.price}</TableCell>
-              <TableCell>{bid.amount}</TableCell>
-              <TableCell>{bid.total}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  </GlassmorphicPaper>
-);
-
-const RecentTrades = ({ trades }) => (
+const OrderBook = ({ asks, bids }) => {
+  const theme = useTheme();
+  return (
     <GlassmorphicPaper>
-        <Typography variant="h6" gutterBottom>Recent Trades</Typography>
-        <TableContainer sx={{ maxHeight: 'calc(100% - 48px)' }}>
-            <Table stickyHeader size="small">
-                <TableHead>
-                    <TableRow>
-                        <TableCell sx={{ color: 'white', border: 0 }}>Price (USDT)</TableCell>
-                        <TableCell sx={{ color: 'white', border: 0 }}>Amount</TableCell>
-                        <TableCell sx={{ color: 'white', border: 0 }}>Time</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {trades.map((trade, index) => (
-                        <TableRow key={index} sx={{ '& td': { border: 0 }}}>
-                            <TableCell sx={{ color: trade.type === 'buy' ? '#4caf50' : '#f44336' }}>{trade.price}</TableCell>
-                            <TableCell>{trade.amount}</TableCell>
-                            <TableCell>{trade.time}</TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
+      <Typography variant="h6" gutterBottom>Order Book</Typography>
+      <TableContainer sx={{ maxHeight: 250 }}>
+        <Table stickyHeader size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell sx={{ color: theme.palette.error.main, border: 0 }}>Price (USDT)</TableCell>
+              <TableCell sx={{ border: 0 }}>Amount (BTC)</TableCell>
+              <TableCell sx={{ border: 0 }}>Total</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {asks.map((ask, index) => (
+              <TableRow key={index} sx={{ '& td': { border: 0 }}}>
+                <TableCell sx={{ color: theme.palette.error.main }}>{ask.price}</TableCell>
+                <TableCell>{ask.amount}</TableCell>
+                <TableCell>{ask.total}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <Typography variant="h6" align="center" sx={{ my: 2 }}>BTC 63500 USDT</Typography>
+      <TableContainer sx={{ maxHeight: 250 }}>
+        <Table stickyHeader size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell sx={{ color: theme.palette.success.main, border: 0 }}>Price (USDT)</TableCell>
+              <TableCell sx={{ border: 0 }}>Amount (BTC)</TableCell>
+              <TableCell sx={{ border: 0 }}>Total</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {bids.map((bid, index) => (
+              <TableRow key={index} sx={{ '& td': { border: 0 }}}>
+                <TableCell sx={{ color: theme.palette.success.main }}>{bid.price}</TableCell>
+                <TableCell>{bid.amount}</TableCell>
+                <TableCell>{bid.total}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </GlassmorphicPaper>
-);
+  );
+};
+
+const RecentTrades = ({ trades }) => {
+  const theme = useTheme();
+  return (
+    <GlassmorphicPaper>
+      <Typography variant="h6" gutterBottom>Recent Trades</Typography>
+      <TableContainer sx={{ maxHeight: 'calc(100% - 48px)' }}>
+        <Table stickyHeader size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell sx={{ border: 0 }}>Price (USDT)</TableCell>
+              <TableCell sx={{ border: 0 }}>Amount</TableCell>
+              <TableCell sx={{ border: 0 }}>Time</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {trades.map((trade, index) => (
+              <TableRow key={index} sx={{ '& td': { border: 0 }}}>
+                <TableCell sx={{ color: trade.type === 'buy' ? theme.palette.success.main : theme.palette.error.main }}>{trade.price}</TableCell>
+                <TableCell>{trade.amount}</TableCell>
+                <TableCell>{trade.time}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </GlassmorphicPaper>
+  );
+};
 
 function Trade() {
     const [asks, setAsks] = useState([]);
     const [bids, setBids] = useState([]);
     const [trades, setTrades] = useState([]);
+    const theme = useTheme();
 
     useEffect(() => {
         // Mock data fetching
@@ -140,8 +149,8 @@ function Trade() {
         <Grid item xs={12} md={6}>
             <GlassmorphicPaper>
                 <Box sx={{ display: 'flex', borderBottom: 1, borderColor: 'divider', mb: 2 }}>
-                    <Button sx={{ color: 'white', flex: 1, borderBottom: '2px solid #4caf50', borderRadius: 0 }}>Buy</Button>
-                    <Button sx={{ color: 'rgba(255,255,255,0.7)', flex: 1 }}>Sell</Button>
+                    <Button sx={{ flex: 1, borderBottom: `2px solid ${theme.palette.success.main}`, borderRadius: 0 }}>Buy</Button>
+                    <Button sx={{ color: 'text.secondary', flex: 1 }}>Sell</Button>
                 </Box>
                 <Grid container spacing={2}>
                     <Grid item xs={6}>
@@ -161,7 +170,7 @@ function Trade() {
                         <StyledTextField fullWidth label="Amount" variant="standard" />
                     </Grid>
                     <Grid item xs={12}>
-                        <Typography gutterBottom sx={{ color: 'rgba(255,255,255,0.7)' }}>Use available balance</Typography>
+                        <Typography gutterBottom color="text.secondary">Use available balance</Typography>
                         <Slider defaultValue={50} aria-label="Default" valueLabelDisplay="auto" />
                     </Grid>
                     <Grid item xs={12}>
