@@ -1,15 +1,17 @@
 import { useState } from 'react';
 import { Box, Grid, Typography, Paper, Tabs, Tab, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Avatar, Button, List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, Switch } from '@mui/material';
-import { styled } from '@mui/system';
+import { styled, useTheme } from '@mui/system';
 import { ArrowUpward, ArrowDownward, Wallet, History, Settings as SettingsIcon } from '@mui/icons-material';
 
 const GlassmorphicPaper = styled(Paper)(({ theme }) => ({
     padding: '20px',
-    background: 'rgba(255, 255, 255, 0.05)',
+    backgroundColor: theme.palette.mode === 'dark' 
+      ? 'rgba(33, 43, 54, 0.7)' 
+      : 'rgba(255, 255, 255, 0.7)',
     backdropFilter: 'blur(10px)',
     borderRadius: '15px',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    color: '#fff',
+    border: `1px solid ${theme.palette.divider}`,
+    color: theme.palette.text.primary,
     width: '100%'
 }));
 
@@ -32,6 +34,7 @@ const assets = [
 
 function Account() {
     const [tabValue, setTabValue] = useState(0);
+    const theme = useTheme();
 
     const handleTabChange = (event, newValue) => {
         setTabValue(newValue);
@@ -39,7 +42,7 @@ function Account() {
 
     return (
         <Box sx={{ width: '100%'}}>
-            <Typography variant="h4" gutterBottom sx={{ color: 'white', fontWeight: 'bold' }}>
+            <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold' }}>
                 Account
             </Typography>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -53,7 +56,7 @@ function Account() {
             <TabPanel value={tabValue} index={0}>
                 <Grid item xs={12}>
                     <GlassmorphicPaper sx={{ mb: 3 }}>
-                        <Typography variant="h6" sx={{ color: 'rgba(255,255,255,0.7)' }}>Total Estimated Balance</Typography>
+                        <Typography variant="h6" color="text.secondary">Total Estimated Balance</Typography>
                         <Typography variant="h3" sx={{ fontWeight: 'bold' }}>$149,263.24</Typography>
                     </GlassmorphicPaper>
                     <GlassmorphicPaper>
@@ -61,29 +64,29 @@ function Account() {
                             <Table>
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell sx={{ color: 'white', border: 0 }}>Asset</TableCell>
-                                        <TableCell sx={{ color: 'white', border: 0 }}>Balance</TableCell>
-                                        <TableCell sx={{ color: 'white', border: 0 }}>Value (USD)</TableCell>
-                                        <TableCell sx={{ color: 'white', border: 0 }}>Actions</TableCell>
+                                        <TableCell sx={{ border: 0 }}>Asset</TableCell>
+                                        <TableCell sx={{ border: 0 }}>Balance</TableCell>
+                                        <TableCell sx={{ border: 0 }}>Value (USD)</TableCell>
+                                        <TableCell sx={{ border: 0 }}>Actions</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
                                     {assets.map((asset) => (
-                                        <TableRow key={asset.symbol} sx={{ '& td': { border: 0 }}}>
+                                        <TableRow key={asset.symbol} sx={{ '& td, & th': { border: 0 }}}>
                                             <TableCell>
                                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                    <Avatar sx={{ bgcolor: '#333', mr: 2 }}>{asset.icon}</Avatar>
+                                                    <Avatar sx={{ bgcolor: 'primary.main', mr: 2 }}>{asset.icon}</Avatar>
                                                     <Box>
                                                         <Typography>{asset.name}</Typography>
-                                                        <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)' }}>{asset.symbol}</Typography>
+                                                        <Typography variant="body2" color="text.secondary">{asset.symbol}</Typography>
                                                     </Box>
                                                 </Box>
                                             </TableCell>
                                             <TableCell>{asset.balance}</TableCell>
                                             <TableCell>${asset.value.toLocaleString()}</TableCell>
                                             <TableCell>
-                                                <Button startIcon={<ArrowUpward />} sx={{ color: '#4caf50' }}>Deposit</Button>
-                                                <Button startIcon={<ArrowDownward />} sx={{ color: '#f44336' }}>Withdraw</Button>
+                                                <Button startIcon={<ArrowUpward />} color="success">Deposit</Button>
+                                                <Button startIcon={<ArrowDownward />} color="error">Withdraw</Button>
                                             </TableCell>
                                         </TableRow>
                                     ))}
