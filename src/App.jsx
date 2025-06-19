@@ -1,14 +1,20 @@
-import { useState } from 'react';
+import React, { useContext } from 'react';
 import { BrowserRouter as Router, Routes, Route, NavLink } from 'react-router-dom';
-import { Box, CssBaseline, AppBar, Toolbar, Typography, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import { Box, CssBaseline, AppBar, Toolbar, Typography, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, IconButton } from '@mui/material';
 import { Dashboard as DashboardIcon, SwapHoriz as TradeIcon, AccountCircle as AccountIcon } from '@mui/icons-material';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
+import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
+import { ThemeContext } from './context/ThemeContext';
 import Dashboard from './pages/Dashboard';
 import Trade from './pages/Trade';
 import Account from './pages/Account';
 
 const drawerWidth = 240;
 
-function App() {
+function AppContent() {
+  const { mode, toggleTheme } = useContext(ThemeContext);
+
   return (
     <Router>
       <Box sx={{ display: 'flex', height: '100vh', width: '100vw', overflow: 'hidden', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}>
@@ -18,15 +24,15 @@ function App() {
           sx={{
             width: `calc(100% - ${drawerWidth}px)`,
             ml: `${drawerWidth}px`,
-            backgroundColor: '#171c28',
-            boxShadow: 'none',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.12)'
           }}
         >
           <Toolbar>
-            <Typography variant="h6" noWrap component="div">
+            <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
               Trading Panel
             </Typography>
+            <IconButton sx={{ ml: 1 }} onClick={toggleTheme} color="inherit">
+              {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+            </IconButton>
           </Toolbar>
         </AppBar>
         <Drawer
@@ -106,6 +112,16 @@ function App() {
         </Box>
       </Box>
     </Router>
+  );
+}
+
+function App() {
+  const { theme } = useContext(ThemeContext);
+  return (
+    <MuiThemeProvider theme={theme}>
+      <CssBaseline />
+      <AppContent />
+    </MuiThemeProvider>
   );
 }
 
