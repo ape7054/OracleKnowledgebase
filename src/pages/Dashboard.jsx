@@ -1,7 +1,15 @@
-import { Box, Grid, Card, Typography, Paper, Avatar } from '@mui/material';
-import { styled, useTheme } from '@mui/system';
-import { AreaChart, Area, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, CartesianGrid } from 'recharts';
-import { BitcoinIcon, EthereumIcon, SolanaIcon, BinanceCoinIcon, CardanoIcon } from '../components/CryptoIcons';
+import { useState } from 'react';
+import { Box, Grid, Typography, Paper, useTheme } from '@mui/material';
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from 'recharts';
+import { styled } from '@mui/system';
+
+// Import icons from the new library
+import BtcIcon from 'cryptocurrency-icons/svg/color/btc.svg?react';
+import EthIcon from 'cryptocurrency-icons/svg/color/eth.svg?react';
+import SolIcon from 'cryptocurrency-icons/svg/color/sol.svg?react';
+import UsdtIcon from 'cryptocurrency-icons/svg/color/usdt.svg?react';
+import BnbIcon from 'cryptocurrency-icons/svg/color/bnb.svg?react';
+import AdaIcon from 'cryptocurrency-icons/svg/color/ada.svg?react';
 
 const GlassmorphicPaper = styled(Paper)(({ theme }) => ({
   padding: '24px',
@@ -88,11 +96,12 @@ const data = [
 ];
 
 const hotCoins = [
-    { name: 'Bitcoin', symbol: 'BTC', price: '$63,500', change: '+2.5%', icon: <BitcoinIcon /> },
-    { name: 'Ethereum', symbol: 'ETH', price: '$4,350', change: '+3.2%', icon: <EthereumIcon /> },
-    { name: 'Solana', symbol: 'SOL', price: '$118', change: '+5.1%', icon: <SolanaIcon /> },
-    { name: 'BNB', symbol: 'BNB', price: '$520', change: '-1.2%', icon: <BinanceCoinIcon /> },
-    { name: 'Cardano', symbol: 'ADA', price: '$1.2', change: '-0.5%', icon: <CardanoIcon /> },
+  { name: 'Bitcoin', symbol: 'BTC', price: '$63,500', change: '+2.5%', icon: BtcIcon },
+  { name: 'Ethereum', symbol: 'ETH', price: '$4,350', change: '+3.2%', icon: EthIcon },
+  { name: 'Solana', symbol: 'SOL', price: '$118', change: '+5.1%', icon: SolIcon },
+  { name: 'BNB', symbol: 'BNB', price: '$520', change: '-1.2%', icon: BnbIcon },
+  { name: 'Cardano', symbol: 'ADA', price: '$1.2', change: '-0.5%', icon: AdaIcon },
+  { name: 'Tether', symbol: 'USDT', price: '$1.00', change: '+0.0%', icon: UsdtIcon },
 ];
 
 const StatCard = ({ title, value }) => (
@@ -102,80 +111,92 @@ const StatCard = ({ title, value }) => (
     </GlassmorphicPaper>
   );
 
-function Dashboard() {
+const HotCoinCard = ({ name, symbol, price, change, icon: Icon }) => {
   const theme = useTheme();
+  const isPositive = change.startsWith('+');
 
   return (
-      <Box sx={{ width: '100%', maxWidth: '100%', minHeight: '80vh' }}>
-        <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold' }}>
-            Market Overview
+    <GlassmorphicPaper sx={{ p: 2, display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+        <Icon style={{ width: 40, height: 40, marginRight: 12 }} />
+        <Box>
+          <Typography variant="h6" sx={{ fontWeight: 'bold' }}>{name}</Typography>
+          <Typography variant="body2" color="text.secondary">{symbol}</Typography>
+        </Box>
+      </Box>
+      <Box sx={{ pl: '52px' }}>
+        <Typography variant="h5" sx={{ my: 0.5, fontWeight: 'bold' }}>{price}</Typography>
+        <Typography sx={{ color: isPositive ? 'success.main' : 'error.main', fontWeight: 500 }}>
+          {change}
         </Typography>
-        <Grid container spacing={3} sx={{ width: '100%', m: 0 }}>
-          <Grid item xs={12} sm={6} md={3}><StatCard title="Total Market Cap" value="$2.1T" /></Grid>
-          <Grid item xs={12} sm={6} md={3}><StatCard title="BTC Dominance" value="42%" /></Grid>
-          <Grid item xs={12} sm={6} md={3}><StatCard title="ETH Dominance" value="18%" /></Grid>
-          <Grid item xs={12} sm={6} md={3}><StatCard title="24h Volume" value="$120B" /></Grid>
-        
-          <Grid item xs={12}>
-            <GlassmorphicPaper sx={{ height: 350, p: 3 }}>
-                <Typography variant="h6" gutterBottom sx={{ ml: 2 }}>Price Trends</Typography>
-                <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={data} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
-                        <defs>
-                            <linearGradient id="colorBtc" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#f7931a" stopOpacity={0.6}/>
-                                <stop offset="95%" stopColor="#f7931a" stopOpacity={0}/>
-                            </linearGradient>
-                            <linearGradient id="colorEth" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#8884d8" stopOpacity={0.6}/>
-                                <stop offset="95%" stopColor="#8884d8" stopOpacity={0}/>
-                            </linearGradient>
-                            <linearGradient id="colorSol" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#00FFA3" stopOpacity={0.6}/>
-                                <stop offset="95%" stopColor="#00FFA3" stopOpacity={0}/>
-                            </linearGradient>
-                        </defs>
-                        <XAxis dataKey="name" stroke={theme.palette.text.secondary} tick={{ fontSize: 12 }} />
-                        <YAxis stroke={theme.palette.text.secondary} tick={{ fontSize: 12 }} />
-                        <CartesianGrid strokeDasharray="3 3" stroke={theme.palette.divider} />
-                        <Tooltip content={<CustomTooltip theme={theme} />} />
-                        <Legend wrapperStyle={{ color: theme.palette.text.secondary, paddingTop: '10px' }}/>
-                        <Area type="monotone" dataKey="BTC" stroke="#f7931a" strokeWidth={2} fill="url(#colorBtc)" activeDot={{ r: 6 }} />
-                        <Area type="monotone" dataKey="ETH" stroke="#8884d8" strokeWidth={2} fill="url(#colorEth)" activeDot={{ r: 6 }} />
-                        <Area type="monotone" dataKey="SOL" stroke="#00FFA3" strokeWidth={2} fill="url(#colorSol)" activeDot={{ r: 6 }} />
-                    </AreaChart>
-                </ResponsiveContainer>
-            </GlassmorphicPaper>
-          </Grid>
+      </Box>
+    </GlassmorphicPaper>
+  );
+};
 
-          <Grid item xs={12}>
-            <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold' }}>Hot Coins</Typography>
-            <Grid container spacing={3}>
-                {hotCoins.map(coin => (
-                    <Grid item xs={12} sm={6} md={2.4} key={coin.symbol}>
-                        <GlassmorphicPaper sx={{ p: 2, justifyContent: 'center' }}>
-                            <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
-                                <Box sx={{ width: 40, height: 40, mr: 1.5, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    {coin.icon}
-                                </Box>
-                                <Box>
-                                    <Typography variant="h6" sx={{ lineHeight: 1.2, fontWeight: 600 }}>{coin.name}</Typography>
-                                    <Typography variant="body2" color="text.secondary">{coin.symbol}</Typography>
-                                </Box>
-                            </Box>
-                            <Box sx={{ pl: '54px' }}>
-                                <Typography variant="h5" sx={{ my: 0.5, fontWeight: 'bold' }}>{coin.price}</Typography>
-                                <Typography sx={{ color: coin.change.startsWith('+') ? 'success.main' : 'error.main', fontWeight: 500 }}>
-                                    {coin.change}
-                                </Typography>
-                            </Box>
-                        </GlassmorphicPaper>
-                    </Grid>
-                ))}
+function Dashboard() {
+  const theme = useTheme();
+  const [chartData, setChartData] = useState([]);
+
+  return (
+    <Box>
+      <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold', mb: 4 }}>
+        Dashboard
+      </Typography>
+
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>Hot Coins</Typography>
+        <Grid container spacing={2}>
+          {hotCoins.map(coin => (
+            <Grid item xs={12} sm={6} md={4} lg={2} key={coin.symbol}>
+              <HotCoinCard {...coin} />
             </Grid>
-          </Grid>
+          ))}
         </Grid>
       </Box>
+
+      <Grid container spacing={3}>
+        <Grid item xs={12} lg={9}>
+          <GlassmorphicPaper sx={{ height: 400 }}>
+            <Typography variant="h6" sx={{ mb: 2 }}>Price Trends</Typography>
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={data} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+                <defs>
+                    <linearGradient id="colorBtc" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#f7931a" stopOpacity={0.8}/>
+                        <stop offset="95%" stopColor="#f7931a" stopOpacity={0}/>
+                    </linearGradient>
+                    <linearGradient id="colorEth" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8}/>
+                        <stop offset="95%" stopColor="#8884d8" stopOpacity={0}/>
+                    </linearGradient>
+                    <linearGradient id="colorSol" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#14f195" stopOpacity={0.8}/>
+                        <stop offset="95%" stopColor="#9945FF" stopOpacity={0}/>
+                    </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke={theme.palette.divider} />
+                <XAxis dataKey="name" stroke={theme.palette.text.secondary} />
+                <YAxis stroke={theme.palette.text.secondary} />
+                <Tooltip content={<CustomTooltip theme={theme} />} />
+                <Legend />
+                <Area type="monotone" dataKey="BTC" stroke="#f7931a" fillOpacity={1} fill="url(#colorBtc)" />
+                <Area type="monotone" dataKey="ETH" stroke="#8884d8" fillOpacity={1} fill="url(#colorEth)" />
+                <Area type="monotone" dataKey="SOL" stroke="#14f195" fillOpacity={1} fill="url(#colorSol)" />
+              </AreaChart>
+            </ResponsiveContainer>
+          </GlassmorphicPaper>
+        </Grid>
+        <Grid item xs={12} lg={3}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+            <StatCard title="Portfolio Value" value="$12,450.80" />
+            <StatCard title="24h Change" value="+$320.50 (+2.6%)" />
+            <StatCard title="Total P&L" value="+$1,890.20" />
+            <StatCard title="Open Positions" value="3" />
+          </Box>
+        </Grid>
+      </Grid>
+    </Box>
   );
 }
 

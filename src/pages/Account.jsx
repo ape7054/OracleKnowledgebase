@@ -1,8 +1,17 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Box, Typography, Paper, Grid, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Avatar, List, ListItem, ListItemText, ListItemSecondaryAction, Switch } from '@mui/material';
 import { styled, useTheme } from '@mui/system';
 import { ArrowUpward, ArrowDownward, Wallet, History, Settings as SettingsIcon } from '@mui/icons-material';
-import { BitcoinIcon, EthereumIcon, SolanaIcon, TetherIcon, BinanceCoinIcon } from '../components/CryptoIcons';
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
+import { ThemeContext } from '../context/ThemeContext';
+import React from 'react';
+
+// Import icons from the new library
+import BtcIcon from 'cryptocurrency-icons/svg/color/btc.svg?react';
+import EthIcon from 'cryptocurrency-icons/svg/color/eth.svg?react';
+import SolIcon from 'cryptocurrency-icons/svg/color/sol.svg?react';
+import UsdtIcon from 'cryptocurrency-icons/svg/color/usdt.svg?react';
+import BnbIcon from 'cryptocurrency-icons/svg/color/bnb.svg?react';
 
 const GlassmorphicPaper = styled(Paper)(({ theme }) => ({
     padding: '24px',
@@ -111,11 +120,11 @@ const TabPanel = (props) => {
 };
 
 const assets = [
-    { name: 'Bitcoin', symbol: 'BTC', balance: 0.85, value: 53975, icon: <BitcoinIcon />, color: '#F7931A' },
-    { name: 'Ethereum', symbol: 'ETH', balance: 12.5, value: 54375, icon: <EthereumIcon />, color: '#627EEA' },
-    { name: 'Solana', symbol: 'SOL', balance: 145.8, value: 17205.24, icon: <SolanaIcon />, color: '#9945FF' },
-    { name: 'Tether', symbol: 'USDT', balance: 10500, value: 10500, icon: <TetherIcon />, color: '#26A17B' },
-    { name: 'Binance Coin', symbol: 'BNB', balance: 25.4, value: 13208, icon: <BinanceCoinIcon />, color: '#F3BA2F' },
+    { name: 'Bitcoin', symbol: 'BTC', balance: 0.85, value: 53975, icon: BtcIcon },
+    { name: 'Ethereum', symbol: 'ETH', balance: 12.5, value: 54375, icon: EthIcon },
+    { name: 'Solana', symbol: 'SOL', balance: 145.8, value: 17205.24, icon: SolIcon },
+    { name: 'Tether', symbol: 'USDT', balance: 10500, value: 10500, icon: UsdtIcon },
+    { name: 'Binance Coin', symbol: 'BNB', balance: 25.4, value: 13208, icon: BnbIcon },
 ];
 
 // Mock transaction history data
@@ -201,7 +210,7 @@ function Account() {
                                             <TableCell>
                                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                                     <Box sx={{ width: 32, height: 32, mr: 2 }}>
-                                                        {asset.icon}
+                                                        {React.createElement(asset.icon, { width: 32, height: 32 })}
                                                     </Box>
                                                     <Box>
                                                         <Typography>{asset.name}</Typography>

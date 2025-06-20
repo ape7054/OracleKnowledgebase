@@ -215,6 +215,7 @@ function Trade() {
     const [bids, setBids] = useState([]);
     const [trades, setTrades] = useState([]);
     const [tradeType, setTradeType] = useState('buy');
+    const [priceType, setPriceType] = useState('market');
     const [sliderValue, setSliderValue] = useState(50);
     const theme = useTheme();
 
@@ -233,6 +234,10 @@ function Trade() {
 
     const handleTradeTypeChange = (type) => {
         setTradeType(type);
+    };
+
+    const handlePriceTypeChange = (event) => {
+        setPriceType(event.target.value);
     };
 
     const handleSliderChange = (event, newValue) => {
@@ -286,25 +291,45 @@ function Trade() {
                     </Button>
                     </Box>
 
-                    <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
-                        <StyledTextField label="Price" variant="standard" defaultValue="Market" />
-                        <StyledTextField label="Amount" variant="standard" />
-                        <StyledSlider 
-                          value={sliderValue} 
-                          onChange={handleSliderChange} 
-                          aria-labelledby="input-slider" 
-                          marks={[{value: 0}, {value: 25}, {value: 50}, {value: 75}, {value: 100}]}
-                          tradeType={tradeType}
-                        />
-                        <Typography variant="body2" align="center">Total: 1,200 USDT</Typography>
-                        <Button
-                          variant="contained"
-                          color={tradeType === 'sell' ? 'error' : 'success'}
-                          size="large"
-                          sx={{ mt: 2 }}
+                    <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 3 }}>
+                        <StyledTextField
+                          label="Price"
+                          variant="standard"
+                          select
+                          value={priceType}
+                          onChange={handlePriceTypeChange}
                         >
-                          {tradeType === 'buy' ? 'Buy BTC' : 'Sell BTC'}
-                        </Button>
+                            <MenuItem value="market">Market</MenuItem>
+                            <MenuItem value="limit">Limit</MenuItem>
+                        </StyledTextField>
+                        
+                        {priceType === 'limit' && (
+                            <StyledTextField
+                                label="Limit Price"
+                                variant="standard"
+                                type="number"
+                                placeholder="0.00"
+                                InputLabelProps={{ shrink: true }}
+                            />
+                        )}
+
+                         <StyledTextField label="Amount" variant="standard" />
+                         <StyledSlider 
+                           value={sliderValue} 
+                           onChange={handleSliderChange} 
+                           aria-labelledby="input-slider" 
+                           marks={[{value: 0}, {value: 25}, {value: 50}, {value: 75}, {value: 100}]}
+                           tradeType={tradeType}
+                         />
+                         <Typography variant="body2" align="center">Total: 1,200 USDT</Typography>
+                         <Button
+                           variant="contained"
+                           color={tradeType === 'sell' ? 'error' : 'success'}
+                           size="large"
+                           sx={{ mt: 2 }}
+                         >
+                           {tradeType === 'buy' ? 'Buy BTC' : 'Sell BTC'}
+                         </Button>
                     </Box>
                 </GlassmorphicPaper>
             </Grid>
