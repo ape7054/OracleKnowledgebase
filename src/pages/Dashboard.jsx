@@ -123,18 +123,30 @@ const marketData = [
 ];
 
 const StatCard = ({ title, value, icon, color }) => (
-    <GlassmorphicPaper sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', p: 3 }}>
+    <GlassmorphicPaper sx={{ 
+      display: 'flex', 
+      flexDirection: 'row', 
+      alignItems: 'center', 
+      p: { xs: 2, md: 3 } // 响应式内边距
+    }}>
       <Box sx={{
-        width: 52, height: 52, borderRadius: '50%',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        width: { xs: 40, md: 52 }, 
+        height: { xs: 40, md: 52 }, 
+        borderRadius: '50%',
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center',
         backgroundColor: alpha(color, 0.15),
         mr: 2,
       }}>
         {icon}
       </Box>
       <Box>
-        <Typography variant="body1" color="text.secondary">{title}</Typography>
-        <Typography variant="h5" sx={{ fontWeight: 'bold' }}>{value}</Typography>
+        <Typography variant="body2" color="text.secondary">{title}</Typography>
+        <Typography variant="h5" sx={{ 
+          fontWeight: 'bold',
+          fontSize: { xs: '1.2rem', md: '1.5rem' } // 响应式字体大小
+        }}>{value}</Typography>
       </Box>
     </GlassmorphicPaper>
 );
@@ -159,6 +171,7 @@ function Dashboard() {
   const theme = useTheme();
   const [selectedCoin, setSelectedCoin] = useState('BTC');
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isExtraSmall = useMediaQuery('(max-width:600px)');
 
   const stats = [
     { title: "Portfolio Value", value: "$12,450.80", icon: <AccountBalanceWalletOutlinedIcon sx={{ color: theme.palette.primary.main }} />, color: theme.palette.primary.main },
@@ -278,11 +291,15 @@ function Dashboard() {
 
   return (
     <Box>
-      <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold', mb: 4 }}>
+      <Typography variant="h4" gutterBottom sx={{ 
+        fontWeight: 'bold', 
+        mb: 4,
+        fontSize: { xs: '1.5rem', sm: '2rem', md: '2.125rem' } // 响应式字体大小
+      }}>
         Dashboard
       </Typography>
 
-      <Grid container spacing={3} sx={{ mb: 4 }}>
+      <Grid container spacing={2} sx={{ mb: 4 }}>
         {stats.map(stat => (
           <Grid item xs={12} sm={6} md={3} key={stat.title}>
             <StatCard {...stat} />
@@ -292,10 +309,20 @@ function Dashboard() {
       
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <GlassmorphicPaper sx={{ height: 450, p: 3 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+          <GlassmorphicPaper sx={{ 
+            height: { xs: 350, sm: 400, md: 450 }, // 响应式高度
+            p: { xs: 2, sm: 3 } // 响应式内边距
+          }}>
+            <Box sx={{ 
+              display: 'flex', 
+              flexDirection: { xs: 'column', sm: 'row' }, // 在小屏幕上垂直排列
+              justifyContent: 'space-between', 
+              alignItems: { xs: 'flex-start', sm: 'center' },
+              gap: { xs: 2, sm: 0 },
+              mb: 2 
+            }}>
               <Typography variant="h6" sx={{ fontWeight: 600 }}>Price Trends</Typography>
-              <Box>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                 {Object.keys(chartData).map(coin => (
                   <Chip
                     key={coin}
@@ -303,7 +330,6 @@ function Dashboard() {
                     clickable
                     onClick={() => setSelectedCoin(coin)}
                     sx={{
-                      ml: 1,
                       transition: 'all 0.3s',
                       backgroundColor: selectedCoin === coin ? chartMeta[coin].stroke : (theme.palette.mode === 'dark' ? alpha(theme.palette.background.default, 0.6) : alpha(theme.palette.grey[400], 0.3)),
                       color: selectedCoin === coin ? '#fff' : theme.palette.text.secondary,
@@ -324,16 +350,15 @@ function Dashboard() {
           <GlassmorphicPaper sx={{ overflow: 'hidden' }}>
             <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>Market Overview</Typography>
             
-            {/* 确保在移动设备上使用卡片视图 */}
+            {/* 使用更精确的宽度检测来决定布局 */}
             <Box sx={{ 
-              display: { xs: 'block', md: 'none' } 
+              display: { xs: 'block', lg: 'none' } 
             }}>
               <MarketCardView />
             </Box>
             
-            {/* 确保只在桌面设备上使用表格视图 */}
             <Box sx={{ 
-              display: { xs: 'none', md: 'block' } 
+              display: { xs: 'none', lg: 'block' } 
             }}>
               <MarketTableView />
             </Box>
