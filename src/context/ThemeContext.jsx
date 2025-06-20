@@ -58,10 +58,15 @@ const darkTheme = createTheme({
       paper: '#212B36',
     },
     text: {
-      primary: '#FFFFFF',
-      secondary: '#919EAB',
+      primary: '#E6E6E6',
+      secondary: '#B0B7C3',
     },
     divider: 'rgba(145, 158, 171, 0.24)',
+    action: {
+      active: '#00AB55',
+      hover: 'rgba(255, 255, 255, 0.08)',
+      selected: 'rgba(0, 171, 85, 0.16)',
+    },
   },
   shadows: [
     'none',
@@ -71,7 +76,7 @@ const darkTheme = createTheme({
 });
 
 export const CustomThemeProvider = ({ children }) => {
-  const [mode, setMode] = useState('light');
+  const [mode, setMode] = useState('dark');
 
   const toggleTheme = () => {
     setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));

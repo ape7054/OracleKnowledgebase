@@ -16,6 +16,7 @@ const drawerWidth = 240;
 const StyledNavLink = styled(NavLink)(({ theme }) => ({
   textDecoration: 'none',
   width: '100%',
+  color: theme.palette.text.primary,
 }));
 
 const StyledListItemButton = styled(ListItemButton)(({ theme }) => ({
@@ -23,6 +24,7 @@ const StyledListItemButton = styled(ListItemButton)(({ theme }) => ({
   margin: '4px 8px',
   borderRadius: '8px',
   transition: 'all 0.2s ease-in-out',
+  color: theme.palette.text.primary,
   '&:hover': {
     backgroundColor: theme.palette.mode === 'dark' 
       ? 'rgba(255, 255, 255, 0.08)' 
@@ -36,6 +38,15 @@ const StyledListItemButton = styled(ListItemButton)(({ theme }) => ({
     '& .MuiListItemIcon-root': {
       color: theme.palette.primary.main,
     },
+  },
+  '& .MuiListItemText-primary': {
+    color: 'inherit',
+  },
+  '& .MuiListItemIcon-root': {
+    color: theme.palette.mode === 'dark' 
+      ? theme.palette.text.secondary
+      : theme.palette.text.primary,
+    minWidth: 40,
   },
 }));
 
@@ -100,8 +111,13 @@ function AppContent() {
             <StyledNavLink to={item.path} end={item.path === '/'}>
               {({ isActive }) => (
                 <StyledListItemButton className={isActive ? 'active' : ''}>
-                  <ListItemIcon sx={{ minWidth: 40 }}>{item.icon}</ListItemIcon>
-                  <ListItemText primary={item.text} primaryTypographyProps={{ fontWeight: 500 }} />
+                  <ListItemIcon>{item.icon}</ListItemIcon>
+                  <ListItemText 
+                    primary={item.text} 
+                    primaryTypographyProps={{ 
+                      fontWeight: 500,
+                    }} 
+                  />
                 </StyledListItemButton>
               )}
             </StyledNavLink>
