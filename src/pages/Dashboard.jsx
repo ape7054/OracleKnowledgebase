@@ -1,6 +1,14 @@
-import { Box, Grid, Card, Typography, Paper } from '@mui/material';
+import { Box, Grid, Card, Typography, Paper, Avatar } from '@mui/material';
 import { styled, useTheme } from '@mui/system';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, CartesianGrid } from 'recharts';
+
+// --- SVG Icons as React Components ---
+
+const BtcIcon = () => <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Bitcoin</title><path d="M11.333 21.933v-3.36l5.44-1.787c.334-.107.56-.427.56-.774v-9.332c0-.347-.227-.667-.56-.774L11.333 4.12v-3.36c0-.4-.4-.667-.774-.56L3.333 2.1c-.347.106-.56.426-.56.773v17.947c0 .347.227.667.56.774l7.227 1.892c.226.054.453.054.667 0zm-5.893-9.52c.427-.4.987-.64 1.627-.64h2.027v3.333H7.067c-.64 0-1.2-.24-1.627-.64a2.138 2.138 0 0 1-.64-1.573c0-.613.24-1.173.64-1.48zm5.12 6.08h-2.027v-3.333h2.027c.72 0 1.333.24 1.76.72.4.453.64 1.04.64 1.68 0 .64-.24 1.227-.64 1.653-.427.427-1.04.28-1.76-.72z" fill="#F7931A"/></svg>;
+const EthIcon = () => <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Ethereum</title><path d="M12 0L2 9.414l10 14.586L22 9.414 12 0zm0 2.828l7.172 6.586-7.172 3.414-7.172-3.414L12 2.828zM12 14.172l-7.172-3.414 7.172 9.414 7.172-9.414-7.172 3.414z" fill="#627EEA"/></svg>;
+const SolIcon = () => <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Solana</title><path d="M3.385 2.923a.462.462 0 00-.462.462v4.846c0 .256.206.462.462.462h4.846a.462.462 0 00.462-.462V3.385a.462.462 0 00-.462-.462H3.385zm12.308 0a.462.462 0 00-.462.462v4.846c0 .256.206.462.462.462h4.846a.462.462 0 00.462-.462V3.385a.462.462 0 00-.462-.462h-4.846zM3.385 15.692a.462.462 0 00-.462.462v4.846c0 .256.206.462.462.462h4.846a.462.462 0 00.462-.462v-4.846a.462.462 0 00-.462-.462H3.385z" fill="#00FFA3"/></svg>;
+const BnbIcon = () => <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>BNB</title><path d="M16.037 3.932l-4.032 4.032-4.032-4.032-6.009 6.01 4.032 4.031-4.032 4.032 6.01 6.009 4.031-4.032 4.032 4.032 6.009-6.01-4.032-4.031 4.032-4.032-6.01-6.009z" fill="#F0B90B"/></svg>;
+const AdaIcon = () => <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Cardano</title><path d="M20.978 11.537c.015.029.027.059.042.088l-4.49 4.25a.31.31 0 01-.252.128h-3.34a.172.172 0 01-.171-.171v-3.34a.345.345 0 01.128-.253l4.22-4.49a.31.31 0 01.445 0l3.418 3.418a.313.313 0 010 .445zm-10.42 5.034a.31.31 0 01-.252.128H7.034a.172.172 0 01-.171-.171v-3.34a.345.345 0 01.128-.253l4.22-4.49a.31.31 0 01.445 0l3.418 3.418a.313.313 0 010 .445l-4.25 4.25a.31.31 0 01-.253.128z" fill="#0033AD"/></svg>;
 
 const GlassmorphicPaper = styled(Paper)(({ theme }) => ({
   padding: '24px',
@@ -87,11 +95,11 @@ const data = [
 ];
 
 const hotCoins = [
-    { name: 'Bitcoin', symbol: 'BTC', price: '$63,500', change: '+2.5%' },
-    { name: 'Ethereum', symbol: 'ETH', price: '$4,350', change: '+3.2%' },
-    { name: 'Solana', symbol: 'SOL', price: '$118', change: '+5.1%' },
-    { name: 'Binance Coin', symbol: 'BNB', price: '$520', change: '-1.2%' },
-    { name: 'Cardano', symbol: 'ADA', price: '$1.2', change: '-0.5%' },
+    { name: 'Bitcoin', symbol: 'BTC', price: '$63,500', change: '+2.5%', icon: <BtcIcon /> },
+    { name: 'Ethereum', symbol: 'ETH', price: '$4,350', change: '+3.2%', icon: <EthIcon /> },
+    { name: 'Solana', symbol: 'SOL', price: '$118', change: '+5.1%', icon: <SolIcon /> },
+    { name: 'BNB', symbol: 'BNB', price: '$520', change: '-1.2%', icon: <BnbIcon /> },
+    { name: 'Cardano', symbol: 'ADA', price: '$1.2', change: '-0.5%', icon: <AdaIcon /> },
 ];
 
 const StatCard = ({ title, value }) => (
@@ -152,15 +160,22 @@ function Dashboard() {
             <Grid container spacing={3}>
                 {hotCoins.map(coin => (
                     <Grid item xs={12} sm={6} md={2.4} key={coin.symbol}>
-                        <GlassmorphicPaper>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <Typography variant="h6">{coin.name}</Typography>
-                                <Typography variant="body2" color="text.secondary">{coin.symbol}</Typography>
+                        <GlassmorphicPaper sx={{ p: 2, justifyContent: 'center' }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
+                                <Box sx={{ width: 40, height: 40, mr: 1.5 }}>
+                                    {coin.icon}
+                                </Box>
+                                <Box>
+                                    <Typography variant="h6" sx={{ lineHeight: 1.2, fontWeight: 600 }}>{coin.name}</Typography>
+                                    <Typography variant="body2" color="text.secondary">{coin.symbol}</Typography>
+                                </Box>
                             </Box>
-                            <Typography variant="h5" sx={{ my: 1, fontWeight: 'bold' }}>{coin.price}</Typography>
-                            <Typography sx={{ color: coin.change.startsWith('+') ? 'success.main' : 'error.main' }}>
-                                {coin.change}
-                            </Typography>
+                            <Box sx={{ pl: '54px' }}>
+                                <Typography variant="h5" sx={{ my: 0.5, fontWeight: 'bold' }}>{coin.price}</Typography>
+                                <Typography sx={{ color: coin.change.startsWith('+') ? 'success.main' : 'error.main', fontWeight: 500 }}>
+                                    {coin.change}
+                                </Typography>
+                            </Box>
                         </GlassmorphicPaper>
                     </Grid>
                 ))}
