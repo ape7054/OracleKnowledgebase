@@ -250,11 +250,11 @@ function Trade() {
                     <Box sx={{ display: 'flex', borderBottom: 1, borderColor: 'divider', mb: 2 }}>
                     <Button 
                       sx={{ 
-                        flex: 1, 
-                        borderBottom: tradeType === 'buy' ? `2px solid ${theme.palette.success.main}` : 'none',
+                        flex: 1,
+                        py: 1.5,
                         borderRadius: 0,
+                        backgroundColor: tradeType === 'buy' ? 'success.main' : 'transparent',
                         color: tradeType === 'buy' ? 'white' : 'text.secondary',
-                        fontWeight: tradeType === 'buy' ? 'bold' : 'normal'
                       }}
                       onClick={() => handleTradeTypeChange('buy')}
                     >
