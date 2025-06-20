@@ -125,6 +125,7 @@ function Trade() {
     const [asks, setAsks] = useState([]);
     const [bids, setBids] = useState([]);
     const [trades, setTrades] = useState([]);
+    const [tradeType, setTradeType] = useState('buy');
     const theme = useTheme();
 
     useEffect(() => {
@@ -140,54 +141,87 @@ function Trade() {
         return () => clearInterval(interval);
     }, []);
 
-  return (
-    <Box>
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={3}>
+    const handleTradeTypeChange = (type) => {
+        setTradeType(type);
+    };
+
+    return (
+      <Box>
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={3}>
             <OrderBook asks={asks} bids={bids} />
-        </Grid>
-        <Grid item xs={12} md={6}>
+          </Grid>
+          <Grid item xs={12} md={6}>
             <GlassmorphicPaper>
-                <Box sx={{ display: 'flex', borderBottom: 1, borderColor: 'divider', mb: 2 }}>
-                    <Button sx={{ flex: 1, borderBottom: `2px solid ${theme.palette.success.main}`, borderRadius: 0 }}>Buy</Button>
-                    <Button sx={{ color: 'text.secondary', flex: 1 }}>Sell</Button>
-                </Box>
-                <Grid container spacing={2}>
-                    <Grid item xs={6}>
-                        <StyledSelect fullWidth defaultValue="BTC/USDT" variant="outlined">
-                            <MenuItem value="BTC/USDT">BTC/USDT</MenuItem>
-                        </StyledSelect>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <StyledSelect fullWidth defaultValue="limit" variant="outlined">
-                            <MenuItem value="limit">Limit Order</MenuItem>
-                        </StyledSelect>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <StyledTextField fullWidth label="Price" defaultValue="63500" variant="standard" />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <StyledTextField fullWidth label="Amount" variant="standard" />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Typography gutterBottom color="text.secondary">Use available balance</Typography>
-                        <Slider defaultValue={50} aria-label="Default" valueLabelDisplay="auto" />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <StyledTextField fullWidth label="Total" variant="standard" />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Button fullWidth variant="contained" color="success" sx={{ py: 1.5 }}>Buy BTC</Button>
-                    </Grid>
+              <Box sx={{ display: 'flex', borderBottom: 1, borderColor: 'divider', mb: 2 }}>
+                <Button 
+                  sx={{ 
+                    flex: 1, 
+                    borderBottom: tradeType === 'buy' ? `2px solid ${theme.palette.success.main}` : 'none',
+                    borderRadius: 0,
+                    color: tradeType === 'buy' ? theme.palette.success.main : theme.palette.text.secondary,
+                    fontWeight: tradeType === 'buy' ? 'bold' : 'normal'
+                  }}
+                  onClick={() => handleTradeTypeChange('buy')}
+                >
+                  BUY
+                </Button>
+                <Button 
+                  sx={{ 
+                    flex: 1, 
+                    borderBottom: tradeType === 'sell' ? `2px solid ${theme.palette.error.main}` : 'none',
+                    borderRadius: 0,
+                    color: tradeType === 'sell' ? theme.palette.error.main : theme.palette.text.secondary,
+                    fontWeight: tradeType === 'sell' ? 'bold' : 'normal'
+                  }}
+                  onClick={() => handleTradeTypeChange('sell')}
+                >
+                  SELL
+                </Button>
+              </Box>
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
+                    <StyledSelect fullWidth defaultValue="BTC/USDT" variant="outlined">
+                        <MenuItem value="BTC/USDT">BTC/USDT</MenuItem>
+                    </StyledSelect>
                 </Grid>
+                <Grid item xs={6}>
+                    <StyledSelect fullWidth defaultValue="limit" variant="outlined">
+                        <MenuItem value="limit">Limit Order</MenuItem>
+                    </StyledSelect>
+                </Grid>
+                <Grid item xs={12}>
+                    <StyledTextField fullWidth label="Price" defaultValue="63500" variant="standard" />
+                </Grid>
+                <Grid item xs={12}>
+                    <StyledTextField fullWidth label="Amount" variant="standard" />
+                </Grid>
+                <Grid item xs={12}>
+                    <Typography gutterBottom color="text.secondary">Use available balance</Typography>
+                    <Slider defaultValue={50} aria-label="Default" valueLabelDisplay="auto" />
+                </Grid>
+                <Grid item xs={12}>
+                    <StyledTextField fullWidth label="Total" variant="standard" />
+                </Grid>
+                <Grid item xs={12}>
+                    <Button 
+                      fullWidth 
+                      variant="contained" 
+                      color={tradeType === 'buy' ? "success" : "error"}
+                      sx={{ py: 1.5 }}
+                    >
+                      {tradeType === 'buy' ? 'Buy BTC' : 'Sell BTC'}
+                    </Button>
+                </Grid>
+              </Grid>
             </GlassmorphicPaper>
+          </Grid>
+          <Grid item xs={12} md={3}>
+            <RecentTrades trades={trades} />
+          </Grid>
         </Grid>
-        <Grid item xs={12} md={3}>
-           <RecentTrades trades={trades} />
-        </Grid>
-      </Grid>
-    </Box>
-  );
+      </Box>
+    );
 }
 
 export default Trade; 
