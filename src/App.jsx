@@ -145,7 +145,7 @@ function AppContent() {
               aria-label="open drawer"
               edge="start"
               onClick={handleDrawerToggle}
-              sx={{ mr: 2, color: 'text.primary' }}
+              sx={{ mr: 2, color: 'text.primary', '&:focus': { outline: 'none' } }}
             >
               <MenuIcon />
             </IconButton>
