@@ -1,7 +1,12 @@
-import { useState } from 'react';
-import { Box, Grid, Typography, Paper, useTheme } from '@mui/material';
-import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from 'recharts';
-import { styled } from '@mui/system';
+import { useState, useMemo } from 'react';
+import { Box, Grid, Typography, Paper, useTheme, Table, TableBody, TableCell, TableHead, TableRow, Chip } from '@mui/material';
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend, LineChart, Line } from 'recharts';
+import { styled, alpha } from '@mui/system';
+
+import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import ShowChartOutlinedIcon from '@mui/icons-material/ShowChartOutlined';
+import BarChartOutlinedIcon from '@mui/icons-material/BarChartOutlined';
 
 // Import icons from the new library
 import BtcIcon from 'cryptocurrency-icons/svg/color/btc.svg?react';
@@ -12,39 +17,35 @@ import BnbIcon from 'cryptocurrency-icons/svg/color/bnb.svg?react';
 import AdaIcon from 'cryptocurrency-icons/svg/color/ada.svg?react';
 
 const GlassmorphicPaper = styled(Paper)(({ theme }) => ({
-  padding: '24px',
-  borderRadius: '16px',
-  transition: 'box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out, background-color 0.3s ease',
-  display: 'flex',
-  flexDirection: 'column',
+    padding: '24px',
+    borderRadius: '16px',
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    transition: 'background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease',
 
-  ...(theme.palette.mode === 'dark'
-    ? {
-        backgroundColor: 'rgba(22, 27, 34, 0.7)',
-        backdropFilter: 'blur(12px)',
-        border: '1px solid rgba(255, 255, 255, 0.1)',
-        boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
-      }
-    : {
-        backgroundColor: theme.palette.background.paper,
-        border: `1px solid ${theme.palette.divider}`,
-        boxShadow: theme.shadows[5],
-      }),
-
-  color: theme.palette.text.primary,
-
-  '&:hover': {
-    ...(theme.palette.mode === 'dark' 
-      ? { 
-          backgroundColor: 'rgba(22, 27, 34, 0.9)',
-          boxShadow: '0 0 40px 0 rgba(0, 0, 0, 0.5)',
+    ...(theme.palette.mode === 'dark'
+      ? {
+          backgroundColor: 'rgba(22, 27, 34, 0.85)',
+          backdropFilter: 'blur(16px)',
+          border: '1px solid rgba(255, 255, 255, 0.08)',
+          boxShadow: '0 10px 40px 0 rgba(0, 0, 0, 0.45)',
         }
       : {
-          boxShadow: theme.shadows[7],
-          transform: 'translateY(-5px)',
-        }
-    ),
-  },
+          backgroundColor: theme.palette.background.paper,
+          border: `1px solid ${theme.palette.divider}`,
+          boxShadow: theme.shadows[8],
+        }),
+  
+    color: theme.palette.text.primary,
+
+    '&:hover': {
+        transform: 'translateY(-4px)',
+        ...(theme.palette.mode === 'dark' && {
+            backgroundColor: 'rgba(22, 27, 34, 0.95)',
+            boxShadow: '0 12px 48px 0 rgba(0, 0, 0, 0.55)',
+        }),
+    },
 }));
 
 const CustomTooltip = ({ active, payload, label, theme }) => {
@@ -55,27 +56,27 @@ const CustomTooltip = ({ active, payload, label, theme }) => {
                 borderRadius: '12px',
                 ...(theme.palette.mode === 'dark'
                     ? {
-                        backgroundColor: 'rgba(33, 43, 54, 0.85)',
-                        backdropFilter: 'blur(8px)',
-                        border: '1px solid rgba(255, 255, 255, 0.1)',
-                        boxShadow: '0 8px 16px rgba(0,0,0,0.3)',
+                        backgroundColor: 'rgba(33, 43, 54, 0.9)',
+                        backdropFilter: 'blur(10px)',
+                        border: '1px solid rgba(255, 255, 255, 0.12)',
+                        boxShadow: '0 8px 16px rgba(0,0,0,0.4)',
                     } : {
-                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                        backdropFilter: 'blur(8px)',
+                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                        backdropFilter: 'blur(10px)',
                         border: `1px solid ${theme.palette.divider}`,
-                        boxShadow: theme.shadows[3],
+                        boxShadow: theme.shadows[4],
                     }
                 )
             }}>
-                <Typography variant="subtitle2" sx={{ mb: 1, color: theme.palette.text.secondary }}>{label}</Typography>
+                <Typography variant="subtitle2" sx={{ mb: 1, color: theme.palette.text.secondary }}>{`Time: ${label}`}</Typography>
                 {payload.map((pld) => (
                     <Box key={pld.dataKey} sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
-                        <Box sx={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: pld.stroke, mr: 1 }} />
-                        <Typography variant="body2" sx={{ color: theme.palette.text.primary, fontWeight: 500, minWidth: 40 }}>
+                        <Box sx={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: pld.stroke, mr: 1.5 }} />
+                        <Typography variant="body2" sx={{ color: theme.palette.text.primary, fontWeight: 600, minWidth: 40 }}>
                             {`${pld.dataKey}: `}
                         </Typography>
-                        <Typography variant="body2" sx={{ color: theme.palette.text.secondary, ml: 0.5 }}>
-                            {pld.value.toLocaleString()}
+                        <Typography variant="body2" sx={{ color: theme.palette.text.primary, fontFamily: 'monospace', ml: 0.5 }}>
+                            {`$${pld.value.toLocaleString()}`}
                         </Typography>
                     </Box>
                 ))}
@@ -85,58 +86,103 @@ const CustomTooltip = ({ active, payload, label, theme }) => {
     return null;
 };
 
-const data = [
-  { name: '00:00', BTC: 62000, ETH: 3100, SOL: 150 },
-  { name: '04:00', BTC: 63500, ETH: 3200, SOL: 155 },
-  { name: '08:00', BTC: 61000, ETH: 3150, SOL: 148 },
-  { name: '12:00', BTC: 64000, ETH: 3250, SOL: 160 },
-  { name: '16:00', BTC: 65000, ETH: 3300, SOL: 165 },
-  { name: '20:00', BTC: 64500, ETH: 3280, SOL: 162 },
-  { name: '24:00', BTC: 66000, ETH: 3350, SOL: 170 },
-];
-
-const hotCoins = [
-  { name: 'Bitcoin', symbol: 'BTC', price: '$63,500', change: '+2.5%', icon: BtcIcon },
-  { name: 'Ethereum', symbol: 'ETH', price: '$4,350', change: '+3.2%', icon: EthIcon },
-  { name: 'Solana', symbol: 'SOL', price: '$118', change: '+5.1%', icon: SolIcon },
-  { name: 'BNB', symbol: 'BNB', price: '$520', change: '-1.2%', icon: BnbIcon },
-  { name: 'Cardano', symbol: 'ADA', price: '$1.2', change: '-0.5%', icon: AdaIcon },
-  { name: 'Tether', symbol: 'USDT', price: '$1.00', change: '+0.0%', icon: UsdtIcon },
-];
-
-const StatCard = ({ title, value }) => (
-    <GlassmorphicPaper sx={{ textAlign: 'center' }}>
-      <Typography variant="body2" color="text.secondary">{title}</Typography>
-      <Typography variant="h5" sx={{ fontWeight: 'bold' }}>{value}</Typography>
-    </GlassmorphicPaper>
-  );
-
-const HotCoinCard = ({ name, symbol, price, change, icon: Icon }) => {
-  const theme = useTheme();
-  const isPositive = change.startsWith('+');
-
-  return (
-    <GlassmorphicPaper sx={{ p: 2, display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between' }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-        <Icon style={{ width: 40, height: 40, marginRight: 12 }} />
-        <Box>
-          <Typography variant="h6" sx={{ fontWeight: 'bold' }}>{name}</Typography>
-          <Typography variant="body2" color="text.secondary">{symbol}</Typography>
-        </Box>
-      </Box>
-      <Box sx={{ pl: '52px' }}>
-        <Typography variant="h5" sx={{ my: 0.5, fontWeight: 'bold' }}>{price}</Typography>
-        <Typography sx={{ color: isPositive ? 'success.main' : 'error.main', fontWeight: 500 }}>
-          {change}
-        </Typography>
-      </Box>
-    </GlassmorphicPaper>
-  );
+const chartData = {
+  BTC: [
+    { name: '00:00', value: 62000 }, { name: '02:00', value: 62500 }, { name: '04:00', value: 63500 }, { name: '06:00', value: 63200 },
+    { name: '08:00', value: 61000 }, { name: '10:00', value: 61500 }, { name: '12:00', value: 64000 }, { name: '14:00', value: 64200 },
+    { name: '16:00', value: 65000 }, { name: '18:00', value: 64800 }, { name: '20:00', value: 64500 }, { name: '22:00', value: 65800 },
+    { name: '24:00', value: 66000 },
+  ],
+  ETH: [
+    { name: '00:00', value: 3100 }, { name: '02:00', value: 3120 }, { name: '04:00', value: 3200 }, { name: '06:00', value: 3180 },
+    { name: '08:00', value: 3150 }, { name: '10:00', value: 3170 }, { name: '12:00', value: 3250 }, { name: '14:00', value: 3260 },
+    { name: '16:00', value: 3300 }, { name: '18:00', value: 3290 }, { name: '20:00', value: 3280 }, { name: '22:00', value: 3340 },
+    { name: '24:00', value: 3350 },
+  ],
+  SOL: [
+    { name: '00:00', value: 150 }, { name: '02:00', value: 152 }, { name: '04:00', value: 155 }, { name: '06:00', value: 154 },
+    { name: '08:00', value: 148 }, { name: '10:00', value: 151 }, { name: '12:00', value: 160 }, { name: '14:00', value: 162 },
+    { name: '16:00', value: 165 }, { name: '18:00', value: 163 }, { name: '20:00', value: 162 }, { name: '22:00', value: 168 },
+    { name: '24:00', value: 170 },
+  ]
 };
+
+const chartMeta = {
+  BTC: { stroke: '#f7931a', id: 'colorBtc' },
+  ETH: { stroke: '#627eea', id: 'colorEth' },
+  SOL: { stroke: '#14f195', id: 'colorSol' },
+}
+
+const marketData = [
+  { name: 'Bitcoin', symbol: 'BTC', price: '$63,500', change: '+2.5%', icon: BtcIcon, sparkline: chartData.BTC.map(d => d.value) },
+  { name: 'Ethereum', symbol: 'ETH', price: '$3,250', change: '+3.2%', icon: EthIcon, sparkline: chartData.ETH.map(d => d.value) },
+  { name: 'Solana', symbol: 'SOL', price: '$162', change: '+5.1%', icon: SolIcon, sparkline: chartData.SOL.map(d => d.value) },
+  { name: 'BNB', symbol: 'BNB', price: '$580', change: '-1.2%', icon: BnbIcon, sparkline: [590, 585, 583, 588, 580] },
+  { name: 'Cardano', symbol: 'ADA', price: '$0.45', change: '-0.5%', icon: AdaIcon, sparkline: [0.46, 0.455, 0.452, 0.458, 0.45] },
+  { name: 'Tether', symbol: 'USDT', price: '$1.00', change: '+0.0%', icon: UsdtIcon, sparkline: [1.00, 1.00, 1.00, 1.00, 1.00] },
+];
+
+const StatCard = ({ title, value, icon, color }) => (
+    <GlassmorphicPaper sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', p: 3 }}>
+      <Box sx={{
+        width: 52, height: 52, borderRadius: '50%',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        backgroundColor: alpha(color, 0.15),
+        mr: 2,
+      }}>
+        {icon}
+      </Box>
+      <Box>
+        <Typography variant="body1" color="text.secondary">{title}</Typography>
+        <Typography variant="h5" sx={{ fontWeight: 'bold' }}>{value}</Typography>
+      </Box>
+    </GlassmorphicPaper>
+);
+  
+const SparkLine = ({ data, strokeColor }) => (
+  <ResponsiveContainer width="100%" height={60}>
+    <LineChart data={data.map(v => ({ value: v }))}>
+      <defs>
+        <linearGradient id={`spark-${strokeColor}`} x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor={alpha(strokeColor, 0.1)} />
+          <stop offset="40%" stopColor={alpha(strokeColor, 0.8)} />
+          <stop offset="100%" stopColor={strokeColor} />
+        </linearGradient>
+      </defs>
+      <Tooltip content={() => null} />
+      <Line type="monotone" dataKey="value" stroke={`url(#spark-${strokeColor})`} strokeWidth={2.5} dot={false} />
+    </LineChart>
+  </ResponsiveContainer>
+);
 
 function Dashboard() {
   const theme = useTheme();
-  const [chartData, setChartData] = useState([]);
+  const [selectedCoin, setSelectedCoin] = useState('BTC');
+
+  const stats = [
+    { title: "Portfolio Value", value: "$12,450.80", icon: <AccountBalanceWalletOutlinedIcon sx={{ color: theme.palette.primary.main }} />, color: theme.palette.primary.main },
+    { title: "24h Change", value: "+$320.50", icon: <TrendingUpIcon sx={{ color: theme.palette.success.main }} />, color: theme.palette.success.main },
+    { title: "Total P&L", value: "$1,890.20", icon: <ShowChartOutlinedIcon sx={{ color: theme.palette.info.main }} />, color: theme.palette.info.main },
+    { title: "Open Positions", value: "3", icon: <BarChartOutlinedIcon sx={{ color: theme.palette.warning.main }} />, color: theme.palette.warning.main },
+  ];
+
+  const MemoizedAreaChart = useMemo(() => (
+    <ResponsiveContainer width="100%" height="100%">
+      <AreaChart data={chartData[selectedCoin]} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+        <defs>
+            <linearGradient id={chartMeta[selectedCoin].id} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor={chartMeta[selectedCoin].stroke} stopOpacity={0.7}/>
+                <stop offset="95%" stopColor={chartMeta[selectedCoin].stroke} stopOpacity={0}/>
+            </linearGradient>
+        </defs>
+        <CartesianGrid strokeDasharray="3 3" stroke={theme.palette.divider} vertical={false} />
+        <XAxis dataKey="name" stroke={theme.palette.text.secondary} tick={{ fontSize: 12 }} />
+        <YAxis stroke={theme.palette.text.secondary} tick={{ fontSize: 12 }} tickFormatter={(value) => `$${(value/1000)}k`} />
+        <Tooltip content={<CustomTooltip theme={theme} />} />
+        <Area type="monotone" dataKey="value" stroke={chartMeta[selectedCoin].stroke} strokeWidth={2} fillOpacity={1} fill={`url(#${chartMeta[selectedCoin].id})`} />
+      </AreaChart>
+    </ResponsiveContainer>
+  ), [selectedCoin, theme]);
 
   return (
     <Box>
@@ -144,56 +190,84 @@ function Dashboard() {
         Dashboard
       </Typography>
 
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>Hot Coins</Typography>
-        <Grid container spacing={2}>
-          {hotCoins.map(coin => (
-            <Grid item xs={12} sm={6} md={4} lg={2} key={coin.symbol}>
-              <HotCoinCard {...coin} />
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
-
+      <Grid container spacing={3} sx={{ mb: 4 }}>
+        {stats.map(stat => (
+          <Grid item xs={12} sm={6} md={3} key={stat.title}>
+            <StatCard {...stat} />
+          </Grid>
+        ))}
+      </Grid>
+      
       <Grid container spacing={3}>
-        <Grid item xs={12} lg={9}>
-          <GlassmorphicPaper sx={{ height: 400 }}>
-            <Typography variant="h6" sx={{ mb: 2 }}>Price Trends</Typography>
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={data} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
-                <defs>
-                    <linearGradient id="colorBtc" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#f7931a" stopOpacity={0.8}/>
-                        <stop offset="95%" stopColor="#f7931a" stopOpacity={0}/>
-                    </linearGradient>
-                    <linearGradient id="colorEth" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8}/>
-                        <stop offset="95%" stopColor="#8884d8" stopOpacity={0}/>
-                    </linearGradient>
-                    <linearGradient id="colorSol" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#14f195" stopOpacity={0.8}/>
-                        <stop offset="95%" stopColor="#9945FF" stopOpacity={0}/>
-                    </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke={theme.palette.divider} />
-                <XAxis dataKey="name" stroke={theme.palette.text.secondary} />
-                <YAxis stroke={theme.palette.text.secondary} />
-                <Tooltip content={<CustomTooltip theme={theme} />} />
-                <Legend />
-                <Area type="monotone" dataKey="BTC" stroke="#f7931a" fillOpacity={1} fill="url(#colorBtc)" />
-                <Area type="monotone" dataKey="ETH" stroke="#8884d8" fillOpacity={1} fill="url(#colorEth)" />
-                <Area type="monotone" dataKey="SOL" stroke="#14f195" fillOpacity={1} fill="url(#colorSol)" />
-              </AreaChart>
-            </ResponsiveContainer>
+        <Grid item xs={12}>
+          <GlassmorphicPaper sx={{ height: 450, p: 3 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+              <Typography variant="h6" sx={{ fontWeight: 600 }}>Price Trends</Typography>
+              <Box>
+                {Object.keys(chartData).map(coin => (
+                  <Chip
+                    key={coin}
+                    label={coin}
+                    clickable
+                    onClick={() => setSelectedCoin(coin)}
+                    sx={{
+                      ml: 1,
+                      transition: 'all 0.3s',
+                      backgroundColor: selectedCoin === coin ? chartMeta[coin].stroke : (theme.palette.mode === 'dark' ? alpha(theme.palette.background.default, 0.6) : alpha(theme.palette.grey[400], 0.3)),
+                      color: selectedCoin === coin ? '#fff' : theme.palette.text.secondary,
+                      fontWeight: 600,
+                      '&:hover': {
+                        backgroundColor: selectedCoin !== coin && (theme.palette.mode === 'dark' ? alpha(theme.palette.background.default, 0.9) : alpha(theme.palette.grey[400], 0.5)),
+                      }
+                    }}
+                  />
+                ))}
+              </Box>
+            </Box>
+            {MemoizedAreaChart}
           </GlassmorphicPaper>
         </Grid>
-        <Grid item xs={12} lg={3}>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-            <StatCard title="Portfolio Value" value="$12,450.80" />
-            <StatCard title="24h Change" value="+$320.50 (+2.6%)" />
-            <StatCard title="Total P&L" value="+$1,890.20" />
-            <StatCard title="Open Positions" value="3" />
-          </Box>
+        
+        <Grid item xs={12}>
+          <GlassmorphicPaper>
+            <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>Market Overview</Typography>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Asset</TableCell>
+                  <TableCell align="right">Price</TableCell>
+                  <TableCell align="right">24h Change</TableCell>
+                  <TableCell align="right" sx={{ width: '150px' }}>24h Chart</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {marketData.map((coin) => (
+                  <TableRow key={coin.symbol} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                    <TableCell component="th" scope="row">
+                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        <coin.icon style={{ width: 32, height: 32, marginRight: 16 }} />
+                        <Box>
+                          <Typography variant="body1" sx={{ fontWeight: 600 }}>{coin.name}</Typography>
+                          <Typography variant="body2" color="text.secondary">{coin.symbol}</Typography>
+                        </Box>
+                      </Box>
+                    </TableCell>
+                    <TableCell align="right">
+                      <Typography variant="body1" sx={{ fontFamily: 'monospace', fontWeight: 500 }}>{coin.price}</Typography>
+                    </TableCell>
+                    <TableCell align="right">
+                      <Typography variant="body1" sx={{ color: coin.change.startsWith('+') ? 'success.main' : 'error.main', fontWeight: 500 }}>
+                        {coin.change}
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="right">
+                      <SparkLine data={coin.sparkline} strokeColor={coin.change.startsWith('+') ? theme.palette.success.main : theme.palette.error.main} />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </GlassmorphicPaper>
         </Grid>
       </Grid>
     </Box>
