@@ -278,7 +278,7 @@ const RecentTrades = ({ trades }) => {
         <Box sx={{ display: 'flex', gap: 1 }}>
           <Chip 
             label="All" 
-            size="small"
+            size="small" 
             clickable
             onClick={() => handleFilterChange('All')}
             sx={{ 
@@ -329,8 +329,8 @@ const RecentTrades = ({ trades }) => {
 
       <Box sx={{ overflowY: 'auto', flexGrow: 1 }}>
         {filteredTrades.slice(0, 15).map((trade, index) => (
-          <Box 
-            key={index} 
+          <Box
+            key={index}
             sx={{ 
               position: 'relative',
               cursor: 'pointer',
@@ -440,7 +440,7 @@ function Trade() {
           mb: 3,
           position: 'relative',
           zIndex: 1100,
-          pr: '60px'
+          pr: { md: '60px' }
         }}>
           <Typography variant="h4" sx={{ fontWeight: 700 }}>
             Trade

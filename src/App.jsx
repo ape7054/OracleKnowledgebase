@@ -156,7 +156,7 @@ function AppContent() {
             }}>
               Trading Panel
             </Typography>
-            <IconButton sx={{ color: 'text.primary' }} onClick={toggleTheme}>
+            <IconButton sx={{ color: 'text.primary', '&:focus': { outline: 'none' } }} onClick={toggleTheme}>
               {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
             </IconButton>
           </Toolbar>
@@ -239,7 +239,10 @@ function AppContent() {
                 backgroundColor: theme.palette.mode === 'dark' 
                   ? 'rgba(255, 255, 255, 0.08)' 
                   : 'rgba(0, 0, 0, 0.04)',
-              }
+              },
+              '&:focus': {
+                outline: 'none',
+              },
             }} 
             onClick={toggleTheme}
           >
