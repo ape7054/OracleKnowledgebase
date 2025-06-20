@@ -438,9 +438,9 @@ function Trade() {
           alignItems: 'center', 
           justifyContent: 'space-between', 
           mb: 3,
-          position: 'relative',
-          zIndex: 1100,
-          pr: { xs: 0, sm: 0, md: '60px' }
+          position: { md: 'relative' },
+          zIndex: { md: 1100 },
+          pr: { md: '60px' }
         }}>
           <Typography variant="h4" sx={{ fontWeight: 700 }}>
             Trade
