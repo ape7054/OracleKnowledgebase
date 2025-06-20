@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Box, Typography, Paper, Grid, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Avatar, List, ListItem, ListItemText, ListItemSecondaryAction, Switch } from '@mui/material';
 import { styled, useTheme } from '@mui/system';
 import { ArrowUpward, ArrowDownward, Wallet, History, Settings as SettingsIcon } from '@mui/icons-material';
+import { BitcoinIcon, EthereumIcon, SolanaIcon, TetherIcon, BinanceCoinIcon } from '../components/CryptoIcons';
 
 const GlassmorphicPaper = styled(Paper)(({ theme }) => ({
     padding: '24px',
@@ -110,11 +111,11 @@ const TabPanel = (props) => {
 };
 
 const assets = [
-    { name: 'Bitcoin', symbol: 'BTC', balance: 0.85, value: 53975, icon: 'B' },
-    { name: 'Ethereum', symbol: 'ETH', balance: 12.5, value: 54375, icon: 'Ξ' },
-    { name: 'Solana', symbol: 'SOL', balance: 145.8, value: 17205.24, icon: 'S' },
-    { name: 'Tether', symbol: 'USDT', balance: 10500, value: 10500, icon: '$' },
-    { name: 'Binance Coin', symbol: 'BNB', balance: 25.4, value: 13208, icon: 'B' },
+    { name: 'Bitcoin', symbol: 'BTC', balance: 0.85, value: 53975, icon: <BitcoinIcon />, color: '#F7931A' },
+    { name: 'Ethereum', symbol: 'ETH', balance: 12.5, value: 54375, icon: <EthereumIcon />, color: '#627EEA' },
+    { name: 'Solana', symbol: 'SOL', balance: 145.8, value: 17205.24, icon: <SolanaIcon />, color: '#9945FF' },
+    { name: 'Tether', symbol: 'USDT', balance: 10500, value: 10500, icon: <TetherIcon />, color: '#26A17B' },
+    { name: 'Binance Coin', symbol: 'BNB', balance: 25.4, value: 13208, icon: <BinanceCoinIcon />, color: '#F3BA2F' },
 ];
 
 // Mock transaction history data
@@ -199,7 +200,9 @@ function Account() {
                                         <TableRow key={asset.symbol} sx={{ '& td, & th': { border: 0 }}}>
                                             <TableCell>
                                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                    <Avatar sx={{ bgcolor: 'primary.main', mr: 2 }}>{asset.icon}</Avatar>
+                                                    <Box sx={{ width: 32, height: 32, mr: 2 }}>
+                                                        {asset.icon}
+                                                    </Box>
                                                     <Box>
                                                         <Typography>{asset.name}</Typography>
                                                         <Typography variant="body2" color="text.secondary">{asset.symbol}</Typography>
