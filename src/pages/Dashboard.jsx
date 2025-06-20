@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Box, Grid, Typography, Paper, useTheme, Table, TableBody, TableCell, TableHead, TableRow, Chip } from '@mui/material';
+import { Box, Grid, Typography, Paper, useTheme, Table, TableBody, TableCell, TableHead, TableRow, Chip, useMediaQuery } from '@mui/material';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend, LineChart, Line } from 'recharts';
 import { styled, alpha } from '@mui/system';
 
@@ -158,6 +158,7 @@ const SparkLine = ({ data, strokeColor }) => (
 function Dashboard() {
   const theme = useTheme();
   const [selectedCoin, setSelectedCoin] = useState('BTC');
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const stats = [
     { title: "Portfolio Value", value: "$12,450.80", icon: <AccountBalanceWalletOutlinedIcon sx={{ color: theme.palette.primary.main }} />, color: theme.palette.primary.main },
@@ -183,6 +184,97 @@ function Dashboard() {
       </AreaChart>
     </ResponsiveContainer>
   ), [selectedCoin, theme]);
+
+  // Mobile card view for market data
+  const MarketCardView = () => (
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+      {marketData.map((coin) => (
+        <GlassmorphicPaper key={coin.symbol} sx={{ p: 2, mb: 1 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <coin.icon style={{ width: 32, height: 32, marginRight: 12 }} />
+              <Box>
+                <Typography variant="body1" sx={{ fontWeight: 600 }}>{coin.name}</Typography>
+                <Typography variant="body2" color="text.secondary">{coin.symbol}</Typography>
+              </Box>
+            </Box>
+            <Typography variant="body1" sx={{ 
+              fontFamily: 'monospace', 
+              fontWeight: 500,
+              color: coin.change.startsWith('+') ? 'success.main' : 
+                    coin.change === '+0.0%' ? 'text.secondary' : 'error.main'
+            }}>
+              {coin.price}
+            </Typography>
+          </Box>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Typography variant="body2" sx={{ 
+              color: coin.change.startsWith('+') ? 'success.main' : 
+                    coin.change === '+0.0%' ? 'text.secondary' : 'error.main',
+              fontWeight: 500 
+            }}>
+              {coin.change}
+            </Typography>
+            <Box sx={{ width: '60%', height: 40 }}>
+              <SparkLine 
+                data={coin.sparkline} 
+                strokeColor={coin.change.startsWith('+') ? theme.palette.success.main : 
+                             coin.change === '+0.0%' ? theme.palette.grey[500] : theme.palette.error.main} 
+              />
+            </Box>
+          </Box>
+        </GlassmorphicPaper>
+      ))}
+    </Box>
+  );
+
+  // Desktop table view for market data
+  const MarketTableView = () => (
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell>Asset</TableCell>
+          <TableCell align="right">Price</TableCell>
+          <TableCell align="right">24h Change</TableCell>
+          <TableCell align="right" sx={{ width: '150px' }}>24h Chart</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {marketData.map((coin) => (
+          <TableRow key={coin.symbol} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+            <TableCell component="th" scope="row">
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <coin.icon style={{ width: 32, height: 32, marginRight: 16 }} />
+                <Box>
+                  <Typography variant="body1" sx={{ fontWeight: 600 }}>{coin.name}</Typography>
+                  <Typography variant="body2" color="text.secondary">{coin.symbol}</Typography>
+                </Box>
+              </Box>
+            </TableCell>
+            <TableCell align="right">
+              <Typography variant="body1" sx={{ fontFamily: 'monospace', fontWeight: 500 }}>{coin.price}</Typography>
+            </TableCell>
+            <TableCell align="right">
+              <Typography variant="body1" sx={{ 
+                color: coin.change.startsWith('+') ? 'success.main' : 
+                      coin.change === '+0.0%' ? 'text.secondary' : 'error.main',
+                fontWeight: 500 
+              }}>
+                {coin.change}
+              </Typography>
+            </TableCell>
+            <TableCell align="right">
+              <SparkLine 
+                data={coin.sparkline} 
+                strokeColor={coin.change.startsWith('+') ? theme.palette.success.main : 
+                             coin.change === '+0.0%' ? theme.palette.grey[500] : theme.palette.error.main} 
+              />
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
 
   return (
     <Box>
@@ -229,44 +321,22 @@ function Dashboard() {
         </Grid>
         
         <Grid item xs={12}>
-          <GlassmorphicPaper>
+          <GlassmorphicPaper sx={{ overflow: 'hidden' }}>
             <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>Market Overview</Typography>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Asset</TableCell>
-                  <TableCell align="right">Price</TableCell>
-                  <TableCell align="right">24h Change</TableCell>
-                  <TableCell align="right" sx={{ width: '150px' }}>24h Chart</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {marketData.map((coin) => (
-                  <TableRow key={coin.symbol} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                    <TableCell component="th" scope="row">
-                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <coin.icon style={{ width: 32, height: 32, marginRight: 16 }} />
-                        <Box>
-                          <Typography variant="body1" sx={{ fontWeight: 600 }}>{coin.name}</Typography>
-                          <Typography variant="body2" color="text.secondary">{coin.symbol}</Typography>
-                        </Box>
-                      </Box>
-                    </TableCell>
-                    <TableCell align="right">
-                      <Typography variant="body1" sx={{ fontFamily: 'monospace', fontWeight: 500 }}>{coin.price}</Typography>
-                    </TableCell>
-                    <TableCell align="right">
-                      <Typography variant="body1" sx={{ color: coin.change.startsWith('+') ? 'success.main' : 'error.main', fontWeight: 500 }}>
-                        {coin.change}
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="right">
-                      <SparkLine data={coin.sparkline} strokeColor={coin.change.startsWith('+') ? theme.palette.success.main : theme.palette.error.main} />
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+            
+            {/* 确保在移动设备上使用卡片视图 */}
+            <Box sx={{ 
+              display: { xs: 'block', md: 'none' } 
+            }}>
+              <MarketCardView />
+            </Box>
+            
+            {/* 确保只在桌面设备上使用表格视图 */}
+            <Box sx={{ 
+              display: { xs: 'none', md: 'block' } 
+            }}>
+              <MarketTableView />
+            </Box>
           </GlassmorphicPaper>
         </Grid>
       </Grid>
