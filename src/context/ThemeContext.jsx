@@ -21,20 +21,31 @@ const lightTheme = createTheme({
       contrastText: '#FFFFFF',
     },
     background: {
-      default: '#f4f6f8',
-      paper: '#ffffff',
+      default: '#F9FAFB',
+      paper: '#FFFFFF',
     },
     text: {
       primary: '#212B36',
       secondary: '#637381',
     },
-    divider: 'rgba(145, 158, 171, 0.24)',
+    divider: 'rgba(145, 158, 171, 0.2)',
   },
   shadows: [
     'none',
-    '0px 2px 4px rgba(145, 158, 171, 0.16)',
-    // 其他阴影级别保持默认
+    '0px 1px 2px 0px rgba(145, 158, 171, 0.08)',
+    '0px 2px 4px -1px rgba(145, 158, 171, 0.08)',
+    '0px 4px 6px -2px rgba(145, 158, 171, 0.08)',
+    '0px 8px 12px -4px rgba(145, 158, 171, 0.08)',
+    '0px 12px 16px -4px rgba(145, 158, 171, 0.12)',
+    '0px 16px 24px -6px rgba(145, 158, 171, 0.12)',
+    '0px 20px 28px -6px rgba(145, 158, 171, 0.12)',
   ],
+  typography: {
+    fontFamily: "'Inter', 'Roboto', 'Helvetica Neue', sans-serif",
+    fontWeightRegular: 400,
+    fontWeightMedium: 600,
+    fontWeightBold: 700,
+  },
 });
 
 // 暗色主题
@@ -76,7 +87,7 @@ const darkTheme = createTheme({
 });
 
 export const CustomThemeProvider = ({ children }) => {
-  const [mode, setMode] = useState('dark');
+  const [mode, setMode] = useState('light');
 
   const toggleTheme = () => {
     setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));

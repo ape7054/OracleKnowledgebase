@@ -3,17 +3,34 @@ import { Box, Grid, Typography, TextField, Select, MenuItem, Button, Slider, Pap
 import { styled, useTheme } from '@mui/system';
 
 const GlassmorphicPaper = styled(Paper)(({ theme }) => ({
-    padding: '20px',
-    backgroundColor: theme.palette.mode === 'dark' 
-      ? 'rgba(33, 43, 54, 0.7)' 
-      : 'rgba(255, 255, 255, 0.7)',
-    backdropFilter: 'blur(10px)',
-    borderRadius: '15px',
-    border: `1px solid ${theme.palette.divider}`,
-    color: theme.palette.text.primary,
+    padding: '24px',
+    borderRadius: '16px',
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
+    transition: 'background-color 0.3s ease, box-shadow 0.3s ease',
+
+    ...(theme.palette.mode === 'dark'
+      ? {
+          backgroundColor: 'rgba(22, 27, 34, 0.7)',
+          backdropFilter: 'blur(12px)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+        }
+      : {
+          backgroundColor: theme.palette.background.paper,
+          border: `1px solid ${theme.palette.divider}`,
+          boxShadow: theme.shadows[5],
+        }),
+  
+    color: theme.palette.text.primary,
+
+    '&:hover': {
+        ...(theme.palette.mode === 'dark' && {
+            backgroundColor: 'rgba(22, 27, 34, 0.9)',
+            boxShadow: '0 0 40px 0 rgba(0, 0, 0, 0.5)',
+        }),
+    },
 }));
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
@@ -42,6 +59,21 @@ const StyledSelect = styled(Select)(({ theme }) => ({
     '& .MuiSvgIcon-root': {
         color: theme.palette.text.primary,
     },
+}));
+
+const StyledSlider = styled(Slider)(({ theme, tradeType }) => ({
+  color: tradeType === 'sell' ? theme.palette.error.main : theme.palette.success.main,
+  '& .MuiSlider-thumb': {
+    backgroundColor: tradeType === 'sell' ? theme.palette.error.main : theme.palette.success.main,
+  },
+  '& .MuiSlider-track': {
+    backgroundColor: tradeType === 'sell' ? theme.palette.error.main : theme.palette.success.main,
+  },
+  '& .MuiSlider-rail': {
+    backgroundColor: tradeType === 'sell' 
+      ? theme.palette.mode === 'dark' ? 'rgba(255, 99, 71, 0.3)' : 'rgba(255, 99, 71, 0.2)'
+      : theme.palette.mode === 'dark' ? 'rgba(76, 175, 80, 0.3)' : 'rgba(76, 175, 80, 0.2)',
+  }
 }));
 
 const OrderBook = ({ asks, bids }) => {
@@ -128,6 +160,7 @@ function Trade() {
     const [bids, setBids] = useState([]);
     const [trades, setTrades] = useState([]);
     const [tradeType, setTradeType] = useState('buy');
+    const [sliderValue, setSliderValue] = useState(50);
     const theme = useTheme();
 
     useEffect(() => {
@@ -145,6 +178,10 @@ function Trade() {
 
     const handleTradeTypeChange = (type) => {
         setTradeType(type);
+    };
+
+    const handleSliderChange = (event, newValue) => {
+        setSliderValue(newValue);
     };
 
   return (
@@ -203,7 +240,13 @@ function Trade() {
                     </Grid>
                     <Grid item xs={12}>
                     <Typography gutterBottom color="text.secondary">Use available balance</Typography>
-                        <Slider defaultValue={50} aria-label="Default" valueLabelDisplay="auto" />
+                        <StyledSlider 
+                          tradeType={tradeType}
+                          value={sliderValue}
+                          onChange={handleSliderChange}
+                          aria-label="Balance" 
+                          valueLabelDisplay="auto" 
+                        />
                     </Grid>
                     <Grid item xs={12}>
                         <StyledTextField fullWidth label="Total" variant="standard" />

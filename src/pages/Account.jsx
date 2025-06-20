@@ -5,17 +5,34 @@ import { ArrowUpward, ArrowDownward, Wallet, History, Settings as SettingsIcon }
 
 const GlassmorphicPaper = styled(Paper)(({ theme }) => ({
     padding: '24px',
-    backgroundColor: theme.palette.mode === 'dark' 
-      ? 'rgba(33, 43, 54, 0.7)' 
-      : 'rgba(255, 255, 255, 0.7)',
-    backdropFilter: 'blur(10px)',
-    borderRadius: '15px',
-    border: `1px solid ${theme.palette.divider}`,
-    color: theme.palette.text.primary,
+    borderRadius: '16px',
     width: '100%',
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
+    transition: 'background-color 0.3s ease, box-shadow 0.3s ease',
+
+    ...(theme.palette.mode === 'dark'
+      ? {
+          backgroundColor: 'rgba(22, 27, 34, 0.7)',
+          backdropFilter: 'blur(12px)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+        }
+      : {
+          backgroundColor: theme.palette.background.paper,
+          border: `1px solid ${theme.palette.divider}`,
+          boxShadow: theme.shadows[5],
+        }),
+  
+    color: theme.palette.text.primary,
+
+    '&:hover': {
+        ...(theme.palette.mode === 'dark' && {
+            backgroundColor: 'rgba(22, 27, 34, 0.9)',
+            boxShadow: '0 0 40px 0 rgba(0, 0, 0, 0.5)',
+        }),
+    },
 }));
 
 const TabContainer = styled(Box)(({ theme }) => ({

@@ -1,24 +1,80 @@
 import { Box, Grid, Card, Typography, Paper } from '@mui/material';
 import { styled, useTheme } from '@mui/system';
-import { LineChart, Line, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, CartesianGrid } from 'recharts';
 
 const GlassmorphicPaper = styled(Paper)(({ theme }) => ({
-  padding: '20px',
-  backgroundColor: theme.palette.mode === 'dark' 
-    ? 'rgba(33, 43, 54, 0.7)'
-    : 'rgba(255, 255, 255, 0.7)',
-  backdropFilter: 'blur(10px)',
-  borderRadius: '15px',
-  border: `1px solid ${theme.palette.divider}`,
-  color: theme.palette.text.primary,
-  transition: 'all 0.3s ease-in-out',
+  padding: '24px',
+  borderRadius: '16px',
+  transition: 'box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out, background-color 0.3s ease',
   display: 'flex',
   flexDirection: 'column',
+
+  ...(theme.palette.mode === 'dark'
+    ? {
+        backgroundColor: 'rgba(22, 27, 34, 0.7)',
+        backdropFilter: 'blur(12px)',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+      }
+    : {
+        backgroundColor: theme.palette.background.paper,
+        border: `1px solid ${theme.palette.divider}`,
+        boxShadow: theme.shadows[5],
+      }),
+
+  color: theme.palette.text.primary,
+
   '&:hover': {
-    transform: 'translateY(-5px)',
-    boxShadow: theme.shadows[10],
+    ...(theme.palette.mode === 'dark' 
+      ? { 
+          backgroundColor: 'rgba(22, 27, 34, 0.9)',
+          boxShadow: '0 0 40px 0 rgba(0, 0, 0, 0.5)',
+        }
+      : {
+          boxShadow: theme.shadows[7],
+          transform: 'translateY(-5px)',
+        }
+    ),
   },
 }));
+
+const CustomTooltip = ({ active, payload, label, theme }) => {
+    if (active && payload && payload.length) {
+        return (
+            <Paper sx={{
+                padding: '12px',
+                borderRadius: '12px',
+                ...(theme.palette.mode === 'dark'
+                    ? {
+                        backgroundColor: 'rgba(33, 43, 54, 0.85)',
+                        backdropFilter: 'blur(8px)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        boxShadow: '0 8px 16px rgba(0,0,0,0.3)',
+                    } : {
+                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                        backdropFilter: 'blur(8px)',
+                        border: `1px solid ${theme.palette.divider}`,
+                        boxShadow: theme.shadows[3],
+                    }
+                )
+            }}>
+                <Typography variant="subtitle2" sx={{ mb: 1, color: theme.palette.text.secondary }}>{label}</Typography>
+                {payload.map((pld) => (
+                    <Box key={pld.dataKey} sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
+                        <Box sx={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: pld.stroke, mr: 1 }} />
+                        <Typography variant="body2" sx={{ color: theme.palette.text.primary, fontWeight: 500, minWidth: 40 }}>
+                            {`${pld.dataKey}: `}
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: theme.palette.text.secondary, ml: 0.5 }}>
+                            {pld.value.toLocaleString()}
+                        </Typography>
+                    </Box>
+                ))}
+            </Paper>
+        );
+    }
+    return null;
+};
 
 const data = [
   { name: '00:00', BTC: 62000, ETH: 3100, SOL: 150 },
@@ -60,23 +116,33 @@ function Dashboard() {
           <Grid item xs={12} sm={6} md={3}><StatCard title="24h Volume" value="$120B" /></Grid>
         
           <Grid item xs={12}>
-            <GlassmorphicPaper sx={{ height: 300 }}>
-                <Typography variant="h6" gutterBottom>Price Trends</Typography>
-                <ResponsiveContainer width="100%" height="90%">
-                    <LineChart data={data}>
-                        <XAxis dataKey="name" stroke={theme.palette.text.secondary} />
-                        <YAxis stroke={theme.palette.text.secondary} />
-                        <Tooltip 
-                            contentStyle={{ 
-                                backgroundColor: theme.palette.background.paper, 
-                                border: 'none' 
-                            }}
-                        />
+            <GlassmorphicPaper sx={{ height: 350, p: 3 }}>
+                <Typography variant="h6" gutterBottom sx={{ ml: 2 }}>Price Trends</Typography>
+                <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={data} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+                        <defs>
+                            <linearGradient id="colorBtc" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="#f7931a" stopOpacity={0.6}/>
+                                <stop offset="95%" stopColor="#f7931a" stopOpacity={0}/>
+                            </linearGradient>
+                            <linearGradient id="colorEth" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="#8884d8" stopOpacity={0.6}/>
+                                <stop offset="95%" stopColor="#8884d8" stopOpacity={0}/>
+                            </linearGradient>
+                            <linearGradient id="colorSol" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="#00FFA3" stopOpacity={0.6}/>
+                                <stop offset="95%" stopColor="#00FFA3" stopOpacity={0}/>
+                            </linearGradient>
+                        </defs>
+                        <XAxis dataKey="name" stroke={theme.palette.text.secondary} tick={{ fontSize: 12 }} />
+                        <YAxis stroke={theme.palette.text.secondary} tick={{ fontSize: 12 }} />
+                        <CartesianGrid strokeDasharray="3 3" stroke={theme.palette.divider} />
+                        <Tooltip content={<CustomTooltip theme={theme} />} />
                         <Legend wrapperStyle={{ color: theme.palette.text.secondary, paddingTop: '10px' }}/>
-                        <Line type="monotone" dataKey="BTC" stroke="#f7931a" strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 8 }} />
-                        <Line type="monotone" dataKey="ETH" stroke="#8884d8" strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 8 }} />
-                        <Line type="monotone" dataKey="SOL" stroke="#00FFA3" strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 8 }} />
-                    </LineChart>
+                        <Area type="monotone" dataKey="BTC" stroke="#f7931a" strokeWidth={2} fill="url(#colorBtc)" activeDot={{ r: 6 }} />
+                        <Area type="monotone" dataKey="ETH" stroke="#8884d8" strokeWidth={2} fill="url(#colorEth)" activeDot={{ r: 6 }} />
+                        <Area type="monotone" dataKey="SOL" stroke="#00FFA3" strokeWidth={2} fill="url(#colorSol)" activeDot={{ r: 6 }} />
+                    </AreaChart>
                 </ResponsiveContainer>
             </GlassmorphicPaper>
           </Grid>
