@@ -12,5 +12,14 @@ export default defineConfig({
     alias: {
       // 如果有需要的话可以添加路径别名
     }
+  },
+  server: {
+    host: '0.0.0.0'
+  },
+  build: {
+    sourcemap: true,
+  },
+  css: {
+    devSourcemap: true,
   }
 })

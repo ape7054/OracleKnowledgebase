@@ -222,7 +222,7 @@ function AppContent() {
             position: 'absolute',
             top: 16,
             right: 16,
-            zIndex: 1100,
+            zIndex: 1200,
           }}
         >
           <IconButton 
