@@ -253,8 +253,14 @@ function Trade() {
                         flex: 1,
                         py: 1.5,
                         borderRadius: 0,
+                        transition: 'background-color 0.3s',
                         backgroundColor: tradeType === 'buy' ? 'success.main' : 'transparent',
                         color: tradeType === 'buy' ? 'white' : 'text.secondary',
+                        '&:hover': {
+                          backgroundColor: tradeType === 'buy' 
+                            ? 'success.dark' 
+                            : (theme.palette.mode === 'dark' ? 'rgba(46, 125, 50, 0.2)' : 'rgba(46, 125, 50, 0.08)'),
+                        }
                       }}
                       onClick={() => handleTradeTypeChange('buy')}
                     >
@@ -265,8 +271,14 @@ function Trade() {
                         flex: 1,
                         py: 1.5,
                         borderRadius: 0,
+                        transition: 'background-color 0.3s',
                         backgroundColor: tradeType === 'sell' ? 'error.main' : 'transparent',
                         color: tradeType === 'sell' ? 'white' : 'text.secondary',
+                        '&:hover': {
+                          backgroundColor: tradeType === 'sell' 
+                            ? 'error.dark' 
+                            : (theme.palette.mode === 'dark' ? 'rgba(239, 83, 80, 0.2)' : 'rgba(239, 83, 80, 0.08)'),
+                        }
                       }}
                       onClick={() => handleTradeTypeChange('sell')}
                     >
