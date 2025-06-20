@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Box, Typography, Paper, Tabs, Tab, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Avatar, Button, List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, Switch } from '@mui/material';
+import { Box, Typography, Paper, Grid, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Avatar, List, ListItem, ListItemText, ListItemSecondaryAction, Switch } from '@mui/material';
 import { styled, useTheme } from '@mui/system';
 import { ArrowUpward, ArrowDownward, Wallet, History, Settings as SettingsIcon } from '@mui/icons-material';
 
@@ -18,13 +18,26 @@ const GlassmorphicPaper = styled(Paper)(({ theme }) => ({
     flexDirection: 'column',
 }));
 
+const TabButton = styled(Button)(({ theme, active }) => ({
+    borderRadius: 0,
+    padding: '12px 16px',
+    justifyContent: 'flex-start',
+    borderBottom: active ? `2px solid ${theme.palette.primary.main}` : `2px solid transparent`,
+    color: active ? theme.palette.primary.main : theme.palette.text.secondary,
+    '&:hover': {
+        backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    },
+    flex: 1,
+    textAlign: 'center',
+}));
+
 const TabPanel = (props) => {
     const { children, value, index, ...other } = props;
     return (
         <div 
             role="tabpanel" 
             hidden={value !== index} 
-            style={{ display: value === index ? 'block' : 'none' }} 
+            style={{ display: value === index ? 'block' : 'none', width: '100%' }} 
             {...other}
         >
             {value === index && (
@@ -57,34 +70,53 @@ function Account() {
     const [tabValue, setTabValue] = useState(0);
     const theme = useTheme();
 
-    const handleTabChange = (event, newValue) => {
+    const handleTabChange = (newValue) => {
         setTabValue(newValue);
     };
 
     return (
-        <Box>
+        <Box sx={{ width: '100%' }}>
             <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold' }}>
                 Account
             </Typography>
-            <Box sx={{ width: '100%', borderBottom: 1, borderColor: 'divider', mb: 3 }}>
-                <Tabs 
-                    value={tabValue} 
-                    onChange={handleTabChange} 
-                    textColor="primary"
-                    indicatorColor="primary"
-                    variant="fullWidth"
-                    centered
-                    sx={{ width: '100%' }}
-                >
-                    <Tab icon={<Wallet />} iconPosition="start" label="ASSETS" sx={{ flexGrow: 1 }} />
-                    <Tab icon={<History />} iconPosition="start" label="HISTORY" sx={{ flexGrow: 1 }} />
-                    <Tab icon={<SettingsIcon />} iconPosition="start" label="SETTINGS" sx={{ flexGrow: 1 }} />
-                </Tabs>
-            </Box>
+            
+            {/* Custom Tab Navigation */}
+            <Grid container sx={{ borderBottom: 1, borderColor: 'divider', mb: 3, width: '100%' }}>
+                <Grid item xs={4}>
+                    <TabButton 
+                        active={tabValue === 0} 
+                        onClick={() => handleTabChange(0)}
+                        startIcon={<Wallet />}
+                        fullWidth
+                    >
+                        ASSETS
+                    </TabButton>
+                </Grid>
+                <Grid item xs={4}>
+                    <TabButton 
+                        active={tabValue === 1} 
+                        onClick={() => handleTabChange(1)}
+                        startIcon={<History />}
+                        fullWidth
+                    >
+                        HISTORY
+                    </TabButton>
+                </Grid>
+                <Grid item xs={4}>
+                    <TabButton 
+                        active={tabValue === 2} 
+                        onClick={() => handleTabChange(2)}
+                        startIcon={<SettingsIcon />}
+                        fullWidth
+                    >
+                        SETTINGS
+                    </TabButton>
+                </Grid>
+            </Grid>
 
             {/* ASSETS Tab */}
             <TabPanel value={tabValue} index={0}>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, width: '100%' }}>
                     <GlassmorphicPaper sx={{ height: 'auto' }}>
                         <Typography variant="h6" color="text.secondary">Total Estimated Balance</Typography>
                         <Typography variant="h3" sx={{ fontWeight: 'bold' }}>$149,263.24</Typography>
@@ -164,7 +196,7 @@ function Account() {
 
             {/* SETTINGS Tab */}
             <TabPanel value={tabValue} index={2}>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, width: '100%' }}>
                     <GlassmorphicPaper>
                         <Typography variant="h6" gutterBottom>Notification Settings</Typography>
                         <List>
