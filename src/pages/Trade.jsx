@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Box, Grid, Typography, TextField, Select, MenuItem, Button, Slider, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Box, Grid, Typography, TextField, Select, MenuItem, Button, Slider, Paper } from '@mui/material';
 import { styled, useTheme } from '@mui/system';
 
 const GlassmorphicPaper = styled(Paper)(({ theme }) => ({
@@ -64,10 +64,13 @@ const StyledSelect = styled(Select)(({ theme }) => ({
 const StyledSlider = styled(Slider)(({ theme, tradeType }) => ({
   color: tradeType === 'sell' ? theme.palette.error.main : theme.palette.success.main,
   '& .MuiSlider-thumb': {
-    backgroundColor: tradeType === 'sell' ? theme.palette.error.main : theme.palette.success.main,
+    boxShadow: 'none',
+    '&:hover, &.Mui-focusVisible': {
+        boxShadow: `0 0 0 8px ${tradeType === 'sell' ? 'rgba(239, 83, 80, 0.16)' : 'rgba(46, 125, 50, 0.16)'}`,
+    },
   },
   '& .MuiSlider-track': {
-    backgroundColor: tradeType === 'sell' ? theme.palette.error.main : theme.palette.success.main,
+    border: 'none',
   },
   '& .MuiSlider-rail': {
     backgroundColor: tradeType === 'sell' 
@@ -76,83 +79,135 @@ const StyledSlider = styled(Slider)(({ theme, tradeType }) => ({
   }
 }));
 
+const OrderBookRow = ({ side, price, amount, total, maxTotal }) => {
+    const theme = useTheme();
+    const isAsk = side === 'asks';
+    const percentage = (total / maxTotal) * 100;
+    
+    const rowStyle = {
+        display: 'flex',
+        justifyContent: 'space-between',
+        padding: '2px 8px',
+        fontSize: '0.8rem',
+        position: 'relative',
+        cursor: 'pointer',
+        '&:hover': {
+            backgroundColor: theme.palette.action.hover,
+        },
+    };
+
+    const backgroundStyle = {
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        [isAsk ? 'right' : 'left']: 0,
+        width: `${percentage}%`,
+        backgroundColor: isAsk ? 'rgba(239, 83, 80, 0.15)' : 'rgba(46, 125, 50, 0.15)',
+        zIndex: 1,
+        transition: 'width 0.3s ease-in-out',
+    };
+
+    return (
+        <Box sx={rowStyle}>
+            <Box sx={backgroundStyle} />
+            <Typography variant="body2" sx={{ flex: 1, color: isAsk ? theme.palette.error.main : theme.palette.success.main, zIndex: 2 }}>
+                {price}
+            </Typography>
+            <Typography variant="body2" sx={{ flex: 1, textAlign: 'right', zIndex: 2 }}>
+                {amount}
+            </Typography>
+            <Typography variant="body2" sx={{ flex: 1, textAlign: 'right', zIndex: 2 }}>
+                {total}
+            </Typography>
+        </Box>
+    );
+};
+
 const OrderBook = ({ asks, bids }) => {
   const theme = useTheme();
+  const maxAsksTotal = Math.max(...asks.map(a => a.total), 0);
+  const maxBidsTotal = Math.max(...bids.map(b => b.total), 0);
+  const maxTotal = Math.max(maxAsksTotal, maxBidsTotal);
+
+  const headerStyle = {
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding: '8px',
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    color: theme.palette.text.secondary,
+    fontSize: '0.75rem',
+    fontWeight: 'bold',
+  };
+
   return (
-  <GlassmorphicPaper>
-    <Typography variant="h6" gutterBottom>Order Book</Typography>
-    <TableContainer sx={{ maxHeight: 250 }}>
-      <Table stickyHeader size="small">
-        <TableHead>
-          <TableRow>
-              <TableCell sx={{ color: theme.palette.error.main, border: 0 }}>Price (USDT)</TableCell>
-              <TableCell sx={{ border: 0 }}>Amount (BTC)</TableCell>
-              <TableCell sx={{ border: 0 }}>Total</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {asks.map((ask, index) => (
-            <TableRow key={index} sx={{ '& td': { border: 0 }}}>
-                <TableCell sx={{ color: theme.palette.error.main }}>{ask.price}</TableCell>
-              <TableCell>{ask.amount}</TableCell>
-              <TableCell>{ask.total}</TableCell>
-            </TableRow>
+    <GlassmorphicPaper sx={{ p: 2, height: '100%' }}>
+      <Typography variant="h6" gutterBottom sx={{ mb: 2 }}>Order Book</Typography>
+      
+      <Box sx={headerStyle}>
+          <Typography variant="caption" sx={{ flex: 1 }}>Price (USDT)</Typography>
+          <Typography variant="caption" sx={{ flex: 1, textAlign: 'right' }}>Amount (BTC)</Typography>
+          <Typography variant="caption" sx={{ flex: 1, textAlign: 'right' }}>Total</Typography>
+      </Box>
+      <Box sx={{ flexGrow: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column-reverse' }}>
+          {asks.slice(0, 7).reverse().map((ask, index) => (
+              <OrderBookRow key={index} side="asks" {...ask} maxTotal={maxTotal} />
           ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-    <Typography variant="h6" align="center" sx={{ my: 2 }}>BTC 63500 USDT</Typography>
-    <TableContainer sx={{ maxHeight: 250 }}>
-      <Table stickyHeader size="small">
-        <TableHead>
-          <TableRow>
-              <TableCell sx={{ color: theme.palette.success.main, border: 0 }}>Price (USDT)</TableCell>
-              <TableCell sx={{ border: 0 }}>Amount (BTC)</TableCell>
-              <TableCell sx={{ border: 0 }}>Total</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {bids.map((bid, index) => (
-            <TableRow key={index} sx={{ '& td': { border: 0 }}}>
-                <TableCell sx={{ color: theme.palette.success.main }}>{bid.price}</TableCell>
-              <TableCell>{bid.amount}</TableCell>
-              <TableCell>{bid.total}</TableCell>
-            </TableRow>
+      </Box>
+
+      <Typography variant="h5" align="center" sx={{ my: 2, color: theme.palette.primary.main, fontWeight: 'bold' }}>
+          63500.50
+      </Typography>
+
+      <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>
+          {bids.slice(0, 7).map((bid, index) => (
+              <OrderBookRow key={index} side="bids" {...bid} maxTotal={maxTotal} />
           ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  </GlassmorphicPaper>
-);
+      </Box>
+    </GlassmorphicPaper>
+  );
 };
 
 const RecentTrades = ({ trades }) => {
   const theme = useTheme();
+
+  const rowStyle = {
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding: '2px 8px',
+    fontSize: '0.8rem',
+  };
+
+  const headerStyle = {
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding: '8px',
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    color: theme.palette.text.secondary,
+    fontSize: '0.75rem',
+    fontWeight: 'bold',
+  };
+
   return (
-    <GlassmorphicPaper>
-        <Typography variant="h6" gutterBottom>Recent Trades</Typography>
-        <TableContainer sx={{ maxHeight: 'calc(100% - 48px)' }}>
-            <Table stickyHeader size="small">
-                <TableHead>
-                    <TableRow>
-              <TableCell sx={{ border: 0 }}>Price (USDT)</TableCell>
-              <TableCell sx={{ border: 0 }}>Amount</TableCell>
-              <TableCell sx={{ border: 0 }}>Time</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {trades.map((trade, index) => (
-                        <TableRow key={index} sx={{ '& td': { border: 0 }}}>
-                <TableCell sx={{ color: trade.type === 'buy' ? theme.palette.success.main : theme.palette.error.main }}>{trade.price}</TableCell>
-                            <TableCell>{trade.amount}</TableCell>
-                            <TableCell>{trade.time}</TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
+    <GlassmorphicPaper sx={{ p: 2, height: '100%' }}>
+      <Typography variant="h6" gutterBottom sx={{ mb: 2 }}>Recent Trades</Typography>
+      <Box sx={headerStyle}>
+          <Typography variant="caption" sx={{ flex: 1 }}>Price (USDT)</Typography>
+          <Typography variant="caption" sx={{ flex: 1, textAlign: 'right' }}>Amount</Typography>
+          <Typography variant="caption" sx={{ flex: 1, textAlign: 'right' }}>Time</Typography>
+      </Box>
+      <Box sx={{ overflowY: 'auto', flexGrow: 1 }}>
+        {trades.slice(0, 15).map((trade, index) => (
+          <Box key={index} sx={rowStyle}>
+            <Typography variant="body2" sx={{ flex: 1, color: trade.type === 'buy' ? theme.palette.success.main : theme.palette.error.main }}>
+              {trade.price}
+            </Typography>
+            <Typography variant="body2" sx={{ flex: 1, textAlign: 'right' }}>{trade.amount}</Typography>
+            <Typography variant="body2" sx={{ flex: 1, textAlign: 'right', color: theme.palette.text.secondary }}>{trade.time}</Typography>
+          </Box>
+        ))}
+      </Box>
     </GlassmorphicPaper>
-);
+  );
 };
 
 function Trade() {
@@ -189,86 +244,66 @@ function Trade() {
         <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold' }}>
           Trade
         </Typography>
-        <Grid container spacing={2} sx={{ width: '100%', m: 0 }}>
-        <Grid item xs={12} md={3}>
-            <OrderBook asks={asks} bids={bids} />
-        </Grid>
-        <Grid item xs={12} md={6}>
-            <GlassmorphicPaper>
-                <Box sx={{ display: 'flex', borderBottom: 1, borderColor: 'divider', mb: 2 }}>
-                <Button 
-                  sx={{ 
-                    flex: 1, 
-                    borderBottom: tradeType === 'buy' ? `2px solid ${theme.palette.success.main}` : 'none',
-                    borderRadius: 0,
-                    color: tradeType === 'buy' ? theme.palette.success.main : theme.palette.text.secondary,
-                    fontWeight: tradeType === 'buy' ? 'bold' : 'normal'
-                  }}
-                  onClick={() => handleTradeTypeChange('buy')}
-                >
-                  BUY
-                </Button>
-                <Button 
-                  sx={{ 
-                    flex: 1, 
-                    borderBottom: tradeType === 'sell' ? `2px solid ${theme.palette.error.main}` : 'none',
-                    borderRadius: 0,
-                    color: tradeType === 'sell' ? theme.palette.error.main : theme.palette.text.secondary,
-                    fontWeight: tradeType === 'sell' ? 'bold' : 'normal'
-                  }}
-                  onClick={() => handleTradeTypeChange('sell')}
-                >
-                  SELL
-                </Button>
-                </Box>
-                <Grid container spacing={2}>
-                    <Grid item xs={6}>
-                        <StyledSelect fullWidth defaultValue="BTC/USDT" variant="outlined">
-                            <MenuItem value="BTC/USDT">BTC/USDT</MenuItem>
-                        </StyledSelect>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <StyledSelect fullWidth defaultValue="limit" variant="outlined">
-                            <MenuItem value="limit">Limit Order</MenuItem>
-                        </StyledSelect>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <StyledTextField fullWidth label="Price" defaultValue="63500" variant="standard" />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <StyledTextField fullWidth label="Amount" variant="standard" />
-                    </Grid>
-                    <Grid item xs={12}>
-                    <Typography gutterBottom color="text.secondary">Use available balance</Typography>
-                        <StyledSlider 
-                          tradeType={tradeType}
-                          value={sliderValue}
-                          onChange={handleSliderChange}
-                          aria-label="Balance" 
-                          valueLabelDisplay="auto" 
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <StyledTextField fullWidth label="Total" variant="standard" />
-                    </Grid>
-                    <Grid item xs={12}>
+        <Grid container spacing={3} sx={{ width: '100%', m: 0 }}>
+            <Grid item xs={12} md={5} lg={4}>
+                <GlassmorphicPaper>
+                    <Box sx={{ display: 'flex', borderBottom: 1, borderColor: 'divider', mb: 2 }}>
                     <Button 
-                      fullWidth 
-                      variant="contained" 
-                      color={tradeType === 'buy' ? "success" : "error"}
-                      sx={{ py: 1.5 }}
+                      sx={{ 
+                        flex: 1, 
+                        borderBottom: tradeType === 'buy' ? `2px solid ${theme.palette.success.main}` : 'none',
+                        borderRadius: 0,
+                        color: tradeType === 'buy' ? 'white' : 'text.secondary',
+                        fontWeight: tradeType === 'buy' ? 'bold' : 'normal'
+                      }}
+                      onClick={() => handleTradeTypeChange('buy')}
                     >
-                      {tradeType === 'buy' ? 'Buy BTC' : 'Sell BTC'}
+                      BUY
                     </Button>
-                    </Grid>
-                </Grid>
-            </GlassmorphicPaper>
+                    <Button 
+                      sx={{ 
+                        flex: 1,
+                        py: 1.5,
+                        borderRadius: 0,
+                        backgroundColor: tradeType === 'sell' ? 'error.main' : 'transparent',
+                        color: tradeType === 'sell' ? 'white' : 'text.secondary',
+                      }}
+                      onClick={() => handleTradeTypeChange('sell')}
+                    >
+                      SELL
+                    </Button>
+                    </Box>
+
+                    <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
+                        <StyledTextField label="Price" variant="standard" defaultValue="Market" />
+                        <StyledTextField label="Amount" variant="standard" />
+                        <StyledSlider 
+                          value={sliderValue} 
+                          onChange={handleSliderChange} 
+                          aria-labelledby="input-slider" 
+                          marks={[{value: 0}, {value: 25}, {value: 50}, {value: 75}, {value: 100}]}
+                          tradeType={tradeType}
+                        />
+                        <Typography variant="body2" align="center">Total: 1,200 USDT</Typography>
+                        <Button
+                          variant="contained"
+                          color={tradeType === 'sell' ? 'error' : 'success'}
+                          size="large"
+                          sx={{ mt: 2 }}
+                        >
+                          {tradeType === 'buy' ? 'Buy BTC' : 'Sell BTC'}
+                        </Button>
+                    </Box>
+                </GlassmorphicPaper>
+            </Grid>
+            <Grid item xs={12} md={4} lg={4}>
+                <OrderBook asks={asks} bids={bids} />
+            </Grid>
+            <Grid item xs={12} md={3} lg={4}>
+                <RecentTrades trades={trades} />
+            </Grid>
         </Grid>
-        <Grid item xs={12} md={3}>
-           <RecentTrades trades={trades} />
-        </Grid>
-      </Grid>
-    </Box>
+      </Box>
   );
 }
 
