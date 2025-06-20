@@ -12,6 +12,8 @@ const GlassmorphicPaper = styled(Paper)(({ theme }) => ({
   border: `1px solid ${theme.palette.divider}`,
   color: theme.palette.text.primary,
   transition: 'all 0.3s ease-in-out',
+  display: 'flex',
+  flexDirection: 'column',
   '&:hover': {
     transform: 'translateY(-5px)',
     boxShadow: theme.shadows[10],
@@ -47,11 +49,11 @@ function Dashboard() {
   const theme = useTheme();
 
   return (
-      <Box>
+      <Box sx={{ width: '100%', maxWidth: '100%', minHeight: '80vh' }}>
         <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold' }}>
             Market Overview
         </Typography>
-        <Grid container spacing={3}>
+        <Grid container spacing={3} sx={{ width: '100%', m: 0 }}>
           <Grid item xs={12} sm={6} md={3}><StatCard title="Total Market Cap" value="$2.1T" /></Grid>
           <Grid item xs={12} sm={6} md={3}><StatCard title="BTC Dominance" value="42%" /></Grid>
           <Grid item xs={12} sm={6} md={3}><StatCard title="ETH Dominance" value="18%" /></Grid>

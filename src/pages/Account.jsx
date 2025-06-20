@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { Box, Grid, Typography, Paper, Tabs, Tab, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Avatar, Button, List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, Switch } from '@mui/material';
+import { Box, Typography, Paper, Tabs, Tab, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Avatar, Button, List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, Switch } from '@mui/material';
 import { styled, useTheme } from '@mui/system';
 import { ArrowUpward, ArrowDownward, Wallet, History, Settings as SettingsIcon } from '@mui/icons-material';
 
 const GlassmorphicPaper = styled(Paper)(({ theme }) => ({
-    padding: '20px',
+    padding: '24px',
     backgroundColor: theme.palette.mode === 'dark' 
       ? 'rgba(33, 43, 54, 0.7)' 
       : 'rgba(255, 255, 255, 0.7)',
@@ -12,14 +12,26 @@ const GlassmorphicPaper = styled(Paper)(({ theme }) => ({
     borderRadius: '15px',
     border: `1px solid ${theme.palette.divider}`,
     color: theme.palette.text.primary,
-    width: '100%'
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
 }));
 
 const TabPanel = (props) => {
     const { children, value, index, ...other } = props;
     return (
-        <div role="tabpanel" hidden={value !== index} {...other}>
-            {value === index && (<Box sx={{ pt: 3 }}><Grid container>{children}</Grid></Box>)}
+        <div 
+            role="tabpanel" 
+            hidden={value !== index} 
+            style={{ display: value === index ? 'block' : 'none' }} 
+            {...other}
+        >
+            {value === index && (
+                <Box sx={{ pt: 3 }}>
+                    {children}
+                </Box>
+            )}
         </div>
     );
 };
@@ -32,6 +44,15 @@ const assets = [
     { name: 'Binance Coin', symbol: 'BNB', balance: 25.4, value: 13208, icon: 'B' },
 ];
 
+// Mock transaction history data
+const transactions = [
+    { type: 'Deposit', asset: 'Bitcoin', amount: '+0.25 BTC', value: '+$15,875.00', date: '2023-06-15 14:30' },
+    { type: 'Withdrawal', asset: 'Ethereum', amount: '-5.0 ETH', value: '-$21,750.00', date: '2023-06-10 09:15' },
+    { type: 'Trade', asset: 'BTC/USDT', amount: '+0.15 BTC', value: '+$9,525.00', date: '2023-06-05 11:45' },
+    { type: 'Trade', asset: 'ETH/BTC', amount: '-2.5 ETH', value: '-0.08 BTC', date: '2023-05-28 16:20' },
+    { type: 'Deposit', asset: 'USDT', amount: '+5000 USDT', value: '+$5,000.00', date: '2023-05-20 10:30' },
+];
+
 function Account() {
     const [tabValue, setTabValue] = useState(0);
     const theme = useTheme();
@@ -41,21 +62,30 @@ function Account() {
     };
 
     return (
-        <Box sx={{ width: '100%'}}>
+        <Box>
             <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold' }}>
                 Account
             </Typography>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                <Tabs value={tabValue} onChange={handleTabChange} textColor="inherit" indicatorColor="primary" variant="fullWidth">
-                    <Tab icon={<Wallet />} iconPosition="start" label="Assets" />
-                    <Tab icon={<History />} iconPosition="start" label="History" />
-                    <Tab icon={<SettingsIcon />} iconPosition="start" label="Settings" />
+            <Box sx={{ width: '100%', borderBottom: 1, borderColor: 'divider', mb: 3 }}>
+                <Tabs 
+                    value={tabValue} 
+                    onChange={handleTabChange} 
+                    textColor="primary"
+                    indicatorColor="primary"
+                    variant="fullWidth"
+                    centered
+                    sx={{ width: '100%' }}
+                >
+                    <Tab icon={<Wallet />} iconPosition="start" label="ASSETS" sx={{ flexGrow: 1 }} />
+                    <Tab icon={<History />} iconPosition="start" label="HISTORY" sx={{ flexGrow: 1 }} />
+                    <Tab icon={<SettingsIcon />} iconPosition="start" label="SETTINGS" sx={{ flexGrow: 1 }} />
                 </Tabs>
             </Box>
 
+            {/* ASSETS Tab */}
             <TabPanel value={tabValue} index={0}>
-                <Grid item xs={12}>
-                    <GlassmorphicPaper sx={{ mb: 3 }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                    <GlassmorphicPaper sx={{ height: 'auto' }}>
                         <Typography variant="h6" color="text.secondary">Total Estimated Balance</Typography>
                         <Typography variant="h3" sx={{ fontWeight: 'bold' }}>$149,263.24</Typography>
                     </GlassmorphicPaper>
@@ -94,28 +124,82 @@ function Account() {
                             </Table>
                         </TableContainer>
                     </GlassmorphicPaper>
-                </Grid>
+                </Box>
             </TabPanel>
+
+            {/* HISTORY Tab */}
+            <TabPanel value={tabValue} index={1}>
+                <GlassmorphicPaper>
+                    <Typography variant="h6" gutterBottom>Transaction History</Typography>
+                    <TableContainer>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell sx={{ border: 0 }}>Type</TableCell>
+                                    <TableCell sx={{ border: 0 }}>Asset</TableCell>
+                                    <TableCell sx={{ border: 0 }}>Amount</TableCell>
+                                    <TableCell sx={{ border: 0 }}>Value</TableCell>
+                                    <TableCell sx={{ border: 0 }}>Date</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {transactions.map((tx, index) => (
+                                    <TableRow key={index} sx={{ '& td, & th': { border: 0 }}}>
+                                        <TableCell>{tx.type}</TableCell>
+                                        <TableCell>{tx.asset}</TableCell>
+                                        <TableCell sx={{ color: tx.amount.startsWith('+') ? theme.palette.success.main : theme.palette.error.main }}>
+                                            {tx.amount}
+                                        </TableCell>
+                                        <TableCell sx={{ color: tx.value.startsWith('+') ? theme.palette.success.main : theme.palette.error.main }}>
+                                            {tx.value}
+                                        </TableCell>
+                                        <TableCell>{tx.date}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </GlassmorphicPaper>
+            </TabPanel>
+
+            {/* SETTINGS Tab */}
             <TabPanel value={tabValue} index={2}>
-                <Grid item xs={12}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                     <GlassmorphicPaper>
-                        <Typography variant="h6">Notification Settings</Typography>
+                        <Typography variant="h6" gutterBottom>Notification Settings</Typography>
                         <List>
                             <ListItem>
-                                <ListItemText primary="Email Notifications" secondary="Receive updates via email" />
-                                <ListItemSecondaryAction>
-                                    <Switch defaultChecked />
-                                </ListItemSecondaryAction>
+                                <ListItemText primary="Email Notifications" secondary="Receive updates via email" primaryTypographyProps={{ sx: { mb: 0.5 } }} />
+                                <ListItemSecondaryAction><Switch defaultChecked /></ListItemSecondaryAction>
                             </ListItem>
                             <ListItem>
-                                <ListItemText primary="Push Notifications" secondary="Get real-time alerts on your devices" />
-                                <ListItemSecondaryAction>
-                                    <Switch />
-                                </ListItemSecondaryAction>
+                                <ListItemText primary="Push Notifications" secondary="Get real-time alerts on your devices" primaryTypographyProps={{ sx: { mb: 0.5 } }} />
+                                <ListItemSecondaryAction><Switch /></ListItemSecondaryAction>
+                            </ListItem>
+                            <ListItem>
+                                <ListItemText primary="Price Alerts" secondary="Be notified of significant price movements" primaryTypographyProps={{ sx: { mb: 0.5 } }} />
+                                <ListItemSecondaryAction><Switch defaultChecked /></ListItemSecondaryAction>
+                            </ListItem>
+                            <ListItem>
+                                <ListItemText primary="Login Notifications" secondary="Get alerted when your account is accessed" primaryTypographyProps={{ sx: { mb: 0.5 } }} />
+                                <ListItemSecondaryAction><Switch defaultChecked /></ListItemSecondaryAction>
                             </ListItem>
                         </List>
                     </GlassmorphicPaper>
-                </Grid>
+                    <GlassmorphicPaper>
+                        <Typography variant="h6" gutterBottom>Security Settings</Typography>
+                        <List>
+                            <ListItem>
+                                <ListItemText primary="Two-Factor Authentication" secondary="Add an extra layer of security" primaryTypographyProps={{ sx: { mb: 0.5 } }} sx={{ pr: 8 }} />
+                                <ListItemSecondaryAction><Button variant="outlined" color="primary">Enable</Button></ListItemSecondaryAction>
+                            </ListItem>
+                            <ListItem>
+                                <ListItemText primary="API Access" secondary="Manage API keys for automated trading" primaryTypographyProps={{ sx: { mb: 0.5 } }} sx={{ pr: 8 }} />
+                                <ListItemSecondaryAction><Button variant="outlined" color="primary">Manage</Button></ListItemSecondaryAction>
+                            </ListItem>
+                        </List>
+                    </GlassmorphicPaper>
+                </Box>
             </TabPanel>
         </Box>
     );

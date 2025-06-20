@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, NavLink } from 'react-router-dom';
-import { Box, CssBaseline, AppBar, Toolbar, Typography, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, IconButton, useTheme, useMediaQuery } from '@mui/material';
+import { Box, CssBaseline, AppBar, Toolbar, Typography, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, IconButton, useTheme, useMediaQuery, Container } from '@mui/material';
 import { Dashboard as DashboardIcon, SwapHoriz as TradeIcon, AccountCircle as AccountIcon, Menu as MenuIcon } from '@mui/icons-material';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
@@ -24,47 +24,47 @@ function AppContent() {
 
   const drawerContent = (
     <div>
-      <Toolbar>
+          <Toolbar>
         <Typography variant="h6">
-          Trading Panel
-        </Typography>
-      </Toolbar>
-      <List>
-        {[
-          { text: 'Dashboard', icon: <DashboardIcon />, path: '/' },
-          { text: 'Trade', icon: <TradeIcon />, path: '/trade' },
-          { text: 'Account', icon: <AccountIcon />, path: '/account' },
-        ].map((item) => (
-          <ListItem key={item.text} disablePadding>
-            <ListItemButton
-              component={NavLink}
-              to={item.path}
-              end={item.path === '/'}
-              sx={{
+              Trading Panel
+            </Typography>
+          </Toolbar>
+          <List>
+            {[
+              { text: 'Dashboard', icon: <DashboardIcon />, path: '/' },
+              { text: 'Trade', icon: <TradeIcon />, path: '/trade' },
+              { text: 'Account', icon: <AccountIcon />, path: '/account' },
+            ].map((item) => (
+              <ListItem key={item.text} disablePadding>
+                <ListItemButton
+                  component={NavLink}
+                  to={item.path}
+                  end={item.path === '/'}
+                  sx={{
                 color: 'text.secondary',
-                '&:hover': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                },
-                '&.active': {
+                    '&:hover': {
+                      backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                    },
+                    '&.active': {
                   color: 'text.primary',
                   backgroundColor: 'action.selected',
                   borderRight: '3px solid',
                   borderColor: 'primary.main',
-                  '& .MuiListItemIcon-root': {
+                      '& .MuiListItemIcon-root': {
                     color: 'text.primary',
-                  },
-                },
-                '& .MuiListItemIcon-root': {
+                      },
+                    },
+                    '& .MuiListItemIcon-root': {
                   color: 'text.secondary',
-                },
-              }}
-            >
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
+                    },
+                  }}
+                >
+                  <ListItemIcon>{item.icon}</ListItemIcon>
+                  <ListItemText primary={item.text} />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
     </div>
   );
 
@@ -141,26 +141,28 @@ function AppContent() {
             open
           >
             {drawerContent}
-          </Drawer>
+        </Drawer>
         </Box>
         <Box
           component="main"
           sx={{
-            flexGrow: 1,
+              flexGrow: 1,
             bgcolor: 'background.default',
-            height: '100vh',
-            overflow: 'auto',
+              height: '100vh',
+            overflowY: 'scroll',
             width: { md: `calc(100% - ${drawerWidth}px)` },
+            display: 'flex',
+            flexDirection: 'column'
           }}
         >
           <Toolbar />
-          <Box sx={{ p: 3 }}>
+          <Container maxWidth={false} sx={{ p: 3, flexGrow: 1 }}>
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/trade" element={<Trade />} />
               <Route path="/account" element={<Account />} />
             </Routes>
-          </Box>
+          </Container>
         </Box>
       </Box>
     </Router>
