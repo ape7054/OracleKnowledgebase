@@ -9,8 +9,59 @@ import { ThemeContext, CustomThemeProvider } from './context/ThemeContext';
 import Dashboard from './pages/Dashboard';
 import Trade from './pages/Trade';
 import Account from './pages/Account';
+import { styled } from '@mui/system';
 
 const drawerWidth = 240;
+
+const StyledNavLink = styled(NavLink)(({ theme }) => ({
+  textDecoration: 'none',
+  width: '100%',
+}));
+
+const StyledListItemButton = styled(ListItemButton)(({ theme }) => ({
+  padding: '12px 16px',
+  margin: '4px 8px',
+  borderRadius: '8px',
+  transition: 'all 0.2s ease-in-out',
+  '&:hover': {
+    backgroundColor: theme.palette.mode === 'dark' 
+      ? 'rgba(255, 255, 255, 0.08)' 
+      : 'rgba(0, 0, 0, 0.04)',
+  },
+  '&.active': {
+    backgroundColor: theme.palette.mode === 'dark' 
+      ? 'rgba(0, 171, 85, 0.16)' 
+      : 'rgba(0, 171, 85, 0.08)',
+    color: theme.palette.primary.main,
+    '& .MuiListItemIcon-root': {
+      color: theme.palette.primary.main,
+    },
+  },
+}));
+
+const StyledDrawer = styled(Drawer)(({ theme }) => ({
+  '& .MuiDrawer-paper': {
+    backgroundColor: theme.palette.mode === 'dark' 
+      ? 'rgba(33, 43, 54, 0.9)' 
+      : 'rgba(255, 255, 255, 0.9)',
+    backdropFilter: 'blur(10px)',
+    borderRight: `1px solid ${theme.palette.divider}`,
+    boxShadow: theme.palette.mode === 'dark'
+      ? '2px 0 8px 0 rgba(0, 0, 0, 0.3)'
+      : '2px 0 8px 0 rgba(145, 158, 171, 0.16)',
+  },
+}));
+
+const StyledAppBar = styled(AppBar)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === 'dark' 
+    ? 'rgba(33, 43, 54, 0.9)' 
+    : 'rgba(255, 255, 255, 0.9)',
+  backdropFilter: 'blur(10px)',
+  boxShadow: theme.palette.mode === 'dark'
+    ? '0 8px 16px 0 rgba(0, 0, 0, 0.3)'
+    : '0 8px 16px 0 rgba(145, 158, 171, 0.16)',
+  borderBottom: `1px solid ${theme.palette.divider}`,
+}));
 
 function AppContent() {
   const { mode, toggleTheme } = useContext(ThemeContext);
@@ -24,47 +75,39 @@ function AppContent() {
 
   const drawerContent = (
     <>
-      <Toolbar>
-        <Typography variant="h6" noWrap>
+      <Toolbar sx={{ 
+        borderBottom: `1px solid ${theme.palette.divider}`,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        py: 1.5
+      }}>
+        <Typography variant="h6" noWrap sx={{ 
+          fontWeight: 700, 
+          color: theme.palette.primary.main,
+          letterSpacing: '0.5px'
+        }}>
           Trading Panel
         </Typography>
       </Toolbar>
-      <List>
+      <Box sx={{ p: 1, mt: 1 }}>
         {[
           { text: 'Dashboard', icon: <DashboardIcon />, path: '/' },
           { text: 'Trade', icon: <TradeIcon />, path: '/trade' },
           { text: 'Account', icon: <AccountIcon />, path: '/account' },
         ].map((item) => (
-          <ListItem key={item.text} disablePadding>
-            <ListItemButton
-              component={NavLink}
-              to={item.path}
-              end={item.path === '/'}
-              sx={{
-                color: 'text.secondary',
-                '&:hover': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                },
-                '&.active': {
-                  color: 'text.primary',
-                  backgroundColor: 'action.selected',
-                  borderLeft: '3px solid',
-                  borderColor: 'primary.main',
-                  '& .MuiListItemIcon-root': {
-                    color: 'text.primary',
-                  },
-                },
-                '& .MuiListItemIcon-root': {
-                  color: 'text.secondary',
-                },
-              }}
-            >
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItemButton>
+          <ListItem key={item.text} disablePadding sx={{ mb: 0.5 }}>
+            <StyledNavLink to={item.path} end={item.path === '/'}>
+              {({ isActive }) => (
+                <StyledListItemButton className={isActive ? 'active' : ''}>
+                  <ListItemIcon sx={{ minWidth: 40 }}>{item.icon}</ListItemIcon>
+                  <ListItemText primary={item.text} primaryTypographyProps={{ fontWeight: 500 }} />
+                </StyledListItemButton>
+              )}
+            </StyledNavLink>
           </ListItem>
         ))}
-      </List>
+      </Box>
     </>
   );
 
@@ -74,14 +117,10 @@ function AppContent() {
         <CssBaseline />
         
         {/* App Bar - Only visible on mobile */}
-        <AppBar
+        <StyledAppBar
           position="fixed"
           sx={{
             display: { md: 'none' },
-            bgcolor: 'background.paper',
-            boxShadow: 'none',
-            borderBottom: '1px solid',
-            borderColor: 'divider',
           }}
         >
           <Toolbar>
@@ -94,17 +133,21 @@ function AppContent() {
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, color: 'text.primary' }}>
+            <Typography variant="h6" noWrap component="div" sx={{ 
+              flexGrow: 1, 
+              color: theme.palette.primary.main,
+              fontWeight: 700
+            }}>
               Trading Panel
             </Typography>
             <IconButton sx={{ color: 'text.primary' }} onClick={toggleTheme}>
               {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
             </IconButton>
           </Toolbar>
-        </AppBar>
+        </StyledAppBar>
         
         {/* Sidebar - Mobile (Temporary Drawer) */}
-        <Drawer
+        <StyledDrawer
           variant="temporary"
           open={mobileOpen}
           onClose={handleDrawerToggle}
@@ -114,15 +157,14 @@ function AppContent() {
             '& .MuiDrawer-paper': {
               boxSizing: 'border-box',
               width: drawerWidth,
-              bgcolor: 'background.paper',
             },
           }}
         >
           {drawerContent}
-        </Drawer>
+        </StyledDrawer>
         
         {/* Sidebar - Desktop (Permanent Drawer) */}
-        <Drawer
+        <StyledDrawer
           variant="permanent"
           sx={{
             display: { xs: 'none', md: 'block' },
@@ -131,15 +173,12 @@ function AppContent() {
             '& .MuiDrawer-paper': {
               width: drawerWidth,
               boxSizing: 'border-box',
-              bgcolor: 'background.paper',
-              borderRight: '1px solid',
-              borderColor: 'divider',
             },
           }}
           open
         >
           {drawerContent}
-        </Drawer>
+        </StyledDrawer>
         
         {/* Main Content */}
         <Box
@@ -167,9 +206,27 @@ function AppContent() {
             position: 'absolute',
             top: 16,
             right: 16,
+            zIndex: 1100,
           }}
         >
-          <IconButton sx={{ color: 'text.primary' }} onClick={toggleTheme}>
+          <IconButton 
+            sx={{ 
+              color: 'text.primary',
+              backgroundColor: theme.palette.mode === 'dark' 
+                ? 'rgba(33, 43, 54, 0.9)' 
+                : 'rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(10px)',
+              boxShadow: theme.palette.mode === 'dark'
+                ? '0 2px 8px 0 rgba(0, 0, 0, 0.3)'
+                : '0 2px 8px 0 rgba(145, 158, 171, 0.16)',
+              '&:hover': {
+                backgroundColor: theme.palette.mode === 'dark' 
+                  ? 'rgba(255, 255, 255, 0.08)' 
+                  : 'rgba(0, 0, 0, 0.04)',
+              }
+            }} 
+            onClick={toggleTheme}
+          >
             {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
           </IconButton>
         </Box>

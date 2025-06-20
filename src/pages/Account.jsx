@@ -18,17 +18,60 @@ const GlassmorphicPaper = styled(Paper)(({ theme }) => ({
     flexDirection: 'column',
 }));
 
+const TabContainer = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    backgroundColor: theme.palette.mode === 'dark' ? 'rgba(33, 43, 54, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+    backdropFilter: 'blur(10px)',
+    borderRadius: '12px',
+    overflow: 'hidden',
+    boxShadow: theme.palette.mode === 'dark' 
+        ? '0 8px 16px 0 rgba(0, 0, 0, 0.3)' 
+        : '0 8px 16px 0 rgba(145, 158, 171, 0.16)',
+    marginBottom: '24px',
+    border: `1px solid ${theme.palette.divider}`,
+}));
+
 const TabButton = styled(Button)(({ theme, active }) => ({
     borderRadius: 0,
-    padding: '12px 16px',
-    justifyContent: 'flex-start',
-    borderBottom: active ? `2px solid ${theme.palette.primary.main}` : `2px solid transparent`,
+    padding: '16px',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: active 
+        ? theme.palette.mode === 'dark' 
+            ? 'rgba(0, 171, 85, 0.16)'
+            : 'rgba(0, 171, 85, 0.08)'
+        : 'transparent',
     color: active ? theme.palette.primary.main : theme.palette.text.secondary,
+    fontWeight: active ? 600 : 400,
+    transition: 'all 0.2s ease-in-out',
+    position: 'relative',
+    overflow: 'hidden',
     '&:hover': {
-        backgroundColor: 'rgba(255, 255, 255, 0.05)',
+        backgroundColor: theme.palette.mode === 'dark' 
+            ? 'rgba(255, 255, 255, 0.08)'
+            : 'rgba(0, 0, 0, 0.04)',
     },
     flex: 1,
     textAlign: 'center',
+    '.MuiButton-startIcon': {
+        marginRight: '8px',
+        transition: 'transform 0.2s ease',
+        color: active ? theme.palette.primary.main : theme.palette.text.secondary,
+    },
+    '&:hover .MuiButton-startIcon': {
+        transform: 'scale(1.1)',
+    },
+    '&::after': active ? {
+        content: '""',
+        position: 'absolute',
+        bottom: 0,
+        left: '50%',
+        transform: 'translateX(-50%)',
+        width: '40%',
+        height: '3px',
+        background: `linear-gradient(90deg, ${theme.palette.primary.light}, ${theme.palette.primary.main})`,
+        borderRadius: '3px 3px 0 0',
+    } : {},
 }));
 
 const TabPanel = (props) => {
@@ -81,38 +124,40 @@ function Account() {
             </Typography>
             
             {/* Custom Tab Navigation */}
-            <Grid container sx={{ borderBottom: 1, borderColor: 'divider', mb: 3, width: '100%' }}>
-                <Grid item xs={4}>
-                    <TabButton 
-                        active={tabValue === 0} 
-                        onClick={() => handleTabChange(0)}
-                        startIcon={<Wallet />}
-                        fullWidth
-                    >
-                        ASSETS
-                    </TabButton>
+            <TabContainer>
+                <Grid container>
+                    <Grid item xs={4}>
+                        <TabButton 
+                            active={tabValue === 0} 
+                            onClick={() => handleTabChange(0)}
+                            startIcon={<Wallet />}
+                            fullWidth
+                        >
+                            ASSETS
+                        </TabButton>
+                    </Grid>
+                    <Grid item xs={4}>
+                        <TabButton 
+                            active={tabValue === 1} 
+                            onClick={() => handleTabChange(1)}
+                            startIcon={<History />}
+                            fullWidth
+                        >
+                            HISTORY
+                        </TabButton>
+                    </Grid>
+                    <Grid item xs={4}>
+                        <TabButton 
+                            active={tabValue === 2} 
+                            onClick={() => handleTabChange(2)}
+                            startIcon={<SettingsIcon />}
+                            fullWidth
+                        >
+                            SETTINGS
+                        </TabButton>
+                    </Grid>
                 </Grid>
-                <Grid item xs={4}>
-                    <TabButton 
-                        active={tabValue === 1} 
-                        onClick={() => handleTabChange(1)}
-                        startIcon={<History />}
-                        fullWidth
-                    >
-                        HISTORY
-                    </TabButton>
-                </Grid>
-                <Grid item xs={4}>
-                    <TabButton 
-                        active={tabValue === 2} 
-                        onClick={() => handleTabChange(2)}
-                        startIcon={<SettingsIcon />}
-                        fullWidth
-                    >
-                        SETTINGS
-                    </TabButton>
-                </Grid>
-            </Grid>
+            </TabContainer>
 
             {/* ASSETS Tab */}
             <TabPanel value={tabValue} index={0}>
