@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, NavLink } from 'react-router-dom';
 import { Box, CssBaseline, AppBar, Toolbar, Typography, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, IconButton, useTheme, useMediaQuery } from '@mui/material';
-import { Dashboard as DashboardIcon, SwapHoriz as TradeIcon, AccountCircle as AccountIcon, Menu as MenuIcon } from '@mui/icons-material';
+import { Dashboard as DashboardIcon, SwapHoriz as TradeIcon, AccountCircle as AccountIcon, Menu as MenuIcon, TrendingUp } from '@mui/icons-material';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
@@ -53,25 +53,50 @@ const StyledListItemButton = styled(ListItemButton)(({ theme }) => ({
 const StyledDrawer = styled(Drawer)(({ theme }) => ({
   '& .MuiDrawer-paper': {
     backgroundColor: theme.palette.mode === 'dark' 
-      ? 'rgba(33, 43, 54, 0.9)' 
-      : 'rgba(255, 255, 255, 0.9)',
-    backdropFilter: 'blur(10px)',
+      ? 'rgba(22, 28, 36, 0.95)' 
+      : 'rgba(255, 255, 255, 0.95)',
+    backgroundImage: theme.palette.mode === 'dark'
+      ? 'linear-gradient(to bottom, rgba(26, 32, 48, 0.95), rgba(8, 11, 25, 0.95))'
+      : 'linear-gradient(to bottom, rgba(255, 255, 255, 0.95), rgba(240, 244, 248, 0.95))',
+    backdropFilter: 'blur(20px)',
     borderRight: `1px solid ${theme.palette.divider}`,
     boxShadow: theme.palette.mode === 'dark'
-      ? '2px 0 8px 0 rgba(0, 0, 0, 0.3)'
-      : '2px 0 8px 0 rgba(145, 158, 171, 0.16)',
+      ? '2px 0 20px 0 rgba(0, 0, 0, 0.4)'
+      : '2px 0 20px 0 rgba(145, 158, 171, 0.2)',
   },
 }));
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' 
-    ? 'rgba(33, 43, 54, 0.9)' 
-    : 'rgba(255, 255, 255, 0.9)',
-  backdropFilter: 'blur(10px)',
+    ? 'rgba(22, 28, 36, 0.95)' 
+    : 'rgba(255, 255, 255, 0.95)',
+  backgroundImage: theme.palette.mode === 'dark'
+    ? 'linear-gradient(to right, rgba(26, 32, 48, 0.95), rgba(8, 11, 25, 0.95))'
+    : 'linear-gradient(to right, rgba(255, 255, 255, 0.95), rgba(240, 244, 248, 0.95))',
+  backdropFilter: 'blur(20px)',
   boxShadow: theme.palette.mode === 'dark'
-    ? '0 8px 16px 0 rgba(0, 0, 0, 0.3)'
-    : '0 8px 16px 0 rgba(145, 158, 171, 0.16)',
+    ? '0 8px 16px 0 rgba(0, 0, 0, 0.4)'
+    : '0 8px 16px 0 rgba(145, 158, 171, 0.2)',
   borderBottom: `1px solid ${theme.palette.divider}`,
+}));
+
+const BrandLogo = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: '8px',
+  '& .logo-icon': {
+    background: theme.palette.mode === 'dark'
+      ? 'linear-gradient(135deg, #5C6BC0 0%, #3F51B5 50%, #303F9F 100%)'
+      : 'linear-gradient(135deg, #42A5F5 0%, #2196F3 50%, #1976D2 100%)',
+    borderRadius: '8px',
+    padding: '6px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    boxShadow: theme.palette.mode === 'dark'
+      ? '0 2px 8px rgba(0,0,0,0.5)'
+      : '0 2px 8px rgba(33,150,243,0.3)',
+  }
 }));
 
 function AppContent() {
@@ -91,15 +116,35 @@ function AppContent() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        py: 1.5
+        py: 2
       }}>
-        <Typography variant="h6" noWrap sx={{ 
-          fontWeight: 700, 
-          color: theme.palette.primary.main,
-          letterSpacing: '0.5px'
-        }}>
-          Trading Panel
-        </Typography>
+        <BrandLogo>
+          <Box className="logo-icon">
+            <TrendingUp sx={{ color: '#fff', fontSize: '1.2rem' }} />
+          </Box>
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Typography variant="h6" noWrap sx={{ 
+              fontWeight: 700, 
+              background: theme.palette.mode === 'dark'
+                ? 'linear-gradient(to right, #9C96FF, #76C4FF)'
+                : 'linear-gradient(to right, #3366FF, #00CCFF)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              letterSpacing: '0.5px',
+              lineHeight: 1.2
+            }}>
+              MarketPulse
+            </Typography>
+            <Typography variant="caption" sx={{ 
+              fontSize: '0.65rem', 
+              opacity: 0.8, 
+              letterSpacing: '0.05rem',
+              color: theme.palette.text.secondary
+            }}>
+              MARKET INTELLIGENCE PLATFORM
+            </Typography>
+          </Box>
+        </BrandLogo>
       </Toolbar>
       <Box sx={{ p: 1, mt: 1 }}>
         {[
@@ -110,12 +155,29 @@ function AppContent() {
           <ListItem key={item.text} disablePadding sx={{ mb: 0.5 }}>
             <StyledNavLink to={item.path} end={item.path === '/'}>
               {({ isActive }) => (
-                <StyledListItemButton className={isActive ? 'active' : ''}>
+                <StyledListItemButton 
+                  className={isActive ? 'active' : ''}
+                  sx={{
+                    background: isActive ? 
+                      theme.palette.mode === 'dark' ?
+                        'linear-gradient(90deg, rgba(45, 55, 72, 0.5), rgba(45, 55, 72, 0.2))' : 
+                        'linear-gradient(90deg, rgba(229, 246, 253, 1), rgba(229, 246, 253, 0.5))'
+                      : 'transparent',
+                    boxShadow: isActive ? 
+                      theme.palette.mode === 'dark' ? 
+                        'inset 4px 0 0 0 #3366FF' : 
+                        'inset 4px 0 0 0 #2196F3'
+                      : 'none',
+                    transition: 'all 0.3s ease-in-out',
+                  }}
+                >
                   <ListItemIcon>{item.icon}</ListItemIcon>
                   <ListItemText 
                     primary={item.text} 
                     primaryTypographyProps={{ 
-                      fontWeight: 500,
+                      fontWeight: isActive ? 600 : 500,
+                      fontSize: '0.95rem',
+                      letterSpacing: '0.02em'
                     }} 
                   />
                 </StyledListItemButton>
@@ -149,13 +211,34 @@ function AppContent() {
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" noWrap component="div" sx={{ 
-              flexGrow: 1, 
-              color: theme.palette.primary.main,
-              fontWeight: 700
-            }}>
-              Trading Panel
-            </Typography>
+            <BrandLogo>
+              <Box className="logo-icon">
+                <TrendingUp sx={{ color: '#fff', fontSize: '1.2rem' }} />
+              </Box>
+              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                <Typography variant="h6" noWrap sx={{ 
+                  fontWeight: 700, 
+                  background: theme.palette.mode === 'dark'
+                    ? 'linear-gradient(to right, #9C96FF, #76C4FF)'
+                    : 'linear-gradient(to right, #3366FF, #00CCFF)', 
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  letterSpacing: '0.5px',
+                  lineHeight: 1.2
+                }}>
+                  MarketPulse
+                </Typography>
+                <Typography variant="caption" sx={{ 
+                  fontSize: '0.6rem', 
+                  opacity: 0.8, 
+                  letterSpacing: '0.05rem',
+                  color: theme.palette.text.secondary
+                }}>
+                  MARKET INTELLIGENCE PLATFORM
+                </Typography>
+              </Box>
+            </BrandLogo>
+            <Box sx={{ flexGrow: 1 }} />
             <IconButton sx={{ color: 'text.primary', '&:focus': { outline: 'none' } }} onClick={toggleTheme}>
               {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
             </IconButton>
