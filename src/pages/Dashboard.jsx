@@ -811,6 +811,18 @@ function Dashboard() {
 
   return (
     <Box sx={{ pb: 4 }}>
+      {/* Add global style to remove focus outlines */}
+      <style jsx global>{`
+        button:focus, [role="button"]:focus, .MuiButtonBase-root:focus, .MuiButtonBase-root.MuiButton-root:focus {
+          outline: none !important;
+          box-shadow: none !important;
+        }
+        .MuiButtonGroup-root .MuiButton-root:focus {
+          outline: none !important;
+          box-shadow: none !important;
+        }
+      `}</style>
+      
       <Box sx={{ mb: 4 }}>
         <Typography variant="h4" sx={{ 
           fontWeight: 700,

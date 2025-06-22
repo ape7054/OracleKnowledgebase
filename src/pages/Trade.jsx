@@ -48,6 +48,12 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   '& .MuiInputLabel-root': {
     color: theme.palette.text.secondary,
   },
+  '& .MuiOutlinedInput-root:focus, & .MuiOutlinedInput-root:focus-within': {
+    outline: 'none',
+  },
+  '& .MuiInputBase-root:focus, & .MuiInputBase-root:focus-within': {
+    outline: 'none',
+  },
 }));
 
 const StyledSelect = styled(TextField)(({ theme }) => ({
@@ -60,6 +66,13 @@ const StyledSelect = styled(TextField)(({ theme }) => ({
     },
     '& .MuiSvgIcon-root': {
         color: theme.palette.text.primary,
+    },
+    '& .MuiOutlinedInput-root:focus, & .MuiOutlinedInput-root:focus-within': {
+        outline: 'none',
+    },
+    '& .MuiSelect-select:focus': {
+        outline: 'none',
+        background: 'transparent',
     },
 }));
 
@@ -433,6 +446,13 @@ function Trade() {
 
   return (
       <Box sx={{ width: '100%', maxWidth: '100%', minHeight: '80vh' }}>
+        <style jsx global>{`
+          button:focus, [role="button"]:focus, .MuiButtonBase-root:focus, .MuiButtonBase-root.MuiButton-root:focus {
+            outline: none !important;
+            box-shadow: none !important;
+          }
+        `}</style>
+        
         <Box sx={{ 
           display: 'flex', 
           alignItems: 'center', 

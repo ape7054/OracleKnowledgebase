@@ -146,6 +146,17 @@ function Account() {
 
     return (
         <Box sx={{ width: '100%' }}>
+            {/* Add global style to remove focus outlines */}
+            <style jsx global>{`
+                button:focus, [role="button"]:focus, .MuiButtonBase-root:focus, .MuiButton-root:focus {
+                    outline: none !important;
+                    box-shadow: none !important;
+                }
+                .MuiSwitch-root:focus, .MuiSwitch-switchBase:focus {
+                    outline: none !important;
+                }
+            `}</style>
+            
             <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold' }}>
                 Account
             </Typography>
