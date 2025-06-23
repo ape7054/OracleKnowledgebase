@@ -162,13 +162,13 @@ const StatCard = ({ title, value, icon, color }) => (
           display: 'flex', 
           alignItems: 'center', 
           justifyContent: 'center',
-          backgroundColor: alpha(color, 0.15),
+        backgroundColor: alpha(color, 0.15),
           boxShadow: `0 4px 12px ${alpha(color, 0.35)}`,
-          mr: 2,
-        }}>
-          {icon}
-        </Box>
-        <Box>
+        mr: 2,
+      }}>
+        {icon}
+      </Box>
+      <Box>
           <Typography variant="body1" color="text.secondary" sx={{ mb: 0.5 }}>{title}</Typography>
           <Typography variant="h5" sx={{ fontWeight: 'bold', background: `linear-gradient(45deg, ${color}, ${color}CC)`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{value}</Typography>
         </Box>
@@ -868,8 +868,8 @@ function Dashboard() {
                       : theme.palette.error.main 
                 }}
               >
-                {coin.change}
-              </Typography>
+              {coin.change}
+            </Typography>
             </Box>
             <Box sx={{ width: '60%', height: 40 }}>
               <SparkLine 
@@ -887,20 +887,20 @@ function Dashboard() {
   // 美化表格视图
   const MarketTableView = () => (
     <StyledTableContainer>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Asset</TableCell>
-            <TableCell align="right">Price</TableCell>
-            <TableCell align="right">24h Change</TableCell>
-            <TableCell align="right" sx={{ width: '150px' }}>24h Chart</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {marketData.map((coin) => (
-            <TableRow key={coin.symbol} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-              <TableCell component="th" scope="row">
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell>Asset</TableCell>
+          <TableCell align="right">Price</TableCell>
+          <TableCell align="right">24h Change</TableCell>
+          <TableCell align="right" sx={{ width: '150px' }}>24h Chart</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {marketData.map((coin) => (
+          <TableRow key={coin.symbol} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+            <TableCell component="th" scope="row">
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <Box sx={{ 
                     width: 40, 
                     height: 40, 
@@ -915,16 +915,16 @@ function Dashboard() {
                   }}>
                     <coin.icon style={{ width: 28, height: 28 }} />
                   </Box>
-                  <Box>
-                    <Typography variant="body1" sx={{ fontWeight: 600 }}>{coin.name}</Typography>
-                    <Typography variant="body2" color="text.secondary">{coin.symbol}</Typography>
-                  </Box>
+                <Box>
+                  <Typography variant="body1" sx={{ fontWeight: 600 }}>{coin.name}</Typography>
+                  <Typography variant="body2" color="text.secondary">{coin.symbol}</Typography>
                 </Box>
-              </TableCell>
-              <TableCell align="right">
+              </Box>
+            </TableCell>
+            <TableCell align="right">
                 <Typography variant="body1" sx={{ fontFamily: 'monospace', fontWeight: 600 }}>{coin.price}</Typography>
-              </TableCell>
-              <TableCell align="right">
+            </TableCell>
+            <TableCell align="right">
                 <Box sx={{ 
                   display: 'inline-flex', 
                   alignItems: 'center',
@@ -955,21 +955,21 @@ function Dashboard() {
                           : theme.palette.error.main 
                     }}
                   >
-                    {coin.change}
-                  </Typography>
+                {coin.change}
+              </Typography>
                 </Box>
-              </TableCell>
-              <TableCell align="right">
-                <SparkLine 
-                  data={coin.sparkline} 
-                  strokeColor={coin.change.startsWith('+') ? theme.palette.success.main : 
-                               coin.change === '+0.0%' ? theme.palette.grey[500] : theme.palette.error.main} 
-                />
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+            </TableCell>
+            <TableCell align="right">
+              <SparkLine 
+                data={coin.sparkline} 
+                strokeColor={coin.change.startsWith('+') ? theme.palette.success.main : 
+                             coin.change === '+0.0%' ? theme.palette.grey[500] : theme.palette.error.main} 
+              />
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
     </StyledTableContainer>
   );
 
@@ -1060,7 +1060,7 @@ function Dashboard() {
             <InsightsIcon sx={{ mr: 1.5, color: theme.palette.primary.main }} />
             <Typography variant="h6" sx={{ fontWeight: 600 }}>
               Market Sentiment Indicators
-            </Typography>
+          </Typography>
           </Box>
         </Grid>
         
@@ -1210,7 +1210,7 @@ function Dashboard() {
             <SignalCellularAltIcon sx={{ mr: 1.5, color: theme.palette.primary.main }} />
             <Typography variant="h6" sx={{ fontWeight: 600 }}>
               Price Trends
-            </Typography>
+          </Typography>
           </Box>
         </Grid>
         
@@ -1258,28 +1258,28 @@ function Dashboard() {
                   }
                 }}
               >
-                <Button 
-                  onClick={() => setSelectedCoin('BTC')}
-                  variant={selectedCoin === 'BTC' ? 'contained' : 'outlined'}
+                  <Button 
+                    onClick={() => setSelectedCoin('BTC')}
+                    variant={selectedCoin === 'BTC' ? 'contained' : 'outlined'}
                   className={selectedCoin === 'BTC' ? 'Mui-selected' : ''}
-                >
-                  BTC
-                </Button>
-                <Button 
-                  onClick={() => setSelectedCoin('ETH')}
-                  variant={selectedCoin === 'ETH' ? 'contained' : 'outlined'}
+                  >
+                    BTC
+                  </Button>
+                  <Button 
+                    onClick={() => setSelectedCoin('ETH')}
+                    variant={selectedCoin === 'ETH' ? 'contained' : 'outlined'}
                   className={selectedCoin === 'ETH' ? 'Mui-selected' : ''}
-                >
-                  ETH
-                </Button>
-                <Button 
-                  onClick={() => setSelectedCoin('SOL')}
-                  variant={selectedCoin === 'SOL' ? 'contained' : 'outlined'}
+                  >
+                    ETH
+                  </Button>
+                  <Button 
+                    onClick={() => setSelectedCoin('SOL')}
+                    variant={selectedCoin === 'SOL' ? 'contained' : 'outlined'}
                   className={selectedCoin === 'SOL' ? 'Mui-selected' : ''}
-                >
-                  SOL
-                </Button>
-              </ButtonGroup>
+                  >
+                    SOL
+                  </Button>
+                </ButtonGroup>
               
               <ButtonGroup 
                 variant="outlined" 
@@ -1367,7 +1367,7 @@ function Dashboard() {
             <BarChartOutlinedIcon sx={{ mr: 1.5, color: theme.palette.primary.main }} />
             <Typography variant="h6" sx={{ fontWeight: 600 }}>
               Market Overview
-            </Typography>
+          </Typography>
           </Box>
         </Grid>
         

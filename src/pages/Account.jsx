@@ -468,7 +468,7 @@ function Account() {
                                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                     {renderPieChart()}
                                 </Box>
-                            </GlassmorphicPaper>
+                    </GlassmorphicPaper>
                         </Grid>
                     </Grid>
                     
@@ -520,27 +520,27 @@ function Account() {
                             </Box>
                         ) : (
                             <StyledTableContainer>
-                                <Table>
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell sx={{ border: 0 }}>Asset</TableCell>
-                                            <TableCell sx={{ border: 0 }}>Balance</TableCell>
-                                            <TableCell sx={{ border: 0 }}>Value (USD)</TableCell>
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell sx={{ border: 0 }}>Asset</TableCell>
+                                        <TableCell sx={{ border: 0 }}>Balance</TableCell>
+                                        <TableCell sx={{ border: 0 }}>Value (USD)</TableCell>
                                             <TableCell sx={{ border: 0 }}>24h Change</TableCell>
                                             <TableCell sx={{ border: 0 }} align="right">Actions</TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {assets.map((asset) => (
-                                            <TableRow key={asset.symbol} sx={{ '& td, & th': { border: 0 }}}>
-                                                <TableCell>
-                                                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {assets.map((asset) => (
+                                        <TableRow key={asset.symbol} sx={{ '& td, & th': { border: 0 }}}>
+                                            <TableCell>
+                                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                                         <AssetIconWrapper sx={{ mr: 2 }}>
                                                             {React.createElement(asset.icon, { width: 28, height: 28 })}
                                                         </AssetIconWrapper>
-                                                        <Box>
+                                                    <Box>
                                                             <Typography sx={{ fontWeight: 600 }}>{asset.name}</Typography>
-                                                            <Typography variant="body2" color="text.secondary">{asset.symbol}</Typography>
+                                                        <Typography variant="body2" color="text.secondary">{asset.symbol}</Typography>
                                                         </Box>
                                                     </Box>
                                                 </TableCell>
@@ -577,8 +577,8 @@ function Account() {
                                                         >
                                                             {asset.change}
                                                         </Typography>
-                                                    </Box>
-                                                </TableCell>
+                                                </Box>
+                                            </TableCell>
                                                 <TableCell align="right">
                                                     <ActionButton
                                                         size="small"
@@ -597,11 +597,11 @@ function Account() {
                                                     >
                                                         Withdraw
                                                     </ActionButton>
-                                                </TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
                             </StyledTableContainer>
                         )}
                     </GlassmorphicPaper>
@@ -655,20 +655,20 @@ function Account() {
                          </Box>
                     ) : (
                         <StyledTableContainer>
-                            <Table>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell sx={{ border: 0 }}>Type</TableCell>
-                                        <TableCell sx={{ border: 0 }}>Asset</TableCell>
-                                        <TableCell sx={{ border: 0 }}>Amount</TableCell>
-                                        <TableCell sx={{ border: 0 }}>Value</TableCell>
-                                        <TableCell sx={{ border: 0 }}>Date</TableCell>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell sx={{ border: 0 }}>Type</TableCell>
+                                    <TableCell sx={{ border: 0 }}>Asset</TableCell>
+                                    <TableCell sx={{ border: 0 }}>Amount</TableCell>
+                                    <TableCell sx={{ border: 0 }}>Value</TableCell>
+                                    <TableCell sx={{ border: 0 }}>Date</TableCell>
                                         <TableCell sx={{ border: 0 }} align="right">Status</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {transactions.map((tx, index) => (
-                                        <TableRow key={index} sx={{ '& td, & th': { border: 0 }}}>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {transactions.map((tx, index) => (
+                                    <TableRow key={index} sx={{ '& td, & th': { border: 0 }}}>
                                             <TableCell>
                                                 <Box sx={{ 
                                                     display: 'inline-flex',
@@ -691,22 +691,22 @@ function Account() {
                                                     {tx.type}
                                                 </Box>
                                             </TableCell>
-                                            <TableCell>{tx.asset}</TableCell>
+                                        <TableCell>{tx.asset}</TableCell>
                                             <TableCell sx={{ 
                                                 color: tx.amount.startsWith('+') ? theme.palette.success.main : theme.palette.error.main,
                                                 fontWeight: 500,
                                                 fontFamily: 'monospace'
                                             }}>
-                                                {tx.amount}
-                                            </TableCell>
+                                            {tx.amount}
+                                        </TableCell>
                                             <TableCell sx={{ 
                                                 color: tx.value.startsWith('+') ? theme.palette.success.main : theme.palette.error.main,
                                                 fontWeight: 600,
                                                 fontFamily: 'monospace'
                                             }}>
-                                                {tx.value}
-                                            </TableCell>
-                                            <TableCell>{tx.date}</TableCell>
+                                            {tx.value}
+                                        </TableCell>
+                                        <TableCell>{tx.date}</TableCell>
                                             <TableCell align="right">
                                                 <Box sx={{ 
                                                     display: 'inline-flex',
@@ -721,10 +721,10 @@ function Account() {
                                                     Completed
                                                 </Box>
                                             </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
                         </StyledTableContainer>
                     )}
                 </GlassmorphicPaper>
