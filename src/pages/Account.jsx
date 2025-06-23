@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react';
-import { Box, Typography, Paper, Grid, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Avatar, List, ListItem, ListItemText, ListItemSecondaryAction, Switch, Divider, Card } from '@mui/material';
+import { Box, Typography, Paper, Grid, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Avatar, List, ListItem, ListItemText, ListItemSecondaryAction, Switch, Divider, Card, useMediaQuery } from '@mui/material';
 import { styled, useTheme, alpha } from '@mui/system';
 import { ArrowUpward, ArrowDownward, Wallet, History, Settings as SettingsIcon, TrendingUp, CreditCard, Visibility } from '@mui/icons-material';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, Area, AreaChart, XAxis, YAxis } from 'recharts';
@@ -100,6 +100,13 @@ const TabButton = styled(Button)(({ theme, active }) => ({
     transition: 'all 0.3s ease',
     position: 'relative',
     overflow: 'hidden',
+
+    [theme.breakpoints.down('sm')]: {
+        padding: '12px 8px',
+        fontSize: '0.75rem',
+        minWidth: 'auto',
+    },
+
     '&:hover': {
         backgroundColor: theme.palette.mode === 'dark' 
             ? alpha(theme.palette.primary.main, 0.15)
@@ -111,6 +118,9 @@ const TabButton = styled(Button)(({ theme, active }) => ({
         marginRight: '8px',
         transition: 'transform 0.3s ease',
         color: active ? theme.palette.primary.main : theme.palette.text.secondary,
+        [theme.breakpoints.down('sm')]: {
+            marginRight: '4px',
+        },
     },
     '&:hover .MuiButton-startIcon': {
         transform: 'scale(1.1)',
@@ -214,6 +224,7 @@ const transactions = [
 function Account() {
     const [tabValue, setTabValue] = useState(0);
     const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
     const handleTabChange = (newValue) => {
         setTabValue(newValue);
@@ -314,9 +325,35 @@ function Account() {
                 .MuiSwitch-root:focus, .MuiSwitch-switchBase:focus {
                     outline: none !important;
                 }
+                .MuiOutlinedInput-root:focus, .MuiOutlinedInput-root:focus-within,
+                .MuiInputBase-root:focus, .MuiInputBase-root:focus-within,
+                .MuiSelect-select:focus, .MuiMenuItem-root:focus,
+                .MuiListItemButton-root:focus, .MuiChip-root:focus,
+                .MuiTab-root:focus, .MuiTabs-root:focus,
+                .MuiPaginationItem-root:focus {
+                    outline: none !important;
+                    box-shadow: none !important;
+                }
+                .MuiIconButton-root:focus {
+                    outline: none !important;
+                    box-shadow: none !important;
+                }
+                .MuiInputLabel-root:focus {
+                    outline: none !important;
+                }
+                .MuiSelect-select.MuiSelect-outlined:focus {
+                    background-color: transparent !important;
+                }
+                a:focus, a:focus-visible {
+                    outline: none !important;
+                    box-shadow: none !important;
+                }
+                input:focus {
+                    outline: none !important;
+                }
             `}</style>
             
-            <Typography variant="h4" gutterBottom sx={{ 
+            <Typography variant={isMobile ? "h5" : "h4"} gutterBottom sx={{ 
                 fontWeight: 700, 
                 mb: 3,
                 background: theme.palette.mode === 'dark'
@@ -372,10 +409,10 @@ function Account() {
                         {/* Balance Card */}
                         <Grid item xs={12} md={6}>
                             <GlassmorphicPaper sx={{ height: '100%' }}>
-                                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+                                <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', mb: 2 }}>
                                     <Box>
                                         <Typography variant="body2" color="text.secondary">Total Estimated Balance</Typography>
-                                        <Typography variant="h3" sx={{ fontWeight: 700, mt: 1 }}>$149,263.24</Typography>
+                                        <Typography variant="h3" sx={{ fontWeight: 700, mt: 1, fontSize: { xs: '2.5rem', md: '3rem' } }}>$149,263.24</Typography>
                                         <Box sx={{ 
                                             display: 'flex', 
                                             alignItems: 'center', 
@@ -393,8 +430,11 @@ function Account() {
                                         </Box>
                                     </Box>
                                     <Box sx={{ 
-                                        display: 'flex', 
-                                        gap: 1 
+                                        display: 'grid', 
+                                        gridTemplateColumns: '1fr 1fr',
+                                        gap: 1.5,
+                                        width: { xs: '100%', sm: 'auto' },
+                                        mt: { xs: 3, sm: 0 },
                                     }}>
                                         <ActionButton 
                                             variant="contained" 
@@ -428,97 +468,142 @@ function Account() {
                                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                     {renderPieChart()}
                                 </Box>
-                    </GlassmorphicPaper>
+                            </GlassmorphicPaper>
                         </Grid>
                     </Grid>
                     
-                    {/* Assets Table */}
+                    {/* Assets Table / Cards */}
                     <GlassmorphicPaper>
                         <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>Your Assets</Typography>
-                        <StyledTableContainer>
-                            <Table>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell sx={{ border: 0 }}>Asset</TableCell>
-                                        <TableCell sx={{ border: 0 }}>Balance</TableCell>
-                                        <TableCell sx={{ border: 0 }}>Value (USD)</TableCell>
-                                        <TableCell sx={{ border: 0 }}>24h Change</TableCell>
-                                        <TableCell sx={{ border: 0 }} align="right">Actions</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {assets.map((asset) => (
-                                        <TableRow key={asset.symbol} sx={{ '& td, & th': { border: 0 }}}>
-                                            <TableCell>
-                                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                    <AssetIconWrapper sx={{ mr: 2 }}>
-                                                        {React.createElement(asset.icon, { width: 28, height: 28 })}
-                                                    </AssetIconWrapper>
-                                                    <Box>
-                                                        <Typography sx={{ fontWeight: 600 }}>{asset.name}</Typography>
-                                                        <Typography variant="body2" color="text.secondary">{asset.symbol}</Typography>
-                                                    </Box>
+                        {isMobile ? (
+                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                                {assets.map((asset) => (
+                                    <Card key={asset.symbol} sx={{ p: 2, borderRadius: '12px', bgcolor: 'transparent', border: `1px solid ${alpha(theme.palette.divider, 0.2)}` }}>
+                                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                <AssetIconWrapper sx={{ mr: 1.5, width: 36, height: 36 }}>
+                                                    {React.createElement(asset.icon, { width: 24, height: 24 })}
+                                                </AssetIconWrapper>
+                                                <Box>
+                                                    <Typography sx={{ fontWeight: 600, fontSize: '0.875rem' }}>{asset.name}</Typography>
+                                                    <Typography variant="body2" color="text.secondary">{asset.symbol}</Typography>
                                                 </Box>
-                                            </TableCell>
-                                            <TableCell sx={{ fontFamily: 'monospace', fontWeight: 500 }}>{asset.balance}</TableCell>
-                                            <TableCell sx={{ fontFamily: 'monospace', fontWeight: 600 }}>${asset.value.toLocaleString()}</TableCell>
-                                            <TableCell>
-                                                <Box sx={{ 
-                                                    display: 'inline-flex', 
-                                                    alignItems: 'center',
-                                                    px: 1.5,
-                                                    py: 0.5,
-                                                    borderRadius: 1,
-                                                    backgroundColor: asset.change.startsWith('+') && asset.change !== '+0.0%' 
-                                                        ? alpha(theme.palette.success.main, 0.1) 
-                                                        : asset.change === '+0.0%' 
-                                                            ? alpha(theme.palette.grey[500], 0.1)
-                                                            : alpha(theme.palette.error.main, 0.1)
-                                                }}>
-                                                    {asset.change.startsWith('+') && asset.change !== '+0.0%' ? (
-                                                        <TrendingUp sx={{ fontSize: '0.875rem', color: theme.palette.success.main, mr: 0.5 }} />
-                                                    ) : asset.change === '+0.0%' ? null : (
-                                                        <ArrowDownward sx={{ fontSize: '0.875rem', color: theme.palette.error.main, mr: 0.5 }} />
-                                                    )}
-                                                    <Typography 
-                                                        variant="body2" 
-                                                        sx={{ 
-                                                            fontWeight: 600, 
-                                                            color: asset.change.startsWith('+') && asset.change !== '+0.0%' 
-                                                                ? theme.palette.success.main 
-                                                                : asset.change === '+0.0%' 
-                                                                    ? theme.palette.grey[500] 
-                                                                    : theme.palette.error.main 
-                                                        }}
-                                                    >
-                                                        {asset.change}
-                                                    </Typography>
-                                                </Box>
-                                            </TableCell>
-                                            <TableCell align="right">
-                                                <ActionButton
-                                                    size="small"
-                                                    variant="outlined"
-                                                    startIcon={<ArrowUpward />}
-                                                    color="success"
-                                                    sx={{ mr: 1 }}
-                                                >
-                                                    Deposit
-                                                </ActionButton>
-                                                <ActionButton
-                                                    size="small"
-                                                    variant="outlined"
-                                                    startIcon={<ArrowDownward />}
-                                                    color="error"
-                                                >
-                                                    Withdraw
-                                                </ActionButton>
-                                            </TableCell>
+                                            </Box>
+                                            <Box sx={{ 
+                                                display: 'inline-flex', 
+                                                alignItems: 'center',
+                                                px: 1, py: 0.5, borderRadius: 1,
+                                                backgroundColor: asset.change.startsWith('+') && asset.change !== '+0.0%' ? alpha(theme.palette.success.main, 0.1) : asset.change === '+0.0%' ? alpha(theme.palette.grey[500], 0.1) : alpha(theme.palette.error.main, 0.1)
+                                            }}>
+                                                <Typography variant="caption" sx={{ fontWeight: 600, color: asset.change.startsWith('+') && asset.change !== '+0.0%' ? theme.palette.success.main : asset.change === '+0.0%' ? theme.palette.grey[500] : theme.palette.error.main }}>
+                                                    {asset.change}
+                                                </Typography>
+                                            </Box>
+                                        </Box>
+                                        <Divider sx={{ my: 1.5, borderColor: alpha(theme.palette.divider, 0.1) }}/>
+                                        <Grid container spacing={1} sx={{ mb: 2, textAlign: 'left' }}>
+                                            <Grid item xs={6}>
+                                                <Typography variant="caption" color="text.secondary">Balance</Typography>
+                                                <Typography sx={{ fontFamily: 'monospace', fontWeight: 500, fontSize: '0.875rem' }}>{asset.balance}</Typography>
+                                            </Grid>
+                                            <Grid item xs={6}>
+                                                <Typography variant="caption" color="text.secondary">Value (USD)</Typography>
+                                                <Typography sx={{ fontFamily: 'monospace', fontWeight: 600, fontSize: '0.875rem' }}>${asset.value.toLocaleString()}</Typography>
+                                            </Grid>
+                                        </Grid>
+                                        <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1 }}>
+                                            <ActionButton size="small" variant="outlined" startIcon={<ArrowUpward />} color="success">Deposit</ActionButton>
+                                            <ActionButton size="small" variant="outlined" startIcon={<ArrowDownward />} color="error">Withdraw</ActionButton>
+                                        </Box>
+                                    </Card>
+                                ))}
+                            </Box>
+                        ) : (
+                            <StyledTableContainer>
+                                <Table>
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell sx={{ border: 0 }}>Asset</TableCell>
+                                            <TableCell sx={{ border: 0 }}>Balance</TableCell>
+                                            <TableCell sx={{ border: 0 }}>Value (USD)</TableCell>
+                                            <TableCell sx={{ border: 0 }}>24h Change</TableCell>
+                                            <TableCell sx={{ border: 0 }} align="right">Actions</TableCell>
                                         </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </StyledTableContainer>
+                                    </TableHead>
+                                    <TableBody>
+                                        {assets.map((asset) => (
+                                            <TableRow key={asset.symbol} sx={{ '& td, & th': { border: 0 }}}>
+                                                <TableCell>
+                                                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                        <AssetIconWrapper sx={{ mr: 2 }}>
+                                                            {React.createElement(asset.icon, { width: 28, height: 28 })}
+                                                        </AssetIconWrapper>
+                                                        <Box>
+                                                            <Typography sx={{ fontWeight: 600 }}>{asset.name}</Typography>
+                                                            <Typography variant="body2" color="text.secondary">{asset.symbol}</Typography>
+                                                        </Box>
+                                                    </Box>
+                                                </TableCell>
+                                                <TableCell sx={{ fontFamily: 'monospace', fontWeight: 500 }}>{asset.balance}</TableCell>
+                                                <TableCell sx={{ fontFamily: 'monospace', fontWeight: 600 }}>${asset.value.toLocaleString()}</TableCell>
+                                                <TableCell>
+                                                    <Box sx={{ 
+                                                        display: 'inline-flex', 
+                                                        alignItems: 'center',
+                                                        px: 1.5,
+                                                        py: 0.5,
+                                                        borderRadius: 1,
+                                                        backgroundColor: asset.change.startsWith('+') && asset.change !== '+0.0%' 
+                                                            ? alpha(theme.palette.success.main, 0.1) 
+                                                            : asset.change === '+0.0%' 
+                                                                ? alpha(theme.palette.grey[500], 0.1)
+                                                                : alpha(theme.palette.error.main, 0.1)
+                                                    }}>
+                                                        {asset.change.startsWith('+') && asset.change !== '+0.0%' ? (
+                                                            <TrendingUp sx={{ fontSize: '0.875rem', color: theme.palette.success.main, mr: 0.5 }} />
+                                                        ) : asset.change === '+0.0%' ? null : (
+                                                            <ArrowDownward sx={{ fontSize: '0.875rem', color: theme.palette.error.main, mr: 0.5 }} />
+                                                        )}
+                                                        <Typography 
+                                                            variant="body2" 
+                                                            sx={{ 
+                                                                fontWeight: 600, 
+                                                                color: asset.change.startsWith('+') && asset.change !== '+0.0%' 
+                                                                    ? theme.palette.success.main 
+                                                                    : asset.change === '+0.0%' 
+                                                                        ? theme.palette.grey[500] 
+                                                                        : theme.palette.error.main 
+                                                            }}
+                                                        >
+                                                            {asset.change}
+                                                        </Typography>
+                                                    </Box>
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                    <ActionButton
+                                                        size="small"
+                                                        variant="outlined"
+                                                        startIcon={<ArrowUpward />}
+                                                        color="success"
+                                                        sx={{ mr: 1 }}
+                                                    >
+                                                        Deposit
+                                                    </ActionButton>
+                                                    <ActionButton
+                                                        size="small"
+                                                        variant="outlined"
+                                                        startIcon={<ArrowDownward />}
+                                                        color="error"
+                                                    >
+                                                        Withdraw
+                                                    </ActionButton>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </StyledTableContainer>
+                        )}
                     </GlassmorphicPaper>
                 </Box>
             </TabPanel>
@@ -531,78 +616,117 @@ function Account() {
                         <Button variant="outlined" size="small" startIcon={<CreditCard />}>Export CSV</Button>
                     </Box>
                     
-                    <StyledTableContainer>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell sx={{ border: 0 }}>Type</TableCell>
-                                    <TableCell sx={{ border: 0 }}>Asset</TableCell>
-                                    <TableCell sx={{ border: 0 }}>Amount</TableCell>
-                                    <TableCell sx={{ border: 0 }}>Value</TableCell>
-                                    <TableCell sx={{ border: 0 }}>Date</TableCell>
-                                    <TableCell sx={{ border: 0 }} align="right">Status</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {transactions.map((tx, index) => (
-                                    <TableRow key={index} sx={{ '& td, & th': { border: 0 }}}>
-                                        <TableCell>
-                                            <Box sx={{ 
-                                                display: 'inline-flex',
-                                                px: 1.5,
-                                                py: 0.5,
-                                                borderRadius: 1,
-                                                backgroundColor: tx.type === 'Deposit' 
-                                                    ? alpha(theme.palette.success.main, 0.1)
-                                                    : tx.type === 'Withdrawal'
-                                                        ? alpha(theme.palette.error.main, 0.1)
-                                                        : alpha(theme.palette.info.main, 0.1),
-                                                color: tx.type === 'Deposit' 
-                                                    ? theme.palette.success.main
-                                                    : tx.type === 'Withdrawal'
-                                                        ? theme.palette.error.main
-                                                        : theme.palette.info.main,
-                                                fontWeight: 600,
-                                                fontSize: '0.75rem'
-                                            }}>
-                                                {tx.type}
-                                            </Box>
-                                        </TableCell>
-                                        <TableCell>{tx.asset}</TableCell>
-                                        <TableCell sx={{ 
-                                            color: tx.amount.startsWith('+') ? theme.palette.success.main : theme.palette.error.main,
-                                            fontWeight: 500,
-                                            fontFamily: 'monospace'
+                    {isMobile ? (
+                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                            {transactions.map((tx, index) => (
+                                <Card key={index} sx={{ p: 2, borderRadius: '12px', bgcolor: 'transparent', border: `1px solid ${alpha(theme.palette.divider, 0.2)}` }}>
+                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1.5 }}>
+                                        <Box>
+                                            <Typography sx={{ fontWeight: 600 }}>{tx.asset}</Typography>
+                                            <Typography variant="caption" color="text.secondary">{tx.date}</Typography>
+                                        </Box>
+                                         <Box sx={{ 
+                                            display: 'inline-flex',
+                                            px: 1.5, py: 0.5, borderRadius: 1,
+                                            backgroundColor: tx.type === 'Deposit' ? alpha(theme.palette.success.main, 0.1) : tx.type === 'Withdrawal' ? alpha(theme.palette.error.main, 0.1) : alpha(theme.palette.info.main, 0.1),
+                                            color: tx.type === 'Deposit' ? theme.palette.success.main : tx.type === 'Withdrawal' ? theme.palette.error.main : theme.palette.info.main,
+                                            fontWeight: 600, fontSize: '0.7rem'
                                         }}>
-                                            {tx.amount}
-                                        </TableCell>
-                                        <TableCell sx={{ 
-                                            color: tx.value.startsWith('+') ? theme.palette.success.main : theme.palette.error.main,
-                                            fontWeight: 600,
-                                            fontFamily: 'monospace'
-                                        }}>
-                                            {tx.value}
-                                        </TableCell>
-                                        <TableCell>{tx.date}</TableCell>
-                                        <TableCell align="right">
-                                            <Box sx={{ 
-                                                display: 'inline-flex',
-                                                px: 1.5,
-                                                py: 0.5,
-                                                borderRadius: 1,
-                                                backgroundColor: alpha(theme.palette.success.main, 0.1),
-                                                color: theme.palette.success.main,
-                                                fontWeight: 600,
-                                                fontSize: '0.75rem'
-                                            }}>
-                                                Completed
-                                            </Box>
-                                        </TableCell>
+                                            {tx.type}
+                                        </Box>
+                                    </Box>
+                                    <Divider sx={{ my: 1, borderColor: alpha(theme.palette.divider, 0.1) }}/>
+                                    <Grid container spacing={1} sx={{ mt: 1 }}>
+                                        <Grid item xs={6}>
+                                            <Typography variant="caption" color="text.secondary">Amount</Typography>
+                                            <Typography sx={{ color: tx.amount.startsWith('+') ? theme.palette.success.main : theme.palette.error.main, fontWeight: 500, fontFamily: 'monospace', fontSize: '0.875rem' }}>
+                                                {tx.amount}
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={6}>
+                                            <Typography variant="caption" color="text.secondary">Value</Typography>
+                                            <Typography sx={{ color: tx.value.startsWith('+') ? theme.palette.success.main : theme.palette.error.main, fontWeight: 600, fontFamily: 'monospace', fontSize: '0.875rem' }}>
+                                                {tx.value}
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
+                                </Card>
+                            ))}
+                         </Box>
+                    ) : (
+                        <StyledTableContainer>
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell sx={{ border: 0 }}>Type</TableCell>
+                                        <TableCell sx={{ border: 0 }}>Asset</TableCell>
+                                        <TableCell sx={{ border: 0 }}>Amount</TableCell>
+                                        <TableCell sx={{ border: 0 }}>Value</TableCell>
+                                        <TableCell sx={{ border: 0 }}>Date</TableCell>
+                                        <TableCell sx={{ border: 0 }} align="right">Status</TableCell>
                                     </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </StyledTableContainer>
+                                </TableHead>
+                                <TableBody>
+                                    {transactions.map((tx, index) => (
+                                        <TableRow key={index} sx={{ '& td, & th': { border: 0 }}}>
+                                            <TableCell>
+                                                <Box sx={{ 
+                                                    display: 'inline-flex',
+                                                    px: 1.5,
+                                                    py: 0.5,
+                                                    borderRadius: 1,
+                                                    backgroundColor: tx.type === 'Deposit' 
+                                                        ? alpha(theme.palette.success.main, 0.1)
+                                                        : tx.type === 'Withdrawal'
+                                                            ? alpha(theme.palette.error.main, 0.1)
+                                                            : alpha(theme.palette.info.main, 0.1),
+                                                    color: tx.type === 'Deposit' 
+                                                        ? theme.palette.success.main
+                                                        : tx.type === 'Withdrawal'
+                                                            ? theme.palette.error.main
+                                                            : theme.palette.info.main,
+                                                    fontWeight: 600,
+                                                    fontSize: '0.75rem'
+                                                }}>
+                                                    {tx.type}
+                                                </Box>
+                                            </TableCell>
+                                            <TableCell>{tx.asset}</TableCell>
+                                            <TableCell sx={{ 
+                                                color: tx.amount.startsWith('+') ? theme.palette.success.main : theme.palette.error.main,
+                                                fontWeight: 500,
+                                                fontFamily: 'monospace'
+                                            }}>
+                                                {tx.amount}
+                                            </TableCell>
+                                            <TableCell sx={{ 
+                                                color: tx.value.startsWith('+') ? theme.palette.success.main : theme.palette.error.main,
+                                                fontWeight: 600,
+                                                fontFamily: 'monospace'
+                                            }}>
+                                                {tx.value}
+                                            </TableCell>
+                                            <TableCell>{tx.date}</TableCell>
+                                            <TableCell align="right">
+                                                <Box sx={{ 
+                                                    display: 'inline-flex',
+                                                    px: 1.5,
+                                                    py: 0.5,
+                                                    borderRadius: 1,
+                                                    backgroundColor: alpha(theme.palette.success.main, 0.1),
+                                                    color: theme.palette.success.main,
+                                                    fontWeight: 600,
+                                                    fontSize: '0.75rem'
+                                                }}>
+                                                    Completed
+                                                </Box>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </StyledTableContainer>
+                    )}
                 </GlassmorphicPaper>
             </TabPanel>
 
@@ -625,7 +749,7 @@ function Account() {
                                     <ListItemText 
                                         primary="Email Notifications" 
                                         secondary="Receive updates via email" 
-                                        primaryTypographyProps={{ sx: { fontWeight: 600, mb: 0.5 } }} 
+                                        primaryTypographyProps={{ sx: { fontWeight: 600, mb: 0.5, fontSize: isMobile ? '0.875rem' : '1rem' } }} 
                                     />
                                 <ListItemSecondaryAction><Switch defaultChecked /></ListItemSecondaryAction>
                             </ListItem>
@@ -634,7 +758,7 @@ function Account() {
                                     <ListItemText 
                                         primary="Push Notifications" 
                                         secondary="Get real-time alerts on your devices" 
-                                        primaryTypographyProps={{ sx: { fontWeight: 600, mb: 0.5 } }} 
+                                        primaryTypographyProps={{ sx: { fontWeight: 600, mb: 0.5, fontSize: isMobile ? '0.875rem' : '1rem' } }} 
                                     />
                                 <ListItemSecondaryAction><Switch /></ListItemSecondaryAction>
                             </ListItem>
@@ -643,7 +767,7 @@ function Account() {
                                     <ListItemText 
                                         primary="Price Alerts" 
                                         secondary="Be notified of significant price movements" 
-                                        primaryTypographyProps={{ sx: { fontWeight: 600, mb: 0.5 } }} 
+                                        primaryTypographyProps={{ sx: { fontWeight: 600, mb: 0.5, fontSize: isMobile ? '0.875rem' : '1rem' } }} 
                                     />
                                 <ListItemSecondaryAction><Switch defaultChecked /></ListItemSecondaryAction>
                             </ListItem>
@@ -652,7 +776,7 @@ function Account() {
                                     <ListItemText 
                                         primary="Login Notifications" 
                                         secondary="Get alerted when your account is accessed" 
-                                        primaryTypographyProps={{ sx: { fontWeight: 600, mb: 0.5 } }} 
+                                        primaryTypographyProps={{ sx: { fontWeight: 600, mb: 0.5, fontSize: isMobile ? '0.875rem' : '1rem' } }} 
                                     />
                                 <ListItemSecondaryAction><Switch defaultChecked /></ListItemSecondaryAction>
                             </ListItem>
@@ -672,7 +796,7 @@ function Account() {
                                     <ListItemText 
                                         primary="Two-Factor Authentication" 
                                         secondary="Add an extra layer of security" 
-                                        primaryTypographyProps={{ sx: { fontWeight: 600, mb: 0.5 } }} 
+                                        primaryTypographyProps={{ sx: { fontWeight: 600, mb: 0.5, fontSize: isMobile ? '0.875rem' : '1rem' } }} 
                                         sx={{ pr: 8 }} 
                                     />
                                     <ListItemSecondaryAction>
@@ -694,7 +818,7 @@ function Account() {
                                     <ListItemText 
                                         primary="API Access" 
                                         secondary="Manage API keys for automated trading" 
-                                        primaryTypographyProps={{ sx: { fontWeight: 600, mb: 0.5 } }} 
+                                        primaryTypographyProps={{ sx: { fontWeight: 600, mb: 0.5, fontSize: isMobile ? '0.875rem' : '1rem' } }} 
                                         sx={{ pr: 8 }} 
                                     />
                                     <ListItemSecondaryAction>

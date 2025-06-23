@@ -451,6 +451,44 @@ function Trade() {
             outline: none !important;
             box-shadow: none !important;
           }
+          .MuiOutlinedInput-root:focus, .MuiOutlinedInput-root:focus-within,
+          .MuiInputBase-root:focus, .MuiInputBase-root:focus-within,
+          .MuiSelect-select:focus, .MuiMenuItem-root:focus,
+          .MuiListItemButton-root:focus, .MuiChip-root:focus,
+          .MuiTab-root:focus, .MuiTabs-root:focus,
+          .MuiPaginationItem-root:focus {
+            outline: none !important;
+            box-shadow: none !important;
+          }
+          .MuiIconButton-root:focus {
+            outline: none !important;
+            box-shadow: none !important;
+          }
+          .MuiInputLabel-root:focus {
+            outline: none !important;
+          }
+          .MuiSelect-select.MuiSelect-outlined:focus {
+            background-color: transparent !important;
+          }
+          a:focus, a:focus-visible {
+            outline: none !important;
+            box-shadow: none !important;
+          }
+          input:focus {
+            outline: none !important;
+          }
+          .MuiSlider-thumb:focus, .MuiSlider-thumb:focus-visible {
+            outline: none !important;
+            box-shadow: none !important;
+          }
+          /* 移除TextField特定焦点样式 */
+          .MuiInput-underline:focus, .MuiInput-underline:focus-within,
+          .MuiInput-underline:after {
+            outline: none !important;
+          }
+          .MuiFilledInput-root:focus-within, .MuiFilledInput-root:focus {
+            background-color: transparent !important;
+          }
         `}</style>
         
         <Box sx={{ 
