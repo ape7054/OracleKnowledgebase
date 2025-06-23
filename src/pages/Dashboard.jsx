@@ -65,12 +65,12 @@ const CustomTooltip = ({ active, payload, label, theme }) => {
                 ...(theme.palette.mode === 'dark'
                     ? {
                         backgroundColor: 'rgba(33, 43, 54, 0.9)',
-                        backdropFilter: 'blur(10px)',
+                        backdropFilter: 'blur(20px)',
                         border: '1px solid rgba(255, 255, 255, 0.12)',
                         boxShadow: '0 8px 16px rgba(0,0,0,0.4)',
                     } : {
                         backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                        backdropFilter: 'blur(10px)',
+                        backdropFilter: 'blur(20px)',
                         border: `1px solid ${theme.palette.divider}`,
                         boxShadow: theme.shadows[4],
                     }
@@ -131,18 +131,47 @@ const marketData = [
 ];
 
 const StatCard = ({ title, value, icon, color }) => (
-    <GlassmorphicPaper sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', p: 3 }}>
+    <GlassmorphicPaper sx={{ 
+        display: 'flex', 
+        flexDirection: 'column', 
+        p: 3,
+        position: 'relative',
+        overflow: 'hidden'
+    }}>
       <Box sx={{
-        width: 52, height: 52, borderRadius: '50%',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        backgroundColor: alpha(color, 0.15),
-        mr: 2,
+        position: 'absolute',
+        top: '-10px',
+        right: '-10px',
+        width: '100px',
+        height: '100px',
+        borderRadius: '50%',
+        background: `radial-gradient(circle, ${alpha(color, 0.1)}, transparent 70%)`,
+        zIndex: 0
+      }} />
+      <Box sx={{
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        position: 'relative',
+        zIndex: 1
       }}>
-        {icon}
-      </Box>
-      <Box>
-        <Typography variant="body1" color="text.secondary">{title}</Typography>
-        <Typography variant="h5" sx={{ fontWeight: 'bold' }}>{value}</Typography>
+        <Box sx={{
+          width: 56, 
+          height: 56, 
+          borderRadius: '12px',
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center',
+          backgroundColor: alpha(color, 0.15),
+          boxShadow: `0 4px 12px ${alpha(color, 0.35)}`,
+          mr: 2,
+        }}>
+          {icon}
+        </Box>
+        <Box>
+          <Typography variant="body1" color="text.secondary" sx={{ mb: 0.5 }}>{title}</Typography>
+          <Typography variant="h5" sx={{ fontWeight: 'bold', background: `linear-gradient(45deg, ${color}, ${color}CC)`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{value}</Typography>
+        </Box>
       </Box>
     </GlassmorphicPaper>
 );
@@ -156,12 +185,45 @@ const SparkLine = ({ data, strokeColor }) => (
           <stop offset="40%" stopColor={alpha(strokeColor, 0.8)} />
           <stop offset="100%" stopColor={strokeColor} />
         </linearGradient>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="2" result="blur" />
+          <feComposite in="SourceGraphic" in2="blur" operator="over" />
+        </filter>
       </defs>
       <Tooltip content={() => null} />
-      <Line type="monotone" dataKey="value" stroke={`url(#spark-${strokeColor})`} strokeWidth={2.5} dot={false} />
+      <Line 
+        type="monotone" 
+        dataKey="value" 
+        stroke={`url(#spark-${strokeColor})`} 
+        strokeWidth={3} 
+        dot={false} 
+        style={{ filter: 'url(#glow)' }}
+        animationDuration={1500}
+      />
     </LineChart>
   </ResponsiveContainer>
 );
+
+// 增强市场表格样式
+const StyledTableContainer = styled(Box)(({ theme }) => ({
+  width: '100%',
+  overflowX: 'auto',
+  '& .MuiTableCell-root': {
+    borderBottom: `1px solid ${alpha(theme.palette.divider, 0.5)}`,
+    padding: '16px 8px',
+  },
+  '& .MuiTableRow-root:hover': {
+    backgroundColor: alpha(theme.palette.action.hover, 0.1),
+    transition: 'background-color 0.3s ease',
+  },
+  '& .MuiTableHead-root .MuiTableCell-root': {
+    color: theme.palette.text.secondary,
+    fontSize: '0.75rem',
+    textTransform: 'uppercase',
+    letterSpacing: '0.05em',
+    fontWeight: 600,
+  },
+}));
 
 // 升级后的市场情绪仪表组件
 const SentimentGauge = ({ value, size = 180 }) => {
@@ -702,30 +764,67 @@ function Dashboard() {
 
   const MemoizedAreaChart = useMemo(() => (
     <ResponsiveContainer width="100%" height="100%">
-      <AreaChart data={chartData[selectedCoin]} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+      <AreaChart data={chartData[selectedCoin]} margin={{ top: 10, right: 30, left: 20, bottom: 10 }}>
         <defs>
             <linearGradient id={chartMeta[selectedCoin].id} x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor={chartMeta[selectedCoin].stroke} stopOpacity={0.7}/>
                 <stop offset="95%" stopColor={chartMeta[selectedCoin].stroke} stopOpacity={0}/>
             </linearGradient>
+            <filter id="shadow" height="200%">
+              <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor={`${chartMeta[selectedCoin].stroke}66`}/>
+            </filter>
         </defs>
-        <CartesianGrid strokeDasharray="3 3" stroke={theme.palette.divider} vertical={false} />
-        <XAxis dataKey="name" stroke={theme.palette.text.secondary} tick={{ fontSize: 12 }} />
-        <YAxis stroke={theme.palette.text.secondary} tick={{ fontSize: 12 }} tickFormatter={(value) => `$${(value/1000)}k`} />
+        <CartesianGrid strokeDasharray="3 3" stroke={alpha(theme.palette.divider, 0.5)} vertical={false} />
+        <XAxis 
+          dataKey="name" 
+          stroke={theme.palette.text.secondary} 
+          tick={{ fontSize: 12 }}
+          axisLine={{ stroke: alpha(theme.palette.text.secondary, 0.2) }}
+          tickLine={{ stroke: alpha(theme.palette.text.secondary, 0.2) }}
+        />
+        <YAxis 
+          stroke={theme.palette.text.secondary} 
+          tick={{ fontSize: 12 }} 
+          tickFormatter={(value) => `$${(value/1000)}k`}
+          axisLine={{ stroke: alpha(theme.palette.text.secondary, 0.2) }}
+          tickLine={{ stroke: alpha(theme.palette.text.secondary, 0.2) }}
+        />
         <Tooltip content={<CustomTooltip theme={theme} />} />
-        <Area type="monotone" dataKey="value" stroke={chartMeta[selectedCoin].stroke} strokeWidth={2} fillOpacity={1} fill={`url(#${chartMeta[selectedCoin].id})`} />
+        <Area 
+          type="monotone" 
+          dataKey="value" 
+          stroke={chartMeta[selectedCoin].stroke} 
+          strokeWidth={3} 
+          fillOpacity={1} 
+          fill={`url(#${chartMeta[selectedCoin].id})`}
+          style={{ filter: 'url(#shadow)' }}
+          animationDuration={1500}
+        />
       </AreaChart>
     </ResponsiveContainer>
   ), [selectedCoin, theme]);
 
-  // Mobile card view for market data
+  // 优化移动视图卡片
   const MarketCardView = () => (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
       {marketData.map((coin) => (
-        <GlassmorphicPaper key={coin.symbol} sx={{ p: 2, mb: 1 }}>
+        <GlassmorphicPaper key={coin.symbol} sx={{ p: 3, mb: 1 }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <coin.icon style={{ width: 32, height: 32, marginRight: 12 }} />
+              <Box sx={{ 
+                width: 40, 
+                height: 40, 
+                borderRadius: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: theme.palette.mode === 'dark' ? alpha(theme.palette.background.paper, 0.4) : alpha(theme.palette.background.paper, 0.8),
+                boxShadow: `0 4px 12px ${alpha(theme.palette.common.black, theme.palette.mode === 'dark' ? 0.3 : 0.1)}`,
+                padding: 1,
+                mr: 2
+              }}>
+                <coin.icon style={{ width: 28, height: 28 }} />
+              </Box>
               <Box>
                 <Typography variant="body1" sx={{ fontWeight: 600 }}>{coin.name}</Typography>
                 <Typography variant="body2" color="text.secondary">{coin.symbol}</Typography>
@@ -733,7 +832,7 @@ function Dashboard() {
             </Box>
             <Typography variant="body1" sx={{ 
               fontFamily: 'monospace', 
-              fontWeight: 500,
+              fontWeight: 600,
               color: coin.change.startsWith('+') ? 'success.main' : 
                     coin.change === '+0.0%' ? 'text.secondary' : 'error.main'
             }}>
@@ -741,13 +840,37 @@ function Dashboard() {
             </Typography>
           </Box>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Typography variant="body2" sx={{ 
-              color: coin.change.startsWith('+') ? 'success.main' : 
-                    coin.change === '+0.0%' ? 'text.secondary' : 'error.main',
-              fontWeight: 500 
+            <Box sx={{ 
+              display: 'inline-flex', 
+              alignItems: 'center',
+              px: 1.5,
+              py: 0.5,
+              borderRadius: 1.5,
+              backgroundColor: coin.change.startsWith('+') && coin.change !== '+0.0%' 
+                ? alpha(theme.palette.success.main, 0.1) 
+                : coin.change === '+0.0%' 
+                  ? alpha(theme.palette.grey[500], 0.1)
+                  : alpha(theme.palette.error.main, 0.1)
             }}>
-              {coin.change}
-            </Typography>
+              {coin.change.startsWith('+') && coin.change !== '+0.0%' ? (
+                <TrendingUpIcon sx={{ fontSize: '0.875rem', color: theme.palette.success.main, mr: 0.5 }} />
+              ) : coin.change === '+0.0%' ? null : (
+                <TrendingDownIcon sx={{ fontSize: '0.875rem', color: theme.palette.error.main, mr: 0.5 }} />
+              )}
+              <Typography 
+                variant="body2" 
+                sx={{ 
+                  fontWeight: 600, 
+                  color: coin.change.startsWith('+') && coin.change !== '+0.0%' 
+                    ? theme.palette.success.main 
+                    : coin.change === '+0.0%' 
+                      ? theme.palette.grey[500] 
+                      : theme.palette.error.main 
+                }}
+              >
+                {coin.change}
+              </Typography>
+            </Box>
             <Box sx={{ width: '60%', height: 40 }}>
               <SparkLine 
                 data={coin.sparkline} 
@@ -761,52 +884,93 @@ function Dashboard() {
     </Box>
   );
 
-  // Desktop table view for market data
+  // 美化表格视图
   const MarketTableView = () => (
-    <Table>
-      <TableHead>
-        <TableRow>
-          <TableCell>Asset</TableCell>
-          <TableCell align="right">Price</TableCell>
-          <TableCell align="right">24h Change</TableCell>
-          <TableCell align="right" sx={{ width: '150px' }}>24h Chart</TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {marketData.map((coin) => (
-          <TableRow key={coin.symbol} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-            <TableCell component="th" scope="row">
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <coin.icon style={{ width: 32, height: 32, marginRight: 16 }} />
-                <Box>
-                  <Typography variant="body1" sx={{ fontWeight: 600 }}>{coin.name}</Typography>
-                  <Typography variant="body2" color="text.secondary">{coin.symbol}</Typography>
-                </Box>
-              </Box>
-            </TableCell>
-            <TableCell align="right">
-              <Typography variant="body1" sx={{ fontFamily: 'monospace', fontWeight: 500 }}>{coin.price}</Typography>
-            </TableCell>
-            <TableCell align="right">
-              <Typography variant="body1" sx={{ 
-                color: coin.change.startsWith('+') ? 'success.main' : 
-                      coin.change === '+0.0%' ? 'text.secondary' : 'error.main',
-                fontWeight: 500 
-              }}>
-                {coin.change}
-              </Typography>
-            </TableCell>
-            <TableCell align="right">
-              <SparkLine 
-                data={coin.sparkline} 
-                strokeColor={coin.change.startsWith('+') ? theme.palette.success.main : 
-                             coin.change === '+0.0%' ? theme.palette.grey[500] : theme.palette.error.main} 
-              />
-            </TableCell>
+    <StyledTableContainer>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Asset</TableCell>
+            <TableCell align="right">Price</TableCell>
+            <TableCell align="right">24h Change</TableCell>
+            <TableCell align="right" sx={{ width: '150px' }}>24h Chart</TableCell>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHead>
+        <TableBody>
+          {marketData.map((coin) => (
+            <TableRow key={coin.symbol} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+              <TableCell component="th" scope="row">
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Box sx={{ 
+                    width: 40, 
+                    height: 40, 
+                    borderRadius: '12px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: theme.palette.mode === 'dark' ? alpha(theme.palette.background.paper, 0.4) : alpha(theme.palette.background.paper, 0.8),
+                    boxShadow: `0 4px 12px ${alpha(theme.palette.common.black, theme.palette.mode === 'dark' ? 0.3 : 0.1)}`,
+                    padding: 1,
+                    mr: 2
+                  }}>
+                    <coin.icon style={{ width: 28, height: 28 }} />
+                  </Box>
+                  <Box>
+                    <Typography variant="body1" sx={{ fontWeight: 600 }}>{coin.name}</Typography>
+                    <Typography variant="body2" color="text.secondary">{coin.symbol}</Typography>
+                  </Box>
+                </Box>
+              </TableCell>
+              <TableCell align="right">
+                <Typography variant="body1" sx={{ fontFamily: 'monospace', fontWeight: 600 }}>{coin.price}</Typography>
+              </TableCell>
+              <TableCell align="right">
+                <Box sx={{ 
+                  display: 'inline-flex', 
+                  alignItems: 'center',
+                  px: 1.5,
+                  py: 0.5,
+                  borderRadius: 1.5,
+                  backgroundColor: coin.change.startsWith('+') && coin.change !== '+0.0%' 
+                    ? alpha(theme.palette.success.main, 0.1) 
+                    : coin.change === '+0.0%' 
+                      ? alpha(theme.palette.grey[500], 0.1)
+                      : alpha(theme.palette.error.main, 0.1),
+                  ml: 'auto',
+                  width: 'fit-content'
+                }}>
+                  {coin.change.startsWith('+') && coin.change !== '+0.0%' ? (
+                    <TrendingUpIcon sx={{ fontSize: '0.875rem', color: theme.palette.success.main, mr: 0.5 }} />
+                  ) : coin.change === '+0.0%' ? null : (
+                    <TrendingDownIcon sx={{ fontSize: '0.875rem', color: theme.palette.error.main, mr: 0.5 }} />
+                  )}
+                  <Typography 
+                    variant="body2" 
+                    sx={{ 
+                      fontWeight: 600, 
+                      color: coin.change.startsWith('+') && coin.change !== '+0.0%' 
+                        ? theme.palette.success.main 
+                        : coin.change === '+0.0%' 
+                          ? theme.palette.grey[500] 
+                          : theme.palette.error.main 
+                    }}
+                  >
+                    {coin.change}
+                  </Typography>
+                </Box>
+              </TableCell>
+              <TableCell align="right">
+                <SparkLine 
+                  data={coin.sparkline} 
+                  strokeColor={coin.change.startsWith('+') ? theme.palette.success.main : 
+                               coin.change === '+0.0%' ? theme.palette.grey[500] : theme.palette.error.main} 
+                />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </StyledTableContainer>
   );
 
   return (
@@ -832,6 +996,7 @@ function Dashboard() {
             : 'linear-gradient(to right, #3366FF, #00CCFF)',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
+          textShadow: theme.palette.mode === 'dark' ? '0px 2px 5px rgba(150, 150, 255, 0.2)' : 'none',
         }}>
           Market Pulse Dashboard
         </Typography>
@@ -850,9 +1015,23 @@ function Dashboard() {
         
         {/* Market Sentiment Indicators Row */}
         <Grid item xs={12}>
-          <Typography variant="h6" sx={{ mt: 2, mb: 2, fontWeight: 600, display: 'flex', alignItems: 'center' }}>
-            <InsightsIcon sx={{ mr: 1 }} /> Market Sentiment Indicators
-          </Typography>
+          <Box sx={{ 
+            mt: 3, 
+            mb: 2, 
+            display: 'flex',
+            alignItems: 'center',
+            backgroundColor: theme.palette.mode === 'dark' ? alpha(theme.palette.background.paper, 0.4) : alpha(theme.palette.background.paper, 0.7),
+            backdropFilter: 'blur(10px)',
+            borderRadius: 2,
+            py: 1.5,
+            px: 2,
+            border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+          }}>
+            <InsightsIcon sx={{ mr: 1.5, color: theme.palette.primary.main }} />
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              Market Sentiment Indicators
+            </Typography>
+          </Box>
         </Grid>
         
         {/* Fear & Greed Index */}
@@ -986,56 +1165,150 @@ function Dashboard() {
         
         {/* Price Chart */}
         <Grid item xs={12}>
-          <Typography variant="h6" sx={{ mt: 2, mb: 2, fontWeight: 600, display: 'flex', alignItems: 'center' }}>
-            <SignalCellularAltIcon sx={{ mr: 1 }} /> Price Trends
-          </Typography>
+          <Box sx={{ 
+            mt: 3, 
+            mb: 2, 
+            display: 'flex',
+            alignItems: 'center',
+            backgroundColor: theme.palette.mode === 'dark' ? alpha(theme.palette.background.paper, 0.4) : alpha(theme.palette.background.paper, 0.7),
+            backdropFilter: 'blur(10px)',
+            borderRadius: 2,
+            py: 1.5,
+            px: 2,
+            border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+          }}>
+            <SignalCellularAltIcon sx={{ mr: 1.5, color: theme.palette.primary.main }} />
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              Price Trends
+            </Typography>
+          </Box>
         </Grid>
         
         <Grid item xs={12}>
           <GlassmorphicPaper>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <ButtonGroup variant="outlined" size="small" aria-label="coin selector">
-                  <Button 
-                    onClick={() => setSelectedCoin('BTC')}
-                    variant={selectedCoin === 'BTC' ? 'contained' : 'outlined'}
-                    sx={{ px: 2 }}
-                  >
-                    BTC
-                  </Button>
-                  <Button 
-                    onClick={() => setSelectedCoin('ETH')}
-                    variant={selectedCoin === 'ETH' ? 'contained' : 'outlined'}
-                    sx={{ px: 2 }}
-                  >
-                    ETH
-                  </Button>
-                  <Button 
-                    onClick={() => setSelectedCoin('SOL')}
-                    variant={selectedCoin === 'SOL' ? 'contained' : 'outlined'}
-                    sx={{ px: 2 }}
-                  >
-                    SOL
-                  </Button>
-                </ButtonGroup>
-              </Box>
+              <ButtonGroup 
+                variant="outlined" 
+                size="small" 
+                aria-label="coin selector"
+                sx={{
+                  borderRadius: '12px',
+                  overflow: 'hidden',
+                  '& .MuiButton-root': {
+                    borderRadius: 0,
+                    px: 2,
+                    py: 1,
+                    borderColor: theme.palette.mode === 'dark' 
+                      ? alpha(theme.palette.primary.main, 0.5)
+                      : alpha(theme.palette.grey[400], 0.5),
+                    fontWeight: 600,
+                    color: theme.palette.mode === 'dark'
+                      ? theme.palette.text.primary
+                      : theme.palette.text.secondary,
+                    backgroundColor: theme.palette.mode === 'dark'
+                      ? alpha(theme.palette.background.paper, 0.6)
+                      : alpha(theme.palette.background.paper, 0.8),
+                  },
+                  '& .MuiButton-root:hover': {
+                    backgroundColor: theme.palette.mode === 'dark'
+                      ? alpha(theme.palette.primary.main, 0.2)
+                      : alpha(theme.palette.primary.main, 0.08),
+                    borderColor: theme.palette.primary.main,
+                  },
+                  '& .MuiButton-root.Mui-selected': {
+                    background: theme.palette.mode === 'dark'
+                      ? `linear-gradient(135deg, ${alpha(theme.palette.primary.dark, 0.8)}, ${alpha(theme.palette.primary.main, 0.6)})`
+                      : `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.primary.light})`,
+                    color: '#fff',
+                    fontWeight: 700,
+                    borderColor: 'transparent',
+                    boxShadow: theme.palette.mode === 'dark'
+                      ? `0 0 10px ${alpha(theme.palette.primary.main, 0.5)}`
+                      : `0 4px 10px ${alpha(theme.palette.primary.main, 0.4)}`,
+                  }
+                }}
+              >
+                <Button 
+                  onClick={() => setSelectedCoin('BTC')}
+                  variant={selectedCoin === 'BTC' ? 'contained' : 'outlined'}
+                  className={selectedCoin === 'BTC' ? 'Mui-selected' : ''}
+                >
+                  BTC
+                </Button>
+                <Button 
+                  onClick={() => setSelectedCoin('ETH')}
+                  variant={selectedCoin === 'ETH' ? 'contained' : 'outlined'}
+                  className={selectedCoin === 'ETH' ? 'Mui-selected' : ''}
+                >
+                  ETH
+                </Button>
+                <Button 
+                  onClick={() => setSelectedCoin('SOL')}
+                  variant={selectedCoin === 'SOL' ? 'contained' : 'outlined'}
+                  className={selectedCoin === 'SOL' ? 'Mui-selected' : ''}
+                >
+                  SOL
+                </Button>
+              </ButtonGroup>
               
-              <ButtonGroup variant="outlined" size="small" aria-label="timeframe selector">
+              <ButtonGroup 
+                variant="outlined" 
+                size="small" 
+                aria-label="timeframe selector"
+                sx={{
+                  borderRadius: '12px',
+                  overflow: 'hidden',
+                  '& .MuiButton-root': {
+                    borderRadius: 0,
+                    py: 1,
+                    borderColor: theme.palette.mode === 'dark' 
+                      ? alpha(theme.palette.primary.main, 0.5)
+                      : alpha(theme.palette.grey[400], 0.5),
+                    fontWeight: 600,
+                    color: theme.palette.mode === 'dark'
+                      ? theme.palette.text.primary
+                      : theme.palette.text.secondary,
+                    backgroundColor: theme.palette.mode === 'dark'
+                      ? alpha(theme.palette.background.paper, 0.6)
+                      : alpha(theme.palette.background.paper, 0.8),
+                  },
+                  '& .MuiButton-root:hover': {
+                    backgroundColor: theme.palette.mode === 'dark'
+                      ? alpha(theme.palette.primary.main, 0.2)
+                      : alpha(theme.palette.primary.main, 0.08),
+                    borderColor: theme.palette.primary.main,
+                  },
+                  '& .MuiButton-root.Mui-selected': {
+                    background: theme.palette.mode === 'dark'
+                      ? `linear-gradient(135deg, ${alpha(theme.palette.primary.dark, 0.8)}, ${alpha(theme.palette.primary.main, 0.6)})`
+                      : `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.primary.light})`,
+                    color: '#fff',
+                    fontWeight: 700,
+                    borderColor: 'transparent',
+                    boxShadow: theme.palette.mode === 'dark'
+                      ? `0 0 10px ${alpha(theme.palette.primary.main, 0.5)}`
+                      : `0 4px 10px ${alpha(theme.palette.primary.main, 0.4)}`,
+                  }
+                }}
+              >
                 <Button 
                   onClick={() => setTimeframe('24h')}
                   variant={timeframe === '24h' ? 'contained' : 'outlined'}
+                  className={timeframe === '24h' ? 'Mui-selected' : ''}
                 >
                   24H
                 </Button>
                 <Button 
                   onClick={() => setTimeframe('7d')}
                   variant={timeframe === '7d' ? 'contained' : 'outlined'}
+                  className={timeframe === '7d' ? 'Mui-selected' : ''}
                 >
                   7D
                 </Button>
                 <Button 
                   onClick={() => setTimeframe('30d')}
                   variant={timeframe === '30d' ? 'contained' : 'outlined'}
+                  className={timeframe === '30d' ? 'Mui-selected' : ''}
                 >
                   30D
                 </Button>
@@ -1049,9 +1322,23 @@ function Dashboard() {
         
         {/* Market Overview */}
         <Grid item xs={12}>
-          <Typography variant="h6" sx={{ mt: 2, mb: 2, fontWeight: 600, display: 'flex', alignItems: 'center' }}>
-            <BarChartOutlinedIcon sx={{ mr: 1 }} /> Market Overview
-          </Typography>
+          <Box sx={{ 
+            mt: 3, 
+            mb: 2, 
+            display: 'flex',
+            alignItems: 'center',
+            backgroundColor: theme.palette.mode === 'dark' ? alpha(theme.palette.background.paper, 0.4) : alpha(theme.palette.background.paper, 0.7),
+            backdropFilter: 'blur(10px)',
+            borderRadius: 2,
+            py: 1.5,
+            px: 2,
+            border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+          }}>
+            <BarChartOutlinedIcon sx={{ mr: 1.5, color: theme.palette.primary.main }} />
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              Market Overview
+            </Typography>
+          </Box>
         </Grid>
         
         <Grid item xs={12}>

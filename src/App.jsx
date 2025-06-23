@@ -11,37 +11,47 @@ import Trade from './pages/Trade';
 import Account from './pages/Account';
 import { styled } from '@mui/system';
 
+// Define the width of the navigation drawer
 const drawerWidth = 240;
 
+// Create a styled NavLink component to remove default text decoration
+// and ensure it takes up the full width of its container.
 const StyledNavLink = styled(NavLink)(({ theme }) => ({
   textDecoration: 'none',
   width: '100%',
   color: theme.palette.text.primary,
 }));
 
+// Create a styled ListItemButton for the navigation links.
+// This component handles the visual styling for normal, hover, and active states.
 const StyledListItemButton = styled(ListItemButton)(({ theme }) => ({
   padding: '12px 16px',
   margin: '4px 8px',
   borderRadius: '8px',
   transition: 'all 0.2s ease-in-out',
   color: theme.palette.text.primary,
+  // Style for when the mouse hovers over the button
   '&:hover': {
     backgroundColor: theme.palette.mode === 'dark' 
       ? 'rgba(255, 255, 255, 0.08)' 
       : 'rgba(0, 0, 0, 0.04)',
   },
+  // Style for when the link is active (the current page)
   '&.active': {
     backgroundColor: theme.palette.mode === 'dark' 
       ? 'rgba(0, 171, 85, 0.16)' 
       : 'rgba(0, 171, 85, 0.08)',
     color: theme.palette.primary.main,
+    // Change the icon color when the link is active
     '& .MuiListItemIcon-root': {
       color: theme.palette.primary.main,
     },
   },
+  // Ensure the text color inherits correctly
   '& .MuiListItemText-primary': {
     color: 'inherit',
   },
+  // Style for the icons in the list
   '& .MuiListItemIcon-root': {
     color: theme.palette.mode === 'dark' 
       ? theme.palette.text.secondary
@@ -50,14 +60,18 @@ const StyledListItemButton = styled(ListItemButton)(({ theme }) => ({
   },
 }));
 
+// Create a styled Drawer (the sidebar) with a glassmorphic effect.
+// It has different background colors and effects for light and dark modes.
 const StyledDrawer = styled(Drawer)(({ theme }) => ({
   '& .MuiDrawer-paper': {
     backgroundColor: theme.palette.mode === 'dark' 
       ? 'rgba(22, 28, 36, 0.95)' 
       : 'rgba(255, 255, 255, 0.95)',
+    // Apply a gradient background for a more modern look
     backgroundImage: theme.palette.mode === 'dark'
       ? 'linear-gradient(to bottom, rgba(26, 32, 48, 0.95), rgba(8, 11, 25, 0.95))'
       : 'linear-gradient(to bottom, rgba(255, 255, 255, 0.95), rgba(240, 244, 248, 0.95))',
+    // Apply a blur effect to the background
     backdropFilter: 'blur(20px)',
     borderRight: `1px solid ${theme.palette.divider}`,
     boxShadow: theme.palette.mode === 'dark'
@@ -66,6 +80,7 @@ const StyledDrawer = styled(Drawer)(({ theme }) => ({
   },
 }));
 
+// Create a styled AppBar (the top navigation bar on mobile) with a glassmorphic effect.
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' 
     ? 'rgba(22, 28, 36, 0.95)' 
@@ -80,10 +95,12 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
   borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 
+// Create a styled component for the brand logo in the sidebar and app bar.
 const BrandLogo = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   gap: '8px',
+  // Styles for the icon container of the logo
   '& .logo-icon': {
     background: theme.palette.mode === 'dark'
       ? 'linear-gradient(135deg, #5C6BC0 0%, #3F51B5 50%, #303F9F 100%)'
@@ -99,18 +116,26 @@ const BrandLogo = styled(Box)(({ theme }) => ({
   }
 }));
 
+// This is the main content component that holds the entire UI.
 function AppContent() {
+  // Get theme mode ('light' or 'dark') and the function to toggle it from context.
   const { mode, toggleTheme } = useContext(ThemeContext);
+  // State to manage whether the mobile drawer is open or closed.
   const [mobileOpen, setMobileOpen] = useState(false);
+  // Get the full theme object from Material-UI.
   const theme = useTheme();
+  // A media query hook that returns true if the screen width is 'md' (medium) or smaller.
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
+  // Function to toggle the mobile drawer's open/closed state.
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
+  // The content of the drawer (sidebar). This is defined once and used for both mobile and desktop.
   const drawerContent = (
     <>
+      {/* Top section of the drawer with the logo and brand name. */}
       <Toolbar sx={{ 
         borderBottom: `1px solid ${theme.palette.divider}`,
         display: 'flex',
@@ -125,6 +150,7 @@ function AppContent() {
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Typography variant="h6" noWrap sx={{ 
               fontWeight: 700, 
+              // Apply a gradient to the text for a modern look
               background: theme.palette.mode === 'dark'
                 ? 'linear-gradient(to right, #9C96FF, #76C4FF)'
                 : 'linear-gradient(to right, #3366FF, #00CCFF)',
@@ -146,18 +172,23 @@ function AppContent() {
           </Box>
         </BrandLogo>
       </Toolbar>
+      {/* Container for the navigation list items. */}
       <Box sx={{ p: 1, mt: 1 }}>
         {[
           { text: 'Dashboard', icon: <DashboardIcon />, path: '/' },
           { text: 'Trade', icon: <TradeIcon />, path: '/trade' },
           { text: 'Account', icon: <AccountIcon />, path: '/account' },
         ].map((item) => (
+          // Each item in the list is a NavLink to handle routing.
           <ListItem key={item.text} disablePadding sx={{ mb: 0.5 }}>
             <StyledNavLink to={item.path} end={item.path === '/'}>
+              {/* Use a render prop to get the 'isActive' state from NavLink. */}
               {({ isActive }) => (
                 <StyledListItemButton 
+                  // Pass the active state to the styled component for styling.
                   className={isActive ? 'active' : ''}
                   sx={{
+                    // Apply different styles when the link is active.
                     background: isActive ? 
                       theme.palette.mode === 'dark' ?
                         'linear-gradient(90deg, rgba(45, 55, 72, 0.5), rgba(45, 55, 72, 0.2))' : 
@@ -190,18 +221,22 @@ function AppContent() {
   );
 
   return (
+    // The Router component enables client-side routing.
     <Router>
+      {/* Main container for the app layout. */}
       <Box sx={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
+        {/* CssBaseline normalizes styles across browsers. */}
         <CssBaseline />
         
-        {/* App Bar - Only visible on mobile */}
+        {/* App Bar (Top Navigation Bar) - Only visible on mobile screens. */}
         <StyledAppBar
           position="fixed"
           sx={{
-            display: { md: 'none' },
+            display: { md: 'none' }, // Hide on medium screens and larger
           }}
         >
           <Toolbar>
+            {/* Menu icon to open the mobile drawer. */}
             <IconButton
               color="inherit"
               aria-label="open drawer"
@@ -211,6 +246,7 @@ function AppContent() {
             >
               <MenuIcon />
             </IconButton>
+            {/* Show the brand logo in the mobile app bar. */}
             <BrandLogo>
               <Box className="logo-icon">
                 <TrendingUp sx={{ color: '#fff', fontSize: '1.2rem' }} />
@@ -239,20 +275,21 @@ function AppContent() {
               </Box>
             </BrandLogo>
             <Box sx={{ flexGrow: 1 }} />
+            {/* Theme toggle button for mobile. */}
             <IconButton sx={{ color: 'text.primary', '&:focus': { outline: 'none' } }} onClick={toggleTheme}>
               {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
             </IconButton>
           </Toolbar>
         </StyledAppBar>
         
-        {/* Sidebar - Mobile (Temporary Drawer) */}
+        {/* Sidebar - Mobile Version (Temporary Drawer) */}
         <StyledDrawer
-          variant="temporary"
+          variant="temporary" // This drawer can be opened and closed.
           open={mobileOpen}
           onClose={handleDrawerToggle}
-          ModalProps={{ keepMounted: true }}
+          ModalProps={{ keepMounted: true }} // Better for performance on mobile.
           sx={{
-            display: { xs: 'block', md: 'none' },
+            display: { xs: 'block', md: 'none' }, // Show only on extra-small screens.
             '& .MuiDrawer-paper': {
               boxSizing: 'border-box',
               width: drawerWidth,
@@ -262,11 +299,11 @@ function AppContent() {
           {drawerContent}
         </StyledDrawer>
         
-        {/* Sidebar - Desktop (Permanent Drawer) */}
+        {/* Sidebar - Desktop Version (Permanent Drawer) */}
         <StyledDrawer
-          variant="permanent"
+          variant="permanent" // This drawer is always visible.
           sx={{
-            display: { xs: 'none', md: 'block' },
+            display: { xs: 'none', md: 'block' }, // Show only on medium screens and larger.
             width: drawerWidth,
             flexShrink: 0,
             '& .MuiDrawer-paper': {
@@ -279,18 +316,19 @@ function AppContent() {
           {drawerContent}
         </StyledDrawer>
         
-        {/* Main Content */}
+        {/* Main Content Area */}
         <Box
           component="main"
           sx={{
-            flexGrow: 1,
+            flexGrow: 1, // This allows the content area to take up the remaining space.
             bgcolor: 'background.default',
-            overflow: 'auto',
+            overflow: 'auto', // Add a scrollbar if content overflows.
             width: '100%',
-            p: 3,
-            pt: { xs: 8, md: 3 }, // Add padding top on mobile for the app bar
+            p: 3, // Padding on all sides.
+            pt: { xs: 8, md: 3 }, // Add padding top on mobile to avoid being hidden by the app bar.
           }}
         >
+          {/* Defines the routes for the application. */}
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/trade" element={<Trade />} />
@@ -298,19 +336,20 @@ function AppContent() {
           </Routes>
         </Box>
         
-        {/* Theme Toggle Button - Desktop */}
+        {/* Theme Toggle Button - Desktop Version */}
         <Box
           sx={{
-            display: { xs: 'none', md: 'flex' },
+            display: { xs: 'none', md: 'flex' }, // Show only on desktop.
             position: 'absolute',
             top: 16,
             right: 16,
-            zIndex: 1200,
+            zIndex: 1200, // Make sure it's on top of other content.
           }}
         >
           <IconButton 
             sx={{ 
               color: 'text.primary',
+              // Apply a glassmorphic effect to the button.
               backgroundColor: theme.palette.mode === 'dark' 
                 ? 'rgba(33, 43, 54, 0.9)' 
                 : 'rgba(255, 255, 255, 0.9)',
@@ -329,6 +368,7 @@ function AppContent() {
             }} 
             onClick={toggleTheme}
           >
+            {/* Show the correct icon based on the current theme mode. */}
             {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
           </IconButton>
         </Box>
@@ -337,17 +377,23 @@ function AppContent() {
   );
 }
 
+// The root 'App' component. Its only job is to provide the theme context.
 function App() {
   return (
+    // CustomThemeProvider manages the theme state (light/dark mode).
     <CustomThemeProvider>
+      {/* AppWrapper consumes the theme and passes it to Material-UI. */}
       <AppWrapper />
     </CustomThemeProvider>
   );
 }
 
+// A wrapper component that consumes the theme from our context.
 function AppWrapper() {
+  // Get the theme object from our custom ThemeContext.
   const { theme } = useContext(ThemeContext);
   return (
+    // Apply the theme to all Material-UI components within AppContent.
     <MuiThemeProvider theme={theme}>
       <AppContent />
     </MuiThemeProvider>

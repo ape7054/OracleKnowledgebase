@@ -428,7 +428,7 @@ function Account() {
                                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                     {renderPieChart()}
                                 </Box>
-                            </GlassmorphicPaper>
+                    </GlassmorphicPaper>
                         </Grid>
                     </Grid>
                     
@@ -610,7 +610,7 @@ function Account() {
             <TabPanel value={tabValue} index={2}>
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={6}>
-                        <GlassmorphicPaper>
+                    <GlassmorphicPaper>
                             <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, mb: 3 }}>Notification Settings</Typography>
                             <List sx={{ 
                                 '& .MuiListItem-root': {
@@ -627,8 +627,8 @@ function Account() {
                                         secondary="Receive updates via email" 
                                         primaryTypographyProps={{ sx: { fontWeight: 600, mb: 0.5 } }} 
                                     />
-                                    <ListItemSecondaryAction><Switch defaultChecked /></ListItemSecondaryAction>
-                                </ListItem>
+                                <ListItemSecondaryAction><Switch defaultChecked /></ListItemSecondaryAction>
+                            </ListItem>
                                 <Divider variant="fullWidth" sx={{ opacity: 0.6 }} />
                                 <ListItem sx={{ py: 1.5 }}>
                                     <ListItemText 
@@ -636,8 +636,8 @@ function Account() {
                                         secondary="Get real-time alerts on your devices" 
                                         primaryTypographyProps={{ sx: { fontWeight: 600, mb: 0.5 } }} 
                                     />
-                                    <ListItemSecondaryAction><Switch /></ListItemSecondaryAction>
-                                </ListItem>
+                                <ListItemSecondaryAction><Switch /></ListItemSecondaryAction>
+                            </ListItem>
                                 <Divider variant="fullWidth" sx={{ opacity: 0.6 }} />
                                 <ListItem sx={{ py: 1.5 }}>
                                     <ListItemText 
@@ -645,8 +645,8 @@ function Account() {
                                         secondary="Be notified of significant price movements" 
                                         primaryTypographyProps={{ sx: { fontWeight: 600, mb: 0.5 } }} 
                                     />
-                                    <ListItemSecondaryAction><Switch defaultChecked /></ListItemSecondaryAction>
-                                </ListItem>
+                                <ListItemSecondaryAction><Switch defaultChecked /></ListItemSecondaryAction>
+                            </ListItem>
                                 <Divider variant="fullWidth" sx={{ opacity: 0.6 }} />
                                 <ListItem sx={{ py: 1.5 }}>
                                     <ListItemText 
@@ -654,15 +654,15 @@ function Account() {
                                         secondary="Get alerted when your account is accessed" 
                                         primaryTypographyProps={{ sx: { fontWeight: 600, mb: 0.5 } }} 
                                     />
-                                    <ListItemSecondaryAction><Switch defaultChecked /></ListItemSecondaryAction>
-                                </ListItem>
-                            </List>
-                        </GlassmorphicPaper>
+                                <ListItemSecondaryAction><Switch defaultChecked /></ListItemSecondaryAction>
+                            </ListItem>
+                        </List>
+                    </GlassmorphicPaper>
                     </Grid>
                     <Grid item xs={12} md={6}>
-                        <GlassmorphicPaper>
+                    <GlassmorphicPaper>
                             <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, mb: 3 }}>Security Settings</Typography>
-                            <List>
+                        <List>
                                 <ListItem sx={{ 
                                     py: 2.5,
                                     backgroundColor: alpha(theme.palette.primary.main, 0.05),
@@ -685,7 +685,7 @@ function Account() {
                                             Enable
                                         </ActionButton>
                                     </ListItemSecondaryAction>
-                                </ListItem>
+                            </ListItem>
                                 <ListItem sx={{ 
                                     py: 2.5, 
                                     backgroundColor: alpha(theme.palette.primary.main, 0.05),
@@ -707,9 +707,9 @@ function Account() {
                                             Manage
                                         </ActionButton>
                                     </ListItemSecondaryAction>
-                                </ListItem>
-                            </List>
-                        </GlassmorphicPaper>
+                            </ListItem>
+                        </List>
+                    </GlassmorphicPaper>
                     </Grid>
                 </Grid>
             </TabPanel>
