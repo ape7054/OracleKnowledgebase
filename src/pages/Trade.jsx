@@ -411,25 +411,74 @@ const RecentTrades = ({ trades }) => {
 };
 
 function Trade() {
-    const [asks, setAsks] = useState([]);
-    const [bids, setBids] = useState([]);
-    const [trades, setTrades] = useState([]);
-    const [tradeType, setTradeType] = useState('buy');
-    const [priceType, setPriceType] = useState('market');
-    const [sliderValue, setSliderValue] = useState(50);
+    const [asks, setAsks] = useState([]); // 订单簿卖单数据，存储卖家挂单信息
+    const [bids, setBids] = useState([]); // 订单簿买单数据，存储买家挂单信息
+    const [trades, setTrades] = useState([]); // 最近交易数据，记录已完成的交易
+    const [tradeType, setTradeType] = useState('buy'); // 交易类型，'buy'为购买，'sell'为出售
+    const [priceType, setPriceType] = useState('market'); // 价格类型，'market'为市价单，'limit'为限价单
+    const [sliderValue, setSliderValue] = useState(50); // 金额滑块值，表示交易金额百分比
+    const [isLoading, setIsLoading] = useState(true); // 加载状态标志，控制加载动画显示
+    const [error, setError] = useState(null); // 错误信息，存储API请求或处理过程中的错误
     const theme = useTheme();
 
     useEffect(() => {
-        // Mock data fetching
-        const interval = setInterval(() => {
-            const newAsks = Array.from({ length: 5 }, () => ({ price: (63500 + Math.random() * 100).toFixed(2), amount: (Math.random() * 2).toFixed(4), total: (Math.random() * 100000).toFixed(2) }));
-            const newBids = Array.from({ length: 5 }, () => ({ price: (63400 - Math.random() * 100).toFixed(2), amount: (Math.random() * 2).toFixed(4), total: (Math.random() * 100000).toFixed(2) }));
-            const newTrades = Array.from({ length: 10 }, () => ({ price: (63450 + (Math.random() - 0.5) * 50).toFixed(2), amount: (Math.random()).toFixed(4), time: new Date().toLocaleTimeString(), type: Math.random() > 0.5 ? 'buy' : 'sell' }));
+        // 从后端API获取交易数据
+        const fetchTrades = async () => {
+            try {
+                setIsLoading(true);
+                const response = await fetch('http://localhost:8080/api/trades');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                setTrades(data);
+                setIsLoading(false);
+            } catch (err) {
+                console.error('Error fetching trades:', err);
+                setError(err.message);
+                setIsLoading(false);
+                
+                // 如果API请求失败，使用一些模拟数据作为后备
+                const fallbackTrades = Array.from({ length: 5 }, () => ({ 
+                    price: (63450 + (Math.random() - 0.5) * 50).toFixed(2), 
+                    amount: (Math.random()).toFixed(4), 
+                    time: new Date().toLocaleTimeString(), 
+                    type: Math.random() > 0.5 ? 'buy' : 'sell' 
+                }));
+                setTrades(fallbackTrades);
+            }
+        };
+        
+        // 仍然使用模拟数据用于订单簿（将来可以替换为真实API）
+        const mockOrderBook = () => {
+            const newAsks = Array.from({ length: 5 }, () => ({ 
+                price: (63500 + Math.random() * 100).toFixed(2), 
+                amount: (Math.random() * 2).toFixed(4), 
+                total: (Math.random() * 100000).toFixed(2) 
+            }));
+            const newBids = Array.from({ length: 5 }, () => ({ 
+                price: (63400 - Math.random() * 100).toFixed(2), 
+                amount: (Math.random() * 2).toFixed(4), 
+                total: (Math.random() * 100000).toFixed(2) 
+            }));
             setAsks(newAsks);
             setBids(newBids);
-            setTrades(newTrades);
-        }, 2000);
-        return () => clearInterval(interval);
+        };
+
+        // 初始加载数据
+        fetchTrades();
+        mockOrderBook();
+        
+        // 设置定时刷新
+        const tradesInterval = setInterval(fetchTrades, 10000); // 每10秒刷新一次交易数据
+        const orderBookInterval = setInterval(mockOrderBook, 2000); // 每2秒刷新一次订单簿
+        
+        return () => {
+            clearInterval(tradesInterval);
+            clearInterval(orderBookInterval);
+        };
     }, []);
 
     const handleTradeTypeChange = (type) => {
@@ -666,7 +715,19 @@ function Trade() {
                 <OrderBook asks={asks} bids={bids} />
             </Grid>
             <Grid item xs={12} md={3} lg={4}>
-                <RecentTrades trades={trades} />
+                {error ? (
+                    <GlassmorphicPaper sx={{ p: 3, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Typography color="error" align="center">
+                            无法加载交易数据: {error}
+                        </Typography>
+                    </GlassmorphicPaper>
+                ) : isLoading ? (
+                    <GlassmorphicPaper sx={{ p: 3, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Typography>加载交易数据中...</Typography>
+                    </GlassmorphicPaper>
+                ) : (
+                    <RecentTrades trades={trades} />
+                )}
             </Grid>
         </Grid>
       </Box>
