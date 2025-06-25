@@ -341,9 +341,9 @@ const RecentTrades = ({ trades }) => {
       </Grid>
 
       <Box sx={{ overflowY: 'auto', flexGrow: 1 }}>
-        {filteredTrades.slice(0, 15).map((trade, index) => (
+        {filteredTrades.slice(0, 15).map((trade) => (
           <Box
-            key={index}
+            key={trade.id}
             sx={{ 
               position: 'relative',
               cursor: 'pointer',
@@ -411,75 +411,94 @@ const RecentTrades = ({ trades }) => {
 };
 
 function Trade() {
-    const [asks, setAsks] = useState([]); // 订单簿卖单数据，存储卖家挂单信息
-    const [bids, setBids] = useState([]); // 订单簿买单数据，存储买家挂单信息
-    const [trades, setTrades] = useState([]); // 最近交易数据，记录已完成的交易
-    const [tradeType, setTradeType] = useState('buy'); // 交易类型，'buy'为购买，'sell'为出售
-    const [priceType, setPriceType] = useState('market'); // 价格类型，'market'为市价单，'limit'为限价单
-    const [sliderValue, setSliderValue] = useState(50); // 金额滑块值，表示交易金额百分比
-    const [isLoading, setIsLoading] = useState(true); // 加载状态标志，控制加载动画显示
-    const [error, setError] = useState(null); // 错误信息，存储API请求或处理过程中的错误
+    const [asks, setAsks] = useState([]);
+    const [bids, setBids] = useState([]);
+    const [trades, setTrades] = useState([]);
+    const [tradeType, setTradeType] = useState('buy');
+    const [priceType, setPriceType] = useState('market');
+    
+    const [price, setPrice] = useState('');
+    const [amount, setAmount] = useState('');
+    
+    const [sliderValue, setSliderValue] = useState(50);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
     const theme = useTheme();
 
-    useEffect(() => {
-        // 从后端API获取交易数据
-        const fetchTrades = async () => {
-            try {
-                setIsLoading(true);
-                const response = await fetch('http://localhost:8080/api/trades');
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                setTrades(data);
-                setIsLoading(false);
-            } catch (err) {
-                console.error('Error fetching trades:', err);
-                setError(err.message);
-                setIsLoading(false);
-                
-                // 如果API请求失败，使用一些模拟数据作为后备
-                const fallbackTrades = Array.from({ length: 5 }, () => ({ 
-                    price: (63450 + (Math.random() - 0.5) * 50).toFixed(2), 
-                    amount: (Math.random()).toFixed(4), 
-                    time: new Date().toLocaleTimeString(), 
-                    type: Math.random() > 0.5 ? 'buy' : 'sell' 
-                }));
-                setTrades(fallbackTrades);
+    const fetchTrades = async () => {
+        try {
+            const response = await fetch('http://localhost:8080/api/trades');
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
             }
-        };
-        
-        // 仍然使用模拟数据用于订单簿（将来可以替换为真实API）
+            
+            const data = await response.json();
+            setTrades(data || []); // Ensure trades is always an array
+            if(isLoading) setIsLoading(false);
+        } catch (err) {
+            console.error('Error fetching trades:', err);
+            setError(err.message);
+            if(isLoading) setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
         const mockOrderBook = () => {
-            const newAsks = Array.from({ length: 5 }, () => ({ 
-                price: (63500 + Math.random() * 100).toFixed(2), 
-                amount: (Math.random() * 2).toFixed(4), 
-                total: (Math.random() * 100000).toFixed(2) 
-            }));
-            const newBids = Array.from({ length: 5 }, () => ({ 
-                price: (63400 - Math.random() * 100).toFixed(2), 
-                amount: (Math.random() * 2).toFixed(4), 
-                total: (Math.random() * 100000).toFixed(2) 
-            }));
-            setAsks(newAsks);
-            setBids(newBids);
+             const newAsks = Array.from({ length: 7 }, () => ({ price: (63500 + Math.random() * 100).toFixed(2), amount: (Math.random() * 2).toFixed(4), total: (Math.random() * 100000).toFixed(2) }));
+             const newBids = Array.from({ length: 7 }, () => ({ price: (63400 - Math.random() * 100).toFixed(2), amount: (Math.random() * 2).toFixed(4), total: (Math.random() * 100000).toFixed(2) }));
+             setAsks(newAsks);
+             setBids(newBids);
         };
 
-        // 初始加载数据
         fetchTrades();
         mockOrderBook();
         
-        // 设置定时刷新
-        const tradesInterval = setInterval(fetchTrades, 10000); // 每10秒刷新一次交易数据
-        const orderBookInterval = setInterval(mockOrderBook, 2000); // 每2秒刷新一次订单簿
+        const tradesInterval = setInterval(fetchTrades, 5000);
+        const orderBookInterval = setInterval(mockOrderBook, 2000);
         
         return () => {
             clearInterval(tradesInterval);
             clearInterval(orderBookInterval);
         };
     }, []);
+
+    const handleCreateTrade = async () => {
+        if (!price || !amount) {
+            alert('Price and Amount cannot be empty.');
+            return;
+        }
+
+        const newTrade = {
+            price: price,
+            amount: amount,
+            type: tradeType,
+        };
+
+        try {
+            const response = await fetch('http://localhost:8080/api/trades', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newTrade),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to create trade.');
+            }
+
+            setPrice('');
+            setAmount('');
+            // alert('Trade created successfully!'); // Can be replaced with a more subtle notification
+            fetchTrades(); 
+
+        } catch (error) {
+            console.error('Error creating trade:', error);
+            alert('Error creating trade: ' + error.message);
+        }
+    };
 
     const handleTradeTypeChange = (type) => {
         setTradeType(type);
@@ -508,35 +527,6 @@ function Trade() {
           .MuiPaginationItem-root:focus {
             outline: none !important;
             box-shadow: none !important;
-          }
-          .MuiIconButton-root:focus {
-            outline: none !important;
-            box-shadow: none !important;
-          }
-          .MuiInputLabel-root:focus {
-            outline: none !important;
-          }
-          .MuiSelect-select.MuiSelect-outlined:focus {
-            background-color: transparent !important;
-          }
-          a:focus, a:focus-visible {
-            outline: none !important;
-            box-shadow: none !important;
-          }
-          input:focus {
-            outline: none !important;
-          }
-          .MuiSlider-thumb:focus, .MuiSlider-thumb:focus-visible {
-            outline: none !important;
-            box-shadow: none !important;
-          }
-          /* 移除TextField特定焦点样式 */
-          .MuiInput-underline:focus, .MuiInput-underline:focus-within,
-          .MuiInput-underline:after {
-            outline: none !important;
-          }
-          .MuiFilledInput-root:focus-within, .MuiFilledInput-root:focus {
-            background-color: transparent !important;
           }
         `}</style>
         
@@ -589,18 +579,12 @@ function Trade() {
                     }}>
                     <Button 
                       sx={{ 
-                        flex: 1,
-                        py: 2,
-                        borderRadius: 0,
-                        transition: 'all 0.3s',
+                        flex: 1, py: 2, borderRadius: 0, transition: 'all 0.3s',
                         backgroundColor: tradeType === 'buy' ? 'success.main' : 'transparent',
                         color: tradeType === 'buy' ? 'white' : 'text.secondary',
-                        fontWeight: 'bold',
-                        fontSize: '1rem',
+                        fontWeight: 'bold', fontSize: '1rem',
                         '&:hover': {
-                          backgroundColor: tradeType === 'buy' 
-                            ? 'success.dark' 
-                            : (theme.palette.mode === 'dark' ? alpha(theme.palette.success.main, 0.2) : alpha(theme.palette.success.main, 0.08)),
+                          backgroundColor: tradeType === 'buy' ? 'success.dark' : (theme.palette.mode === 'dark' ? alpha(theme.palette.success.main, 0.2) : alpha(theme.palette.success.main, 0.08)),
                         }
                       }}
                       onClick={() => handleTradeTypeChange('buy')}
@@ -609,18 +593,12 @@ function Trade() {
                     </Button>
                     <Button 
                       sx={{ 
-                        flex: 1,
-                        py: 2,
-                        borderRadius: 0,
-                        transition: 'all 0.3s',
+                        flex: 1, py: 2, borderRadius: 0, transition: 'all 0.3s',
                         backgroundColor: tradeType === 'sell' ? 'error.main' : 'transparent',
                         color: tradeType === 'sell' ? 'white' : 'text.secondary',
-                        fontWeight: 'bold',
-                        fontSize: '1rem',
+                        fontWeight: 'bold', fontSize: '1rem',
                         '&:hover': {
-                          backgroundColor: tradeType === 'sell' 
-                            ? 'error.dark' 
-                            : (theme.palette.mode === 'dark' ? alpha(theme.palette.error.main, 0.2) : alpha(theme.palette.error.main, 0.08)),
+                          backgroundColor: tradeType === 'sell' ? 'error.dark' : (theme.palette.mode === 'dark' ? alpha(theme.palette.error.main, 0.2) : alpha(theme.palette.error.main, 0.08)),
                         }
                       }}
                       onClick={() => handleTradeTypeChange('sell')}
@@ -638,27 +616,31 @@ function Trade() {
                           onChange={handlePriceTypeChange}
                           fullWidth
                         >
-                            <MenuItem value="market">Market</MenuItem>
+                            <MenuItem value="market">Market (Not implemented)</MenuItem>
                             <MenuItem value="limit">Limit</MenuItem>
                         </StyledTextField>
                         
-                        {priceType === 'limit' && (
-                            <StyledTextField
-                                label="Limit Price"
-                                variant="standard"
-                                type="number"
-                                placeholder="0.00"
-                                InputLabelProps={{ shrink: true }}
-                                fullWidth
-                                InputProps={{
-                                  endAdornment: <Typography variant="body2" color="text.secondary">USDT</Typography>
-                                }}
-                            />
-                        )}
+                        <StyledTextField
+                           label={"Limit Price"}
+                           variant="standard"
+                           type="number"
+                           placeholder="0.00"
+                           value={price}
+                           onChange={(e) => setPrice(e.target.value)}
+                           InputLabelProps={{ shrink: true }}
+                           fullWidth
+                           InputProps={{
+                             endAdornment: <Typography variant="body2" color="text.secondary">USDT</Typography>
+                           }}
+                        />
 
                          <StyledTextField 
                            label="Amount" 
                            variant="standard" 
+                           type="number"
+                           placeholder="0.00"
+                           value={amount}
+                           onChange={(e) => setAmount(e.target.value)}
                            fullWidth
                            InputProps={{
                              endAdornment: <Typography variant="body2" color="text.secondary">BTC</Typography>
@@ -670,40 +652,29 @@ function Trade() {
                              value={sliderValue} 
                              onChange={handleSliderChange} 
                              aria-labelledby="input-slider" 
-                             marks={[
-                               {value: 0, label: '0%'},
-                               {value: 25, label: '25%'},
-                               {value: 50, label: '50%'},
-                               {value: 75, label: '75%'},
-                               {value: 100, label: '100%'}
-                             ]}
+                             marks={[{value: 0, label: '0%'}, {value: 25, label: '25%'}, {value: 50, label: '50%'}, {value: 75, label: '75%'}, {value: 100, label: '100%'}]}
                              tradeType={tradeType}
                            />
                          </Box>
                          
                          <Box sx={{ 
                            backgroundColor: theme.palette.mode === 'dark' ? alpha(theme.palette.background.paper, 0.4) : alpha(theme.palette.background.paper, 0.7),
-                           p: 2,
-                           borderRadius: '8px',
-                           border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
-                           mt: 1
+                           p: 2, borderRadius: '8px', border: `1px solid ${alpha(theme.palette.divider, 0.1)}`, mt: 1
                          }}>
                            <Typography variant="body2" sx={{ color: theme.palette.text.secondary }}>Total:</Typography>
-                           <Typography variant="h6" sx={{ fontWeight: 'bold', fontFamily: 'monospace' }}>1,200 USDT</Typography>
+                           <Typography variant="h6" sx={{ fontWeight: 'bold', fontFamily: 'monospace' }}>
+                             { (price && amount) ? (parseFloat(price) * parseFloat(amount)).toFixed(2) : '0.00' } USDT
+                           </Typography>
                          </Box>
                          
                          <Button
                            variant="contained"
                            color={tradeType === 'sell' ? 'error' : 'success'}
                            size="large"
+                           onClick={handleCreateTrade}
                            sx={{ 
-                             mt: 2,
-                             py: 1.5,
-                             fontWeight: 'bold',
-                             fontSize: '1rem',
-                             boxShadow: tradeType === 'sell' 
-                               ? '0 8px 16px rgba(239, 83, 80, 0.24)'
-                               : '0 8px 16px rgba(46, 125, 50, 0.24)'
+                             mt: 2, py: 1.5, fontWeight: 'bold', fontSize: '1rem',
+                             boxShadow: tradeType === 'sell' ? '0 8px 16px rgba(239, 83, 80, 0.24)' : '0 8px 16px rgba(46, 125, 50, 0.24)'
                            }}
                          >
                            {tradeType === 'buy' ? 'Buy BTC' : 'Sell BTC'}
@@ -734,4 +705,4 @@ function Trade() {
   );
 }
 
-export default Trade; 
+export default Trade;
