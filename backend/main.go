@@ -5,15 +5,18 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql" // _ import for side-effect: registering mysql driver
+	"github.com/joho/godotenv"
 )
 
 // DB 是全局数据库连接池
 var db *sql.DB
+var hub *Hub // 添加全局 Hub 实例
 
 // Trade 定义了交易数据结构
 type Trade struct {
@@ -25,10 +28,24 @@ type Trade struct {
 }
 
 func main() {
+	// 加载 .env 文件中的环境变量
+	if err := godotenv.Load(); err != nil {
+		log.Println("警告: 未找到 .env 文件或无法加载. 将使用系统环境变量.")
+	}
+
 	// --- 数据库初始化 ---
 	var err error
-	// DSN (Data Source Name) 格式: user:password@tcp(host:port)/dbname
-	dsn := "market_pulse_user:wBYXZkiLTExiEAHF@tcp(127.0.0.1:3306)/market_pulse_db?parseTime=true"
+	// 从环境变量中读取数据库连接信息
+	dbUser := getEnv("DB_USER", "market_pulse_user")
+	dbPassword := getEnv("DB_PASSWORD", "wBYXZkiLTExiEAHF") // 默认值仅作为备用，实际应从环境变量获取
+	dbHost := getEnv("DB_HOST", "127.0.0.1")
+	dbPort := getEnv("DB_PORT", "3306")
+	dbName := getEnv("DB_NAME", "market_pulse_db")
+
+	// 构建 DSN (Data Source Name)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", 
+		dbUser, dbPassword, dbHost, dbPort, dbName)
+	
 	db, err = sql.Open("mysql", dsn)
 	if err != nil {
 		log.Fatalf("无法打开数据库: %v", err)
@@ -43,6 +60,10 @@ func main() {
 	// 自动创建数据表 (数据库迁移)
 	createTable()
 
+	// --- WebSocket Hub 初始化 ---
+	hub = newHub()
+	go hub.run()
+
 	// --- Gin 引擎设置 ---
 	router := gin.Default()
 	router.Use(cors.Default())
@@ -51,8 +72,18 @@ func main() {
 	setupRoutes(router)
 
 	// --- 启动服务器 ---
-	log.Println("后端服务器启动在 http://localhost:8080")
-	router.Run(":8080")
+	serverPort := getEnv("SERVER_PORT", "8080")
+	log.Printf("后端服务器启动在 http://localhost:%s", serverPort)
+	router.Run(":" + serverPort)
+}
+
+// getEnv 从环境变量中获取值，如果不存在则返回默认值
+func getEnv(key, defaultValue string) string {
+	value := os.Getenv(key)
+	if value == "" {
+		return defaultValue
+	}
+	return value
 }
 
 func createTable() {
@@ -75,6 +106,11 @@ func setupRoutes(router *gin.Engine) {
 	// 健康检查接口
 	router.GET("/api/health", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"status": "ok"})
+	})
+
+	// WebSocket 连接端点
+	router.GET("/ws/trades", func(c *gin.Context) {
+		serveWs(hub, c.Writer, c.Request)
 	})
 
 	// 获取所有交易记录
@@ -122,11 +158,30 @@ func createTrade(c *gin.Context) {
 	}
 
 	query := "INSERT INTO trades (price, amount, trade_time, trade_type) VALUES (?, ?, ?, ?)"
-	_, err := db.Exec(query, newTrade.Price, newTrade.Amount, time.Now(), newTrade.Type)
+	result, err := db.Exec(query, newTrade.Price, newTrade.Amount, time.Now(), newTrade.Type)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "无法创建交易记录: " + err.Error()})
 		return
 	}
+
+	// 获取新插入记录的 ID
+	id, err := result.LastInsertId()
+	if err != nil {
+		log.Println("无法获取新交易的ID:", err)
+		// 即使无法获取ID，仍然可以继续，但广播的数据会不完整
+	}
+	
+	// 准备要广播的完整交易数据
+	fullTrade := Trade{
+		ID:     int(id),
+		Price:  newTrade.Price,
+		Amount: newTrade.Amount,
+		Time:   time.Now().Format("20:06:07"),
+		Type:   newTrade.Type,
+	}
+
+	// 广播新的交易记录
+	hub.broadcastTrade(fullTrade)
 
 	c.JSON(http.StatusCreated, gin.H{"status": "交易记录已创建"})
 }

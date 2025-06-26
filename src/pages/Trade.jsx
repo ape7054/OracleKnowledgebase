@@ -453,12 +453,38 @@ function Trade() {
 
         fetchTrades();
         mockOrderBook();
+
+        // --- WebSocket 连接 ---
+        const socket = new WebSocket('ws://localhost:8080/ws/trades');
+
+        socket.onopen = () => {
+            console.log('WebSocket 连接已建立');
+        };
+
+        socket.onmessage = (event) => {
+            try {
+                const newTrade = JSON.parse(event.data);
+                // 将新交易添加到列表的开头
+                setTrades(prevTrades => [newTrade, ...prevTrades]);
+            } catch (error) {
+                console.error('无法解析收到的交易数据:', error);
+            }
+        };
+
+        socket.onclose = () => {
+            console.log('WebSocket 连接已关闭');
+        };
+
+        socket.onerror = (error) => {
+            console.error('WebSocket 错误:', error);
+        };
         
-        const tradesInterval = setInterval(fetchTrades, 5000);
+        // 订单簿仍然使用轮询
         const orderBookInterval = setInterval(mockOrderBook, 2000);
         
+        // --- 清理 ---
         return () => {
-            clearInterval(tradesInterval);
+            socket.close(); // 组件卸载时关闭 WebSocket 连接
             clearInterval(orderBookInterval);
         };
     }, []);
@@ -491,8 +517,9 @@ function Trade() {
 
             setPrice('');
             setAmount('');
-            // alert('Trade created successfully!'); // Can be replaced with a more subtle notification
-            fetchTrades(); 
+            // 成功创建交易后，我们不再需要手动刷新列表。
+            // 后端会通过 WebSocket 自动将新交易广播回来。
+            // fetchTrades(); 
 
         } catch (error) {
             console.error('Error creating trade:', error);
