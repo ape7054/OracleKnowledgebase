@@ -36,8 +36,11 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
+            # 创建部署目录（如果不存在）
+            mkdir -p /www/wwwroot/market-pulse/dist
+            
             # 进入部署目录
-            cd /www/wwwroot/trading-panel-live/www.ency.asia
+            cd /www/wwwroot/market-pulse/dist
             
             # 删除旧文件
             rm -rf ./*
@@ -51,7 +54,7 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           source: "dist/*"
-          target: "/www/wwwroot/trading-panel-live/www.ency.asia"
+          target: "/www/wwwroot/market-pulse/dist"
           strip_components: 1
 
       - name: Set permissions and Reload Nginx
@@ -62,7 +65,7 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
             # 设置权限
-            chown -R www:www /www/wwwroot/trading-panel-live/www.ency.asia
+            chown -R www:www /www/wwwroot/market-pulse/dist
             
             # 重启 Nginx
             /etc/init.d/nginx reload
