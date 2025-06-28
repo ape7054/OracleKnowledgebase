@@ -107,7 +107,7 @@ func setupRoutes(router *gin.Engine) {
 	router.GET("/api/health", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"status":  "ok",
-			"version": "1.0.1", // 添加版本号
+			"version": "1.0.2", // 更新版本号
 		})
 	})
 
