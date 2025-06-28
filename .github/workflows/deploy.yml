@@ -3,6 +3,13 @@ name: Deploy to Server
 on:
   push:
     branches: [ main, master ]
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'index.html'
+      - 'vite.config.js'
+      - 'package.json'
+      - '.github/workflows/deploy.yml'
 
 jobs:
   build-and-deploy:
