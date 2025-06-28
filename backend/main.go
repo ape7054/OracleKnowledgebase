@@ -20,11 +20,11 @@ var hub *Hub // 添加全局 Hub 实例
 
 // Trade 定义了交易数据结构
 type Trade struct {
-	ID     int       `json:"id"`
-	Price  string    `json:"price"`
-	Amount string    `json:"amount"`
-	Time   string    `json:"time"`
-	Type   string    `json:"type"` // "buy" or "sell"
+	ID     int    `json:"id"`
+	Price  string `json:"price"`
+	Amount string `json:"amount"`
+	Time   string `json:"time"`
+	Type   string `json:"type"` // "buy" or "sell"
 }
 
 func main() {
@@ -43,9 +43,9 @@ func main() {
 	dbName := getEnv("DB_NAME", "market_pulse_db")
 
 	// 构建 DSN (Data Source Name)
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", 
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true",
 		dbUser, dbPassword, dbHost, dbPort, dbName)
-	
+
 	db, err = sql.Open("mysql", dsn)
 	if err != nil {
 		log.Fatalf("无法打开数据库: %v", err)
@@ -105,7 +105,10 @@ func createTable() {
 func setupRoutes(router *gin.Engine) {
 	// 健康检查接口
 	router.GET("/api/health", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"status": "ok"})
+		c.JSON(http.StatusOK, gin.H{
+			"status":  "ok",
+			"version": "1.0.1", // 添加版本号
+		})
 	})
 
 	// WebSocket 连接端点
@@ -170,7 +173,7 @@ func createTrade(c *gin.Context) {
 		log.Println("无法获取新交易的ID:", err)
 		// 即使无法获取ID，仍然可以继续，但广播的数据会不完整
 	}
-	
+
 	// 准备要广播的完整交易数据
 	fullTrade := Trade{
 		ID:     int(id),
