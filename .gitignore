@@ -37,3 +37,7 @@ dist-ssr
 .DS_Store
 
 lerna-debug.log*
+
+# Backend build output
+backend/market-pulse-backend
+backend/market-pulse-backend.exe
