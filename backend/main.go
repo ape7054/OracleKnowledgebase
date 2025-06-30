@@ -139,7 +139,7 @@ func getTrades(c *gin.Context) {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "无法扫描交易记录行"})
 			return
 		}
-		t.Time = tradeTime.Format("20:06:07")
+		t.Time = tradeTime.Format("15:04:05")
 		trades = append(trades, t)
 	}
 	c.JSON(http.StatusOK, trades)
@@ -179,7 +179,7 @@ func createTrade(c *gin.Context) {
 		ID:     int(id),
 		Price:  newTrade.Price,
 		Amount: newTrade.Amount,
-		Time:   time.Now().Format("20:06:07"),
+		Time:   time.Now().Format("15:04:05"),
 		Type:   newTrade.Type,
 	}
 
