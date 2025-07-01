@@ -1,0 +1,60 @@
+services:
+  # 数据库服务
+  db:
+    image: mysql:8.0
+    container_name: market-pulse-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_NAME:-market_pulse_db}
+      MYSQL_USER: ${DB_USER:-market_pulse_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-wBYXZkiLTExiEAHF}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpassword}
+    ports:
+      # 为了方便从外部（如 MySQL Workbench）连接调试，将容器的 3306 端口映射到主机的 3307 端口
+      # 注意：我们使用 3307 是为了避免与你本地可能正在运行的 MySQL 实例（通常在 3306）冲突
+      - "3307:3306"
+    volumes:
+      # 将数据库文件持久化到本地，防止容器删除后数据丢失
+      - mysql-data:/var/lib/mysql
+
+  # 后端服务
+  backend:
+    container_name: market-pulse-backend
+    # 指定使用 backend 目录下的 Dockerfile 进行构建
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      # 映射后端端口
+      - "8080:8080"
+    environment:
+      # 这里设置的环境变量会覆盖 Go 代码中的默认值
+      - DB_HOST=db
+      - DB_USER=${DB_USER:-market_pulse_user}
+      - DB_PASSWORD=${DB_PASSWORD:-wBYXZkiLTExiEAHF}
+      - DB_NAME=${DB_NAME:-market_pulse_db}
+      - SERVER_PORT=8080
+    depends_on:
+      # 确保后端在数据库启动之后再启动
+      - db
+
+  # 前端服务
+  frontend:
+    container_name: market-pulse-frontend
+    # 使用根目录的 Dockerfile 进行构建
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      # 将容器的 80 端口（Nginx）映射到主机的 5173 端口，以保持和你之前一致的访问体验
+      - "5173:80"
+    depends_on:
+      # 确保前端在后端启动之后再启动
+      - backend
+
+# 定义数据卷
+volumes:
+  mysql-data:
+    driver: local 
