@@ -5,11 +5,6 @@ FROM golang:1.22-alpine AS builder
 # 设置工作目录
 WORKDIR /app
 
-# 复制 go.mod 和 go.sum 文件，并下载依赖
-# 这一步可以利用 Docker 的层缓存机制，只要这两个文件没变，就不需要重新下载依赖
-COPY go.mod go.sum ./
-RUN go mod download
-
 # 复制所有源代码到工作目录
 COPY . .
 
@@ -22,7 +17,7 @@ RUN CGO_ENABLED=0 go build -o /app/market-pulse-backend .
 
 # 第二阶段：运行
 # 使用一个非常小的基础镜像
-FROM alpine:latest
+FROM alpine:3.18
 
 # 设置工作目录
 WORKDIR /app

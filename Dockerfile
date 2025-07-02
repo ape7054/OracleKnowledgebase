@@ -1,5 +1,5 @@
 # 第一阶段：构建 React 应用
-FROM node:20-alpine AS build
+FROM node:18-alpine AS build
 
 # 设置工作目录
 WORKDIR /app
@@ -21,7 +21,7 @@ RUN npm run build
 # ---
 
 # 第二阶段：使用 Nginx 托管静态文件
-FROM nginx:stable-alpine
+FROM nginx:1.24-alpine
 
 # 将我们自定义的 Nginx 配置文件复制到容器中
 COPY nginx/nginx.conf /etc/nginx/nginx.conf

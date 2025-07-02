@@ -16,45 +16,48 @@ services:
     volumes:
       # 将数据库文件持久化到本地，防止容器删除后数据丢失
       - mysql-data:/var/lib/mysql
+    networks:
+      - market-pulse-network
 
   # 后端服务
   backend:
-    container_name: market-pulse-backend
-    # 指定使用 backend 目录下的 Dockerfile 进行构建
     build:
       context: ./backend
       dockerfile: Dockerfile
+    container_name: market-pulse-backend
     restart: unless-stopped
-    ports:
-      # 映射后端端口
-      - "8080:8080"
-    environment:
-      # 这里设置的环境变量会覆盖 Go 代码中的默认值
-      - DB_HOST=db
-      - DB_USER=${DB_USER:-market_pulse_user}
-      - DB_PASSWORD=${DB_PASSWORD:-wBYXZkiLTExiEAHF}
-      - DB_NAME=${DB_NAME:-market_pulse_db}
-      - SERVER_PORT=8080
     depends_on:
-      # 确保后端在数据库启动之后再启动
       - db
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USER: ${DB_USER:-market_pulse_user}
+      DB_PASSWORD: ${DB_PASSWORD:-wBYXZkiLTExiEAHF}
+      DB_NAME: ${DB_NAME:-market_pulse_db}
+      SERVER_PORT: 8080
+    networks:
+      - market-pulse-network
 
   # 前端服务
   frontend:
-    container_name: market-pulse-frontend
-    # 使用根目录的 Dockerfile 进行构建
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: market-pulse-frontend
     restart: unless-stopped
-    ports:
-      # 将容器的 80 端口（Nginx）映射到主机的 5173 端口，以保持和你之前一致的访问体验
-      - "5173:80"
     depends_on:
-      # 确保前端在后端启动之后再启动
       - backend
+    ports:
+      - "80:80"
+    networks:
+      - market-pulse-network
 
 # 定义数据卷
 volumes:
   mysql-data:
-    driver: local 
+    driver: local
+
+# 定义网络
+networks:
+  market-pulse-network:
+    driver: bridge 
