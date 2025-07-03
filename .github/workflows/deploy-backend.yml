@@ -1,45 +1,76 @@
-name: Deploy Backend
+name: Deploy Backend with Docker
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, main ]
     paths:
       - 'backend/**'
       - '.github/workflows/deploy-backend.yml'
+      - 'docker-compose.yml'
+
+env:
+  # Set the image name, using your GitHub username for the namespace
+  IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/market-pulse-backend
 
 jobs:
-  deploy:
+  build-and-push:
+    name: Build and Push Docker Image
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write # Grant permission to write to GitHub Packages
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Go
-        uses: actions/setup-go@v4
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
         with:
-          go-version: '1.23'
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.PAT }}
 
-      - name: Build backend
-        run: |
-          cd backend
-          go build -o market-pulse-backend
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./backend
+          push: true
+          tags: ${{ env.IMAGE_NAME }}:latest
 
-      - name: Deploy to server
+  deploy:
+    name: Deploy to Server
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Copy docker-compose file to server
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_SSH_KEY }}
-          source: "backend/market-pulse-backend"
-          target: "/tmp"
+          source: "docker-compose.yml"
+          target: "/www/wwwroot/market-pulse" # Assumes this is your project directory on the server
 
-      - name: Install and restart service
+      - name: Deploy and Restart Service
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            sudo mv /tmp/backend/market-pulse-backend /www/wwwroot/market-pulse/backend/
-            sudo chmod +x /www/wwwroot/market-pulse/backend/market-pulse-backend
-            sudo systemctl restart market-pulse 
+            # Navigate to the project directory on your server
+            cd /www/wwwroot/market-pulse
+
+            # Log in to the GitHub Container Registry
+            echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+
+            # Pull the latest backend image from the registry
+            docker-compose pull backend
+
+            # Restart only the backend service using the new image
+            # --no-deps ensures we don't restart the database or other services
+            docker-compose up -d --no-deps backend
+
+            # Optional: Clean up old, unused Docker images to save disk space
+            docker image prune -f 

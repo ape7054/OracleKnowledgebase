@@ -55,7 +55,7 @@ services:
 # 定义数据卷
 volumes:
   mysql-data:
-    driver: local
+    driver: local 
 
 # 定义网络
 networks:

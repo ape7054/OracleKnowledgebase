@@ -1,73 +1,83 @@
-name: Deploy to Server
+name: Deploy Frontend with Docker
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ master, main ]
     paths:
       - 'src/**'
       - 'public/**'
+      - 'nginx/**'
       - 'index.html'
       - 'vite.config.js'
-      - 'package.json'
-      - '.github/workflows/deploy.yml'
+      - 'package*.json'
+      - 'Dockerfile'
+      - '.github/workflows/deploy-frontend.yml'
+      - 'docker-compose.yml'
+
+env:
+  # Set the image name, using your GitHub username for the namespace
+  IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/market-pulse-frontend
 
 jobs:
-  build-and-deploy:
+  build-and-push:
+    name: Build and Push Docker Image
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
         with:
-          node-version: '16'
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.PAT }}
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build project
-        run: npm run build
-
-      - name: Deploy to Server via SSH
-        uses: appleboy/ssh-action@master
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
         with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USERNAME }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          script: |
-            # 创建部署目录（如果不存在）
-            mkdir -p /www/wwwroot/market-pulse/dist
-            
-            # 进入部署目录
-            cd /www/wwwroot/market-pulse/dist
-            
-            # 删除旧文件
-            rm -rf ./*
-            
-            echo "旧文件已删除"
+          context: .
+          # The Dockerfile for the frontend is in the root directory
+          dockerfile: ./Dockerfile
+          push: true
+          tags: ${{ env.IMAGE_NAME }}:latest
 
-      - name: Copy files via SCP
+  deploy:
+    name: Deploy to Server
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Copy docker-compose file to server
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_SSH_KEY }}
-          source: "dist/*"
-          target: "/www/wwwroot/market-pulse/dist"
-          strip_components: 1
+          source: "docker-compose.yml"
+          target: "/www/wwwroot/market-pulse"
 
-      - name: Set permissions and Reload Nginx
+      - name: Deploy and Restart Service
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            # 设置权限
-            chown -R www:www /www/wwwroot/market-pulse/dist
-            
-            # 重启 Nginx
-            /etc/init.d/nginx reload
-            
-            echo "部署成功！"
+            # Navigate to the project directory
+            cd /www/wwwroot/market-pulse
+
+            # Log in to the GitHub Container Registry
+            echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+
+            # Pull the latest frontend image
+            docker-compose pull frontend
+
+            # Restart only the frontend service
+            docker-compose up -d --no-deps frontend
+
+            # Optional: Clean up old, unused Docker images
+            docker image prune -f
