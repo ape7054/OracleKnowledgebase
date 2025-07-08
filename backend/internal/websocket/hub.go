@@ -1,4 +1,4 @@
-package main
+package websocket
 
 import "encoding/json"
 
@@ -17,7 +17,7 @@ type Hub struct {
 	unregister chan *Client
 }
 
-func newHub() *Hub {
+func NewHub() *Hub {
 	return &Hub{
 		broadcast:  make(chan []byte),
 		register:   make(chan *Client),
@@ -26,7 +26,7 @@ func newHub() *Hub {
 	}
 }
 
-func (h *Hub) run() {
+func (h *Hub) Run() {
 	for {
 		select {
 		case client := <-h.register:
@@ -52,8 +52,8 @@ func (h *Hub) run() {
 	}
 }
 
-// broadcastTrade 会将交易信息序列化为 JSON 并发送到广播通道。
-func (h *Hub) broadcastTrade(trade Trade) {
+// BroadcastTrade 会将交易信息序列化为 JSON 并发送到广播通道。
+func (h *Hub) BroadcastTrade(trade interface{}) {
 	// 将 trade 结构体序列化为 JSON
 	message, err := json.Marshal(trade)
 	if err != nil {
@@ -63,4 +63,4 @@ func (h *Hub) broadcastTrade(trade Trade) {
 	}
 	// 将 JSON 消息发送到广播通道
 	h.broadcast <- message
-} 
+}

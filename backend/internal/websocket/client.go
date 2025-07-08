@@ -1,4 +1,4 @@
-package main
+package websocket
 
 import (
 	"log"
@@ -100,8 +100,8 @@ func (c *Client) writePump() {
 	}
 }
 
-// serveWs 处理来自 peer 的 WebSocket 请求。
-func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
+// ServeWs 处理来自 peer 的 WebSocket 请求。
+func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println(err)
@@ -113,4 +113,4 @@ func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 	// 允许在独立的 goroutine 中并发执行读写操作。
 	go client.writePump()
 	go client.readPump()
-} 
+}

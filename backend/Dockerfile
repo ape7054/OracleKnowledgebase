@@ -6,12 +6,14 @@ FROM golang:1.22-alpine AS builder
 WORKDIR /app
 
 # 复制所有源代码到工作目录
+COPY go.mod go.sum ./
+RUN go mod download
 COPY . .
 
 # 编译 Go 应用。
 # -o 指定输出文件名为 market-pulse-backend
 # CGO_ENABLED=0 是为了进行静态编译，确保可执行文件不依赖 C 库，使其在 alpine 这种精简环境下也能运行
-RUN CGO_ENABLED=0 go build -o /app/market-pulse-backend .
+RUN CGO_ENABLED=0 go build -o /app/market-pulse-backend ./cmd/market-pulse-backend
 
 # ---
 
@@ -30,4 +32,4 @@ EXPOSE 8080
 
 # 容器启动时运行的命令
 # 启动我们的后端服务
-CMD ["/app/market-pulse-backend"] 
+CMD ["./market-pulse-backend"] 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Box, Grid, Typography, TextField, MenuItem, Button, Slider, Paper, Divider, Chip } from '@mui/material';
 import { styled, useTheme, alpha } from '@mui/system';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
@@ -423,23 +423,31 @@ function Trade() {
     const [sliderValue, setSliderValue] = useState(50);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [page, setPage] = useState(1);
+    const [limit, setLimit] = useState(20);
+    const [totalRecords, setTotalRecords] = useState(0);
+    const [loading, setLoading] = useState(false);
     const theme = useTheme();
 
     const fetchTrades = async () => {
+        setLoading(true);
         try {
-            const response = await fetch('http://localhost:8080/api/trades');
+            const response = await fetch(`http://localhost:8080/api/trades?page=${page}&limit=${limit}`);
             
             if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
             
             const data = await response.json();
-            setTrades(data || []); // Ensure trades is always an array
+            setTrades(data.data || []);
+            setTotalRecords(data.total_records || 0);
             if(isLoading) setIsLoading(false);
         } catch (err) {
             console.error('Error fetching trades:', err);
             setError(err.message);
             if(isLoading) setIsLoading(false);
+        } finally {
+            setLoading(false);
         }
     };
 
