@@ -1,11 +1,11 @@
 import React, { useContext, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, NavLink } from 'react-router-dom';
+import { Routes, Route, NavLink } from 'react-router-dom';
 import { Box, CssBaseline, AppBar, Toolbar, Typography, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, IconButton, useTheme, useMediaQuery } from '@mui/material';
 import { Dashboard as DashboardIcon, SwapHoriz as TradeIcon, AccountCircle as AccountIcon, Menu as MenuIcon, TrendingUp } from '@mui/icons-material';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
-import { ThemeContext, CustomThemeProvider } from './context/ThemeContext';
+import { ThemeContext } from './context/ThemeContext';
 import Dashboard from './pages/Dashboard';
 import Trade from './pages/Trade';
 import Account from './pages/Account';
@@ -221,9 +221,6 @@ function AppContent() {
   );
 
   return (
-    // The Router component enables client-side routing.
-    <Router>
-      {/* Main container for the app layout. */}
       <Box sx={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
         {/* CssBaseline normalizes styles across browsers. */}
         <CssBaseline />
@@ -373,18 +370,14 @@ function AppContent() {
           </IconButton>
         </Box>
       </Box>
-    </Router>
   );
 }
 
 // The root 'App' component. Its only job is to provide the theme context.
 function App() {
   return (
-    // CustomThemeProvider manages the theme state (light/dark mode).
-    <CustomThemeProvider>
-      {/* AppWrapper consumes the theme and passes it to Material-UI. */}
+    // AppWrapper consumes the theme and passes it to Material-UI.
       <AppWrapper />
-    </CustomThemeProvider>
   );
 }
 

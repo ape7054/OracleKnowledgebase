@@ -14,26 +14,26 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// API 结构体持有对数据库和 WebSocket Hub 的依赖
+// API struct holds dependencies for the database and WebSocket hub
 type API struct {
 	DB  *sql.DB
 	Hub *websocket.Hub
 }
 
-// NewAPI 创建一个新的 API 实例
+// NewAPI creates a new API instance
 func NewAPI(db *sql.DB, hub *websocket.Hub) *API {
 	return &API{DB: db, Hub: hub}
 }
 
-// HealthCheck 提供一个健康的检查端点
+// HealthCheck provides a health check endpoint
 func (a *API) HealthCheck(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"status":  "ok",
-		"version": "2.0.0", // 版本升级，因为我们重构了！
+		"version": "2.0.0", // Version bump because we refactored!
 	})
 }
 
-// GetTrades 获取交易列表
+// GetTrades fetches a paginated list of trades
 func (a *API) GetTrades(c *gin.Context) {
 	pageStr := c.DefaultQuery("page", "1")
 	limitStr := c.DefaultQuery("limit", "20")
@@ -59,7 +59,7 @@ func (a *API) GetTrades(c *gin.Context) {
 	var totalRecords int64
 	err = db.QueryRow("SELECT COUNT(*) FROM trades").Scan(&totalRecords)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "无法查询交易总数"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not query total trades count"})
 		return
 	}
 
@@ -67,7 +67,7 @@ func (a *API) GetTrades(c *gin.Context) {
 	query := "SELECT id, price, amount, trade_time, trade_type FROM trades ORDER BY trade_time DESC LIMIT ? OFFSET ?"
 	rows, err := db.Query(query, limit, offset)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "无法查询交易记录"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not query trades"})
 		return
 	}
 	defer rows.Close()
@@ -77,7 +77,7 @@ func (a *API) GetTrades(c *gin.Context) {
 		var t models.Trade
 		var tradeTime time.Time
 		if err := rows.Scan(&t.ID, &t.Price, &t.Amount, &tradeTime, &t.Type); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "无法扫描交易记录行"})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "could not scan trade row"})
 			return
 		}
 		t.Time = tradeTime.Format("15:04:05")
@@ -92,17 +92,17 @@ func (a *API) GetTrades(c *gin.Context) {
 	})
 }
 
-// CreateTrade 创建一个新的交易
+// CreateTrade creates a new trade
 func (a *API) CreateTrade(c *gin.Context) {
 	var newTrade models.Trade
 
 	if err := c.ShouldBindJSON(&newTrade); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "无效的请求数据: " + err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request data: " + err.Error()})
 		return
 	}
 
 	if newTrade.Price == "" || newTrade.Amount == "" || newTrade.Type == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "价格, 数量和类型不能为空"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Price, amount, and type cannot be empty"})
 		return
 	}
 
@@ -110,13 +110,13 @@ func (a *API) CreateTrade(c *gin.Context) {
 	query := "INSERT INTO trades (price, amount, trade_time, trade_type) VALUES (?, ?, ?, ?)"
 	result, err := db.Exec(query, newTrade.Price, newTrade.Amount, time.Now(), newTrade.Type)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "无法创建交易记录: " + err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not create trade: " + err.Error()})
 		return
 	}
 
 	id, err := result.LastInsertId()
 	if err != nil {
-		log.Println("无法获取新交易的ID:", err)
+		log.Println("Could not get ID for new trade:", err)
 	}
 
 	fullTrade := models.Trade{
@@ -129,10 +129,10 @@ func (a *API) CreateTrade(c *gin.Context) {
 
 	a.Hub.BroadcastTrade(fullTrade)
 
-	c.JSON(http.StatusCreated, gin.H{"status": "交易记录已创建"})
+	c.JSON(http.StatusCreated, gin.H{"status": "trade created"})
 }
 
-// ServeWsUpgrade 升级 HTTP 连接到 WebSocket
+// ServeWsUpgrade upgrades the HTTP connection to a WebSocket
 func (a *API) ServeWsUpgrade(c *gin.Context) {
 	websocket.ServeWs(a.Hub, c.Writer, c.Request)
 }

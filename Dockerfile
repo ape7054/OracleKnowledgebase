@@ -30,6 +30,9 @@ COPY nginx/nginx.conf /etc/nginx/nginx.conf
 # 复制到 Nginx 的默认网站根目录 /usr/share/nginx/html
 COPY --from=build /app/dist /usr/share/nginx/html
 
+# Remove the default Nginx configuration file that conflicts with our setup.
+RUN rm /etc/nginx/conf.d/default.conf
+
 # 暴露 80 端口，这是 Nginx 默认监听的端口
 EXPOSE 80
 
