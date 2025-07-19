@@ -63,11 +63,11 @@ func (a *API) GetTrades(c *gin.Context) {
 		return
 	}
 
-	// Then, get the paginated data
-	query := "SELECT id, price, amount, trade_time, trade_type FROM trades ORDER BY trade_time DESC LIMIT ? OFFSET ?"
+	// Then, get the paginated data (包含用户信息，处理NULL值)
+	query := "SELECT id, price, amount, trade_time, trade_type, COALESCE(user_id, 0), COALESCE(user_name, 'Anonymous') FROM trades ORDER BY trade_time DESC LIMIT ? OFFSET ?"
 	rows, err := db.Query(query, limit, offset)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not query trades"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not query trades: " + err.Error()})
 		return
 	}
 	defer rows.Close()
@@ -76,11 +76,15 @@ func (a *API) GetTrades(c *gin.Context) {
 	for rows.Next() {
 		var t models.Trade
 		var tradeTime time.Time
-		if err := rows.Scan(&t.ID, &t.Price, &t.Amount, &tradeTime, &t.Type); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "could not scan trade row"})
+		var userID int
+		if err := rows.Scan(&t.ID, &t.Price, &t.Amount, &tradeTime, &t.Type, &userID, &t.UserName); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "could not scan trade row: " + err.Error()})
 			return
 		}
 		t.Time = tradeTime.Format("15:04:05")
+		if userID > 0 {
+			t.UserID = &userID
+		}
 		trades = append(trades, t)
 	}
 
@@ -107,8 +111,12 @@ func (a *API) CreateTrade(c *gin.Context) {
 	}
 
 	db := database.GetDB()
-	query := "INSERT INTO trades (price, amount, trade_time, trade_type) VALUES (?, ?, ?, ?)"
-	result, err := db.Exec(query, newTrade.Price, newTrade.Amount, time.Now(), newTrade.Type)
+	// 简单版本：使用默认用户（编程小白友好）
+	defaultUserID := 1
+	defaultUserName := "testuser"
+
+	query := "INSERT INTO trades (price, amount, trade_time, trade_type, user_id, user_name) VALUES (?, ?, ?, ?, ?, ?)"
+	result, err := db.Exec(query, newTrade.Price, newTrade.Amount, time.Now(), newTrade.Type, defaultUserID, defaultUserName)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not create trade: " + err.Error()})
 		return
@@ -120,11 +128,13 @@ func (a *API) CreateTrade(c *gin.Context) {
 	}
 
 	fullTrade := models.Trade{
-		ID:     int(id),
-		Price:  newTrade.Price,
-		Amount: newTrade.Amount,
-		Time:   time.Now().Format("15:04:05"),
-		Type:   newTrade.Type,
+		ID:       int(id),
+		Price:    newTrade.Price,
+		Amount:   newTrade.Amount,
+		Time:     time.Now().Format("15:04:05"),
+		Type:     newTrade.Type,
+		UserID:   &defaultUserID,
+		UserName: defaultUserName,
 	}
 
 	a.Hub.BroadcastTrade(fullTrade)

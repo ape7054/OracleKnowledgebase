@@ -43,18 +43,22 @@ func GetDB() *sql.DB {
 }
 
 func createTable() error {
+	// 创建基础表
 	query := `
 	CREATE TABLE IF NOT EXISTS trades (
 		id INT AUTO_INCREMENT PRIMARY KEY,
 		price VARCHAR(50) NOT NULL,
 		amount VARCHAR(50) NOT NULL,
 		trade_time TIMESTAMP NOT NULL,
-		trade_type VARCHAR(10) NOT NULL
+		trade_type VARCHAR(10) NOT NULL,
+		user_id INT DEFAULT NULL,
+		user_name VARCHAR(50) DEFAULT 'Anonymous'
 	);`
 
 	if _, err := db.Exec(query); err != nil {
 		return fmt.Errorf("无法创建 'trades' 表: %v", err)
 	}
+
 	log.Println("'trades' 表已准备就绪.")
 	return nil
 }

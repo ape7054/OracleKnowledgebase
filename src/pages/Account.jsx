@@ -353,17 +353,26 @@ function Account() {
                 }
             `}</style>
             
-            <Typography variant={isMobile ? "h5" : "h4"} gutterBottom sx={{ 
-                fontWeight: 700, 
-                mb: 3,
-                background: theme.palette.mode === 'dark'
-                  ? 'linear-gradient(to right, #9C96FF, #76C4FF)'
-                  : 'linear-gradient(to right, #3366FF, #00CCFF)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-            }}>
-                Account
-            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+                <Box
+                    sx={{
+                        width: 6,
+                        height: 32,
+                        background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                        borderRadius: '3px',
+                    }}
+                />
+                <Typography variant={isMobile ? "h5" : "h4"} gutterBottom sx={{
+                    fontWeight: 700,
+                    mb: 0,
+                    background: `linear-gradient(135deg, ${theme.palette.text.primary}, ${theme.palette.primary.main})`,
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                }}>
+                    Account
+                </Typography>
+            </Box>
             
             {/* Custom Tab Navigation */}
             <TabContainer>
@@ -464,7 +473,25 @@ function Account() {
                         {/* Portfolio Distribution */}
                         <Grid item xs={12} md={6}>
                             <GlassmorphicPaper>
-                                <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>Portfolio Allocation</Typography>
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
+                                    <Box
+                                        sx={{
+                                            width: 4,
+                                            height: 24,
+                                            background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                                            borderRadius: '2px',
+                                        }}
+                                    />
+                                    <Typography variant="h6" sx={{
+                                        fontWeight: 700,
+                                        background: `linear-gradient(135deg, ${theme.palette.text.primary}, ${theme.palette.primary.main})`,
+                                        backgroundClip: 'text',
+                                        WebkitBackgroundClip: 'text',
+                                        WebkitTextFillColor: 'transparent',
+                                    }}>
+                                        Portfolio Allocation
+                                    </Typography>
+                                </Box>
                                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                     {renderPieChart()}
                                 </Box>
@@ -474,7 +501,25 @@ function Account() {
                     
                     {/* Assets Table / Cards */}
                     <GlassmorphicPaper>
-                        <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>Your Assets</Typography>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 3 }}>
+                            <Box
+                                sx={{
+                                    width: 4,
+                                    height: 24,
+                                    background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                                    borderRadius: '2px',
+                                }}
+                            />
+                            <Typography variant="h6" sx={{
+                                fontWeight: 700,
+                                background: `linear-gradient(135deg, ${theme.palette.text.primary}, ${theme.palette.primary.main})`,
+                                backgroundClip: 'text',
+                                WebkitBackgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent',
+                            }}>
+                                Your Assets
+                            </Typography>
+                        </Box>
                         {isMobile ? (
                             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                                 {assets.map((asset) => (
@@ -612,7 +657,25 @@ function Account() {
             <TabPanel value={tabValue} index={1}>
                 <GlassmorphicPaper>
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
-                        <Typography variant="h6" sx={{ fontWeight: 600 }}>Transaction History</Typography>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                            <Box
+                                sx={{
+                                    width: 4,
+                                    height: 24,
+                                    background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                                    borderRadius: '2px',
+                                }}
+                            />
+                            <Typography variant="h6" sx={{
+                                fontWeight: 700,
+                                background: `linear-gradient(135deg, ${theme.palette.text.primary}, ${theme.palette.primary.main})`,
+                                backgroundClip: 'text',
+                                WebkitBackgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent',
+                            }}>
+                                Transaction History
+                            </Typography>
+                        </Box>
                         <Button variant="outlined" size="small" startIcon={<CreditCard />}>Export CSV</Button>
                     </Box>
                     
@@ -735,7 +798,25 @@ function Account() {
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={6}>
                     <GlassmorphicPaper>
-                            <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, mb: 3 }}>Notification Settings</Typography>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 3 }}>
+                                <Box
+                                    sx={{
+                                        width: 4,
+                                        height: 24,
+                                        background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                                        borderRadius: '2px',
+                                    }}
+                                />
+                                <Typography variant="h6" sx={{
+                                    fontWeight: 700,
+                                    background: `linear-gradient(135deg, ${theme.palette.text.primary}, ${theme.palette.primary.main})`,
+                                    backgroundClip: 'text',
+                                    WebkitBackgroundClip: 'text',
+                                    WebkitTextFillColor: 'transparent',
+                                }}>
+                                    Notification Settings
+                                </Typography>
+                            </Box>
                             <List sx={{ 
                                 '& .MuiListItem-root': {
                                     borderRadius: 2,
@@ -785,7 +866,25 @@ function Account() {
                     </Grid>
                     <Grid item xs={12} md={6}>
                     <GlassmorphicPaper>
-                            <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, mb: 3 }}>Security Settings</Typography>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 3 }}>
+                                <Box
+                                    sx={{
+                                        width: 4,
+                                        height: 24,
+                                        background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                                        borderRadius: '2px',
+                                    }}
+                                />
+                                <Typography variant="h6" sx={{
+                                    fontWeight: 700,
+                                    background: `linear-gradient(135deg, ${theme.palette.text.primary}, ${theme.palette.primary.main})`,
+                                    backgroundClip: 'text',
+                                    WebkitBackgroundClip: 'text',
+                                    WebkitTextFillColor: 'transparent',
+                                }}>
+                                    Security Settings
+                                </Typography>
+                            </Box>
                         <List>
                                 <ListItem sx={{ 
                                     py: 2.5,

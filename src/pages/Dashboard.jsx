@@ -1018,18 +1018,26 @@ function Dashboard() {
       `}</style>
       
       <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" sx={{ 
-          fontWeight: 700,
-          mb: 1,
-          background: theme.palette.mode === 'dark'
-            ? 'linear-gradient(to right, #9C96FF, #76C4FF)'
-            : 'linear-gradient(to right, #3366FF, #00CCFF)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          textShadow: theme.palette.mode === 'dark' ? '0px 2px 5px rgba(150, 150, 255, 0.2)' : 'none',
-        }}>
-          Market Pulse Dashboard
-        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Box
+            sx={{
+              width: 6,
+              height: 32,
+              background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+              borderRadius: '3px',
+            }}
+          />
+          <Typography variant="h4" sx={{
+            fontWeight: 700,
+            mb: 1,
+            background: `linear-gradient(135deg, ${theme.palette.text.primary}, ${theme.palette.primary.main})`,
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+          }}>
+            Market Pulse Dashboard
+          </Typography>
+        </Box>
         <Typography variant="body1" color="text.secondary">
           Comprehensive market sentiment analysis and real-time cryptocurrency insights
         </Typography>
@@ -1057,8 +1065,23 @@ function Dashboard() {
             px: 2,
             border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
           }}>
+            <Box
+              sx={{
+                width: 4,
+                height: 24,
+                background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                borderRadius: '2px',
+                mr: 1.5,
+              }}
+            />
             <InsightsIcon sx={{ mr: 1.5, color: theme.palette.primary.main }} />
-            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+            <Typography variant="h6" sx={{
+              fontWeight: 700,
+              background: `linear-gradient(135deg, ${theme.palette.text.primary}, ${theme.palette.primary.main})`,
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+            }}>
               Market Sentiment Indicators
           </Typography>
           </Box>
@@ -1207,8 +1230,23 @@ function Dashboard() {
             px: 2,
             border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
           }}>
+            <Box
+              sx={{
+                width: 4,
+                height: 24,
+                background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                borderRadius: '2px',
+                mr: 1.5,
+              }}
+            />
             <SignalCellularAltIcon sx={{ mr: 1.5, color: theme.palette.primary.main }} />
-            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+            <Typography variant="h6" sx={{
+              fontWeight: 700,
+              background: `linear-gradient(135deg, ${theme.palette.text.primary}, ${theme.palette.primary.main})`,
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+            }}>
               Price Trends
           </Typography>
           </Box>
@@ -1364,8 +1402,23 @@ function Dashboard() {
             px: 2,
             border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
           }}>
+            <Box
+              sx={{
+                width: 4,
+                height: 24,
+                background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                borderRadius: '2px',
+                mr: 1.5,
+              }}
+            />
             <BarChartOutlinedIcon sx={{ mr: 1.5, color: theme.palette.primary.main }} />
-            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+            <Typography variant="h6" sx={{
+              fontWeight: 700,
+              background: `linear-gradient(135deg, ${theme.palette.text.primary}, ${theme.palette.primary.main})`,
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+            }}>
               Market Overview
           </Typography>
           </Box>
