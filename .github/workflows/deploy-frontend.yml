@@ -63,7 +63,7 @@ jobs:
           source: "docker-compose.yml"
           target: "/www/wwwroot/market-pulse"
 
-      - name: Deploy and Restart Service
+      - name: Deploy Frontend
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SERVER_HOST }}
@@ -73,14 +73,16 @@ jobs:
             # Navigate to the project directory
             cd /www/wwwroot/market-pulse
 
-            # Log in to the GitHub Container Registry
-            echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+            # Pull the latest code
+            git pull origin master
 
-            # Pull the latest frontend image
-            docker-compose pull frontend
+            # Install dependencies
+            npm install
 
-            # Restart only the frontend service
-            docker-compose up -d --no-deps frontend
+            # Build the frontend
+            npm run build
 
-            # Optional: Clean up old, unused Docker images
-            docker image prune -f
+            # Restart nginx to serve the new files
+            systemctl reload nginx
+
+            echo "Frontend deployment completed successfully!"
