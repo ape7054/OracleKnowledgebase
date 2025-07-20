@@ -29,6 +29,8 @@ import BchIcon from 'cryptocurrency-icons/svg/color/bch.svg?react';
 import AvaxIcon from 'cryptocurrency-icons/svg/color/avax.svg?react';
 import XrpIcon from 'cryptocurrency-icons/svg/color/xrp.svg?react';
 import WbtcIcon from 'cryptocurrency-icons/svg/color/wbtc.svg?react';
+import UsdcIcon from 'cryptocurrency-icons/svg/color/usdc.svg?react';
+import DogeIcon from 'cryptocurrency-icons/svg/color/doge.svg?react';
 
 // Import API services
 import { cachedMarketApi, dataTransformers } from '../api/marketApi';
@@ -796,6 +798,9 @@ function Dashboard() {
     'BCH': BchIcon,     // Bitcoin Cash
     'AVAX': AvaxIcon,   // Avalanche
     'XRP': XrpIcon,     // Ripple
+    'USDC': UsdcIcon,   // USD Coin
+    'DOGE': DogeIcon,   // Dogecoin
+    'STETH': EthIcon,   // Lido Staked Ether 使用 ETH 图标
   };
 
   // 转换API数据为Dashboard组件期望的格式
