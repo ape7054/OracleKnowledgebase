@@ -10,6 +10,7 @@ const HypeIcon = ({ width = 32, height = 32, ...props }) => (
     style={{
       borderRadius: '50%',
       objectFit: 'cover',
+      display: 'block',
       ...props.style
     }}
     {...props}
