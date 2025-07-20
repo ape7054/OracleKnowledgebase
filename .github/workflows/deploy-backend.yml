@@ -65,15 +65,14 @@ jobs:
             # Navigate to the project directory on your server
             cd /www/wwwroot/market-pulse
 
-            # Log in to the GitHub Container Registry
-            echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+            # Pull the latest code
+            git pull origin master
 
-            # Pull the latest backend image from the registry
-            docker-compose pull backend
-
-            # Restart only the backend service using the new image
-            # --no-deps ensures we don't restart the database or other services
+            # Rebuild and restart the backend service
+            docker-compose build --no-cache backend
             docker-compose up -d --no-deps backend
 
             # Optional: Clean up old, unused Docker images to save disk space
-            docker image prune -f 
+            docker image prune -f
+
+            echo "Backend deployment completed successfully!"
