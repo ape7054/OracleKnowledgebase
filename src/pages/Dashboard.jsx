@@ -124,7 +124,7 @@ const chartMeta = {
   SOL: { stroke: '#14f195', id: 'colorSol' },
 }
 
-const marketData = [
+const staticMarketData = [
   { name: 'Bitcoin', symbol: 'BTC', price: '$63,500', change: '+2.5%', icon: BtcIcon, sparkline: chartData.BTC.map(d => d.value) },
   { name: 'Ethereum', symbol: 'ETH', price: '$3,250', change: '+3.2%', icon: EthIcon, sparkline: chartData.ETH.map(d => d.value) },
   { name: 'Solana', symbol: 'SOL', price: '$162', change: '+5.1%', icon: SolIcon, sparkline: chartData.SOL.map(d => d.value) },
@@ -770,6 +770,41 @@ function Dashboard() {
   const [error, setError] = useState(null);
   const [lastUpdated, setLastUpdated] = useState(null);
 
+  // 图标映射
+  const iconMap = {
+    'BTC': BtcIcon,
+    'ETH': EthIcon,
+    'SOL': SolIcon,
+    'BNB': BnbIcon,
+    'ADA': AdaIcon,
+    'USDT': UsdtIcon,
+  };
+
+  // 转换API数据为Dashboard组件期望的格式
+  const transformApiDataForDashboard = (apiData) => {
+    return apiData.map(coin => {
+      const symbol = coin.symbol.toUpperCase();
+      const changePercent = coin.change || 0;
+      const changeStr = changePercent >= 0 ? `+${changePercent.toFixed(1)}%` : `${changePercent.toFixed(1)}%`;
+
+      // 生成模拟的sparkline数据
+      const basePrice = coin.price || 0;
+      const sparkline = Array.from({ length: 24 }, (_, i) => {
+        const variation = (Math.random() - 0.5) * 0.1; // ±5% 变化
+        return basePrice * (1 + variation);
+      });
+
+      return {
+        name: coin.name,
+        symbol: symbol,
+        price: `$${coin.price?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}`,
+        change: changeStr,
+        icon: iconMap[symbol] || BtcIcon, // 默认使用BTC图标
+        sparkline: sparkline
+      };
+    });
+  };
+
   // 获取市场数据
   const fetchMarketData = async () => {
     try {
@@ -779,15 +814,19 @@ function Dashboard() {
       const response = await cachedMarketApi.getMarketData(20); // 获取前20名
 
       if (response.success && response.data) {
-        const transformedData = response.data.map(dataTransformers.transformCoinData);
-        setMarketData(transformedData);
+        // 先转换为标准格式
+        const standardData = response.data.map(dataTransformers.transformCoinData);
+
+        // 再转换为Dashboard组件期望的格式
+        const dashboardData = transformApiDataForDashboard(standardData);
+        setMarketData(dashboardData);
 
         // 计算市场概览数据
         const summary = dataTransformers.transformMarketSummary(response.data);
         setMarketSummary(summary);
 
         setLastUpdated(new Date());
-        console.log('Market data updated:', transformedData.length, 'coins');
+        console.log('Market data updated:', dashboardData.length, 'coins');
       }
     } catch (err) {
       console.error('Failed to fetch market data:', err);
@@ -857,9 +896,11 @@ function Dashboard() {
   ), [selectedCoin, theme]);
 
   // 优化移动视图卡片
-  const MarketCardView = () => (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      {marketData.map((coin) => (
+  const MarketCardView = () => {
+    const displayData = marketData.length > 0 ? marketData : staticMarketData;
+    return (
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+        {displayData.map((coin) => (
         <GlassmorphicPaper key={coin.symbol} sx={{ p: 3, mb: 1 }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -934,22 +975,25 @@ function Dashboard() {
         </GlassmorphicPaper>
       ))}
     </Box>
-  );
+    );
+  };
 
   // 美化表格视图
-  const MarketTableView = () => (
-    <StyledTableContainer>
-    <Table>
-      <TableHead>
-        <TableRow>
-          <TableCell>Asset</TableCell>
-          <TableCell align="right">Price</TableCell>
-          <TableCell align="right">24h Change</TableCell>
-          <TableCell align="right" sx={{ width: '150px' }}>24h Chart</TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {marketData.map((coin) => (
+  const MarketTableView = () => {
+    const displayData = marketData.length > 0 ? marketData : staticMarketData;
+    return (
+      <StyledTableContainer>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Asset</TableCell>
+            <TableCell align="right">Price</TableCell>
+            <TableCell align="right">24h Change</TableCell>
+            <TableCell align="right" sx={{ width: '150px' }}>24h Chart</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {displayData.map((coin) => (
           <TableRow key={coin.symbol} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
             <TableCell component="th" scope="row">
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -1023,7 +1067,63 @@ function Dashboard() {
       </TableBody>
     </Table>
     </StyledTableContainer>
-  );
+    );
+  };
+
+  // 显示加载状态
+  if (loading) {
+    return (
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '60vh',
+        flexDirection: 'column',
+        gap: 2
+      }}>
+        <Box sx={{
+          width: 60,
+          height: 60,
+          border: `4px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+          borderTop: `4px solid ${theme.palette.primary.main}`,
+          borderRadius: '50%',
+          animation: 'spin 1s linear infinite',
+          '@keyframes spin': {
+            '0%': { transform: 'rotate(0deg)' },
+            '100%': { transform: 'rotate(360deg)' }
+          }
+        }} />
+        <Typography variant="h6" color="text.secondary">
+          Loading Market Data...
+        </Typography>
+      </Box>
+    );
+  }
+
+  // 显示错误状态
+  if (error) {
+    return (
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '60vh',
+        flexDirection: 'column',
+        gap: 2
+      }}>
+        <Typography variant="h6" color="error.main">
+          {error}
+        </Typography>
+        <Button
+          variant="contained"
+          onClick={fetchMarketData}
+          sx={{ mt: 2 }}
+        >
+          Retry
+        </Button>
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ pb: 4 }}>
