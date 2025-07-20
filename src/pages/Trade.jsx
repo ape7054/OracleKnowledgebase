@@ -471,7 +471,7 @@ const RecentTrades = ({ trades, page, totalPages, handlePrevPage, handleNextPage
       </Box>
       
       <Grid container spacing={0} sx={headerStyle}>
-        <Grid item xs={3.5} sm={3.5} md={3.5}>
+        <Grid item xs={3} sm={3} md={3}>
           <Typography variant="caption" sx={{ fontWeight: 700, letterSpacing: '0.5px' }}>
             Price (USDT)
           </Typography>
@@ -481,7 +481,7 @@ const RecentTrades = ({ trades, page, totalPages, handlePrevPage, handleNextPage
             Amount
           </Typography>
         </Grid>
-        <Grid item xs={3} sm={3} md={3} sx={{ textAlign: 'center' }}>
+        <Grid item xs={3.5} sm={3.5} md={3.5} sx={{ textAlign: 'center' }}>
           <Typography variant="caption" sx={{ fontWeight: 700, letterSpacing: '0.5px' }}>
             Trader
           </Typography>
@@ -560,7 +560,7 @@ const RecentTrades = ({ trades, page, totalPages, handlePrevPage, handleNextPage
             }}
           >
             <Grid container spacing={0} sx={{ p: { xs: 1, sm: 1.5 } }}>
-              <Grid item xs={3.5} sm={3.5} md={3.5} sx={{ display: 'flex', alignItems: 'center' }}>
+              <Grid item xs={3} sm={3} md={3} sx={{ display: 'flex', alignItems: 'center' }}>
                 <Box
                   component="span"
                   sx={{
@@ -643,7 +643,7 @@ const RecentTrades = ({ trades, page, totalPages, handlePrevPage, handleNextPage
                   BTC
                 </Typography>
               </Grid>
-              <Grid item xs={3} sm={3} md={3} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Grid item xs={3.5} sm={3.5} md={3.5} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Typography
                   variant="body2"
                   sx={{
