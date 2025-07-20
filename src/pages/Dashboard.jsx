@@ -35,6 +35,9 @@ import DogeIcon from 'cryptocurrency-icons/svg/color/doge.svg?react';
 // Import API services
 import { cachedMarketApi, dataTransformers } from '../api/marketApi';
 
+// Import custom icons
+import HypeIcon from '../assets/icons/HypeIcon';
+
 const GlassmorphicPaper = styled(Paper)(({ theme }) => ({
     padding: '24px',
     borderRadius: '16px',
@@ -790,7 +793,7 @@ function Dashboard() {
     'TRX': TrxIcon,
     'WSTETH': EthIcon,  // Wrapped stETH 使用 ETH 图标
     'WBTC': WbtcIcon,   // Wrapped Bitcoin
-    'HYPE': BtcIcon,    // Hyperliquid 暂时使用 BTC 图标 (没有专用图标)
+    'HYPE': HypeIcon,   // Hyperliquid 专用图标
     'XLM': XlmIcon,     // Stellar
     'SUI': SolIcon,     // Sui 暂时使用 SOL 图标 (没有专用图标)
     'LINK': LinkIcon,   // Chainlink
