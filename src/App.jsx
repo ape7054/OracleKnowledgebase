@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Routes, Route, NavLink } from 'react-router-dom';
 import { Box, CssBaseline, AppBar, Toolbar, Typography, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, IconButton, useTheme, useMediaQuery } from '@mui/material';
-import { Dashboard as DashboardIcon, SwapHoriz as TradeIcon, AccountCircle as AccountIcon, Menu as MenuIcon, TrendingUp } from '@mui/icons-material';
+import { Dashboard as DashboardIcon, SwapHoriz as TradeIcon, AccountCircle as AccountIcon, Menu as MenuIcon, TrendingUp, Home as HomeIcon } from '@mui/icons-material';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
@@ -176,13 +176,14 @@ function AppContent() {
       {/* Container for the navigation list items. */}
       <Box sx={{ p: 1, mt: 1 }}>
         {[
+          { text: 'Home', icon: <HomeIcon />, path: '/' },
           { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
           { text: 'Trade', icon: <TradeIcon />, path: '/trade' },
           { text: 'Account', icon: <AccountIcon />, path: '/account' },
         ].map((item) => (
           // Each item in the list is a NavLink to handle routing.
           <ListItem key={item.text} disablePadding sx={{ mb: 0.5 }}>
-            <StyledNavLink to={item.path} end={item.path === '/' || item.path === '/dashboard'}>
+            <StyledNavLink to={item.path} end={item.path === '/'}>
               {/* Use a render prop to get the 'isActive' state from NavLink. */}
               {({ isActive }) => (
                 <StyledListItemButton 
