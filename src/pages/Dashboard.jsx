@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Box, Grid, Typography, Paper, useTheme, Table, TableBody, TableCell, TableHead, TableRow, Chip, useMediaQuery, Divider, Button, ButtonGroup } from '@mui/material';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend, LineChart, Line, PieChart, Pie, Cell, RadialBarChart, RadialBar } from 'recharts';
 import { styled, alpha } from '@mui/system';
@@ -22,6 +22,9 @@ import SolIcon from 'cryptocurrency-icons/svg/color/sol.svg?react';
 import UsdtIcon from 'cryptocurrency-icons/svg/color/usdt.svg?react';
 import BnbIcon from 'cryptocurrency-icons/svg/color/bnb.svg?react';
 import AdaIcon from 'cryptocurrency-icons/svg/color/ada.svg?react';
+
+// Import API services
+import { cachedMarketApi, dataTransformers } from '../api/marketApi';
 
 const GlassmorphicPaper = styled(Paper)(({ theme }) => ({
     padding: '24px',
@@ -755,11 +758,60 @@ function Dashboard() {
   const [timeframe, setTimeframe] = useState('24h');
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
+  // 新增状态管理
+  const [marketData, setMarketData] = useState([]);
+  const [marketSummary, setMarketSummary] = useState({
+    totalMarketCap: '0',
+    btcDominance: '0%',
+    ethDominance: '0%',
+    dailyVolume: '0'
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [lastUpdated, setLastUpdated] = useState(null);
+
+  // 获取市场数据
+  const fetchMarketData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const response = await cachedMarketApi.getMarketData(20); // 获取前20名
+
+      if (response.success && response.data) {
+        const transformedData = response.data.map(dataTransformers.transformCoinData);
+        setMarketData(transformedData);
+
+        // 计算市场概览数据
+        const summary = dataTransformers.transformMarketSummary(response.data);
+        setMarketSummary(summary);
+
+        setLastUpdated(new Date());
+        console.log('Market data updated:', transformedData.length, 'coins');
+      }
+    } catch (err) {
+      console.error('Failed to fetch market data:', err);
+      setError('Failed to load market data. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 组件挂载时获取数据
+  useEffect(() => {
+    fetchMarketData();
+
+    // 设置定时刷新（每30秒）
+    const interval = setInterval(fetchMarketData, 30000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   const stats = [
-    { title: "Portfolio Value", value: "$12,450.80", icon: <AccountBalanceWalletOutlinedIcon sx={{ color: theme.palette.primary.main }} />, color: theme.palette.primary.main },
-    { title: "24h Change", value: "+$320.50", icon: <TrendingUpIcon sx={{ color: theme.palette.success.main }} />, color: theme.palette.success.main },
-    { title: "Total P&L", value: "$1,890.20", icon: <ShowChartOutlinedIcon sx={{ color: theme.palette.info.main }} />, color: theme.palette.info.main },
-    { title: "Open Positions", value: "3", icon: <BarChartOutlinedIcon sx={{ color: theme.palette.warning.main }} />, color: theme.palette.warning.main },
+    { title: "Total Market Cap", value: marketSummary.totalMarketCap, icon: <AccountBalanceWalletOutlinedIcon sx={{ color: theme.palette.primary.main }} />, color: theme.palette.primary.main },
+    { title: "24h Volume", value: marketSummary.dailyVolume, icon: <TrendingUpIcon sx={{ color: theme.palette.success.main }} />, color: theme.palette.success.main },
+    { title: "BTC Dominance", value: marketSummary.btcDominance, icon: <ShowChartOutlinedIcon sx={{ color: theme.palette.info.main }} />, color: theme.palette.info.main },
+    { title: "ETH Dominance", value: marketSummary.ethDominance, icon: <BarChartOutlinedIcon sx={{ color: theme.palette.warning.main }} />, color: theme.palette.warning.main },
   ];
 
   const MemoizedAreaChart = useMemo(() => (

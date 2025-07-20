@@ -13,9 +13,21 @@ func SetupRouter(api *API) *gin.Engine {
 	router.Use(cors.Default())
 
 	// 设置路由
+	// 健康检查
 	router.GET("/api/health", api.HealthCheck)
+
+	// 市场数据API
+	router.GET("/api/market/data", api.GetMarketData)
+	router.GET("/api/market/coins/:id", api.GetCoinDetails)
+	router.GET("/api/market/coins/:id/history", api.GetHistoricalData)
+	router.GET("/api/market/coins", api.GetMultipleCoins)
+	router.GET("/api/market/ping", api.PingCoinGecko)
+
+	// 交易API
 	router.GET("/api/trades", api.GetTrades)
 	router.POST("/api/trades", api.CreateTrade)
+
+	// WebSocket
 	router.GET("/ws/trades", api.ServeWsUpgrade)
 
 	return router
