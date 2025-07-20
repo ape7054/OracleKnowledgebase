@@ -62,7 +62,7 @@ cp -r AI-Protocol-Lab /path/to/your/project/
 ### 2. 生成项目上下文
 ```bash
 cd /path/to/your/project
-./AI-Protocol-Lab/get-ai-context.sh
+./AI-Protocol-Lab/scripts/get-ai-context.sh
 ```
 
 ### 3. 选择合适的Prompt
@@ -85,7 +85,7 @@ cat AI-Protocol-Lab/prompts/development_assistant.prompt.md
 **场景**: 从VSCode切换到其他编辑器，AI对话历史丢失
 ```bash
 # 1. 生成当前项目上下文
-./AI-Protocol-Lab/get-ai-context.sh
+./AI-Protocol-Lab/scripts/get-ai-context.sh
 
 # 2. 复制生成的内容给新的AI助手
 # 3. 继续开发工作，无缝衔接
@@ -95,7 +95,7 @@ cat AI-Protocol-Lab/prompts/development_assistant.prompt.md
 **场景**: 新团队成员需要快速了解项目
 ```bash
 # 1. 提供项目背景
-cat AI-Protocol-Lab/get-ai-context.sh
+./AI-Protocol-Lab/scripts/get-ai-context.sh
 
 # 2. 选择合适的学习prompt
 cat AI-Protocol-Lab/prompts/web3_mentor.prompt.md  # 如果是Web3项目
@@ -144,14 +144,14 @@ cat AI-Protocol-Lab/prompts/documentation_generator.prompt.md
 
 ```
 AI-Protocol-Lab/
-├── prompts/                          # Prompt集合
+├── prompts/                          # 🤖 Prompt集合
 │   ├── tech_english_tutor.prompt.md     # 技术英语指导
 │   ├── web3_mentor.prompt.md            # Web3学习指导
 │   ├── development_assistant.prompt.md   # 开发助手
 │   ├── code_reviewer.prompt.md          # 代码审查
 │   ├── documentation_generator.prompt.md # 文档生成
 │   ├── project_progress_manager.prompt.md # 项目管理
-│   └── zh-CN/                           # 中文版本
+│   └── zh-CN/                           # 🇨🇳 中文版本
 │       ├── README.md                    # 中文使用指南
 │       ├── development_assistant.prompt.md
 │       ├── code_reviewer.prompt.md
@@ -159,12 +159,14 @@ AI-Protocol-Lab/
 │       ├── project_progress_manager.prompt.md
 │       ├── tech_english_tutor.prompt.md
 │       └── web3_mentor.prompt.md
-├── docs/                             # 文档目录
+├── scripts/                          # 🛠️ 工具脚本
+│   └── get-ai-context.sh             # 上下文生成脚本
+├── docs/                             # 📚 文档目录
+│   ├── README.md                     # 文档导航
 │   ├── README-PROGRESS-MANAGER.md    # 项目管理详细指南
 │   └── USAGE-EXAMPLES.md             # 使用示例
-├── ai-conversations/                 # 历史对话记录
-├── get-ai-context.sh                 # 上下文生成脚本
-└── README.md                         # 主要说明文档
+├── ai-conversations/                 # 💬 历史对话记录
+└── README.md                         # 📖 主要说明文档
 ```
 
 ## 💡 最佳实践

@@ -11,7 +11,7 @@
 ```bash
 # 1. 快速获取上下文
 cd /www/wwwroot/market-pulse
-./AI-Protocol-Lab/get-ai-context.sh
+./AI-Protocol-Lab/scripts/get-ai-context.sh
 
 # 2. 复制生成的内容给新的AI助手
 # 3. 说明您的需求
@@ -92,7 +92,7 @@ grep -r "Dashboard" docs/conversations/development/
 cat docs/conversations/development/2025-01-20-dashboard-fixes-and-ui-improvements.md
 
 # 3. 获取当前上下文
-./AI-Protocol-Lab/get-ai-context.sh
+./AI-Protocol-Lab/scripts/get-ai-context.sh
 ```
 
 #### AI对话示例
@@ -110,7 +110,7 @@ AI: 根据您提供的历史解决方案，Dashboard问题主要是缺少loading
 
 #### 1. 完整自动化脚本
 ```bash
-./AI-Protocol-Lab/get-ai-context.sh
+./AI-Protocol-Lab/scripts/get-ai-context.sh
 ```
 **优点**: 包含实时状态、Git历史、服务状态  
 **用途**: 新会话开始时使用
