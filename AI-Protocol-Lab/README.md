@@ -150,11 +150,21 @@ AI-Protocol-Lab/
 │   ├── development_assistant.prompt.md   # 开发助手
 │   ├── code_reviewer.prompt.md          # 代码审查
 │   ├── documentation_generator.prompt.md # 文档生成
-│   └── project_progress_manager.prompt.md # 项目管理
+│   ├── project_progress_manager.prompt.md # 项目管理
+│   └── zh-CN/                           # 中文版本
+│       ├── README.md                    # 中文使用指南
+│       ├── development_assistant.prompt.md
+│       ├── code_reviewer.prompt.md
+│       ├── documentation_generator.prompt.md
+│       ├── project_progress_manager.prompt.md
+│       ├── tech_english_tutor.prompt.md
+│       └── web3_mentor.prompt.md
+├── docs/                             # 文档目录
+│   ├── README-PROGRESS-MANAGER.md    # 项目管理详细指南
+│   └── USAGE-EXAMPLES.md             # 使用示例
+├── ai-conversations/                 # 历史对话记录
 ├── get-ai-context.sh                 # 上下文生成脚本
-├── README.md                         # 本文档
-├── README-PROGRESS-MANAGER.md        # 项目管理详细指南
-└── USAGE-EXAMPLES.md                 # 使用示例
+└── README.md                         # 主要说明文档
 ```
 
 ## 💡 最佳实践
@@ -181,8 +191,9 @@ AI-Protocol-Lab/
 
 ## 🔗 相关资源
 
-- [项目管理详细指南](README-PROGRESS-MANAGER.md)
-- [使用示例和场景](USAGE-EXAMPLES.md)
+- [项目管理详细指南](docs/README-PROGRESS-MANAGER.md)
+- [使用示例和场景](docs/USAGE-EXAMPLES.md)
+- [中文版本指南](prompts/zh-CN/README.md)
 - [Prompt编写最佳实践](https://docs.anthropic.com/claude/docs/prompt-engineering)
 
 ## 🤝 贡献
