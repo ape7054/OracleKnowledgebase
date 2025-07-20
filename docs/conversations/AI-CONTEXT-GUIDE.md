@@ -160,6 +160,27 @@ git log --oneline -10
 - 完善错误处理机制
 - 优化数据转换逻辑
 
+## 🤖 AI助手快速启动
+
+### 方法1: 一键获取上下文 (推荐)
+```bash
+cd /www/wwwroot/market-pulse
+./AI-Protocol-Lab/get-ai-context.sh
+```
+**说明**: 自动生成包含实时状态的完整上下文信息
+
+### 方法2: 使用专业Prompt
+```bash
+cat AI-Protocol-Lab/prompts/project_progress_manager.prompt.md
+```
+**说明**: 让AI具备项目管理和进度跟踪能力
+
+### 方法3: 使用本指南
+```bash
+cat docs/conversations/AI-CONTEXT-GUIDE.md
+```
+**说明**: 提供完整的项目背景和使用技巧
+
 ## 🎯 下次对话建议
 
 ### 优先开发任务
@@ -173,6 +194,13 @@ git log --oneline -10
 - "优化[具体页面]的性能"
 - "添加[具体功能]的测试用例"
 
+### 进度管理命令
+- "update progress" - 更新项目进度
+- "save conversation" - 保存当前对话记录
+
 ---
 
-**使用提示**: 直接将这个文档的内容作为上下文提供给AI助手，可以快速建立项目背景，提高开发效率。
+**使用提示**:
+1. **新AI会话**: 运行 `./AI-Protocol-Lab/get-ai-context.sh` 获取上下文
+2. **项目管理**: 使用 `project_progress_manager.prompt.md`
+3. **快速开发**: 直接使用本文档内容作为上下文
