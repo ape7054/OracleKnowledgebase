@@ -1,186 +1,129 @@
 #!/bin/bash
 
-# Universal AI Context Generator
-# 用于快速获取项目上下文信息，供AI助手使用
+# AI Protocol Lab - 项目上下文获取脚本
+# 自动收集项目信息，为AI助手提供完整的项目上下文
 
-echo "🤖 Universal AI Context Generator"
-echo "================================"
+echo "# 🤖 MarketPulse 项目上下文"
+echo "_自动生成于: $(date '+%Y-%m-%d %H:%M:%S')_"
+echo ""
+echo "---"
 echo ""
 
-# 检查是否在项目根目录
-if [ ! -d "AI-Protocol-Lab" ]; then
-    echo "❌ 错误: 请在包含AI-Protocol-Lab目录的项目根目录运行此脚本"
-    echo "   当前目录: $(pwd)"
-    echo "   提示: 确保AI-Protocol-Lab文件夹存在于当前目录"
-    exit 1
-fi
+# 项目基本信息
+echo "## 📋 项目基本信息"
+echo ""
+echo "**项目名称**: MarketPulse"
+echo "**项目类型**: 加密货币市场分析平台"
+echo "**工作目录**: $(pwd)"
+echo "**部署地址**: https://www.ency.asia/dashboard"
+echo ""
 
-# 尝试检测项目类型
-PROJECT_TYPE="Unknown"
+# 技术栈信息
+echo "## 🛠️ 技术栈"
+echo ""
 if [ -f "package.json" ]; then
-    PROJECT_TYPE="Node.js/JavaScript"
-elif [ -f "go.mod" ]; then
-    PROJECT_TYPE="Go"
-elif [ -f "requirements.txt" ] || [ -f "pyproject.toml" ]; then
-    PROJECT_TYPE="Python"
-elif [ -f "Cargo.toml" ]; then
-    PROJECT_TYPE="Rust"
-elif [ -f "pom.xml" ]; then
-    PROJECT_TYPE="Java/Maven"
-elif [ -f "*.csproj" ]; then
-    PROJECT_TYPE=".NET/C#"
+    echo "### 前端技术栈"
+    echo "- **构建工具**: $(grep -o '"vite"[^,]*' package.json | cut -d'"' -f4 | head -1 || echo 'Vite')"
+    echo "- **框架**: React 18"
+    echo "- **UI库**: Material-UI 5"
+    echo "- **图表**: Recharts"
+    echo "- **路由**: React Router"
+    echo ""
 fi
 
-echo "📍 项目目录: $(pwd)"
-echo "📅 生成时间: $(date '+%Y-%m-%d %H:%M:%S')"
+# Git信息
+echo "## 📝 最新提交信息"
 echo ""
-
-# 创建临时文件
-CONTEXT_FILE="/tmp/marketpulse-ai-context.md"
-
-cat > "$CONTEXT_FILE" << EOF
-# Universal AI Assistant Context
-
-## 🚀 快速启动信息
-
-**项目名称**: $(basename "$(pwd)")
-**项目类型**: $PROJECT_TYPE
-**项目路径**: $(pwd)
-**生成时间**:
-EOF
-
-echo "$(date '+%Y-%m-%d %H:%M:%S')" >> "$CONTEXT_FILE"
-
-cat >> "$CONTEXT_FILE" << 'EOF'
-
-## 📊 当前项目状态
-
-EOF
-
-# 添加最新的项目状态
-if [ -f "docs/development/DEVELOPMENT-ROADMAP.md" ]; then
-    echo "### 开发进度概览" >> "$CONTEXT_FILE"
-    echo '```' >> "$CONTEXT_FILE"
-    grep -A 10 "已完成模块" docs/development/DEVELOPMENT-ROADMAP.md | head -15 >> "$CONTEXT_FILE"
-    echo '```' >> "$CONTEXT_FILE"
-    echo "" >> "$CONTEXT_FILE"
-fi
-
-# 添加最近的Git提交
-echo "### 最近的开发活动" >> "$CONTEXT_FILE"
-echo '```' >> "$CONTEXT_FILE"
-echo "最近5次提交:" >> "$CONTEXT_FILE"
-git log --oneline -5 >> "$CONTEXT_FILE" 2>/dev/null || echo "无法获取Git历史" >> "$CONTEXT_FILE"
-echo '```' >> "$CONTEXT_FILE"
-echo "" >> "$CONTEXT_FILE"
-
-# 添加项目结构
-echo "### 项目结构" >> "$CONTEXT_FILE"
-echo '```' >> "$CONTEXT_FILE"
-echo "主要目录:" >> "$CONTEXT_FILE"
-ls -la | grep "^d" | awk '{print $9}' | grep -v "^\.$\|^\.\.$" | head -10 >> "$CONTEXT_FILE"
-echo "" >> "$CONTEXT_FILE"
-echo "重要文件:" >> "$CONTEXT_FILE"
-find . -maxdepth 2 -name "*.json" -o -name "*.md" -o -name "*.go" -o -name "*.jsx" | grep -E "(package\.json|README|main\.go|Dashboard\.jsx)" | head -10 >> "$CONTEXT_FILE"
-echo '```' >> "$CONTEXT_FILE"
-echo "" >> "$CONTEXT_FILE"
-
-# 添加服务状态
-echo "### 服务状态检查" >> "$CONTEXT_FILE"
-echo '```' >> "$CONTEXT_FILE"
-echo "端口占用情况:" >> "$CONTEXT_FILE"
-netstat -tlnp 2>/dev/null | grep -E ":5173|:8080|:3307" || echo "无法检查端口状态" >> "$CONTEXT_FILE"
-echo '```' >> "$CONTEXT_FILE"
-echo "" >> "$CONTEXT_FILE"
-
-# 添加AI使用指南链接
-cat >> "$CONTEXT_FILE" << 'EOF'
-## 🤖 AI助手使用指南
-
-### 完整上下文文档
-- **详细指南**: `docs/conversations/AI-CONTEXT-GUIDE.md`
-- **开发路线图**: `docs/development/DEVELOPMENT-ROADMAP.md`
-- **最新对话**: `docs/conversations/development/`
-
-### 快速启动命令
-```bash
-# 启动开发环境
-cd /www/wwwroot/market-pulse
-docker-compose up -d
-npm run dev
-
-# 检查服务状态
-curl http://localhost:8080/api/health
-curl http://localhost:5173
-```
-
-### 常见任务
-1. **修复UI问题**: 检查浏览器控制台 (F12)
-2. **API问题**: 检查后端日志和数据库连接
-3. **添加新功能**: 参考现有代码结构和API设计
-4. **更新进度**: 使用 "update progress" 命令
-
-## 📝 重要提醒
-
-1. **项目当前完成度**: 82%
-2. **下一步优先级**: 用户认证系统开发
-3. **技术栈**: React + Material UI + Go + Gin + MySQL
-4. **API集成**: CoinGecko API已完全集成
-
----
-
-**使用方法**: 将此文档内容复制给AI助手，然后说明您的具体需求。
-EOF
-
-# 显示生成的上下文
-echo "✅ AI上下文信息已生成"
-echo ""
-echo "📄 生成的文件: $CONTEXT_FILE"
-echo ""
-echo "🔍 内容预览:"
-echo "----------------------------------------"
-head -30 "$CONTEXT_FILE"
-echo "..."
-echo "----------------------------------------"
-echo ""
-
-# 提供使用选项
-echo "📋 使用选项:"
-echo ""
-echo "1️⃣  查看完整内容:"
-echo "   cat $CONTEXT_FILE"
-echo ""
-echo "2️⃣  复制到剪贴板 (如果支持):"
-if command -v xclip &> /dev/null; then
-    echo "   cat $CONTEXT_FILE | xclip -selection clipboard"
-elif command -v pbcopy &> /dev/null; then
-    echo "   cat $CONTEXT_FILE | pbcopy"
+if [ -d ".git" ]; then
+    echo "**分支**: $(git branch --show-current 2>/dev/null || echo 'unknown')"
+    echo "**最新提交**: $(git log -1 --pretty=format:'%h - %s (%cr)' 2>/dev/null || echo 'No git history')"
+    echo ""
 else
-    echo "   手动复制文件内容"
-fi
-echo ""
-echo "3️⃣  获取详细AI指南:"
-echo "   cat docs/conversations/AI-CONTEXT-GUIDE.md"
-echo ""
-echo "4️⃣  获取完整项目Prompt:"
-echo "   cat AI-Protocol-Lab/prompts/project_progress_manager.prompt.md"
-echo ""
-
-# 提供快速复制选项
-read -p "🤖 是否现在显示完整内容供复制? (y/n): " -n 1 -r
-echo ""
-if [[ $REPLY =~ ^[Yy]$ ]]; then
+    echo "未找到Git仓库"
     echo ""
-    echo "📋 完整AI上下文内容 (复制以下所有内容给AI助手):"
-    echo "========================================================"
-    cat "$CONTEXT_FILE"
-    echo "========================================================"
-    echo ""
-    echo "✅ 请复制上述内容给AI助手，然后说明您的具体需求。"
 fi
 
+# 项目结构
+echo "## 📁 项目结构"
 echo ""
-echo "🎯 提示: 如果需要更详细的项目背景，请使用:"
-echo "   cat docs/conversations/AI-CONTEXT-GUIDE.md"
+echo "\`\`\`"
+echo "market-pulse/"
+if [ -d "src" ]; then
+    echo "├── src/                    # React前端代码"
+    echo "│   ├── pages/             # 页面组件"
+    echo "│   ├── components/        # 通用组件"
+    echo "│   └── context/           # 上下文管理"
+fi
+if [ -d "docs" ]; then
+    echo "├── docs/                  # 项目文档"
+fi
+if [ -d "AI-Protocol-Lab" ]; then
+    echo "├── AI-Protocol-Lab/       # AI协作工具箱"
+fi
+if [ -f "package.json" ]; then
+    echo "├── package.json           # 依赖管理"
+fi
+if [ -f "vite.config.js" ]; then
+    echo "├── vite.config.js         # 构建配置"
+fi
+echo "\`\`\`"
 echo ""
-echo "🚀 准备就绪! 您现在可以开始与AI助手对话了。"
+
+# 重要文件状态
+echo "## 📄 重要文件状态"
+echo ""
+if [ -f "src/pages/Dashboard.jsx" ]; then
+    lines=$(wc -l < "src/pages/Dashboard.jsx")
+    echo "- **Dashboard.jsx**: $lines 行 (主要工作文件)"
+fi
+if [ -f "package.json" ]; then
+    echo "- **package.json**: 存在"
+fi
+if [ -f "AI-Protocol-Lab/docs/AI-CONTEXT-GUIDE.md" ]; then
+    echo "- **AI-CONTEXT-GUIDE.md**: 存在 (快速上下文指南)"
+fi
+echo ""
+
+# 最新状态
+echo "## 🚀 最新项目状态"
+echo ""
+echo "### Dashboard专业级升级 (2025-07-20)"
+echo "- ✅ 完全重新设计Dashboard界面"
+echo "- ✅ 新增高级组件 (PremiumStatCard, PremiumSparkLine等)"
+echo "- ✅ 修复图标颜色问题"
+echo "- ✅ 实现深空背景和动画效果"
+echo "- ✅ 完善响应式设计"
+echo ""
+
+# 快速命令
+echo "## ⚡ 快速命令"
+echo ""
+echo "\`\`\`bash"
+echo "# 开发模式"
+echo "npm run dev"
+echo ""
+echo "# 构建生产版本"
+echo "npm run build"
+echo ""
+echo "# 重载nginx"
+echo "systemctl reload nginx"
+echo ""
+echo "# 查看AI协作指南"
+echo "cat AI-Protocol-Lab/docs/AI-CONTEXT-GUIDE.md"
+echo "\`\`\`"
+echo ""
+
+# AI助手建议
+echo "## 🤖 AI助手建议"
+echo ""
+echo "基于当前项目状态，建议AI助手扮演以下角色之一："
+echo ""
+echo "1. **前端开发专家** - 继续UI/UX优化"
+echo "2. **性能优化专家** - 代码分割和性能提升"
+echo "3. **移动端专家** - 移动体验优化"
+echo "4. **数据可视化专家** - 图表和分析功能"
+echo ""
+
+echo "---"
+echo ""
+echo "_此上下文由 AI-Protocol-Lab 自动生成_"

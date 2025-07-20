@@ -2,11 +2,11 @@
 
 MarketPulse 是一个现代化的加密货币市场智能平台，采用全栈架构开发。项目使用 React + Material UI 构建前端，Go + Gin 框架构建后端，MySQL 作为数据库，全部容器化部署，为开发者提供完整的加密货币交易平台解决方案。
 
-![项目状态](https://img.shields.io/badge/状态-开发中-yellow)
-![完成度](https://img.shields.io/badge/完成度-65%25-orange)
-![前端](https://img.shields.io/badge/前端-React%2018-blue)
-![后端](https://img.shields.io/badge/后端-Go%201.22-cyan)
-![数据库](https://img.shields.io/badge/数据库-MySQL%208.0-blue)
+![项目状态](https://img.shields.io/badge/状态-活跃开发-green)
+![完成度](https://img.shields.io/badge/完成度-85%25-brightgreen)
+![前端](https://img.shields.io/badge/前端-React%2018%20%2B%20MUI%205-blue)
+![图表](https://img.shields.io/badge/图表-Recharts-purple)
+![构建](https://img.shields.io/badge/构建-Vite-yellow)
 
 ## 🎯 项目愿景
 
@@ -18,18 +18,18 @@ MarketPulse 是一个现代化的加密货币市场智能平台，采用全栈�
 
 ## 📊 项目状态
 
-**总体完成度: 75%** | **最新更新**: 2025年1月20日
+**总体完成度: 85%** | **最新更新**: 2025年7月20日 | **部署地址**: https://www.ency.asia/dashboard
 
 | 模块 | 完成度 | 状态 | 说明 |
 |------|--------|------|------|
-| 🎨 前端UI/UX | 90% | ✅ 优秀 | React + Material UI，响应式设计完成 |
-| 🔧 后端架构 | 85% | ✅ 优秀 | Go + Gin 框架，完整API服务 |
-| 🗄️ 数据库设计 | 75% | ✅ 良好 | MySQL，完整数据模型设计 |
-| 🌐 API集成 | 80% | ✅ 优秀 | CoinGecko API完全集成，实时数据 |
-| 🔐 用户认证 | 20% | ⚠️ 待开发 | JWT认证系统 |
-| 🧪 测试覆盖 | 15% | ⚠️ 需要补充 | API测试完成，需要更多测试 |
-| 🚀 开发环境 | 95% | ✅ 优秀 | Docker化，一键启动 |
-| 📚 文档系统 | 95% | ✅ 优秀 | 完整的开发文档 |
+| 🎨 前端UI/UX | 95% | ✅ 专业级 | React + MUI 5 + Recharts，专业级Dashboard |
+| 📊 数据可视化 | 90% | ✅ 优秀 | 高级图表组件，动画效果完善 |
+| 🌐 API集成 | 85% | ✅ 优秀 | 实时市场数据，完整API服务 |
+| 📱 响应式设计 | 95% | ✅ 优秀 | 完美适配所有设备尺寸 |
+| 🎭 动画系统 | 90% | ✅ 优秀 | 流畅的交互动画和视觉效果 |
+| 🚀 构建部署 | 95% | ✅ 优秀 | Vite构建，Nginx部署 |
+| 📚 文档系统 | 95% | ✅ 优秀 | 完整的开发文档 + AI协作工具 |
+| 🤖 AI协作 | 90% | ✅ 创新 | AI-Protocol-Lab工具箱 |
 
 ## ✨ 核心功能
 
@@ -244,12 +244,32 @@ market-pulse/
 - 🐛 **Bug报告**: [GitHub Issues](https://github.com/ape7054/trading-dashboard/issues)
 - 💬 **功能讨论**: [GitHub Discussions](https://github.com/ape7054/trading-dashboard/discussions)
 - 📖 **文档问题**: 查看 [文档导航](docs/DOCUMENTATION-INDEX.md)
+- 🤖 **AI协作**: 使用 [AI-Protocol-Lab](AI-Protocol-Lab/) 完整工具箱
 - 📧 **直接联系**: 项目维护者
+
+### 📁 文档结构
+
+项目采用AI-Protocol-Lab统一管理所有文档和AI协作资源：
+
+#### `/AI-Protocol-Lab/` - 规范化AI协作工具箱 🤖
+- 📖 [工具箱总览](AI-Protocol-Lab/README.md) - 完整功能介绍
+- 🚀 [快速上下文指南](AI-Protocol-Lab/docs/AI-CONTEXT-GUIDE.md) - 30秒了解项目状态
+- 📊 [项目状态报告](AI-Protocol-Lab/docs/PROJECT-STATUS-2025-07-20.md) - 完整进度跟踪
+- 🎯 [Prompt库](AI-Protocol-Lab/prompts/) - 专业AI助手提示词
+- 💬 [对话记录](AI-Protocol-Lab/conversations/) - AI开发对话历史
+- 🔧 [工具脚本](AI-Protocol-Lab/scripts/) - 自动化工具
+
+#### 项目技术文档 (`/AI-Protocol-Lab/project/`)
+- 📖 [文档导航](AI-Protocol-Lab/project/DOCUMENTATION-INDEX.md) - 完整的文档索引
+- 🛠️ [开发指南](AI-Protocol-Lab/project/development/README-DEV.md) - 环境搭建和开发流程
+- 📋 [API规范](AI-Protocol-Lab/project/development/API-SPECIFICATION.md) - 接口文档
+- 🏗️ [技术架构](AI-Protocol-Lab/project/development/TECHNICAL-GUIDE.md) - 系统架构说明
 
 ### 🆘 常见问题
 - **启动失败？** 查看 [开发指南](docs/development/README-DEV.md) 的故障排除部分
 - **API错误？** 参考 [API文档](docs/development/API-SPECIFICATION.md)
 - **架构疑问？** 阅读 [技术指南](docs/development/TECHNICAL-GUIDE.md)
+- **AI协作？** 查看 [AI-Protocol-Lab](AI-Protocol-Lab/) 快速上手
 
 ---
 

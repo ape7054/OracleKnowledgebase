@@ -1,236 +1,121 @@
 # 🤖 AI Protocol Lab
 
-**通用AI助手工具箱** - 提升开发效率的专业化Prompt集合
+**通用AI助手工具箱** - 提升开发效率的专业化工具集合
 
 ## 📋 概述
 
-AI Protocol Lab是一个可复用的AI助手工具箱，包含多种专业化的prompt，适用于任何软件开发项目。无论您使用什么技术栈、在哪个编辑器中工作，都可以通过这些prompt获得一致的高质量AI助手体验。
+AI Protocol Lab是一个完整的AI助手协作工具箱，包含prompt库、对话记录、项目文档和实用脚本。既可以作为通用工具在不同项目间复用，也能管理特定项目的所有AI协作资源。
 
 ### 🎯 核心价值
 
 - **🔄 无缝切换**: 在不同编辑器、AI助手之间保持上下文连续性
 - **📚 知识保存**: 自动化项目进度跟踪和技术决策记录
 - **⚡ 效率提升**: 专业化prompt提供针对性的开发支持
-- **🔧 即插即用**: 复制文件夹到任何项目即可使用
+- **🔧 即插即用**: 复制到任何项目即可使用
+- **📖 统一管理**: 集成项目文档，一站式AI协作解决方案
 
-## 📁 Prompt集合
-
-### 🎓 学习和指导类
-
-#### `tech_english_tutor.prompt.md`
-- **用途**: 技术英语学习和改进
-- **适用**: 需要提升技术英语水平的开发者
-- **特色**: 专业术语解释、写作指导、表达优化
-
-#### `web3_mentor.prompt.md`
-- **用途**: Web3技术学习指导
-- **适用**: 从Web2向Web3转型的开发者
-- **特色**: 结构化学习路径、实践项目指导
-
-### 🛠️ 开发支持类
-
-#### `development_assistant.prompt.md`
-- **用途**: 全栈开发技术支持
-- **适用**: 日常开发问题解决、架构设计
-- **特色**: 多技术栈支持、最佳实践指导、代码质量保证
-
-#### `code_reviewer.prompt.md`
-- **用途**: 专业代码审查
-- **适用**: 代码质量提升、团队协作
-- **特色**: 结构化审查流程、建设性反馈、优先级分类
-
-#### `documentation_generator.prompt.md`
-- **用途**: 技术文档生成和优化
-- **适用**: API文档、用户手册、项目文档
-- **特色**: 多种文档模板、清晰的结构指导
-
-### 📊 项目管理类
-
-#### `project_progress_manager.prompt.md`
-- **用途**: 项目进度跟踪和对话记录保存
-- **适用**: 任何需要进度管理的软件项目
-- **特色**: 自动化文档更新、上下文保存、知识传承
-
-## 🚀 快速开始
-
-### 1. 复制到您的项目
-```bash
-# 将整个AI-Protocol-Lab文件夹复制到您的项目根目录
-cp -r AI-Protocol-Lab /path/to/your/project/
-```
-
-### 2. 生成项目上下文
-```bash
-cd /path/to/your/project
-./AI-Protocol-Lab/scripts/get-ai-context.sh
-```
-
-### 3. 选择合适的Prompt
-```bash
-# 查看所有可用的prompt
-ls AI-Protocol-Lab/prompts/
-
-# 使用特定prompt
-cat AI-Protocol-Lab/prompts/development_assistant.prompt.md
-```
-
-### 4. 与AI助手对话
-- 复制选择的prompt内容
-- 粘贴给AI助手
-- 开始专业化的技术对话
-
-## 📖 使用场景
-
-### 🔄 编辑器切换
-**场景**: 从VSCode切换到其他编辑器，AI对话历史丢失
-```bash
-# 1. 生成当前项目上下文
-./AI-Protocol-Lab/scripts/get-ai-context.sh
-
-# 2. 复制生成的内容给新的AI助手
-# 3. 继续开发工作，无缝衔接
-```
-
-### 👥 团队协作
-**场景**: 新团队成员需要快速了解项目
-```bash
-# 1. 提供项目背景
-./AI-Protocol-Lab/scripts/get-ai-context.sh
-
-# 2. 选择合适的学习prompt
-cat AI-Protocol-Lab/prompts/web3_mentor.prompt.md  # 如果是Web3项目
-
-# 3. 开始指导和学习
-```
-
-### 🔍 代码审查
-**场景**: 需要对代码进行专业审查
-```bash
-# 1. 使用代码审查prompt
-cat AI-Protocol-Lab/prompts/code_reviewer.prompt.md
-
-# 2. 提供代码给AI助手
-# 3. 获得结构化的审查反馈
-```
-
-### 📚 文档编写
-**场景**: 需要创建或改进项目文档
-```bash
-# 1. 使用文档生成prompt
-cat AI-Protocol-Lab/prompts/documentation_generator.prompt.md
-
-# 2. 说明文档类型和需求
-# 3. 获得专业的文档建议和模板
-```
-
-## 🔧 自定义和扩展
-
-### 添加新的Prompt
-1. 在`prompts/`目录下创建新的`.prompt.md`文件
-2. 遵循现有的格式和结构
-3. 包含清晰的使用说明和激活条件
-
-### 修改现有Prompt
-1. 根据项目需求调整prompt内容
-2. 保持核心结构和原则不变
-3. 添加项目特定的上下文信息
-
-### 项目特定配置
-1. 修改`get-ai-context.sh`脚本
-2. 添加项目特定的检测逻辑
-3. 自定义生成的上下文信息
-
-## 📁 文件结构
+## 📁 规范化目录结构
 
 ```
 AI-Protocol-Lab/
-├── prompts/                          # Prompt集合
-│   ├── tech_english_tutor.prompt.md     # 技术英语指导
-│   ├── web3_mentor.prompt.md            # Web3学习指导
-│   ├── development_assistant.prompt.md   # 开发助手
-│   ├── code_reviewer.prompt.md          # 代码审查
-│   ├── documentation_generator.prompt.md # 文档生成
-│   ├── project_progress_manager.prompt.md # 项目管理
-│   └── zh-CN/                           # 中文版本
-│       ├── README.md                    # 中文使用指南
-│       ├── development_assistant.prompt.md
-│       ├── code_reviewer.prompt.md
-│       ├── documentation_generator.prompt.md
-│       ├── project_progress_manager.prompt.md
-│       ├── tech_english_tutor.prompt.md
-│       └── web3_mentor.prompt.md
-├── docs/                             # 文档目录
-│   ├── README-PROGRESS-MANAGER.md    # 项目管理详细指南
-│   └── USAGE-EXAMPLES.md             # 使用示例
-├── ai-conversations/                 # 历史对话记录
-├── get-ai-context.sh                 # 上下文生成脚本
-└── README.md                         # 主要说明文档
+├── README.md                    # 本文件
+├── docs/                       # 📖 AI协作工具文档
+│   ├── AI-CONTEXT-GUIDE.md     # 快速上下文指南
+│   ├── PROJECT-STATUS-2025-07-20.md # 项目状态报告
+│   ├── README-PROGRESS-MANAGER.md   # 进度管理指南
+│   └── USAGE-EXAMPLES.md       # 使用示例
+├── prompts/                    # 🎯 专业Prompt库
+│   ├── development_assistant.prompt.md
+│   ├── code_reviewer.prompt.md
+│   ├── project_progress_manager.prompt.md
+│   ├── tech_english_tutor.prompt.md
+│   ├── web3_mentor.prompt.md
+│   ├── documentation_generator.prompt.md
+│   └── zh-CN/                  # 中文版本
+├── conversations/              # 💬 AI对话记录
+│   ├── market-pulse-dashboard-upgrade_2025-07-20.md
+│   └── web3_fullstack_conversation_2025-07-18.md
+├── scripts/                    # 🔧 工具脚本
+│   ├── get-ai-context.sh       # 项目上下文获取
+│   └── README.md               # 脚本说明
+└── project/                    # 📚 项目特定文档
+    ├── DOCUMENTATION-INDEX.md   # 文档导航
+    ├── development/            # 开发文档
+    ├── conversations/          # 项目技术讨论
+    └── guides/                # 用户指南
 ```
 
-## 💡 最佳实践
+## 🚀 快速开始
 
-### 1. **选择合适的Prompt**
-- 根据当前任务选择最相关的prompt
-- 可以组合使用多个prompt
-- 定期更新和优化prompt内容
+### 使用专业Prompt
+```bash
+# 选择合适的prompt
+cat prompts/development_assistant.prompt.md
+# 复制内容到新的AI对话开始处
+```
 
-### 2. **保持上下文连续性**
-- 定期运行`get-ai-context.sh`更新项目状态
-- 在重要开发节点保存对话记录
-- 使用项目管理prompt跟踪进度
+### 获取项目上下文
+```bash
+# 自动生成项目上下文
+./scripts/get-ai-context.sh
+```
 
-### 3. **团队协作**
-- 统一使用相同的prompt版本
-- 分享有效的prompt使用经验
-- 建立团队特定的prompt库
+### 查看对话历史
+```bash
+# 了解最新的开发进展
+cat conversations/market-pulse-dashboard-upgrade_2025-07-20.md
+```
 
-### 4. **持续改进**
-- 根据使用反馈优化prompt
-- 添加项目特定的最佳实践
-- 定期回顾和更新工具箱
+## 📚 详细文档
 
-## 🔗 相关资源
+### AI协作工具文档 (`/docs/`)
+- 🚀 [快速上下文指南](docs/AI-CONTEXT-GUIDE.md) - 30秒了解项目状态
+- 📊 [项目状态报告](docs/PROJECT-STATUS-2025-07-20.md) - 完整进度跟踪
+- 📋 [进度管理指南](docs/README-PROGRESS-MANAGER.md) - 项目管理工具
+- 💡 [使用示例](docs/USAGE-EXAMPLES.md) - 实际应用场景
 
-- [项目管理详细指南](docs/README-PROGRESS-MANAGER.md)
-- [使用示例和场景](docs/USAGE-EXAMPLES.md)
-- [中文版本指南](prompts/zh-CN/README.md)
-- [Prompt编写最佳实践](https://docs.anthropic.com/claude/docs/prompt-engineering)
+### 项目特定文档 (`/project/`)
+- 📖 [文档导航](project/DOCUMENTATION-INDEX.md) - 完整文档索引
+- 🛠️ [开发文档](project/development/) - 技术架构、API规范
+- 💬 [项目对话](project/conversations/) - 技术讨论记录
+- 📚 [用户指南](project/guides/) - 使用说明
 
-## 🤝 贡献
+## 💡 使用场景
 
-欢迎贡献新的prompt或改进现有的工具：
+### 🔄 AI助手切换
+当需要在不同AI助手间切换时，使用快速上下文指南和专业prompt。
 
-1. Fork项目并创建新分支
-2. 添加或修改prompt文件
-3. 测试prompt的有效性
-4. 提交Pull Request
+### 📋 项目管理
+使用project_progress_manager.prompt.md进行自动化进度跟踪。
 
-## 📄 许可证
+### 🎓 学习指导
+使用学习类prompt进行技术英语提升和Web3学习。
 
-本项目采用MIT许可证，可自由使用、修改和分发。
+## 📈 最新更新 (2025-07-20)
 
-## 📈 使用统计
+- ✅ Dashboard专业级升级完成
+- ✅ 图标颜色问题修复
+- ✅ 文档结构规范化优化
+- ✅ 统一命名规范
+- ✅ 消除重复目录
 
-- **创建时间**: 2025年7月18日
-- **最后更新**: 2025年7月20日
-- **项目数量**: 1个 (MarketPulse)
-- **对话记录**: 2个 (Web3学习会话 + Dashboard升级会话)
-- **主要成果**: Dashboard专业级升级完成
+## 🔧 目录规范说明
 
-## 📝 最新更新 (2025-07-20)
+### **命名规范**
+- 所有目录名使用小写，不使用连字符
+- 文件名使用大写字母和连字符（如需要）
+- 保持一致性和可读性
 
-### **MarketPulse Dashboard 专业级升级**
-- ✅ 完全重新设计Dashboard界面
-- ✅ 新增4个高级组件 (PremiumStatCard, PremiumSparkLine等)
-- ✅ 修复图标颜色问题
-- ✅ 实现深空背景和浮动动画效果
-- ✅ 完善响应式设计
+### **功能分离**
+- `conversations/` - 专门存放AI对话记录
+- `project/conversations/` - 存放项目技术讨论记录
+- 避免功能重复和混淆
 
-### **新增文档**
-- `ai-conversations/market-pulse-dashboard-upgrade_2025-07-20.md` - 详细对话记录
-- `docs/PROJECT-STATUS-2025-07-20.md` - 项目状态报告
-- `docs/AI-CONTEXT-GUIDE.md` - AI助手快速上下文指南
+### **层次清晰**
+- 通用工具在根目录下
+- 项目特定内容在project/目录下
+- 每个目录职责明确
 
 ---
 
-**记住**: AI Protocol Lab的价值在于持续使用和改进。将它复制到您的每个项目中，建立一致的AI协作体验！
+**记住**: AI Protocol Lab专注于提供完整的AI协作解决方案，规范化的结构确保长期可维护性。

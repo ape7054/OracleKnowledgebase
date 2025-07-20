@@ -1,6 +1,27 @@
 # 💬 AI对话记录
 
+## ⚠️ 重要迁移通知
+
+**AI助手协作工具已迁移到新位置！**
+
+### 🔄 新的统一位置
+所有AI助手相关的文档和工具现在统一管理在：
+```
+/www/wwwroot/market-pulse/AI-Protocol-Lab/
+```
+
+### 📁 主要文件新位置
+- **快速上下文指南**: `/AI-Protocol-Lab/docs/AI-CONTEXT-GUIDE.md`
+- **对话记录**: `/AI-Protocol-Lab/ai-conversations/`
+- **项目状态**: `/AI-Protocol-Lab/docs/PROJECT-STATUS-2025-07-20.md`
+
+---
+
+## 📋 本目录说明
+
 这个目录用于存储与AI助手的重要技术讨论和决策过程，帮助团队了解项目的演进历程。
+
+**注意**: 新的AI对话请保存到 `/AI-Protocol-Lab/ai-conversations/` 目录。
 
 ## 📁 目录结构
 

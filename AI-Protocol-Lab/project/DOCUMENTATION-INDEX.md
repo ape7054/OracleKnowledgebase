@@ -15,6 +15,21 @@
 ### 📚 用户指南 (`/guides/`)
 面向最终用户的使用指南和教程（规划中）。
 
+### 🤖 AI协作工具 (`/ai-protocol-lab/`)
+专业的AI助手协作工具集，提供完整的AI协作体验。
+
+| 📄 主要文件 | 📝 描述 |
+|------------|---------|
+| [🚀 快速上下文指南](ai-protocol-lab/AI-CONTEXT-GUIDE.md) | 30秒让新AI助手了解项目状态 |
+| [📊 项目状态报告](ai-protocol-lab/PROJECT-STATUS-2025-07-20.md) | 完整的项目进度和技术架构 |
+| [📋 使用指南](ai-protocol-lab/README.md) | AI协作工具详细说明 |
+| [💡 使用示例](ai-protocol-lab/USAGE-EXAMPLES.md) | 实际应用场景 |
+
+**工具资源**:
+- [🎯 Prompt库](../AI-Protocol-Lab/prompts/) - 专业化AI助手提示词集合
+- [💬 对话记录](../AI-Protocol-Lab/ai-conversations/) - 详细的开发对话历史
+- [🔧 工具脚本](../AI-Protocol-Lab/scripts/) - 自动化工具
+
 ## 📖 文档导航
 
 ## 📖 开发文档导航
