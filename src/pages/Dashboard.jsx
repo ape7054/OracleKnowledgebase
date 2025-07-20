@@ -22,6 +22,13 @@ import SolIcon from 'cryptocurrency-icons/svg/color/sol.svg?react';
 import UsdtIcon from 'cryptocurrency-icons/svg/color/usdt.svg?react';
 import BnbIcon from 'cryptocurrency-icons/svg/color/bnb.svg?react';
 import AdaIcon from 'cryptocurrency-icons/svg/color/ada.svg?react';
+import TrxIcon from 'cryptocurrency-icons/svg/color/trx.svg?react';
+import XlmIcon from 'cryptocurrency-icons/svg/color/xlm.svg?react';
+import LinkIcon from 'cryptocurrency-icons/svg/color/link.svg?react';
+import BchIcon from 'cryptocurrency-icons/svg/color/bch.svg?react';
+import AvaxIcon from 'cryptocurrency-icons/svg/color/avax.svg?react';
+import XrpIcon from 'cryptocurrency-icons/svg/color/xrp.svg?react';
+import WbtcIcon from 'cryptocurrency-icons/svg/color/wbtc.svg?react';
 
 // Import API services
 import { cachedMarketApi, dataTransformers } from '../api/marketApi';
@@ -778,6 +785,17 @@ function Dashboard() {
     'BNB': BnbIcon,
     'ADA': AdaIcon,
     'USDT': UsdtIcon,
+    'TRX': TrxIcon,
+    'WSTETH': EthIcon,  // Wrapped stETH 使用 ETH 图标
+    'WBTC': WbtcIcon,   // Wrapped Bitcoin
+    'HYPE': BtcIcon,    // Hyperliquid 暂时使用 BTC 图标 (没有专用图标)
+    'XLM': XlmIcon,     // Stellar
+    'SUI': SolIcon,     // Sui 暂时使用 SOL 图标 (没有专用图标)
+    'LINK': LinkIcon,   // Chainlink
+    'HBAR': AdaIcon,    // Hedera 暂时使用 ADA 图标 (没有专用图标)
+    'BCH': BchIcon,     // Bitcoin Cash
+    'AVAX': AvaxIcon,   // Avalanche
+    'XRP': XrpIcon,     // Ripple
   };
 
   // 转换API数据为Dashboard组件期望的格式
