@@ -16,14 +16,28 @@ export default defineConfig({
   },
   server: {
     host: '0.0.0.0',
+    port: 5173,
     proxy: {
       '/api': {
-        target: 'http://localhost:8080',
+        // 开发环境默认使用本地后端
+        target: process.env.VITE_API_TARGET || 'http://localhost:8080',
         changeOrigin: true,
+        configure: (proxy, options) => {
+          proxy.on('error', (err, req, res) => {
+            console.log('🔴 API Proxy Error:', err.message);
+          });
+          proxy.on('proxyReq', (proxyReq, req, res) => {
+            console.log('🔄 API Request:', req.method, req.url);
+          });
+          proxy.on('proxyRes', (proxyRes, req, res) => {
+            console.log('✅ API Response:', proxyRes.statusCode, req.url);
+          });
+        },
       },
       '/ws': {
-        target: 'ws://localhost:8080',
+        target: process.env.VITE_WS_TARGET || 'ws://localhost:8080',
         ws: true,
+        changeOrigin: true,
       }
     }
   },

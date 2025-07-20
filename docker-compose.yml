@@ -35,22 +35,24 @@ services:
       DB_PASSWORD: ${DB_PASSWORD:-wBYXZkiLTExiEAHF}
       DB_NAME: ${DB_NAME:-market_pulse_db}
       SERVER_PORT: 8080
+    ports:
+      - "8080:8080"  # 映射到主机端口，让nginx可以访问
     networks:
       - market-pulse-network
 
-  # 前端服务
-  frontend:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: market-pulse-frontend
-    restart: unless-stopped
-    depends_on:
-      - backend
-    ports:
-      - "80:80"
-    networks:
-      - market-pulse-network
+  # 前端服务 (现在由nginx直接服务静态文件，不需要容器)
+  # frontend:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: market-pulse-frontend
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - backend
+  #   ports:
+  #     - "80:80"  # 端口被nginx使用
+  #   networks:
+  #     - market-pulse-network
 
 # 定义数据卷
 volumes:
