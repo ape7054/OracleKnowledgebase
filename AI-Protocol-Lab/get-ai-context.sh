@@ -1,18 +1,34 @@
 #!/bin/bash
 
-# MarketPulse AI Context Generator
+# Universal AI Context Generator
 # 用于快速获取项目上下文信息，供AI助手使用
 
-echo "🤖 MarketPulse AI Context Generator"
-echo "=================================="
+echo "🤖 Universal AI Context Generator"
+echo "================================"
 echo ""
 
-# 检查是否在正确的目录
-if [ ! -f "package.json" ] || [ ! -d "AI-Protocol-Lab" ]; then
-    echo "❌ 错误: 请在MarketPulse项目根目录运行此脚本"
+# 检查是否在项目根目录
+if [ ! -d "AI-Protocol-Lab" ]; then
+    echo "❌ 错误: 请在包含AI-Protocol-Lab目录的项目根目录运行此脚本"
     echo "   当前目录: $(pwd)"
-    echo "   期望目录: /www/wwwroot/market-pulse"
+    echo "   提示: 确保AI-Protocol-Lab文件夹存在于当前目录"
     exit 1
+fi
+
+# 尝试检测项目类型
+PROJECT_TYPE="Unknown"
+if [ -f "package.json" ]; then
+    PROJECT_TYPE="Node.js/JavaScript"
+elif [ -f "go.mod" ]; then
+    PROJECT_TYPE="Go"
+elif [ -f "requirements.txt" ] || [ -f "pyproject.toml" ]; then
+    PROJECT_TYPE="Python"
+elif [ -f "Cargo.toml" ]; then
+    PROJECT_TYPE="Rust"
+elif [ -f "pom.xml" ]; then
+    PROJECT_TYPE="Java/Maven"
+elif [ -f "*.csproj" ]; then
+    PROJECT_TYPE=".NET/C#"
 fi
 
 echo "📍 项目目录: $(pwd)"
@@ -22,16 +38,15 @@ echo ""
 # 创建临时文件
 CONTEXT_FILE="/tmp/marketpulse-ai-context.md"
 
-cat > "$CONTEXT_FILE" << 'EOF'
-# MarketPulse AI Assistant Context
+cat > "$CONTEXT_FILE" << EOF
+# Universal AI Assistant Context
 
 ## 🚀 快速启动信息
 
-**项目名称**: MarketPulse  
-**项目类型**: 加密货币市场智能平台  
-**技术栈**: React + Go + MySQL + Docker  
-**项目路径**: /www/wwwroot/market-pulse  
-**生成时间**: 
+**项目名称**: $(basename "$(pwd)")
+**项目类型**: $PROJECT_TYPE
+**项目路径**: $(pwd)
+**生成时间**:
 EOF
 
 echo "$(date '+%Y-%m-%d %H:%M:%S')" >> "$CONTEXT_FILE"

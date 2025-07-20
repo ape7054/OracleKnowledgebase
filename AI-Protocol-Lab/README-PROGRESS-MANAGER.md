@@ -1,8 +1,8 @@
-# Project Progress Manager - 使用指南
+# AI Protocol Lab - 使用指南
 
 ## 📋 概述
 
-这个AI Prompt系统专门设计用于保存和管理MarketPulse项目的开发进度、技术决策和AI对话记录，确保您可以在任何时候、任何编辑器中无缝继续开发工作。
+AI Protocol Lab是一个通用的AI助手工具箱，包含多种专业化的prompt，可以在任何软件项目中使用。这个工具箱设计用于提升开发效率、保存项目知识、确保AI助手的无缝切换和协作。
 
 ## 🎯 解决的问题
 
