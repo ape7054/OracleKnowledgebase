@@ -6,6 +6,7 @@ import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 import { ThemeContext } from './context/ThemeContext';
+import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import Trade from './pages/Trade';
 import Account from './pages/Account';
@@ -175,13 +176,13 @@ function AppContent() {
       {/* Container for the navigation list items. */}
       <Box sx={{ p: 1, mt: 1 }}>
         {[
-          { text: 'Dashboard', icon: <DashboardIcon />, path: '/' },
+          { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
           { text: 'Trade', icon: <TradeIcon />, path: '/trade' },
           { text: 'Account', icon: <AccountIcon />, path: '/account' },
         ].map((item) => (
           // Each item in the list is a NavLink to handle routing.
           <ListItem key={item.text} disablePadding sx={{ mb: 0.5 }}>
-            <StyledNavLink to={item.path} end={item.path === '/'}>
+            <StyledNavLink to={item.path} end={item.path === '/' || item.path === '/dashboard'}>
               {/* Use a render prop to get the 'isActive' state from NavLink. */}
               {({ isActive }) => (
                 <StyledListItemButton 
@@ -327,7 +328,8 @@ function AppContent() {
         >
           {/* Defines the routes for the application. */}
           <Routes>
-            <Route path="/" element={<Dashboard />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/trade" element={<Trade />} />
             <Route path="/account" element={<Account />} />
           </Routes>
