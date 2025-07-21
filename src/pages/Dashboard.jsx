@@ -283,12 +283,21 @@ const chartMeta = {
 }
 
 const staticMarketData = [
-  { name: 'Bitcoin', symbol: 'BTC', price: '$63,500', change: '+2.5%', icon: BtcIcon, sparkline: chartData.BTC.map(d => d.value) },
-  { name: 'Ethereum', symbol: 'ETH', price: '$3,250', change: '+3.2%', icon: EthIcon, sparkline: chartData.ETH.map(d => d.value) },
-  { name: 'Solana', symbol: 'SOL', price: '$162', change: '+5.1%', icon: SolIcon, sparkline: chartData.SOL.map(d => d.value) },
-  { name: 'BNB', symbol: 'BNB', price: '$580', change: '-1.2%', icon: BnbIcon, sparkline: [590, 585, 583, 588, 580] },
+  { name: 'Bitcoin', symbol: 'BTC', price: '$118,400.00', change: '+0.3%', icon: BtcIcon, sparkline: chartData.BTC.map(d => d.value) },
+  { name: 'Ethereum', symbol: 'ETH', price: '$3,762.84', change: '+2.0%', icon: EthIcon, sparkline: chartData.ETH.map(d => d.value) },
+  { name: 'XRP', symbol: 'XRP', price: '$3.50', change: '+2.4%', icon: XrpIcon, sparkline: [3.40, 3.42, 3.48, 3.52, 3.50] },
+  { name: 'Tether', symbol: 'USDT', price: '$1.00', change: '-0.0%', icon: UsdtIcon, sparkline: [1.00, 1.00, 1.00, 1.00, 1.00] },
+  { name: 'BNB', symbol: 'BNB', price: '$701.38', change: '+2.6%', icon: BnbIcon, sparkline: [680, 685, 695, 700, 701] },
+  { name: 'Solana', symbol: 'SOL', price: '$186.36', change: '+4.7%', icon: SolIcon, sparkline: chartData.SOL.map(d => d.value) },
+  { name: 'USDC', symbol: 'USDC', price: '$1.00', change: '-0.0%', icon: UsdcIcon, sparkline: [1.00, 1.00, 1.00, 1.00, 1.00] },
+  { name: 'Dogecoin', symbol: 'DOGE', price: '$0.37', change: '+7.2%', icon: DogeIcon, sparkline: [0.34, 0.35, 0.36, 0.37, 0.37] },
   { name: 'Cardano', symbol: 'ADA', price: '$0.45', change: '-0.5%', icon: AdaIcon, sparkline: [0.46, 0.455, 0.452, 0.458, 0.45] },
-  { name: 'Tether', symbol: 'USDT', price: '$1.00', change: '+0.0%', icon: UsdtIcon, sparkline: [1.00, 1.00, 1.00, 1.00, 1.00] },
+  { name: 'TRON', symbol: 'TRX', price: '$0.28', change: '+1.8%', icon: TrxIcon, sparkline: [0.27, 0.275, 0.278, 0.282, 0.28] },
+  { name: 'Avalanche', symbol: 'AVAX', price: '$42.15', change: '+3.4%', icon: AvaxIcon, sparkline: [40.5, 41.2, 41.8, 42.3, 42.15] },
+  { name: 'Chainlink', symbol: 'LINK', price: '$25.67', change: '+5.2%', icon: LinkIcon, sparkline: [24.2, 24.8, 25.1, 25.9, 25.67] },
+  { name: 'Bitcoin Cash', symbol: 'BCH', price: '$512.34', change: '-2.1%', icon: BchIcon, sparkline: [525, 520, 515, 510, 512] },
+  { name: 'Wrapped Bitcoin', symbol: 'WBTC', price: '$118,350.00', change: '+0.2%', icon: WbtcIcon, sparkline: [118100, 118200, 118300, 118400, 118350] },
+  { name: 'Stellar', symbol: 'XLM', price: '$0.48', change: '+6.3%', icon: XlmIcon, sparkline: [0.44, 0.45, 0.46, 0.49, 0.48] }
 ];
 
 // 高级统计卡片

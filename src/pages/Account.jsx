@@ -1,9 +1,8 @@
-import { useState, useContext } from 'react';
-import { Box, Typography, Paper, Grid, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Avatar, List, ListItem, ListItemText, ListItemSecondaryAction, Switch, Divider, Card, useMediaQuery } from '@mui/material';
-import { styled, useTheme, alpha } from '@mui/system';
-import { ArrowUpward, ArrowDownward, Wallet, History, Settings as SettingsIcon, TrendingUp, CreditCard, Visibility } from '@mui/icons-material';
+import { useState } from 'react';
+import { Box, Typography, Paper, Grid, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, List, ListItem, ListItemText, ListItemSecondaryAction, Switch, Divider, Card, useMediaQuery, Fade, Slide } from '@mui/material';
+import { styled, useTheme, alpha, keyframes } from '@mui/system';
+import { ArrowUpward, ArrowDownward, Wallet, History, Settings as SettingsIcon, TrendingUp, CreditCard, Visibility, TrendingDown } from '@mui/icons-material';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, Area, AreaChart, XAxis, YAxis } from 'recharts';
-import { ThemeContext } from '../context/ThemeContext';
 import React from 'react';
 
 // Import icons from the new library
@@ -12,6 +11,26 @@ import EthIcon from 'cryptocurrency-icons/svg/color/eth.svg?react';
 import SolIcon from 'cryptocurrency-icons/svg/color/sol.svg?react';
 import UsdtIcon from 'cryptocurrency-icons/svg/color/usdt.svg?react';
 import BnbIcon from 'cryptocurrency-icons/svg/color/bnb.svg?react';
+import AdaIcon from 'cryptocurrency-icons/svg/color/ada.svg?react';
+import TrxIcon from 'cryptocurrency-icons/svg/color/trx.svg?react';
+import XlmIcon from 'cryptocurrency-icons/svg/color/xlm.svg?react';
+import LinkIcon from 'cryptocurrency-icons/svg/color/link.svg?react';
+import BchIcon from 'cryptocurrency-icons/svg/color/bch.svg?react';
+import AvaxIcon from 'cryptocurrency-icons/svg/color/avax.svg?react';
+import XrpIcon from 'cryptocurrency-icons/svg/color/xrp.svg?react';
+import WbtcIcon from 'cryptocurrency-icons/svg/color/wbtc.svg?react';
+import UsdcIcon from 'cryptocurrency-icons/svg/color/usdc.svg?react';
+import DogeIcon from 'cryptocurrency-icons/svg/color/doge.svg?react';
+
+// 动画定义
+const pulse = keyframes`
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+`;
+
+
+
+
 
 // Enhanced glassmorphic paper with more premium effects
 const GlassmorphicPaper = styled(Paper)(({ theme }) => ({
@@ -167,6 +186,237 @@ const AssetIconWrapper = styled(Box)(({ theme }) => ({
     border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
 }));
 
+
+
+
+
+// Your Assets的高级卡片视图 - 使用Dashboard样式
+const PremiumAssetsCardView = () => {
+  return (
+    <Grid container spacing={3}>
+      {assets.map((asset, index) => {
+        const theme = useTheme();
+        const isPositive = asset.change.startsWith('+') && asset.change !== '+0.0%';
+        const isNegative = asset.change.startsWith('-');
+        const trendColor = isPositive ? theme.palette.success.main :
+                          isNegative ? theme.palette.error.main :
+                          theme.palette.grey[500];
+
+        return (
+          <Grid item xs={12} sm={6} lg={4} key={asset.symbol}>
+            <Fade in timeout={800 + index * 100}>
+              <Box
+                sx={{
+                  position: 'relative',
+                  background: theme.palette.mode === 'dark'
+                    ? 'linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%)'
+                    : 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.8) 100%)',
+                  backdropFilter: 'blur(20px)',
+                  border: `1px solid ${alpha(trendColor, 0.2)}`,
+                  borderRadius: '16px',
+                  p: 3,
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  overflow: 'hidden',
+                  '&:hover': {
+                    transform: 'translateY(-4px) scale(1.02)',
+                    border: `1px solid ${alpha(trendColor, 0.4)}`,
+                    boxShadow: `0 20px 40px ${alpha(trendColor, 0.2)}, 0 0 0 1px ${alpha(trendColor, 0.1)}`,
+                    '& .trend-indicator': {
+                      transform: 'scale(1.1)',
+                      boxShadow: `0 0 20px ${alpha(trendColor, 0.6)}`
+                    },
+                    '& .balance-text': {
+                      transform: 'scale(1.05)'
+                    }
+                  }
+                }}
+              >
+                {/* 背景装饰 */}
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: -50,
+                    right: -50,
+                    width: 100,
+                    height: 100,
+                    background: `radial-gradient(circle, ${alpha(trendColor, 0.1)} 0%, transparent 70%)`,
+                    borderRadius: '50%',
+                    animation: `${pulse} 4s ease-in-out infinite`
+                  }}
+                />
+
+                {/* 头部区域 */}
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Box
+                      sx={{
+                        width: 48,
+                        height: 48,
+                        borderRadius: '16px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        background: `linear-gradient(135deg, ${alpha(trendColor, 0.1)}, ${alpha(trendColor, 0.2)})`,
+                        border: `2px solid ${alpha(trendColor, 0.3)}`,
+                        mr: 2,
+                        position: 'relative',
+                        color: trendColor,
+                        '& svg': {
+                          color: trendColor,
+                          fill: 'currentColor'
+                        }
+                      }}
+                    >
+                      {React.createElement(asset.icon, { style: { width: 32, height: 32 } })}
+                    </Box>
+
+                    <Box>
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          fontWeight: 700,
+                          fontSize: '1.1rem',
+                          mb: 0.5
+                        }}
+                      >
+                        {asset.name}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          color: theme.palette.text.secondary,
+                          fontWeight: 500,
+                          fontSize: '0.85rem'
+                        }}
+                      >
+                        {asset.symbol}
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  {/* 趋势指示器 */}
+                  <Box
+                    className="trend-indicator"
+                    sx={{
+                      width: 12,
+                      height: 12,
+                      borderRadius: '50%',
+                      background: `radial-gradient(circle, ${trendColor}, ${alpha(trendColor, 0.7)})`,
+                      boxShadow: `0 0 12px ${alpha(trendColor, 0.5)}`,
+                      animation: `${pulse} 2s ease-in-out infinite`,
+                      transition: 'all 0.3s ease'
+                    }}
+                  />
+                </Box>
+
+                {/* 余额和价值区域 */}
+                <Box sx={{ mb: 2 }}>
+                  <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
+                    Balance
+                  </Typography>
+                  <Typography
+                    variant="h5"
+                    className="balance-text"
+                    sx={{
+                      fontFamily: 'monospace',
+                      fontWeight: 800,
+                      fontSize: '1.5rem',
+                      mb: 1,
+                      transition: 'transform 0.3s ease',
+                      background: `linear-gradient(135deg, ${theme.palette.text.primary}, ${trendColor})`,
+                      backgroundClip: 'text',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent'
+                    }}
+                  >
+                    {asset.balance}
+                  </Typography>
+
+                  <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
+                    Value (USD)
+                  </Typography>
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      fontFamily: 'monospace',
+                      fontWeight: 700,
+                      fontSize: '1.2rem',
+                      mb: 2
+                    }}
+                  >
+                    ${asset.value.toLocaleString()}
+                  </Typography>
+
+                  <Box
+                    sx={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      px: 2,
+                      py: 1,
+                      borderRadius: '12px',
+                      background: `linear-gradient(135deg, ${alpha(trendColor, 0.1)}, ${alpha(trendColor, 0.05)})`,
+                      border: `1px solid ${alpha(trendColor, 0.2)}`
+                    }}
+                  >
+                    {isPositive ? (
+                      <TrendingUp sx={{ fontSize: '1rem', color: trendColor, mr: 0.5 }} />
+                    ) : isNegative ? (
+                      <TrendingDown sx={{ fontSize: '1rem', color: trendColor, mr: 0.5 }} />
+                    ) : null}
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        fontWeight: 700,
+                        color: trendColor,
+                        fontSize: '0.9rem'
+                      }}
+                    >
+                      {asset.change}
+                    </Typography>
+                  </Box>
+                </Box>
+
+                {/* 操作按钮 */}
+                <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, mt: 2 }}>
+                  <ActionButton
+                    size="small"
+                    variant="outlined"
+                    startIcon={<ArrowUpward />}
+                    color="success"
+                  >
+                    Deposit
+                  </ActionButton>
+                  <ActionButton
+                    size="small"
+                    variant="outlined"
+                    startIcon={<ArrowDownward />}
+                    color="error"
+                  >
+                    Withdraw
+                  </ActionButton>
+                </Box>
+
+                {/* 底部装饰线 */}
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    height: 3,
+                    background: `linear-gradient(90deg, transparent, ${trendColor}, transparent)`,
+                    opacity: 0.6
+                  }}
+                />
+              </Box>
+            </Fade>
+          </Grid>
+        );
+      })}
+    </Grid>
+  );
+};
+
 const TabPanel = (props) => {
     const { children, value, index, ...other } = props;
     return (
@@ -187,29 +437,42 @@ const TabPanel = (props) => {
 
 // Portfolio distribution data
 const portfolioData = [
-    { name: 'Bitcoin', value: 36.2, color: '#F7931A' },
-    { name: 'Ethereum', value: 36.4, color: '#627EEA' },
-    { name: 'Solana', value: 11.5, color: '#14F195' },
-    { name: 'Tether', value: 7.0, color: '#26A17B' },
-    { name: 'BNB', value: 8.9, color: '#F3BA2F' }
+    { name: 'Bitcoin', value: 41.1, color: '#F7931A' },
+    { name: 'Ethereum', value: 15.0, color: '#627EEA' },
+    { name: 'XRP', value: 8.2, color: '#23292F' },
+    { name: 'Tether', value: 6.9, color: '#26A17B' },
+    { name: 'BNB', value: 6.2, color: '#F3BA2F' },
+    { name: 'Solana', value: 4.9, color: '#14F195' },
+    { name: 'USDC', value: 4.1, color: '#2775CA' },
+    { name: 'Others', value: 13.6, color: '#9CA3AF' }
 ];
 
 // Portfolio performance data
 const performanceData = [
-    { name: 'Jan', value: 132000 },
-    { name: 'Feb', value: 135000 },
-    { name: 'Mar', value: 138000 },
-    { name: 'Apr', value: 136000 },
-    { name: 'May', value: 142000 },
-    { name: 'Jun', value: 149263 },
+    { name: 'Jan', value: 285000 },
+    { name: 'Feb', value: 298000 },
+    { name: 'Mar', value: 315000 },
+    { name: 'Apr', value: 328000 },
+    { name: 'May', value: 345000 },
+    { name: 'Jun', value: 362834 },
 ];
 
 const assets = [
-    { name: 'Bitcoin', symbol: 'BTC', balance: 0.85, value: 53975, icon: BtcIcon, change: '+2.5%', color: '#F7931A' },
-    { name: 'Ethereum', symbol: 'ETH', balance: 12.5, value: 54375, icon: EthIcon, change: '+3.2%', color: '#627EEA' },
-    { name: 'Solana', symbol: 'SOL', balance: 145.8, value: 17205.24, icon: SolIcon, change: '+5.1%', color: '#14F195' },
-    { name: 'Tether', symbol: 'USDT', balance: 10500, value: 10500, icon: UsdtIcon, change: '+0.0%', color: '#26A17B' },
-    { name: 'Binance Coin', symbol: 'BNB', balance: 25.4, value: 13208, icon: BnbIcon, change: '-1.2%', color: '#F3BA2F' },
+    { name: 'Bitcoin', symbol: 'BTC', balance: 1.26, value: 149244, icon: BtcIcon, change: '+0.3%', color: '#F7931A' },
+    { name: 'Ethereum', symbol: 'ETH', balance: 14.5, value: 54561, icon: EthIcon, change: '+2.0%', color: '#627EEA' },
+    { name: 'XRP', symbol: 'XRP', balance: 8500, value: 29750, icon: XrpIcon, change: '+2.4%', color: '#23292F' },
+    { name: 'Tether', symbol: 'USDT', balance: 25000, value: 25000, icon: UsdtIcon, change: '-0.0%', color: '#26A17B' },
+    { name: 'BNB', symbol: 'BNB', balance: 32.1, value: 22514, icon: BnbIcon, change: '+2.6%', color: '#F3BA2F' },
+    { name: 'Solana', symbol: 'SOL', balance: 95.3, value: 17765, icon: SolIcon, change: '+4.7%', color: '#14F195' },
+    { name: 'USDC', symbol: 'USDC', balance: 15000, value: 15000, icon: UsdcIcon, change: '-0.0%', color: '#2775CA' },
+    { name: 'Dogecoin', symbol: 'DOGE', balance: 28500, value: 10545, icon: DogeIcon, change: '+7.2%', color: '#C2A633' },
+    { name: 'Cardano', symbol: 'ADA', balance: 18750, value: 8438, icon: AdaIcon, change: '-0.5%', color: '#0033AD' },
+    { name: 'TRON', symbol: 'TRX', balance: 25000, value: 7000, icon: TrxIcon, change: '+1.8%', color: '#FF060A' },
+    { name: 'Avalanche', symbol: 'AVAX', balance: 145.2, value: 6120, icon: AvaxIcon, change: '+3.4%', color: '#E84142' },
+    { name: 'Chainlink', symbol: 'LINK', balance: 185.4, value: 4760, icon: LinkIcon, change: '+5.2%', color: '#375BD2' },
+    { name: 'Bitcoin Cash', symbol: 'BCH', balance: 8.5, value: 4355, icon: BchIcon, change: '-2.1%', color: '#8DC351' },
+    { name: 'Wrapped Bitcoin', symbol: 'WBTC', balance: 0.035, value: 4142, icon: WbtcIcon, change: '+0.2%', color: '#F7931A' },
+    { name: 'Stellar', symbol: 'XLM', balance: 7500, value: 3600, icon: XlmIcon, change: '+6.3%', color: '#7D00FF' }
 ];
 
 // Mock transaction history data
@@ -220,6 +483,213 @@ const transactions = [
     { type: 'Trade', asset: 'ETH/BTC', amount: '-2.5 ETH', value: '-0.08 BTC', date: '2023-05-28 16:20' },
     { type: 'Deposit', asset: 'USDT', amount: '+5000 USDT', value: '+$5,000.00', date: '2023-05-20 10:30' },
 ];
+
+
+
+// Your Assets的高级表格视图 - 使用Dashboard样式
+const PremiumAssetsTableView = () => {
+  const theme = useTheme();
+  return (
+    <Box sx={{ overflow: 'hidden' }}>
+      {/* 表格头部 */}
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: '2fr 1fr 1fr 1fr 1.5fr',
+          gap: 2,
+          p: 2,
+          background: theme.palette.mode === 'dark'
+            ? 'linear-gradient(135deg, rgba(30, 41, 59, 0.5), rgba(15, 23, 42, 0.3))'
+            : 'linear-gradient(135deg, rgba(248, 250, 252, 0.8), rgba(241, 245, 249, 0.6))',
+          borderRadius: '12px 12px 0 0',
+          border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+          borderBottom: 'none'
+        }}
+      >
+        <Typography variant="subtitle2" sx={{ fontWeight: 700, color: theme.palette.text.secondary, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+          Asset
+        </Typography>
+        <Typography variant="subtitle2" sx={{ fontWeight: 700, color: theme.palette.text.secondary, textTransform: 'uppercase', letterSpacing: '0.1em', textAlign: 'right' }}>
+          Balance
+        </Typography>
+        <Typography variant="subtitle2" sx={{ fontWeight: 700, color: theme.palette.text.secondary, textTransform: 'uppercase', letterSpacing: '0.1em', textAlign: 'right' }}>
+          Value (USD)
+        </Typography>
+        <Typography variant="subtitle2" sx={{ fontWeight: 700, color: theme.palette.text.secondary, textTransform: 'uppercase', letterSpacing: '0.1em', textAlign: 'right' }}>
+          24h Change
+        </Typography>
+        <Typography variant="subtitle2" sx={{ fontWeight: 700, color: theme.palette.text.secondary, textTransform: 'uppercase', letterSpacing: '0.1em', textAlign: 'right' }}>
+          Actions
+        </Typography>
+      </Box>
+
+      {/* 表格内容 */}
+      <Box>
+        {assets.map((asset, index) => {
+          const isPositive = asset.change.startsWith('+') && asset.change !== '+0.0%';
+          const isNegative = asset.change.startsWith('-');
+          const trendColor = isPositive ? theme.palette.success.main :
+                            isNegative ? theme.palette.error.main :
+                            theme.palette.grey[500];
+
+          return (
+            <Slide direction="up" in timeout={600 + index * 100} key={asset.symbol}>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: '2fr 1fr 1fr 1fr 1.5fr',
+                  gap: 2,
+                  p: 2,
+                  background: theme.palette.mode === 'dark'
+                    ? 'linear-gradient(135deg, rgba(30, 41, 59, 0.3), rgba(15, 23, 42, 0.2))'
+                    : 'linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(248, 250, 252, 0.6))',
+                  backdropFilter: 'blur(10px)',
+                  border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                  borderTop: index === 0 ? `1px solid ${alpha(theme.palette.divider, 0.1)}` : 'none',
+                  borderRadius: index === assets.length - 1 ? '0 0 12px 12px' : '0',
+                  transition: 'all 0.3s ease',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  '&:hover': {
+                    background: theme.palette.mode === 'dark'
+                      ? `linear-gradient(135deg, ${alpha(trendColor, 0.1)}, ${alpha(trendColor, 0.05)})`
+                      : `linear-gradient(135deg, ${alpha(trendColor, 0.05)}, ${alpha(trendColor, 0.02)})`,
+                    border: `1px solid ${alpha(trendColor, 0.3)}`,
+                    transform: 'translateX(4px)',
+                    '&::before': {
+                      opacity: 1
+                    }
+                  },
+                  '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    left: 0,
+                    top: 0,
+                    bottom: 0,
+                    width: 4,
+                    background: `linear-gradient(180deg, ${trendColor}, ${alpha(trendColor, 0.5)})`,
+                    opacity: 0,
+                    transition: 'opacity 0.3s ease'
+                  }
+                }}
+              >
+                {/* Asset */}
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Box
+                    sx={{
+                      width: 44,
+                      height: 44,
+                      borderRadius: '14px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      background: `linear-gradient(135deg, ${alpha(trendColor, 0.1)}, ${alpha(trendColor, 0.05)})`,
+                      border: `2px solid ${alpha(trendColor, 0.2)}`,
+                      mr: 2,
+                      color: trendColor,
+                      '& svg': {
+                        color: trendColor,
+                        fill: 'currentColor'
+                      }
+                    }}
+                  >
+                    {React.createElement(asset.icon, { style: { width: 28, height: 28 } })}
+                  </Box>
+                  <Box>
+                    <Typography variant="body1" sx={{ fontWeight: 700, mb: 0.5 }}>
+                      {asset.name}
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: theme.palette.text.secondary, fontWeight: 500 }}>
+                      {asset.symbol}
+                    </Typography>
+                  </Box>
+                </Box>
+
+                {/* Balance */}
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      fontFamily: 'monospace',
+                      fontWeight: 700,
+                      fontSize: '1.1rem'
+                    }}
+                  >
+                    {asset.balance}
+                  </Typography>
+                </Box>
+
+                {/* Value (USD) */}
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      fontFamily: 'monospace',
+                      fontWeight: 700,
+                      fontSize: '1.1rem'
+                    }}
+                  >
+                    ${asset.value.toLocaleString()}
+                  </Typography>
+                </Box>
+
+                {/* 24h Change */}
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      px: 1.5,
+                      py: 0.8,
+                      borderRadius: '10px',
+                      background: `linear-gradient(135deg, ${alpha(trendColor, 0.15)}, ${alpha(trendColor, 0.08)})`,
+                      border: `1px solid ${alpha(trendColor, 0.25)}`
+                    }}
+                  >
+                    {isPositive ? (
+                      <TrendingUp sx={{ fontSize: '1rem', color: trendColor, mr: 0.5 }} />
+                    ) : isNegative ? (
+                      <TrendingDown sx={{ fontSize: '1rem', color: trendColor, mr: 0.5 }} />
+                    ) : null}
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        fontWeight: 700,
+                        color: trendColor
+                      }}
+                    >
+                      {asset.change}
+                    </Typography>
+                  </Box>
+                </Box>
+
+                {/* Actions */}
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
+                  <ActionButton
+                    size="small"
+                    variant="outlined"
+                    startIcon={<ArrowUpward />}
+                    color="success"
+                  >
+                    Deposit
+                  </ActionButton>
+                  <ActionButton
+                    size="small"
+                    variant="outlined"
+                    startIcon={<ArrowDownward />}
+                    color="error"
+                  >
+                    Withdraw
+                  </ActionButton>
+                </Box>
+              </Box>
+            </Slide>
+          );
+        })}
+      </Box>
+    </Box>
+  );
+};
 
 function Account() {
     const [tabValue, setTabValue] = useState(0);
@@ -421,7 +891,7 @@ function Account() {
                                 <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', mb: 2 }}>
                                     <Box>
                                         <Typography variant="body2" color="text.secondary">Total Estimated Balance</Typography>
-                                        <Typography variant="h3" sx={{ fontWeight: 700, mt: 1, fontSize: { xs: '2.5rem', md: '3rem' } }}>$149,263.24</Typography>
+                                        <Typography variant="h3" sx={{ fontWeight: 700, mt: 1, fontSize: { xs: '2.5rem', md: '3rem' } }}>$362,834.00</Typography>
                                         <Box sx={{ 
                                             display: 'flex', 
                                             alignItems: 'center', 
@@ -499,157 +969,44 @@ function Account() {
                         </Grid>
                     </Grid>
                     
-                    {/* Assets Table / Cards */}
+                    {/* Assets Table / Cards - Using Dashboard Style */}
+                    <Box sx={{
+                        mt: 3,
+                        mb: 2,
+                        display: 'flex',
+                        alignItems: 'center',
+                        backgroundColor: theme.palette.mode === 'dark' ? alpha(theme.palette.background.paper, 0.4) : alpha(theme.palette.background.paper, 0.7),
+                        backdropFilter: 'blur(10px)',
+                        borderRadius: 2,
+                        py: 1.5,
+                        px: 2,
+                        border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                    }}>
+                        <Box
+                            sx={{
+                                width: 4,
+                                height: 24,
+                                background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                                borderRadius: '2px',
+                                mr: 1.5,
+                            }}
+                        />
+                        <Wallet sx={{ mr: 1.5, color: theme.palette.primary.main }} />
+                        <Typography variant="h6" sx={{
+                            fontWeight: 700,
+                            background: `linear-gradient(135deg, ${theme.palette.text.primary}, ${theme.palette.primary.main})`,
+                            backgroundClip: 'text',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                        }}>
+                            Your Assets
+                        </Typography>
+                    </Box>
+
                     <GlassmorphicPaper>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 3 }}>
-                            <Box
-                                sx={{
-                                    width: 4,
-                                    height: 24,
-                                    background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-                                    borderRadius: '2px',
-                                }}
-                            />
-                            <Typography variant="h6" sx={{
-                                fontWeight: 700,
-                                background: `linear-gradient(135deg, ${theme.palette.text.primary}, ${theme.palette.primary.main})`,
-                                backgroundClip: 'text',
-                                WebkitBackgroundClip: 'text',
-                                WebkitTextFillColor: 'transparent',
-                            }}>
-                                Your Assets
-                            </Typography>
-                        </Box>
-                        {isMobile ? (
-                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                                {assets.map((asset) => (
-                                    <Card key={asset.symbol} sx={{ p: 2, borderRadius: '12px', bgcolor: 'transparent', border: `1px solid ${alpha(theme.palette.divider, 0.2)}` }}>
-                                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                <AssetIconWrapper sx={{ mr: 1.5, width: 36, height: 36 }}>
-                                                    {React.createElement(asset.icon, { width: 24, height: 24 })}
-                                                </AssetIconWrapper>
-                                                <Box>
-                                                    <Typography sx={{ fontWeight: 600, fontSize: '0.875rem' }}>{asset.name}</Typography>
-                                                    <Typography variant="body2" color="text.secondary">{asset.symbol}</Typography>
-                                                </Box>
-                                            </Box>
-                                            <Box sx={{ 
-                                                display: 'inline-flex', 
-                                                alignItems: 'center',
-                                                px: 1, py: 0.5, borderRadius: 1,
-                                                backgroundColor: asset.change.startsWith('+') && asset.change !== '+0.0%' ? alpha(theme.palette.success.main, 0.1) : asset.change === '+0.0%' ? alpha(theme.palette.grey[500], 0.1) : alpha(theme.palette.error.main, 0.1)
-                                            }}>
-                                                <Typography variant="caption" sx={{ fontWeight: 600, color: asset.change.startsWith('+') && asset.change !== '+0.0%' ? theme.palette.success.main : asset.change === '+0.0%' ? theme.palette.grey[500] : theme.palette.error.main }}>
-                                                    {asset.change}
-                                                </Typography>
-                                            </Box>
-                                        </Box>
-                                        <Divider sx={{ my: 1.5, borderColor: alpha(theme.palette.divider, 0.1) }}/>
-                                        <Grid container spacing={1} sx={{ mb: 2, textAlign: 'left' }}>
-                                            <Grid item xs={6}>
-                                                <Typography variant="caption" color="text.secondary">Balance</Typography>
-                                                <Typography sx={{ fontFamily: 'monospace', fontWeight: 500, fontSize: '0.875rem' }}>{asset.balance}</Typography>
-                                            </Grid>
-                                            <Grid item xs={6}>
-                                                <Typography variant="caption" color="text.secondary">Value (USD)</Typography>
-                                                <Typography sx={{ fontFamily: 'monospace', fontWeight: 600, fontSize: '0.875rem' }}>${asset.value.toLocaleString()}</Typography>
-                                            </Grid>
-                                        </Grid>
-                                        <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1 }}>
-                                            <ActionButton size="small" variant="outlined" startIcon={<ArrowUpward />} color="success">Deposit</ActionButton>
-                                            <ActionButton size="small" variant="outlined" startIcon={<ArrowDownward />} color="error">Withdraw</ActionButton>
-                                        </Box>
-                                    </Card>
-                                ))}
-                            </Box>
-                        ) : (
-                            <StyledTableContainer>
-                            <Table>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell sx={{ border: 0 }}>Asset</TableCell>
-                                        <TableCell sx={{ border: 0 }}>Balance</TableCell>
-                                        <TableCell sx={{ border: 0 }}>Value (USD)</TableCell>
-                                            <TableCell sx={{ border: 0 }}>24h Change</TableCell>
-                                            <TableCell sx={{ border: 0 }} align="right">Actions</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {assets.map((asset) => (
-                                        <TableRow key={asset.symbol} sx={{ '& td, & th': { border: 0 }}}>
-                                            <TableCell>
-                                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                        <AssetIconWrapper sx={{ mr: 2 }}>
-                                                            {React.createElement(asset.icon, { width: 28, height: 28 })}
-                                                        </AssetIconWrapper>
-                                                    <Box>
-                                                            <Typography sx={{ fontWeight: 600 }}>{asset.name}</Typography>
-                                                        <Typography variant="body2" color="text.secondary">{asset.symbol}</Typography>
-                                                        </Box>
-                                                    </Box>
-                                                </TableCell>
-                                                <TableCell sx={{ fontFamily: 'monospace', fontWeight: 500 }}>{asset.balance}</TableCell>
-                                                <TableCell sx={{ fontFamily: 'monospace', fontWeight: 600 }}>${asset.value.toLocaleString()}</TableCell>
-                                                <TableCell>
-                                                    <Box sx={{ 
-                                                        display: 'inline-flex', 
-                                                        alignItems: 'center',
-                                                        px: 1.5,
-                                                        py: 0.5,
-                                                        borderRadius: 1,
-                                                        backgroundColor: asset.change.startsWith('+') && asset.change !== '+0.0%' 
-                                                            ? alpha(theme.palette.success.main, 0.1) 
-                                                            : asset.change === '+0.0%' 
-                                                                ? alpha(theme.palette.grey[500], 0.1)
-                                                                : alpha(theme.palette.error.main, 0.1)
-                                                    }}>
-                                                        {asset.change.startsWith('+') && asset.change !== '+0.0%' ? (
-                                                            <TrendingUp sx={{ fontSize: '0.875rem', color: theme.palette.success.main, mr: 0.5 }} />
-                                                        ) : asset.change === '+0.0%' ? null : (
-                                                            <ArrowDownward sx={{ fontSize: '0.875rem', color: theme.palette.error.main, mr: 0.5 }} />
-                                                        )}
-                                                        <Typography 
-                                                            variant="body2" 
-                                                            sx={{ 
-                                                                fontWeight: 600, 
-                                                                color: asset.change.startsWith('+') && asset.change !== '+0.0%' 
-                                                                    ? theme.palette.success.main 
-                                                                    : asset.change === '+0.0%' 
-                                                                        ? theme.palette.grey[500] 
-                                                                        : theme.palette.error.main 
-                                                            }}
-                                                        >
-                                                            {asset.change}
-                                                        </Typography>
-                                                </Box>
-                                            </TableCell>
-                                                <TableCell align="right">
-                                                    <ActionButton
-                                                        size="small"
-                                                        variant="outlined"
-                                                        startIcon={<ArrowUpward />}
-                                                        color="success"
-                                                        sx={{ mr: 1 }}
-                                                    >
-                                                        Deposit
-                                                    </ActionButton>
-                                                    <ActionButton
-                                                        size="small"
-                                                        variant="outlined"
-                                                        startIcon={<ArrowDownward />}
-                                                        color="error"
-                                                    >
-                                                        Withdraw
-                                                    </ActionButton>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                            </StyledTableContainer>
-                        )}
+                        {isMobile ? <PremiumAssetsCardView /> : <PremiumAssetsTableView />}
                     </GlassmorphicPaper>
+
                 </Box>
             </TabPanel>
 
