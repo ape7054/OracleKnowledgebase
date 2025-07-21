@@ -36,8 +36,7 @@ AI-Protocol-Lab/
 │   └── README.md               # 脚本说明
 └── project-docs/               # 📚 项目特定文档
     ├── ai-collaboration/       # AI协作相关文档
-    ├── development/            # 技术文档
-    └── guides/                # 用户指南
+    └── development/            # 技术文档
 ```
 
 **设计理念**:
@@ -106,7 +105,6 @@ cat AI-Protocol-Lab/prompts/development_assistant.prompt.md
 #### 项目技术文档
 - 📖 [文档导航](project-docs/DOCUMENTATION-INDEX.md) - 完整文档索引
 - 🛠️ [开发文档](project-docs/development/) - 技术架构、API规范
-- 📚 [用户指南](project-docs/guides/) - 使用说明
 
 #### 对话记录统一管理
 - 💬 [所有对话记录](conversations/) - AI对话和项目讨论统一存放
