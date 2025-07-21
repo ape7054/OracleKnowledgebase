@@ -14,16 +14,13 @@ AI Protocol Lab是一个完整的AI助手协作工具箱，包含prompt库、对
 - **🔧 即插即用**: 复制到任何项目即可使用
 - **📖 统一管理**: 集成项目文档，一站式AI协作解决方案
 
-## 📁 规范化目录结构
+## 📁 完整工具箱结构
 
 ```
 AI-Protocol-Lab/
 ├── README.md                    # 本文件
-├── docs/                       # 📖 AI协作工具文档
-│   ├── AI-CONTEXT-GUIDE.md     # 快速上下文指南
-│   ├── PROJECT-STATUS-2025-07-20.md # 项目状态报告
-│   ├── README-PROGRESS-MANAGER.md   # 进度管理指南
-│   └── USAGE-EXAMPLES.md       # 使用示例
+├── docs/                       # 📖 通用AI协作工具文档
+│   └── README.md               # 工具使用指南
 ├── prompts/                    # 🎯 专业Prompt库
 │   ├── development_assistant.prompt.md
 │   ├── code_reviewer.prompt.md
@@ -33,89 +30,198 @@ AI-Protocol-Lab/
 │   ├── documentation_generator.prompt.md
 │   └── zh-CN/                  # 中文版本
 ├── conversations/              # 💬 AI对话记录
-│   ├── market-pulse-dashboard-upgrade_2025-07-20.md
-│   └── web3_fullstack_conversation_2025-07-18.md
+│   └── 2025-07-21_market-pulse-development-summary.md
 ├── scripts/                    # 🔧 工具脚本
 │   ├── get-ai-context.sh       # 项目上下文获取
 │   └── README.md               # 脚本说明
-└── project/                    # 📚 项目特定文档
-    ├── DOCUMENTATION-INDEX.md   # 文档导航
-    ├── development/            # 开发文档
-    ├── conversations/          # 项目技术讨论
+└── project-docs/               # 📚 项目特定文档
+    ├── ai-collaboration/       # AI协作相关文档
+    ├── development/            # 技术文档
     └── guides/                # 用户指南
 ```
 
+**设计理念**:
+- 通用工具 (`docs/`, `prompts/`, `scripts/`) 可复制到任何项目
+- 项目内容 (`conversations/`, `project-docs/`) 统一管理
+- 简化结构，避免重复和复杂性
+- 一站式AI协作解决方案
+
 ## 🚀 快速开始
 
-### 使用专业Prompt
+### 🎯 **最简单的使用方法（3步搞定）**
+
+#### **第一步：让AI了解您的项目**
 ```bash
-# 选择合适的prompt
-cat prompts/development_assistant.prompt.md
-# 复制内容到新的AI对话开始处
+cd /www/wwwroot/market-pulse
+./AI-Protocol-Lab/scripts/get-ai-context.sh
+```
+**复制输出内容，粘贴给任何AI助手（ChatGPT、Claude等）**
+
+#### **第二步：选择AI助手角色**
+```bash
+# 写代码、调试问题
+cat AI-Protocol-Lab/prompts/development_assistant.prompt.md
+
+# 审查代码
+cat AI-Protocol-Lab/prompts/code_reviewer.prompt.md
+
+# 管理项目进度
+cat AI-Protocol-Lab/prompts/project_progress_manager.prompt.md
+```
+**复制prompt内容，粘贴给AI助手**
+
+#### **第三步：开始高效协作**
+对AI说："现在请帮我开发XXX功能" 或 "请审查这段代码"
+
+### 📝 **完整使用示例**
+
+**场景：让AI帮您写代码**
+```bash
+# 1. 获取项目上下文
+./AI-Protocol-Lab/scripts/get-ai-context.sh
+
+# 2. 选择开发助手角色
+cat AI-Protocol-Lab/prompts/development_assistant.prompt.md
+
+# 3. 在AI助手中粘贴：
+#    - 项目上下文（步骤1的输出）
+#    - 开发助手prompt（步骤2的内容）
+#    - 然后说："请帮我添加一个新的价格图表组件"
 ```
 
-### 获取项目上下文
-```bash
-# 自动生成项目上下文
-./scripts/get-ai-context.sh
-```
-
-### 查看对话历史
-```bash
-# 了解最新的开发进展
-cat conversations/market-pulse-dashboard-upgrade_2025-07-20.md
-```
+**AI就会基于您的项目结构和技术栈，给出具体的代码实现！**
 
 ## 📚 详细文档
 
-### AI协作工具文档 (`/docs/`)
-- 🚀 [快速上下文指南](docs/AI-CONTEXT-GUIDE.md) - 30秒了解项目状态
-- 📊 [项目状态报告](docs/PROJECT-STATUS-2025-07-20.md) - 完整进度跟踪
-- 📋 [进度管理指南](docs/README-PROGRESS-MANAGER.md) - 项目管理工具
-- 💡 [使用示例](docs/USAGE-EXAMPLES.md) - 实际应用场景
+### 通用AI协作工具文档 (`/docs/`)
+- 📋 [工具使用指南](docs/README.md) - AI Protocol Lab完整使用说明
 
-### 项目特定文档 (`/project/`)
-- 📖 [文档导航](project/DOCUMENTATION-INDEX.md) - 完整文档索引
-- 🛠️ [开发文档](project/development/) - 技术架构、API规范
-- 💬 [项目对话](project/conversations/) - 技术讨论记录
-- 📚 [用户指南](project/guides/) - 使用说明
+### 项目特定文档 (`/project-docs/`)
 
-## 💡 使用场景
+#### AI协作文档
+- 🚀 [快速上下文指南](project-docs/ai-collaboration/AI-CONTEXT-GUIDE.md) - 30秒了解项目状态
+- 📊 [项目状态报告](project-docs/ai-collaboration/PROJECT-STATUS-2025-07-20.md) - 完整进度跟踪
+- 💡 [使用示例](project-docs/ai-collaboration/USAGE-EXAMPLES.md) - 实际应用场景
 
-### 🔄 AI助手切换
-当需要在不同AI助手间切换时，使用快速上下文指南和专业prompt。
+#### 项目技术文档
+- 📖 [文档导航](project-docs/DOCUMENTATION-INDEX.md) - 完整文档索引
+- 🛠️ [开发文档](project-docs/development/) - 技术架构、API规范
+- 📚 [用户指南](project-docs/guides/) - 使用说明
 
-### 📋 项目管理
-使用project_progress_manager.prompt.md进行自动化进度跟踪。
+#### 对话记录统一管理
+- 💬 [所有对话记录](conversations/) - AI对话和项目讨论统一存放
 
-### 🎓 学习指导
-使用学习类prompt进行技术英语提升和Web3学习。
+## 💡 常见使用场景
 
-## 📈 最新更新 (2025-07-20)
+### 🔄 **编辑器切换/对话丢失**
+**问题**：从VSCode切换到其他编辑器，或浏览器刷新导致AI对话历史丢失
+**解决**：
+```bash
+./AI-Protocol-Lab/scripts/get-ai-context.sh  # 获取项目上下文
+cat AI-Protocol-Lab/prompts/development_assistant.prompt.md  # 选择角色
+# 复制粘贴给新的AI助手，立即恢复工作状态
+```
 
+### 👥 **新团队成员加入**
+**场景**：新同事需要快速了解项目
+**方法**：
+```bash
+# 1. 快速了解项目
+cat AI-Protocol-Lab/project-docs/ai-collaboration/AI-CONTEXT-GUIDE.md
+
+# 2. 查看项目状态
+cat AI-Protocol-Lab/project-docs/ai-collaboration/PROJECT-STATUS-2025-07-20.md
+
+# 3. 搭建开发环境
+cat AI-Protocol-Lab/project-docs/development/README-DEV.md
+```
+
+### 🔍 **代码审查**
+**使用**：
+```bash
+cat AI-Protocol-Lab/prompts/code_reviewer.prompt.md
+# 复制给AI，然后提交代码进行专业审查
+```
+
+### 📋 **项目管理**
+**跟踪进度**：
+```bash
+cat AI-Protocol-Lab/prompts/project_progress_manager.prompt.md
+# 让AI帮您管理项目进度和任务规划
+```
+
+## 🔧 **高级功能**
+
+### **自动化脚本详解**
+```bash
+# 生成完整项目上下文
+./AI-Protocol-Lab/scripts/get-ai-context.sh
+
+# 保存上下文到文件
+./AI-Protocol-Lab/scripts/get-ai-context.sh > current-context.md
+
+# 只查看项目结构
+./AI-Protocol-Lab/scripts/get-ai-context.sh | grep -A 20 "项目结构"
+```
+
+### **查看历史对话**
+```bash
+# 查看所有对话记录
+ls AI-Protocol-Lab/conversations/
+
+# 查看完整开发历程总结
+cat AI-Protocol-Lab/conversations/2025-07-21_market-pulse-development-summary.md
+```
+
+### **复制到新项目**
+```bash
+# 复制整个工具箱到新项目
+cp -r AI-Protocol-Lab /path/to/new-project/
+
+# 清理项目特定内容
+cd /path/to/new-project/AI-Protocol-Lab
+rm -rf conversations/* project-docs/*
+
+# 更新脚本中的项目信息
+vim scripts/get-ai-context.sh
+```
+
+## 💡 **最佳实践**
+
+### **日常开发流程**
+1. **开始工作前**：运行 `get-ai-context.sh` 获取项目状态
+2. **选择角色**：根据任务选择合适的prompt
+3. **开始协作**：复制粘贴给AI助手，开始高效工作
+
+### **对话记录管理**
+- 重要AI对话保存到 `conversations/` 目录
+- 命名格式：`YYYY-MM-DD_主题描述.md`
+- 定期整理和归档
+
+### **文档维护**
+- 项目状态变化时更新相关文档
+- 保持快速上下文指南的时效性
+
+## 📈 **更新日志**
+
+### 2025-07-21
+- ✅ 简化使用说明，3步即可上手
+- ✅ 添加具体使用示例和场景
+- ✅ 优化文档结构和对话记录管理
+
+### 2025-07-20
 - ✅ Dashboard专业级升级完成
-- ✅ 图标颜色问题修复
 - ✅ 文档结构规范化优化
-- ✅ 统一命名规范
-- ✅ 消除重复目录
-
-## 🔧 目录规范说明
-
-### **命名规范**
-- 所有目录名使用小写，不使用连字符
-- 文件名使用大写字母和连字符（如需要）
-- 保持一致性和可读性
-
-### **功能分离**
-- `conversations/` - 专门存放AI对话记录
-- `project/conversations/` - 存放项目技术讨论记录
-- 避免功能重复和混淆
-
-### **层次清晰**
-- 通用工具在根目录下
-- 项目特定内容在project/目录下
-- 每个目录职责明确
+- ✅ 统一命名规范，消除重复目录
 
 ---
 
-**记住**: AI Protocol Lab专注于提供完整的AI协作解决方案，规范化的结构确保长期可维护性。
+## 🎯 **核心理念**
+
+**让AI协作像呼吸一样自然**
+- 🚀 **3步上手**：获取上下文 → 选择角色 → 开始协作
+- 🔄 **无缝切换**：在任何AI助手间保持工作连续性
+- 📚 **知识保存**：项目经验和决策过程完整记录
+- 🎯 **即插即用**：复制到任何项目立即可用
+
+**记住**：这不只是一个工具箱，而是您的AI协作伙伴！🤖

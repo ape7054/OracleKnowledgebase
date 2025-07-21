@@ -251,19 +251,20 @@ market-pulse/
 
 项目采用AI-Protocol-Lab统一管理所有文档和AI协作资源：
 
-#### `/AI-Protocol-Lab/` - 规范化AI协作工具箱 🤖
+#### `/AI-Protocol-Lab/` - 完整AI协作工具箱 🤖
 - 📖 [工具箱总览](AI-Protocol-Lab/README.md) - 完整功能介绍
-- 🚀 [快速上下文指南](AI-Protocol-Lab/docs/AI-CONTEXT-GUIDE.md) - 30秒了解项目状态
-- 📊 [项目状态报告](AI-Protocol-Lab/docs/PROJECT-STATUS-2025-07-20.md) - 完整进度跟踪
+- 🚀 [快速上下文指南](AI-Protocol-Lab/project-docs/ai-collaboration/AI-CONTEXT-GUIDE.md) - 30秒了解项目状态
+- 📊 [项目状态报告](AI-Protocol-Lab/project-docs/ai-collaboration/PROJECT-STATUS-2025-07-20.md) - 完整进度跟踪
 - 🎯 [Prompt库](AI-Protocol-Lab/prompts/) - 专业AI助手提示词
-- 💬 [对话记录](AI-Protocol-Lab/conversations/) - AI开发对话历史
+- 💬 [AI对话记录](AI-Protocol-Lab/conversations/) - AI开发对话历史
 - 🔧 [工具脚本](AI-Protocol-Lab/scripts/) - 自动化工具
 
-#### 项目技术文档 (`/AI-Protocol-Lab/project/`)
-- 📖 [文档导航](AI-Protocol-Lab/project/DOCUMENTATION-INDEX.md) - 完整的文档索引
-- 🛠️ [开发指南](AI-Protocol-Lab/project/development/README-DEV.md) - 环境搭建和开发流程
-- 📋 [API规范](AI-Protocol-Lab/project/development/API-SPECIFICATION.md) - 接口文档
-- 🏗️ [技术架构](AI-Protocol-Lab/project/development/TECHNICAL-GUIDE.md) - 系统架构说明
+#### 项目技术文档 (`/AI-Protocol-Lab/project-docs/`)
+- 📖 [文档导航](AI-Protocol-Lab/project-docs/DOCUMENTATION-INDEX.md) - 完整的文档索引
+- 🛠️ [开发指南](AI-Protocol-Lab/project-docs/development/README-DEV.md) - 环境搭建和开发流程
+- 📋 [API规范](AI-Protocol-Lab/project-docs/development/API-SPECIFICATION.md) - 接口文档
+- 🏗️ [技术架构](AI-Protocol-Lab/project-docs/development/TECHNICAL-GUIDE.md) - 系统架构说明
+- 💬 [所有对话记录](AI-Protocol-Lab/conversations/) - AI对话和项目讨论统一管理
 
 ### 🆘 常见问题
 - **启动失败？** 查看 [开发指南](docs/development/README-DEV.md) 的故障排除部分

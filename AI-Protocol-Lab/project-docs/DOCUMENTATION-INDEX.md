@@ -9,26 +9,25 @@
 ### 🛠️ 开发文档 (`/development/`)
 专业的技术开发文档，包含项目架构、API规范、开发指南等。
 
-### 💬 AI对话记录 (`/conversations/`)
-与AI助手的重要对话记录，包含技术讨论、决策过程和问题解决方案。
-
 ### 📚 用户指南 (`/guides/`)
 面向最终用户的使用指南和教程（规划中）。
 
-### 🤖 AI协作工具 (`/ai-protocol-lab/`)
-专业的AI助手协作工具集，提供完整的AI协作体验。
+### 🤖 AI协作工具 (`/ai-collaboration/`)
+专门针对MarketPulse项目的AI协作文档和指南。
 
 | 📄 主要文件 | 📝 描述 |
 |------------|---------|
-| [🚀 快速上下文指南](ai-protocol-lab/AI-CONTEXT-GUIDE.md) | 30秒让新AI助手了解项目状态 |
-| [📊 项目状态报告](ai-protocol-lab/PROJECT-STATUS-2025-07-20.md) | 完整的项目进度和技术架构 |
-| [📋 使用指南](ai-protocol-lab/README.md) | AI协作工具详细说明 |
-| [💡 使用示例](ai-protocol-lab/USAGE-EXAMPLES.md) | 实际应用场景 |
+| [🚀 快速上下文指南](ai-collaboration/AI-CONTEXT-GUIDE.md) | 30秒让新AI助手了解项目状态 |
+| [📊 项目状态报告](ai-collaboration/PROJECT-STATUS-2025-07-20.md) | 完整的项目进度和技术架构 |
+| [💡 使用示例](ai-collaboration/USAGE-EXAMPLES.md) | 实际应用场景 |
 
-**工具资源**:
-- [🎯 Prompt库](../AI-Protocol-Lab/prompts/) - 专业化AI助手提示词集合
-- [💬 对话记录](../AI-Protocol-Lab/ai-conversations/) - 详细的开发对话历史
-- [🔧 工具脚本](../AI-Protocol-Lab/scripts/) - 自动化工具
+### 💬 对话记录 (`../conversations/`)
+所有AI对话和项目技术讨论记录，统一管理便于查找。
+
+**AI协作工具资源**:
+- [🎯 Prompt库](../prompts/) - 专业化AI助手提示词集合
+- [🔧 工具脚本](../scripts/) - 自动化工具
+- [📖 工具说明](../README.md) - AI-Protocol-Lab完整使用指南
 
 ## 📖 文档导航
 
@@ -70,24 +69,22 @@
 ## 💬 AI对话记录
 
 ### 📝 对话记录说明
-这里存储与AI助手的重要技术讨论和决策过程，帮助团队了解项目的演进历程。
-
-### 📁 对话分类
-| 📂 分类 | 📝 描述 | 📍 位置 |
-|---------|---------|---------|
-| 🏗️ **架构设计** | 系统架构和技术选型讨论 | `conversations/architecture/` |
-| 🛠️ **开发实现** | 具体功能开发和问题解决 | `conversations/development/` |
-| 📋 **项目管理** | 项目规划和进度讨论 | `conversations/planning/` |
-| 🐛 **问题排查** | Bug修复和故障排除过程 | `conversations/troubleshooting/` |
+所有AI对话和项目技术讨论记录统一存储在 `../conversations/` 目录中，按时间顺序排列，便于查找和追踪项目发展历程。
 
 ### 📄 命名规范
 ```
-conversations/[分类]/YYYY-MM-DD_[主题描述].md
+conversations/YYYY-MM-DD_[主题描述].md
 ```
 
 **示例**:
-- `conversations/planning/2024-07-20_项目文档结构优化.md`
-- `conversations/development/2024-07-20_API集成方案讨论.md`
+- `conversations/2025-07-20_项目文档结构优化.md`
+- `conversations/2025-07-20_API集成方案讨论.md`
+- `conversations/market-pulse-dashboard-upgrade_2025-07-20.md`
+
+### 🔍 查找对话记录
+- 📁 **位置**: `../conversations/`
+- 📋 **内容**: AI开发对话、技术讨论、决策过程、问题解决方案
+- ⏰ **排序**: 按文件名时间顺序排列
 
 ## 📊 文档完成度
 
@@ -248,7 +245,7 @@ git push origin docs/improve-readme
 
 **📊 文档统计**: 4个已完成 | 5个规划中 | 总计9个文档
 
-**📅 最后更新**: 2024年7月20日 | **📝 文档版本**: v2.1 | **👥 维护者**: MarketPulse开发团队
+**📅 最后更新**: 2025年7月20日 | **📝 文档版本**: v2.1 | **👥 维护者**: MarketPulse开发团队
 
 **💡 建议或问题？欢迎提交 [Issue](https://github.com/ape7054/trading-dashboard/issues) 或 [Discussion](https://github.com/ape7054/trading-dashboard/discussions)**
 
