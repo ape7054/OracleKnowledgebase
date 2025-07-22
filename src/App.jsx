@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Routes, Route, NavLink } from 'react-router-dom';
 import { Box, CssBaseline, AppBar, Toolbar, Typography, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, IconButton, useTheme, useMediaQuery } from '@mui/material';
-import { Dashboard as DashboardIcon, SwapHoriz as TradeIcon, AccountCircle as AccountIcon, Menu as MenuIcon, TrendingUp, Home as HomeIcon } from '@mui/icons-material';
+import { Dashboard as DashboardIcon, SwapHoriz as TradeIcon, AccountCircle as AccountIcon, Menu as MenuIcon, TrendingUp, Home as HomeIcon, Article as NewsIcon } from '@mui/icons-material';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
@@ -10,6 +10,11 @@ import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import Trade from './pages/Trade';
 import Account from './pages/Account';
+import AccountSimple from './pages/AccountSimple';
+import AccountNew from './pages/AccountNew';
+import AccountMinimal from './pages/AccountMinimal';
+import AccountFixed from './pages/AccountFixed';
+import News from './pages/NewsProfessional';
 import { styled } from '@mui/system';
 
 // Define the width of the navigation drawer
@@ -39,18 +44,24 @@ const StyledListItemButton = styled(ListItemButton)(({ theme }) => ({
   },
   // Style for when the link is active (the current page)
   '&.active': {
-    backgroundColor: theme.palette.mode === 'dark' 
-      ? 'rgba(0, 171, 85, 0.16)' 
+    backgroundColor: theme.palette.mode === 'dark'
+      ? 'rgba(0, 171, 85, 0.16)'
       : 'rgba(0, 171, 85, 0.08)',
     color: theme.palette.primary.main,
     // Change the icon color when the link is active
     '& .MuiListItemIcon-root': {
       color: theme.palette.primary.main,
     },
+    // Ensure active text color is correct
+    '& .MuiListItemText-primary': {
+      color: theme.palette.primary.main,
+    },
   },
-  // Ensure the text color inherits correctly
+  // Ensure the text color is correct for both themes
   '& .MuiListItemText-primary': {
-    color: 'inherit',
+    color: theme.palette.mode === 'dark'
+      ? theme.palette.text.primary
+      : theme.palette.text.primary,
   },
   // Style for the icons in the list
   '& .MuiListItemIcon-root': {
@@ -65,8 +76,8 @@ const StyledListItemButton = styled(ListItemButton)(({ theme }) => ({
 // It has different background colors and effects for light and dark modes.
 const StyledDrawer = styled(Drawer)(({ theme }) => ({
   '& .MuiDrawer-paper': {
-    backgroundColor: theme.palette.mode === 'dark' 
-      ? 'rgba(22, 28, 36, 0.95)' 
+    backgroundColor: theme.palette.mode === 'dark'
+      ? 'rgba(22, 28, 36, 0.95)'
       : 'rgba(255, 255, 255, 0.95)',
     // Apply a gradient background for a more modern look
     backgroundImage: theme.palette.mode === 'dark'
@@ -78,6 +89,8 @@ const StyledDrawer = styled(Drawer)(({ theme }) => ({
     boxShadow: theme.palette.mode === 'dark'
       ? '2px 0 20px 0 rgba(0, 0, 0, 0.4)'
       : '2px 0 20px 0 rgba(145, 158, 171, 0.2)',
+    // Ensure text color is correct for both themes
+    color: theme.palette.text.primary,
   },
 }));
 
@@ -178,6 +191,7 @@ function AppContent() {
         {[
           { text: 'Home', icon: <HomeIcon />, path: '/' },
           { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
+          { text: 'News', icon: <NewsIcon />, path: '/news' },
           { text: 'Trade', icon: <TradeIcon />, path: '/trade' },
           { text: 'Account', icon: <AccountIcon />, path: '/account' },
         ].map((item) => (
@@ -331,8 +345,13 @@ function AppContent() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/news" element={<News />} />
             <Route path="/trade" element={<Trade />} />
-            <Route path="/account" element={<Account />} />
+            <Route path="/account" element={<AccountFixed />} />
+            <Route path="/account-original" element={<Account />} />
+            <Route path="/account-minimal" element={<AccountMinimal />} />
+            <Route path="/account-new" element={<AccountNew />} />
+            <Route path="/account-simple" element={<AccountSimple />} />
           </Routes>
         </Box>
         

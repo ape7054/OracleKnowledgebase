@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Box, Typography, Paper, Grid, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, List, ListItem, ListItemText, ListItemSecondaryAction, Switch, Divider, Card, useMediaQuery, Fade, Slide } from '@mui/material';
 import { styled, useTheme, alpha, keyframes } from '@mui/system';
 import { ArrowUpward, ArrowDownward, Wallet, History, Settings as SettingsIcon, TrendingUp, CreditCard, Visibility, TrendingDown } from '@mui/icons-material';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, Area, AreaChart, XAxis, YAxis } from 'recharts';
 import React from 'react';
+import { cachedMarketApi, dataTransformers } from '../api/marketApi';
 
 // Import icons from the new library
 import BtcIcon from 'cryptocurrency-icons/svg/color/btc.svg?react';
@@ -191,7 +192,7 @@ const AssetIconWrapper = styled(Box)(({ theme }) => ({
 
 
 // Your Assets的高级卡片视图 - 使用Dashboard样式
-const PremiumAssetsCardView = () => {
+const PremiumAssetsCardView = ({ assets }) => {
   return (
     <Grid container spacing={3}>
       {assets.map((asset, index) => {
@@ -435,19 +436,26 @@ const TabPanel = (props) => {
     );
 };
 
-// Portfolio distribution data
-const portfolioData = [
-    { name: 'Bitcoin', value: 41.1, color: '#F7931A' },
-    { name: 'Ethereum', value: 15.0, color: '#627EEA' },
-    { name: 'XRP', value: 8.2, color: '#23292F' },
-    { name: 'Tether', value: 6.9, color: '#26A17B' },
-    { name: 'BNB', value: 6.2, color: '#F3BA2F' },
-    { name: 'Solana', value: 4.9, color: '#14F195' },
-    { name: 'USDC', value: 4.1, color: '#2775CA' },
-    { name: 'Others', value: 13.6, color: '#9CA3AF' }
+// Static assets data with default values
+const staticAssets = [
+    { name: 'Bitcoin', symbol: 'BTC', balance: 1.26, value: 149244, icon: BtcIcon, change: '+0.3%', color: '#10B981', apiId: 'bitcoin' },
+    { name: 'Ethereum', symbol: 'ETH', balance: 14.5, value: 54561, icon: EthIcon, change: '+2.0%', color: '#10B981', apiId: 'ethereum' },
+    { name: 'XRP', symbol: 'XRP', balance: 8500, value: 29750, icon: XrpIcon, change: '+2.4%', color: '#10B981', apiId: 'ripple' },
+    { name: 'Tether', symbol: 'USDT', balance: 25000, value: 25000, icon: UsdtIcon, change: '-0.0%', color: '#EF4444', apiId: 'tether' },
+    { name: 'BNB', symbol: 'BNB', balance: 32.1, value: 22514, icon: BnbIcon, change: '+2.6%', color: '#10B981', apiId: 'binancecoin' },
+    { name: 'Solana', symbol: 'SOL', balance: 95.3, value: 17765, icon: SolIcon, change: '+4.7%', color: '#10B981', apiId: 'solana' },
+    { name: 'USDC', symbol: 'USDC', balance: 15000, value: 15000, icon: UsdcIcon, change: '-0.0%', color: '#EF4444', apiId: 'usd-coin' },
+    { name: 'Dogecoin', symbol: 'DOGE', balance: 28500, value: 10545, icon: DogeIcon, change: '+7.2%', color: '#10B981', apiId: 'dogecoin' },
+    { name: 'Cardano', symbol: 'ADA', balance: 18750, value: 8438, icon: AdaIcon, change: '-0.5%', color: '#EF4444', apiId: 'cardano' },
+    { name: 'TRON', symbol: 'TRX', balance: 25000, value: 7000, icon: TrxIcon, change: '+1.8%', color: '#10B981', apiId: 'tron' },
+    { name: 'Avalanche', symbol: 'AVAX', balance: 145.2, value: 6120, icon: AvaxIcon, change: '+3.4%', color: '#10B981', apiId: 'avalanche-2' },
+    { name: 'Chainlink', symbol: 'LINK', balance: 185.4, value: 4760, icon: LinkIcon, change: '+5.2%', color: '#10B981', apiId: 'chainlink' },
+    { name: 'Bitcoin Cash', symbol: 'BCH', balance: 8.5, value: 4355, icon: BchIcon, change: '-2.1%', color: '#EF4444', apiId: 'bitcoin-cash' },
+    { name: 'Wrapped Bitcoin', symbol: 'WBTC', balance: 0.035, value: 4142, icon: WbtcIcon, change: '+0.2%', color: '#10B981', apiId: 'wrapped-bitcoin' },
+    { name: 'Stellar', symbol: 'XLM', balance: 7500, value: 3600, icon: XlmIcon, change: '+6.3%', color: '#10B981', apiId: 'stellar' }
 ];
 
-// Portfolio performance data
+// Portfolio performance data (static for demo)
 const performanceData = [
     { name: 'Jan', value: 285000 },
     { name: 'Feb', value: 298000 },
@@ -455,24 +463,6 @@ const performanceData = [
     { name: 'Apr', value: 328000 },
     { name: 'May', value: 345000 },
     { name: 'Jun', value: 362834 },
-];
-
-const assets = [
-    { name: 'Bitcoin', symbol: 'BTC', balance: 1.26, value: 149244, icon: BtcIcon, change: '+0.3%', color: '#F7931A' },
-    { name: 'Ethereum', symbol: 'ETH', balance: 14.5, value: 54561, icon: EthIcon, change: '+2.0%', color: '#627EEA' },
-    { name: 'XRP', symbol: 'XRP', balance: 8500, value: 29750, icon: XrpIcon, change: '+2.4%', color: '#23292F' },
-    { name: 'Tether', symbol: 'USDT', balance: 25000, value: 25000, icon: UsdtIcon, change: '-0.0%', color: '#26A17B' },
-    { name: 'BNB', symbol: 'BNB', balance: 32.1, value: 22514, icon: BnbIcon, change: '+2.6%', color: '#F3BA2F' },
-    { name: 'Solana', symbol: 'SOL', balance: 95.3, value: 17765, icon: SolIcon, change: '+4.7%', color: '#14F195' },
-    { name: 'USDC', symbol: 'USDC', balance: 15000, value: 15000, icon: UsdcIcon, change: '-0.0%', color: '#2775CA' },
-    { name: 'Dogecoin', symbol: 'DOGE', balance: 28500, value: 10545, icon: DogeIcon, change: '+7.2%', color: '#C2A633' },
-    { name: 'Cardano', symbol: 'ADA', balance: 18750, value: 8438, icon: AdaIcon, change: '-0.5%', color: '#0033AD' },
-    { name: 'TRON', symbol: 'TRX', balance: 25000, value: 7000, icon: TrxIcon, change: '+1.8%', color: '#FF060A' },
-    { name: 'Avalanche', symbol: 'AVAX', balance: 145.2, value: 6120, icon: AvaxIcon, change: '+3.4%', color: '#E84142' },
-    { name: 'Chainlink', symbol: 'LINK', balance: 185.4, value: 4760, icon: LinkIcon, change: '+5.2%', color: '#375BD2' },
-    { name: 'Bitcoin Cash', symbol: 'BCH', balance: 8.5, value: 4355, icon: BchIcon, change: '-2.1%', color: '#8DC351' },
-    { name: 'Wrapped Bitcoin', symbol: 'WBTC', balance: 0.035, value: 4142, icon: WbtcIcon, change: '+0.2%', color: '#F7931A' },
-    { name: 'Stellar', symbol: 'XLM', balance: 7500, value: 3600, icon: XlmIcon, change: '+6.3%', color: '#7D00FF' }
 ];
 
 // Mock transaction history data
@@ -487,7 +477,7 @@ const transactions = [
 
 
 // Your Assets的高级表格视图 - 使用Dashboard样式
-const PremiumAssetsTableView = () => {
+const PremiumAssetsTableView = ({ assets }) => {
   const theme = useTheme();
   return (
     <Box sx={{ overflow: 'hidden' }}>
@@ -693,6 +683,9 @@ const PremiumAssetsTableView = () => {
 
 function Account() {
     const [tabValue, setTabValue] = useState(0);
+    const [marketData, setMarketData] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -700,13 +693,101 @@ function Account() {
         setTabValue(newValue);
     };
 
+    // 获取市场数据并更新价格
+    const fetchMarketData = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+
+            const response = await cachedMarketApi.getMarketData(15); // 获取前15名
+
+            if (response.success && response.data) {
+                // 更新静态资产的价格信息
+                const updatedAssets = staticAssets.map(asset => {
+                    const apiData = response.data.find(coin => coin.id === asset.apiId);
+                    if (apiData) {
+                        const value = asset.balance * apiData.current_price;
+                        return {
+                            ...asset,
+                            value: value,
+                            change: `${apiData.price_change_percentage_24h >= 0 ? '+' : ''}${apiData.price_change_percentage_24h?.toFixed(1)}%`,
+                            color: apiData.price_change_percentage_24h >= 0 ? '#10B981' : '#EF4444'
+                        };
+                    }
+                    return asset;
+                });
+                setMarketData(updatedAssets);
+            } else {
+                // 如果API失败，使用静态数据
+                setMarketData(staticAssets.map(asset => ({
+                    ...asset,
+                    value: 0,
+                    change: '+0.0%',
+                    color: '#9CA3AF'
+                })));
+            }
+        } catch (err) {
+            console.error('Failed to fetch market data:', err);
+            setError('Failed to load market data');
+            // 使用静态数据作为后备
+            setMarketData(staticAssets.map(asset => ({
+                ...asset,
+                value: 0,
+                change: '+0.0%',
+                color: '#9CA3AF'
+            })));
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+
+    // 计算总余额和投资组合分配
+    const calculatePortfolioData = (assets) => {
+        const totalValue = assets.reduce((sum, asset) => sum + asset.value, 0);
+
+        const portfolioData = assets.slice(0, 7).map(asset => ({
+            name: asset.name,
+            value: ((asset.value / totalValue) * 100),
+            color: asset.color
+        }));
+
+        // 如果有超过7个资产，将剩余的合并为"Others"
+        if (assets.length > 7) {
+            const othersValue = assets.slice(7).reduce((sum, asset) => sum + asset.value, 0);
+            portfolioData.push({
+                name: 'Others',
+                value: ((othersValue / totalValue) * 100),
+                color: '#9CA3AF'
+            });
+        }
+
+        return { totalValue, portfolioData };
+    };
+
+    // 组件挂载时获取数据
+    useEffect(() => {
+        fetchMarketData();
+
+        // 设置定时刷新（每30秒）
+        const interval = setInterval(fetchMarketData, 30000);
+
+        return () => clearInterval(interval);
+    }, []);
+
+    // 计算当前的投资组合数据
+    const { totalValue, portfolioData: currentPortfolioData } = marketData.length > 0
+        ? calculatePortfolioData(marketData)
+        : { totalValue: 0, portfolioData: [] };
+
     // Custom PieChart for portfolio breakdown
     const renderPieChart = () => {
         return (
             <ResponsiveContainer width="100%" height={220}>
                 <PieChart>
                     <Pie
-                        data={portfolioData}
+                        data={currentPortfolioData}
                         cx="50%"
                         cy="50%"
                         innerRadius={60}
@@ -891,7 +972,9 @@ function Account() {
                                 <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', mb: 2 }}>
                                     <Box>
                                         <Typography variant="body2" color="text.secondary">Total Estimated Balance</Typography>
-                                        <Typography variant="h3" sx={{ fontWeight: 700, mt: 1, fontSize: { xs: '2.5rem', md: '3rem' } }}>$362,834.00</Typography>
+                                        <Typography variant="h3" sx={{ fontWeight: 700, mt: 1, fontSize: { xs: '2.5rem', md: '3rem' } }}>
+                                            ${totalValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                        </Typography>
                                         <Box sx={{ 
                                             display: 'flex', 
                                             alignItems: 'center', 
@@ -1004,7 +1087,17 @@ function Account() {
                     </Box>
 
                     <GlassmorphicPaper>
-                        {isMobile ? <PremiumAssetsCardView /> : <PremiumAssetsTableView />}
+                        {loading ? (
+                            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 200 }}>
+                                <Typography>Loading assets...</Typography>
+                            </Box>
+                        ) : error ? (
+                            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 200 }}>
+                                <Typography color="error">{error}</Typography>
+                            </Box>
+                        ) : (
+                            isMobile ? <PremiumAssetsCardView assets={marketData} /> : <PremiumAssetsTableView assets={marketData} />
+                        )}
                     </GlassmorphicPaper>
 
                 </Box>

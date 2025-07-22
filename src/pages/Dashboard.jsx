@@ -94,6 +94,7 @@ import { cachedMarketApi, dataTransformers } from '../api/marketApi';
 
 // Import custom icons
 import HypeIcon from '../assets/icons/HypeIcon';
+// import CryptoNews from '../components/CryptoNews';
 
 // 动画定义
 const glow = keyframes`
@@ -255,45 +256,72 @@ const CustomTooltip = ({ active, payload, label, theme }) => {
     return null;
 };
 
+// 生成更真实的加密货币价格数据，包含更大的波动
+const generateRealisticPriceData = (basePrice, volatility = 0.15) => {
+  const data = [];
+  let currentPrice = basePrice;
+
+  for (let i = 0; i < 24; i++) {
+    // 模拟真实的价格波动
+    const randomChange = (Math.random() - 0.5) * 2 * volatility;
+    const trendFactor = Math.sin(i * 0.3) * 0.05; // 添加趋势因子
+    const marketSentiment = Math.sin(i * 0.1) * 0.03; // 市场情绪波动
+
+    currentPrice = currentPrice * (1 + randomChange + trendFactor + marketSentiment);
+
+    data.push({
+      name: `${String(i).padStart(2, '0')}:00`,
+      value: Math.round(currentPrice * 100) / 100,
+      volume: Math.random() * 1000000 + 500000, // 添加交易量数据
+      timestamp: Date.now() - (24 - i) * 3600000
+    });
+  }
+
+  return data;
+};
+
 const chartData = {
-  BTC: [
-    { name: '00:00', value: 62000 }, { name: '02:00', value: 62500 }, { name: '04:00', value: 63500 }, { name: '06:00', value: 63200 },
-    { name: '08:00', value: 61000 }, { name: '10:00', value: 61500 }, { name: '12:00', value: 64000 }, { name: '14:00', value: 64200 },
-    { name: '16:00', value: 65000 }, { name: '18:00', value: 64800 }, { name: '20:00', value: 64500 }, { name: '22:00', value: 65800 },
-    { name: '24:00', value: 66000 },
-  ],
-  ETH: [
-    { name: '00:00', value: 3100 }, { name: '02:00', value: 3120 }, { name: '04:00', value: 3200 }, { name: '06:00', value: 3180 },
-    { name: '08:00', value: 3150 }, { name: '10:00', value: 3170 }, { name: '12:00', value: 3250 }, { name: '14:00', value: 3260 },
-    { name: '16:00', value: 3300 }, { name: '18:00', value: 3290 }, { name: '20:00', value: 3280 }, { name: '22:00', value: 3340 },
-    { name: '24:00', value: 3350 },
-  ],
-  SOL: [
-    { name: '00:00', value: 150 }, { name: '02:00', value: 152 }, { name: '04:00', value: 155 }, { name: '06:00', value: 154 },
-    { name: '08:00', value: 148 }, { name: '10:00', value: 151 }, { name: '12:00', value: 160 }, { name: '14:00', value: 162 },
-    { name: '16:00', value: 165 }, { name: '18:00', value: 163 }, { name: '20:00', value: 162 }, { name: '22:00', value: 168 },
-    { name: '24:00', value: 170 },
-  ]
+  BTC: generateRealisticPriceData(95000, 0.08), // BTC波动相对较小但绝对值大
+  ETH: generateRealisticPriceData(3400, 0.12), // ETH波动中等
+  SOL: generateRealisticPriceData(180, 0.18), // SOL波动较大
 };
 
 const chartMeta = {
-  BTC: { stroke: '#f7931a', id: 'colorBtc' },
-  ETH: { stroke: '#627eea', id: 'colorEth' },
-  SOL: { stroke: '#14f195', id: 'colorSol' },
+  BTC: {
+    stroke: '#f7931a',
+    id: 'colorBtc',
+    gradient: ['#f7931a', '#ff6b35'],
+    name: 'Bitcoin',
+    symbol: '₿'
+  },
+  ETH: {
+    stroke: '#627eea',
+    id: 'colorEth',
+    gradient: ['#627eea', '#9c88ff'],
+    name: 'Ethereum',
+    symbol: 'Ξ'
+  },
+  SOL: {
+    stroke: '#14f195',
+    id: 'colorSol',
+    gradient: ['#14f195', '#00d4aa'],
+    name: 'Solana',
+    symbol: '◎'
+  },
 }
 
 const staticMarketData = [
   { name: 'Bitcoin', symbol: 'BTC', price: '$118,400.00', change: '+0.3%', icon: BtcIcon, sparkline: chartData.BTC.map(d => d.value) },
   { name: 'Ethereum', symbol: 'ETH', price: '$3,762.84', change: '+2.0%', icon: EthIcon, sparkline: chartData.ETH.map(d => d.value) },
-  { name: 'XRP', symbol: 'XRP', price: '$3.50', change: '+2.4%', icon: XrpIcon, sparkline: [3.40, 3.42, 3.48, 3.52, 3.50] },
-  { name: 'Tether', symbol: 'USDT', price: '$1.00', change: '-0.0%', icon: UsdtIcon, sparkline: [1.00, 1.00, 1.00, 1.00, 1.00] },
-  { name: 'BNB', symbol: 'BNB', price: '$701.38', change: '+2.6%', icon: BnbIcon, sparkline: [680, 685, 695, 700, 701] },
+  { name: 'XRP', symbol: 'XRP', price: '$3.50', change: '+2.4%', icon: XrpIcon, sparkline: [3.20, 3.35, 3.60, 3.45, 3.50] },
+  { name: 'Tether', symbol: 'USDT', price: '$1.00', change: '-0.0%', icon: UsdtIcon, sparkline: [1.002, 0.999, 1.001, 0.998, 1.000] },
+  { name: 'BNB', symbol: 'BNB', price: '$701.38', change: '+2.6%', icon: BnbIcon, sparkline: [650, 675, 720, 690, 701] },
   { name: 'Solana', symbol: 'SOL', price: '$186.36', change: '+4.7%', icon: SolIcon, sparkline: chartData.SOL.map(d => d.value) },
-  { name: 'USDC', symbol: 'USDC', price: '$1.00', change: '-0.0%', icon: UsdcIcon, sparkline: [1.00, 1.00, 1.00, 1.00, 1.00] },
-  { name: 'Dogecoin', symbol: 'DOGE', price: '$0.37', change: '+7.2%', icon: DogeIcon, sparkline: [0.34, 0.35, 0.36, 0.37, 0.37] },
-  { name: 'Cardano', symbol: 'ADA', price: '$0.45', change: '-0.5%', icon: AdaIcon, sparkline: [0.46, 0.455, 0.452, 0.458, 0.45] },
-  { name: 'TRON', symbol: 'TRX', price: '$0.28', change: '+1.8%', icon: TrxIcon, sparkline: [0.27, 0.275, 0.278, 0.282, 0.28] },
-  { name: 'Avalanche', symbol: 'AVAX', price: '$42.15', change: '+3.4%', icon: AvaxIcon, sparkline: [40.5, 41.2, 41.8, 42.3, 42.15] },
+  { name: 'USDC', symbol: 'USDC', price: '$1.00', change: '-0.0%', icon: UsdcIcon, sparkline: [1.003, 0.997, 1.002, 0.999, 1.000] },
+  { name: 'Dogecoin', symbol: 'DOGE', price: '$0.37', change: '+7.2%', icon: DogeIcon, sparkline: [0.30, 0.34, 0.39, 0.35, 0.37] },
+  { name: 'Cardano', symbol: 'ADA', price: '$0.45', change: '-0.5%', icon: AdaIcon, sparkline: [0.48, 0.44, 0.47, 0.43, 0.45] },
+  { name: 'TRON', symbol: 'TRX', price: '$0.28', change: '+1.8%', icon: TrxIcon, sparkline: [0.26, 0.29, 0.27, 0.30, 0.28] },
+  { name: 'Avalanche', symbol: 'AVAX', price: '$42.15', change: '+3.4%', icon: AvaxIcon, sparkline: [38.5, 43.2, 40.8, 44.3, 42.15] },
   { name: 'Chainlink', symbol: 'LINK', price: '$25.67', change: '+5.2%', icon: LinkIcon, sparkline: [24.2, 24.8, 25.1, 25.9, 25.67] },
   { name: 'Bitcoin Cash', symbol: 'BCH', price: '$512.34', change: '-2.1%', icon: BchIcon, sparkline: [525, 520, 515, 510, 512] },
   { name: 'Wrapped Bitcoin', symbol: 'WBTC', price: '$118,350.00', change: '+0.2%', icon: WbtcIcon, sparkline: [118100, 118200, 118300, 118400, 118350] },
@@ -343,8 +371,12 @@ const PremiumStatCard = ({ title, value, icon, color, trend, subtitle }) => {
           minWidth: 64,
           minHeight: 64,
           boxShadow: `0 8px 32px ${alpha(color, 0.4)}`,
-          color: '#fff',
           position: 'relative',
+          '& svg': {
+            color: '#fff !important',
+            fontSize: '2.5rem !important',
+            filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))'
+          },
           '&::before': {
             content: '""',
             position: 'absolute',
@@ -430,25 +462,25 @@ const PremiumSparkLine = ({ data, strokeColor, trend = 'up' }) => {
   const maxValue = Math.max(...data);
   const range = maxValue - minValue;
 
-  // 动态颜色基于趋势
+  // 动态颜色基于趋势 - 增强颜色饱和度和亮度
   const colors = {
     up: {
-      primary: '#10b981',
-      secondary: '#059669',
-      glow: 'rgba(16, 185, 129, 0.4)',
-      area: 'rgba(16, 185, 129, 0.1)'
+      primary: '#00ff88',      // 更亮的绿色
+      secondary: '#00cc66',    // 更鲜艳的绿色
+      glow: 'rgba(0, 255, 136, 0.6)',    // 增强发光效果
+      area: 'rgba(0, 255, 136, 0.2)'     // 增强区域填充
     },
     down: {
-      primary: '#ef4444',
-      secondary: '#dc2626',
-      glow: 'rgba(239, 68, 68, 0.4)',
-      area: 'rgba(239, 68, 68, 0.1)'
+      primary: '#ff4757',      // 更亮的红色
+      secondary: '#ff3742',    // 更鲜艳的红色
+      glow: 'rgba(255, 71, 87, 0.6)',    // 增强发光效果
+      area: 'rgba(255, 71, 87, 0.2)'     // 增强区域填充
     },
     neutral: {
-      primary: '#6b7280',
-      secondary: '#4b5563',
-      glow: 'rgba(107, 114, 128, 0.4)',
-      area: 'rgba(107, 114, 128, 0.1)'
+      primary: '#a4b0be',      // 更亮的灰色
+      secondary: '#8395a7',    // 更有对比度的灰色
+      glow: 'rgba(164, 176, 190, 0.6)',  // 增强发光效果
+      area: 'rgba(164, 176, 190, 0.2)'   // 增强区域填充
     }
   };
 
@@ -504,9 +536,9 @@ const PremiumSparkLine = ({ data, strokeColor, trend = 'up' }) => {
               <stop offset="100%" stopColor={alpha(colorScheme.primary, 0.05)} />
             </linearGradient>
 
-            {/* 发光效果 */}
-            <filter id={`glow-${gradientId}`} x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="3" result="blur" />
+            {/* 发光效果 - 增强 */}
+            <filter id={`glow-${gradientId}`} x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur stdDeviation="5" result="blur" />
               <feComposite in="SourceGraphic" in2="blur" operator="over" />
             </filter>
 
@@ -532,7 +564,7 @@ const PremiumSparkLine = ({ data, strokeColor, trend = 'up' }) => {
             type="monotone"
             dataKey="value"
             stroke={`url(#${gradientId})`}
-            strokeWidth={3}
+            strokeWidth={4}
             dot={false}
             className="spark-line"
             style={{
@@ -1182,35 +1214,56 @@ function Dashboard() {
       // 生成更真实的sparkline数据
       const basePrice = coin.price || 0;
 
-      // 根据币种和变化百分比生成不同的波动模式
-      const volatility = Math.abs(changePercent) > 5 ? 0.15 :
-                        Math.abs(changePercent) > 2 ? 0.08 : 0.04;
+      // 大幅增加波动幅度，让图表更加动态
+      const volatility = Math.abs(changePercent) > 5 ? 0.35 :  // 从0.15增加到0.35
+                        Math.abs(changePercent) > 2 ? 0.25 :   // 从0.08增加到0.25
+                        0.15;                                   // 从0.04增加到0.15
 
       // 生成带趋势的价格数据
       const sparkline = Array.from({ length: 24 }, (_, i) => {
         const progress = i / 23; // 0 to 1
 
-        // 基础趋势（根据24h变化）
-        const trendComponent = basePrice * (changePercent / 100) * progress;
+        // 基础趋势（根据24h变化）- 增强趋势影响
+        const trendComponent = basePrice * (changePercent / 100) * progress * 1.5; // 增加1.5倍
 
-        // 随机波动（使用不同的频率和幅度）
-        const randomWalk = Math.sin(i * 0.5 + Math.random() * 2) * volatility * basePrice;
-        const microFluctuation = (Math.random() - 0.5) * 0.02 * basePrice;
+        // 大幅增强随机波动
+        const randomWalk = Math.sin(i * 0.8 + Math.random() * 3) * volatility * basePrice; // 增加频率和幅度
+        const microFluctuation = (Math.random() - 0.5) * 0.08 * basePrice; // 从0.02增加到0.08
 
-        // 添加一些特定的价格模式
+        // 添加更强烈的价格模式
         let patternComponent = 0;
-        if (symbol === 'BTC') {
-          // BTC通常有较大的波动
-          patternComponent = Math.sin(i * 0.3) * 0.03 * basePrice;
-        } else if (symbol === 'ETH') {
-          // ETH可能有不同的波动模式
-          patternComponent = Math.cos(i * 0.4) * 0.025 * basePrice;
+        if (symbol === 'BTC' || symbol === 'WBTC') {
+          // BTC通常有较大的波动 - 大幅增强
+          patternComponent = Math.sin(i * 0.6) * 0.12 * basePrice + // 从0.03增加到0.12
+                            Math.cos(i * 0.4) * 0.08 * basePrice;   // 添加额外波动
+        } else if (symbol === 'ETH' || symbol === 'STETH') {
+          // ETH可能有不同的波动模式 - 增强
+          patternComponent = Math.cos(i * 0.7) * 0.10 * basePrice + // 从0.025增加到0.10
+                            Math.sin(i * 0.9) * 0.06 * basePrice;   // 添加额外波动
+        } else if (symbol === 'SOL') {
+          // Solana通常波动较大
+          patternComponent = Math.sin(i * 1.2) * 0.15 * basePrice +
+                            Math.cos(i * 0.8) * 0.10 * basePrice;
+        } else if (symbol === 'DOGE') {
+          // Dogecoin波动更加剧烈
+          patternComponent = Math.sin(i * 1.5) * 0.20 * basePrice +
+                            (Math.random() - 0.5) * 0.15 * basePrice;
         } else if (symbol === 'USDT' || symbol === 'USDC') {
-          // 稳定币应该几乎没有波动
-          return basePrice + (Math.random() - 0.5) * 0.001 * basePrice;
+          // 稳定币保持微小波动
+          return basePrice + (Math.random() - 0.5) * 0.003 * basePrice; // 稍微增加一点
+        } else {
+          // 其他币种也增加波动
+          patternComponent = Math.sin(i * 0.5 + Math.random()) * 0.08 * basePrice +
+                            Math.cos(i * 0.3 + Math.random()) * 0.05 * basePrice;
         }
 
-        return Math.max(0, basePrice + trendComponent + randomWalk + microFluctuation + patternComponent);
+        // 添加一些随机的价格跳跃，模拟真实市场
+        const priceJump = Math.random() < 0.3 ? (Math.random() - 0.5) * 0.06 * basePrice : 0;
+
+        const finalPrice = basePrice + trendComponent + randomWalk + microFluctuation + patternComponent + priceJump;
+
+        // 确保价格不会变成负数，但允许更大的波动范围
+        return Math.max(basePrice * 0.7, finalPrice); // 允许最多30%的下跌
       });
 
       return {
@@ -1230,9 +1283,9 @@ function Dashboard() {
       setLoading(true);
       setError(null);
 
-      const response = await cachedMarketApi.getMarketData(20); // 获取前20名
+      const response = await cachedMarketApi.getMarketData(20);
 
-      if (response.success && response.data) {
+      if (response.success && response.data && response.data.length > 0) {
         // 先转换为标准格式
         const standardData = response.data.map(dataTransformers.transformCoinData);
 
@@ -1245,7 +1298,8 @@ function Dashboard() {
         setMarketSummary(summary);
 
         setLastUpdated(new Date());
-        console.log('Market data updated:', dashboardData.length, 'coins');
+      } else {
+        setError('No market data available');
       }
     } catch (err) {
       console.error('Failed to fetch market data:', err);
@@ -1272,47 +1326,159 @@ function Dashboard() {
     { title: "ETH Dominance", value: marketSummary.ethDominance, icon: <BarChartOutlinedIcon sx={{ color: theme.palette.warning.main }} />, color: theme.palette.warning.main },
   ];
 
-  const MemoizedAreaChart = useMemo(() => (
-    <ResponsiveContainer width="100%" height="100%">
-      <AreaChart data={chartData[selectedCoin]} margin={{ top: 10, right: 30, left: 20, bottom: 10 }}>
-        <defs>
-            <linearGradient id={chartMeta[selectedCoin].id} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor={chartMeta[selectedCoin].stroke} stopOpacity={0.7}/>
-                <stop offset="95%" stopColor={chartMeta[selectedCoin].stroke} stopOpacity={0}/>
-            </linearGradient>
-            <filter id="shadow" height="200%">
-              <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor={`${chartMeta[selectedCoin].stroke}66`}/>
-            </filter>
-        </defs>
-        <CartesianGrid strokeDasharray="3 3" stroke={alpha(theme.palette.divider, 0.5)} vertical={false} />
-        <XAxis 
-          dataKey="name" 
-          stroke={theme.palette.text.secondary} 
-          tick={{ fontSize: 12 }}
-          axisLine={{ stroke: alpha(theme.palette.text.secondary, 0.2) }}
-          tickLine={{ stroke: alpha(theme.palette.text.secondary, 0.2) }}
-        />
-        <YAxis 
-          stroke={theme.palette.text.secondary} 
-          tick={{ fontSize: 12 }} 
-          tickFormatter={(value) => `$${(value/1000)}k`}
-          axisLine={{ stroke: alpha(theme.palette.text.secondary, 0.2) }}
-          tickLine={{ stroke: alpha(theme.palette.text.secondary, 0.2) }}
-        />
-        <Tooltip content={<CustomTooltip theme={theme} />} />
-        <Area 
-          type="monotone" 
-          dataKey="value" 
-          stroke={chartMeta[selectedCoin].stroke} 
-          strokeWidth={3} 
-          fillOpacity={1} 
-          fill={`url(#${chartMeta[selectedCoin].id})`}
-          style={{ filter: 'url(#shadow)' }}
-          animationDuration={1500}
-        />
-      </AreaChart>
-    </ResponsiveContainer>
-  ), [selectedCoin, theme]);
+  // 专业级价格图表组件
+  const MemoizedAreaChart = useMemo(() => {
+    const currentData = chartData[selectedCoin];
+    const currentMeta = chartMeta[selectedCoin];
+    const minValue = Math.min(...currentData.map(d => d.value));
+    const maxValue = Math.max(...currentData.map(d => d.value));
+    const priceChange = ((currentData[currentData.length - 1].value - currentData[0].value) / currentData[0].value * 100);
+    const isPositive = priceChange >= 0;
+
+    return (
+      <Box sx={{ position: 'relative', height: '100%' }}>
+        {/* 价格信息头部 */}
+        <Box sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          zIndex: 10,
+          background: alpha(theme.palette.background.paper, 0.9),
+          backdropFilter: 'blur(10px)',
+          borderRadius: 2,
+          p: 2,
+          border: `1px solid ${alpha(theme.palette.divider, 0.1)}`
+        }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+            <Typography variant="h6" sx={{ fontWeight: 700, color: currentMeta.stroke }}>
+              {currentMeta.symbol}
+            </Typography>
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              {currentMeta.name}
+            </Typography>
+          </Box>
+          <Typography variant="h4" sx={{ fontWeight: 700, mb: 0.5 }}>
+            ${currentData[currentData.length - 1].value.toLocaleString()}
+          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography
+              variant="body1"
+              sx={{
+                color: isPositive ? theme.palette.success.main : theme.palette.error.main,
+                fontWeight: 600
+              }}
+            >
+              {isPositive ? '+' : ''}{priceChange.toFixed(2)}%
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              24h
+            </Typography>
+          </Box>
+        </Box>
+
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart data={currentData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+            <defs>
+              {/* 主渐变 */}
+              <linearGradient id={`gradient-${currentMeta.id}`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor={currentMeta.gradient[0]} stopOpacity={0.8}/>
+                <stop offset="50%" stopColor={currentMeta.gradient[1]} stopOpacity={0.4}/>
+                <stop offset="100%" stopColor={currentMeta.gradient[1]} stopOpacity={0.1}/>
+              </linearGradient>
+
+              {/* 发光效果 */}
+              <filter id={`glow-${currentMeta.id}`} height="300%" width="300%" x="-75%" y="-75%">
+                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                <feMerge>
+                  <feMergeNode in="coloredBlur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+
+              {/* 阴影效果 */}
+              <filter id={`shadow-${currentMeta.id}`} height="200%">
+                <feDropShadow dx="0" dy="4" stdDeviation="8" floodColor={currentMeta.stroke} floodOpacity="0.3"/>
+              </filter>
+            </defs>
+
+            <CartesianGrid
+              strokeDasharray="2 4"
+              stroke={alpha(theme.palette.divider, 0.3)}
+              vertical={false}
+              horizontal={true}
+            />
+
+            <XAxis
+              dataKey="name"
+              stroke={theme.palette.text.secondary}
+              tick={{ fontSize: 11, fill: theme.palette.text.secondary }}
+              axisLine={false}
+              tickLine={false}
+              interval="preserveStartEnd"
+            />
+
+            <YAxis
+              stroke={theme.palette.text.secondary}
+              tick={{ fontSize: 11, fill: theme.palette.text.secondary }}
+              tickFormatter={(value) => {
+                if (value >= 1000000) return `$${(value/1000000).toFixed(1)}M`;
+                if (value >= 1000) return `$${(value/1000).toFixed(0)}k`;
+                return `$${value.toFixed(0)}`;
+              }}
+              axisLine={false}
+              tickLine={false}
+              domain={['dataMin - 100', 'dataMax + 100']}
+            />
+
+            <Tooltip
+              content={({ active, payload, label }) => {
+                if (active && payload && payload.length) {
+                  const data = payload[0].payload;
+                  return (
+                    <Box sx={{
+                      background: alpha(theme.palette.background.paper, 0.95),
+                      backdropFilter: 'blur(10px)',
+                      border: `1px solid ${alpha(currentMeta.stroke, 0.3)}`,
+                      borderRadius: 2,
+                      p: 2,
+                      boxShadow: theme.shadows[8]
+                    }}>
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                        {label}
+                      </Typography>
+                      <Typography variant="h6" sx={{ fontWeight: 700, color: currentMeta.stroke }}>
+                        ${data.value.toLocaleString()}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Volume: ${(data.volume / 1000000).toFixed(1)}M
+                      </Typography>
+                    </Box>
+                  );
+                }
+                return null;
+              }}
+            />
+
+            <Area
+              type="monotone"
+              dataKey="value"
+              stroke={currentMeta.stroke}
+              strokeWidth={3}
+              fillOpacity={1}
+              fill={`url(#gradient-${currentMeta.id})`}
+              style={{
+                filter: `url(#glow-${currentMeta.id}) url(#shadow-${currentMeta.id})`,
+                strokeLinecap: 'round',
+                strokeLinejoin: 'round'
+              }}
+              animationDuration={2000}
+              animationEasing="ease-out"
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+      </Box>
+    );
+  }, [selectedCoin, theme]);
 
   // 优化移动视图卡片
   const MarketCardView = () => {
@@ -1468,14 +1634,15 @@ function Dashboard() {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  background: `linear-gradient(135deg, ${alpha(trendColor, 0.1)}, ${alpha(trendColor, 0.2)})`,
-                  border: `2px solid ${alpha(trendColor, 0.3)}`,
+                  background: theme.palette.mode === 'dark'
+                    ? 'rgba(255, 255, 255, 0.1)'
+                    : 'rgba(0, 0, 0, 0.05)',
+                  border: `1px solid ${alpha(trendColor, 0.3)}`,
                   mr: 2,
                   position: 'relative',
-                  color: trendColor,
                   '& svg': {
-                    color: trendColor,
-                    fill: 'currentColor'
+                    // Keep original icon colors - don't override with trendColor
+                    filter: 'none'
                   },
                   '&::before': {
                     content: '""',
@@ -1978,22 +2145,20 @@ function Dashboard() {
         </Fade>
       
         {/* 高级统计卡片网格 */}
-        <Slide direction="up" in timeout={1200}>
-          <Grid container spacing={4} sx={{ mb: 6 }}>
-            {stats.map((stat, index) => (
-              <Grid item xs={12} sm={6} lg={3} key={index}>
-                <PremiumStatCard
-                  title={stat.title}
-                  value={stat.value}
-                  icon={stat.icon}
-                  color={stat.color}
-                  trend={index === 1 ? '+12.5%' : index === 2 ? '+8.3%' : undefined}
-                  subtitle={index === 0 ? 'Last 24h' : index === 3 ? 'vs competitors' : undefined}
-                />
-              </Grid>
-            ))}
-          </Grid>
-        </Slide>
+        <Grid container spacing={4} sx={{ mb: 6 }}>
+          {stats.map((stat, index) => (
+            <Grid item xs={12} sm={6} lg={3} key={index}>
+              <PremiumStatCard
+                title={stat.title}
+                value={stat.value}
+                icon={stat.icon}
+                color={stat.color}
+                trend={index === 1 ? '+12.5%' : index === 2 ? '+8.3%' : undefined}
+                subtitle={index === 0 ? 'Last 24h' : index === 3 ? 'vs competitors' : undefined}
+              />
+            </Grid>
+          ))}
+        </Grid>
 
         {/* 主要内容网格 */}
         <Grid container spacing={4}>
@@ -2375,6 +2540,10 @@ function Dashboard() {
             {isMobile ? <PremiumMarketCardView /> : <PremiumMarketTableView />}
           </GlassmorphicPaper>
         </Grid>
+
+
+
+
       </Grid>
       </Container>
     </Box>
