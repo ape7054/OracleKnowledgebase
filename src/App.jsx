@@ -9,11 +9,7 @@ import { ThemeContext } from './context/ThemeContext';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import Trade from './pages/Trade';
-import Account from './pages/Account';
-import AccountSimple from './pages/AccountSimple';
-import AccountNew from './pages/AccountNew';
-import AccountMinimal from './pages/AccountMinimal';
-import AccountFixed from './pages/AccountFixed';
+import Account from './pages/AccountPremium';
 import News from './pages/NewsProfessional';
 import { styled } from '@mui/system';
 
@@ -347,11 +343,7 @@ function AppContent() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/news" element={<News />} />
             <Route path="/trade" element={<Trade />} />
-            <Route path="/account" element={<AccountFixed />} />
-            <Route path="/account-original" element={<Account />} />
-            <Route path="/account-minimal" element={<AccountMinimal />} />
-            <Route path="/account-new" element={<AccountNew />} />
-            <Route path="/account-simple" element={<AccountSimple />} />
+            <Route path="/account" element={<Account />} />
           </Routes>
         </Box>
         
