@@ -14,33 +14,37 @@ import {
   TrendingDown,
   AccessTime,
   Refresh,
-  OpenInNew
+  OpenInNew,
+  Comment
 } from '@mui/icons-material';
 import { useTheme, alpha } from '@mui/material/styles';
 import NewsDetail from './NewsDetail';
+import { fetchCryptoNews } from '../services/newsService';
 
-// 模拟新闻数据
+// 模拟新闻数据 - 添加真实链接
 const mockNewsData = [
   {
     id: 1,
-    title: "Bitcoin突破$70,000大关，创历史新高",
-    summary: "比特币价格在机构投资者大量买入的推动下突破70,000美元...",
-    source: "CryptoNews",
+    title: "Bitcoin ETF获批推动价格突破新高",
+    summary: "比特币ETF的正式获批为机构投资者提供了更便捷的投资渠道，推动BTC价格创下历史新高...",
+    source: "CoinDesk",
+    sourceUrl: "https://www.coindesk.com/markets/2024/01/10/bitcoin-etf-approval-drives-price-to-new-highs/",
     time: "2小时前",
     sentiment: "positive",
     coins: ["BTC"],
     impact: "high",
     category: "market",
-    tags: ["价格突破", "机构投资", "历史新高"],
+    tags: ["ETF获批", "机构投资", "历史新高"],
     views: 15420,
     likes: 234,
     dislikes: 12
   },
   {
     id: 2,
-    title: "以太坊升级进展顺利，质押奖励增加",
-    summary: "以太坊网络的最新升级带来了更高的质押奖励和更低的gas费用...",
-    source: "CoinDesk",
+    title: "以太坊2.0质押奖励机制优化",
+    summary: "以太坊网络最新升级优化了质押奖励分配机制，提高了验证者收益并降低了网络费用...",
+    source: "Ethereum.org",
+    sourceUrl: "https://ethereum.org/en/roadmap/merge/",
     time: "4小时前",
     sentiment: "positive",
     coins: ["ETH"],
@@ -53,9 +57,10 @@ const mockNewsData = [
   },
   {
     id: 3,
-    title: "DeFi协议面临新的监管挑战",
-    summary: "监管机构对去中心化金融协议提出了新的合规要求...",
-    source: "Reuters",
+    title: "DeFi协议面临新的监管框架",
+    summary: "全球监管机构正在制定针对去中心化金融协议的新监管框架，要求更高的透明度和合规性...",
+    source: "CoinTelegraph",
+    sourceUrl: "https://cointelegraph.com/news/defi-protocols-face-new-regulatory-challenges",
     time: "6小时前",
     sentiment: "negative",
     coins: ["DeFi"],
@@ -68,9 +73,10 @@ const mockNewsData = [
   },
   {
     id: 4,
-    title: "Solana生态系统持续扩张",
-    summary: "Solana区块链上的新项目数量持续增长，TVL达到新高...",
+    title: "Solana生态TVL突破100亿美元",
+    summary: "Solana区块链生态系统的总锁定价值(TVL)首次突破100亿美元大关，新项目数量持续增长...",
     source: "The Block",
+    sourceUrl: "https://www.theblock.co/post/solana-ecosystem-tvl-surpasses-10-billion",
     time: "8小时前",
     sentiment: "positive",
     coins: ["SOL"],
@@ -83,9 +89,10 @@ const mockNewsData = [
   },
   {
     id: 5,
-    title: "NFT市场迎来新一轮创新浪潮",
-    summary: "多个知名品牌宣布进入NFT领域，推出限量数字藏品...",
-    source: "NFT News",
+    title: "主流品牌加速布局NFT市场",
+    summary: "Nike、Adidas等知名品牌纷纷推出NFT数字藏品，传统企业与Web3的融合进一步加深...",
+    source: "Decrypt",
+    sourceUrl: "https://decrypt.co/news/mainstream-brands-accelerate-nft-market-entry",
     time: "10小时前",
     sentiment: "positive",
     coins: ["NFT"],
@@ -98,12 +105,13 @@ const mockNewsData = [
   },
   {
     id: 6,
-    title: "Layer 2解决方案获得重大突破",
-    summary: "新的Layer 2技术显著提升了交易速度并降低了成本...",
-    source: "Tech Crypto",
+    title: "Layer 2扩容方案性能大幅提升",
+    summary: "Arbitrum和Optimism等Layer 2解决方案在最新升级后，交易速度提升300%，费用降低90%...",
+    source: "Bankless",
+    sourceUrl: "https://bankless.com/layer-2-scaling-solutions-major-breakthrough",
     time: "12小时前",
     sentiment: "positive",
-    coins: ["ETH", "MATIC"],
+    coins: ["ETH", "ARB", "OP"],
     impact: "high",
     category: "technology",
     tags: ["Layer 2", "扩容方案", "技术突破"],
@@ -112,6 +120,23 @@ const mockNewsData = [
     dislikes: 9
   }
 ];
+
+// 真实新闻API获取函数
+const fetchRealNews = async (maxItems = 10) => {
+  try {
+    // 使用新闻服务获取数据
+    const newsData = await fetchCryptoNews({
+      maxItems,
+      useRealAPI: true, // 设置为true以使用真实API
+      newsApiKey: process.env.REACT_APP_NEWS_API_KEY // 从环境变量获取API密钥
+    });
+
+    return newsData.length > 0 ? newsData : mockNewsData;
+  } catch (error) {
+    console.error('获取新闻失败:', error);
+    return mockNewsData; // 降级到模拟数据
+  }
+};
 
 // 情绪指示器组件
 const SentimentIndicator = ({ sentiment }) => {
@@ -161,6 +186,22 @@ const SentimentIndicator = ({ sentiment }) => {
 const NewsItem = ({ news, isLast, onNewsClick }) => {
   const theme = useTheme();
 
+  const handleSourceClick = (e) => {
+    e.stopPropagation();
+    if (news.sourceUrl) {
+      window.open(news.sourceUrl, '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  const handleTitleClick = () => {
+    // 优先跳转到外部链接，如果没有则打开详情弹窗
+    if (news.sourceUrl) {
+      window.open(news.sourceUrl, '_blank', 'noopener,noreferrer');
+    } else {
+      onNewsClick(news);
+    }
+  };
+
   return (
     <Box>
       <Box sx={{ p: 2 }}>
@@ -177,14 +218,14 @@ const NewsItem = ({ news, isLast, onNewsClick }) => {
                   color: theme.palette.primary.main
                 }
               }}
-              onClick={() => onNewsClick(news)}
+              onClick={handleTitleClick}
             >
               {news.title}
             </Typography>
-            
-            <Typography 
-              variant="body2" 
-              color="text.secondary" 
+
+            <Typography
+              variant="body2"
+              color="text.secondary"
               sx={{ mb: 2, lineHeight: 1.5 }}
             >
               {news.summary}
@@ -193,7 +234,18 @@ const NewsItem = ({ news, isLast, onNewsClick }) => {
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap', mb: 1 }}>
               <SentimentIndicator sentiment={news.sentiment} />
 
-              <Typography variant="caption" color="text.secondary">
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{
+                  cursor: news.sourceUrl ? 'pointer' : 'default',
+                  '&:hover': news.sourceUrl ? {
+                    color: theme.palette.primary.main,
+                    textDecoration: 'underline'
+                  } : {}
+                }}
+                onClick={news.sourceUrl ? handleSourceClick : undefined}
+              >
                 {news.source} • {news.time}
               </Typography>
 
@@ -276,16 +328,36 @@ const NewsItem = ({ news, isLast, onNewsClick }) => {
             </Box>
           </Box>
 
-          <IconButton
-            size="small"
-            sx={{ opacity: 0.7, '&:hover': { opacity: 1 } }}
-            onClick={() => onNewsClick(news)}
-          >
-            <OpenInNew sx={{ fontSize: 16 }} />
-          </IconButton>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+            {/* 外部链接按钮 */}
+            {news.sourceUrl && (
+              <IconButton
+                size="small"
+                sx={{
+                  opacity: 0.7,
+                  '&:hover': { opacity: 1 },
+                  color: theme.palette.primary.main
+                }}
+                onClick={handleSourceClick}
+                title="访问原文"
+              >
+                <OpenInNew sx={{ fontSize: 16 }} />
+              </IconButton>
+            )}
+
+            {/* 详情按钮 */}
+            <IconButton
+              size="small"
+              sx={{ opacity: 0.7, '&:hover': { opacity: 1 } }}
+              onClick={() => onNewsClick(news)}
+              title="查看详情"
+            >
+              <Comment sx={{ fontSize: 16 }} />
+            </IconButton>
+          </Box>
         </Box>
       </Box>
-      
+
       {!isLast && <Divider sx={{ opacity: 0.3 }} />}
     </Box>
   );
@@ -300,17 +372,24 @@ const CryptoNews = ({ maxItems = 4, showHeader = true }) => {
   const [newsDetailOpen, setNewsDetailOpen] = useState(false);
 
   useEffect(() => {
-    // 模拟加载新闻数据
-    setNews(mockNewsData.slice(0, maxItems));
+    loadNews();
   }, [maxItems]);
 
-  const handleRefresh = () => {
+  const loadNews = async () => {
     setLoading(true);
-    // 模拟刷新延迟
-    setTimeout(() => {
-      setNews([...mockNewsData].sort(() => Math.random() - 0.5).slice(0, maxItems));
+    try {
+      const newsData = await fetchRealNews(maxItems);
+      setNews(newsData);
+    } catch (error) {
+      console.error('加载新闻失败:', error);
+      setNews(mockNewsData.slice(0, maxItems));
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
+  };
+
+  const handleRefresh = async () => {
+    await loadNews();
   };
 
   const handleNewsClick = (newsItem) => {

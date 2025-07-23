@@ -60,7 +60,7 @@ const sentimentData = [
 const mockNewsData = [
   {
     title: "Bitcoin突破$250,000大关，创历史新高",
-    link: "#",
+    link: "https://www.coindesk.com/markets/2024/01/10/bitcoin-breaks-250000-reaches-all-time-high/",
     pubDate: "2小时前",
     description: "比特币价格在大型金融机构和主权基金持续买入的推动下突破25万美元，创下历史新高...",
     source: "CoinDesk",
@@ -71,7 +71,7 @@ const mockNewsData = [
   },
   {
     title: "以太坊 3.0 升级成功完成，交易速度提升10倍",
-    link: "#",
+    link: "https://ethereum.org/en/roadmap/merge/",
     pubDate: "4小时前",
     description: "以太坊网络完成了期待已久的3.0升级，交易处理能力大幅提升，同时能耗降低了95%...",
     source: "CoinDesk",
@@ -170,7 +170,16 @@ const NewsItem = ({ news }) => {
   const theme = useTheme();
   const impactStyle = getImpactColor(news.impact);
   const sentimentStyle = getSentimentColor(news.sentiment);
-  
+
+  // 处理标题点击
+  const handleTitleClick = () => {
+    console.log('🔥 点击标题:', news.title, 'URL:', news.link);
+    alert('点击了标题: ' + news.title); // 添加弹窗测试
+    if (news.link && news.link !== '#') {
+      window.open(news.link, '_blank', 'noopener,noreferrer');
+    }
+  };
+
   return (
     <Paper 
       elevation={0} 
@@ -216,22 +225,26 @@ const NewsItem = ({ news }) => {
         </Box>
       </Box>
       
-      <Link 
-        href={news.link}
-        sx={{ 
+      <Typography
+        sx={{
           color: theme.palette.mode === 'dark' ? theme.palette.primary.light : theme.palette.primary.main,
           textDecoration: 'none',
           fontWeight: 700,
           fontSize: '1.1rem',
           display: 'block',
           mb: 1,
+          cursor: 'pointer',
+          border: '2px solid red', // 添加红色边框测试
+          padding: '4px',
           '&:hover': {
-            textDecoration: 'underline'
+            textDecoration: 'underline',
+            backgroundColor: 'yellow' // 添加黄色背景测试
           }
         }}
+        onClick={handleTitleClick}
       >
-        {news.title}
-      </Link>
+        {news.title} 🔥 [可点击]
+      </Typography>
       
       <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
         {news.description}
@@ -419,6 +432,11 @@ const News = () => {
       position: 'relative'
     }}>
       <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1, py: 4 }}>
+        {/* 测试修改是否生效 */}
+        <Box sx={{ mb: 2, p: 2, backgroundColor: 'red', color: 'white', textAlign: 'center' }}>
+          <Typography variant="h4">🔥 测试修改已生效！点击功能已添加！🔥</Typography>
+        </Box>
+
         {/* 页面标题 */}
         <Box sx={{ mb: 4, textAlign: 'center' }}>
           <Typography

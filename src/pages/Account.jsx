@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Box, Typography, Paper, Grid, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, List, ListItem, ListItemText, ListItemSecondaryAction, Switch, Divider, Card, useMediaQuery, Fade, Slide } from '@mui/material';
+import { Box, Typography, Paper, Grid, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, List, ListItem, ListItemText, ListItemSecondaryAction, Switch, Divider, Card, useMediaQuery, Fade, Slide, Container } from '@mui/material';
 import { styled, useTheme, alpha, keyframes } from '@mui/system';
 import { ArrowUpward, ArrowDownward, Wallet, History, Settings as SettingsIcon, TrendingUp, CreditCard, Visibility, TrendingDown } from '@mui/icons-material';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, Area, AreaChart, XAxis, YAxis } from 'recharts';
@@ -29,6 +29,11 @@ const pulse = keyframes`
   50% { opacity: 0.8; transform: scale(1.05); }
 `;
 
+const float = keyframes`
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+`;
+
 
 
 
@@ -51,7 +56,7 @@ const GlassmorphicPaper = styled(Paper)(({ theme }) => ({
           boxShadow: '0 10px 40px 0 rgba(0, 0, 0, 0.37)',
         }
       : {
-          backgroundColor: 'rgba(255, 255, 255, 0.85)',
+          backgroundColor: 'rgba(255, 255, 255, 0.25)',
           backdropFilter: 'blur(20px)',
           border: `1px solid ${theme.palette.divider}`,
           boxShadow: '0 10px 40px rgba(145, 158, 171, 0.2)',
@@ -181,7 +186,7 @@ const AssetIconWrapper = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: theme.palette.mode === 'dark' ? alpha(theme.palette.background.paper, 0.4) : alpha(theme.palette.background.paper, 0.8),
+    backgroundColor: theme.palette.mode === 'dark' ? 'rgba(22, 27, 34, 0.4)' : 'rgba(255, 255, 255, 0.8)',
     boxShadow: `0 4px 12px ${alpha(theme.palette.common.black, theme.palette.mode === 'dark' ? 0.3 : 0.1)}`,
     padding: 6,
     border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
@@ -866,7 +871,27 @@ function Account() {
     };
 
     return (
-        <Box sx={{ width: '100%' }}>
+        <Box sx={{
+            width: '100%',
+            minHeight: '100vh',
+            background: theme.palette.mode === 'dark'
+                ? 'radial-gradient(ellipse at top, rgba(102, 126, 234, 0.1) 0%, rgba(15, 23, 42, 0.9) 50%), linear-gradient(135deg, #0f172a 0%, #1e293b 100%)'
+                : 'radial-gradient(ellipse at top, rgba(59, 130, 246, 0.08) 0%, rgba(255, 255, 255, 0.9) 50%), linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
+            position: 'relative',
+            overflow: 'hidden'
+        }}>
+            {/* 动态背景元素 */}
+            <Box sx={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                opacity: 0.05,
+                background: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23${theme.palette.primary.main.slice(1)}' fill-opacity='0.4'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+                animation: `${float} 20s ease-in-out infinite`
+            }} />
+
             {/* Add global style to remove focus outlines */}
             <style jsx global>{`
                 button:focus, [role="button"]:focus, .MuiButtonBase-root:focus, .MuiButton-root:focus {
@@ -903,8 +928,9 @@ function Account() {
                     outline: none !important;
                 }
             `}</style>
-            
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+
+            <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1, py: 4 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
                 <Box
                     sx={{
                         width: 6,
@@ -1058,7 +1084,7 @@ function Account() {
                         mb: 2,
                         display: 'flex',
                         alignItems: 'center',
-                        backgroundColor: theme.palette.mode === 'dark' ? alpha(theme.palette.background.paper, 0.4) : alpha(theme.palette.background.paper, 0.7),
+                        backgroundColor: theme.palette.mode === 'dark' ? 'rgba(22, 27, 34, 0.4)' : 'rgba(255, 255, 255, 0.7)',
                         backdropFilter: 'blur(10px)',
                         borderRadius: 2,
                         py: 1.5,
@@ -1386,6 +1412,7 @@ function Account() {
                     </Grid>
                 </Grid>
             </TabPanel>
+            </Container>
         </Box>
     );
 }

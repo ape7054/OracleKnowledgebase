@@ -328,129 +328,150 @@ const staticMarketData = [
   { name: 'Stellar', symbol: 'XLM', price: '$0.48', change: '+6.3%', icon: XlmIcon, sparkline: [0.44, 0.45, 0.46, 0.49, 0.48] }
 ];
 
-// 高级统计卡片
+// 专业金融Dashboard统计卡片
 const PremiumStatCard = ({ title, value, icon, color, trend, subtitle }) => {
   const theme = useTheme();
 
   return (
-    <PremiumCard variant="premium" sx={{
+    <Card sx={{
       position: 'relative',
+      height: '160px',
+      minHeight: '160px',
+      borderRadius: '12px',
       background: theme.palette.mode === 'dark'
-        ? `linear-gradient(135deg, ${alpha(color, 0.15)} 0%, ${alpha(color, 0.05)} 100%)`
-        : `linear-gradient(135deg, ${alpha(color, 0.08)} 0%, ${alpha(color, 0.03)} 100%)`,
-      border: `1px solid ${alpha(color, 0.2)}`,
+        ? 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)'
+        : 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+      border: theme.palette.mode === 'dark'
+        ? '1px solid rgba(148, 163, 184, 0.1)'
+        : '1px solid rgba(226, 232, 240, 0.8)',
+      boxShadow: theme.palette.mode === 'dark'
+        ? '0 1px 3px rgba(0, 0, 0, 0.3)'
+        : '0 1px 3px rgba(0, 0, 0, 0.1)',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      cursor: 'pointer',
+      overflow: 'hidden',
+      display: 'flex',
+      flexDirection: 'column',
       '&:hover': {
-        background: theme.palette.mode === 'dark'
-          ? `linear-gradient(135deg, ${alpha(color, 0.25)} 0%, ${alpha(color, 0.1)} 100%)`
-          : `linear-gradient(135deg, ${alpha(color, 0.15)} 0%, ${alpha(color, 0.08)} 100%)`,
-        border: `1px solid ${alpha(color, 0.4)}`,
-        boxShadow: `0 20px 60px ${alpha(color, 0.3)}`,
+        transform: 'translateY(-4px)',
+        boxShadow: theme.palette.mode === 'dark'
+          ? '0 10px 25px rgba(0, 0, 0, 0.4)'
+          : '0 10px 25px rgba(0, 0, 0, 0.15)',
+        border: theme.palette.mode === 'dark'
+          ? '1px solid rgba(148, 163, 184, 0.2)'
+          : '1px solid rgba(226, 232, 240, 1)',
       }
     }}>
-      {/* 背景装饰 */}
+      {/* 顶部装饰条 */}
       <Box sx={{
         position: 'absolute',
-        top: -20,
-        right: -20,
-        width: 100,
-        height: 100,
-        borderRadius: '50%',
-        background: `radial-gradient(circle, ${alpha(color, 0.1)} 0%, transparent 70%)`,
-        pointerEvents: 'none'
+        top: 0,
+        left: 0,
+        right: 0,
+        height: '3px',
+        background: `linear-gradient(90deg, ${color} 0%, ${alpha(color, 0.6)} 100%)`
       }} />
 
-      <Stack direction="row" spacing={3} alignItems="center" sx={{ position: 'relative', zIndex: 1 }}>
-        {/* 图标 */}
-        <Box sx={{
-          p: 2,
-          borderRadius: '20px',
-          background: `linear-gradient(135deg, ${color} 0%, ${alpha(color, 0.8)} 100%)`,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          minWidth: 64,
-          minHeight: 64,
-          boxShadow: `0 8px 32px ${alpha(color, 0.4)}`,
-          position: 'relative',
-          '& svg': {
-            color: '#fff !important',
-            fontSize: '2.5rem !important',
-            filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))'
-          },
-          '&::before': {
-            content: '""',
-            position: 'absolute',
-            inset: -2,
-            borderRadius: '22px',
-            background: `linear-gradient(135deg, ${color}, transparent)`,
-            zIndex: -1,
-            opacity: 0.5,
-          }
-        }}>
-          {icon}
+      <CardContent sx={{
+        p: 2,
+        height: 'calc(100% - 3px)', // 减去顶部装饰条的高度
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        flex: 1,
+        '&:last-child': { pb: 2 }
+      }}>
+        {/* 头部区域 */}
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.5 }}>
+          {/* 图标 */}
+          <Box
+            sx={{
+              width: 40,
+              height: 40,
+              borderRadius: '10px',
+              background: `linear-gradient(135deg, ${color} 0%, ${alpha(color, 0.8)} 100%)`,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: `0 3px 8px ${alpha(color, 0.3)}`,
+              '& svg': {
+                color: '#fff',
+                fontSize: '1.3rem'
+              }
+            }}
+          >
+            {icon}
+          </Box>
+
+          {/* 趋势标签 */}
+          {trend && (
+            <Chip
+              label={trend}
+              size="small"
+              sx={{
+                height: '22px',
+                fontSize: '0.7rem',
+                fontWeight: 600,
+                background: trend.startsWith('+')
+                  ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
+                  : 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+                color: '#fff',
+                border: 'none',
+                '& .MuiChip-label': {
+                  px: 1
+                }
+              }}
+            />
+          )}
         </Box>
 
-        {/* 内容 */}
-        <Box sx={{ flex: 1 }}>
+        {/* 标题 */}
+        <Typography
+          variant="body2"
+          sx={{
+            color: theme.palette.text.secondary,
+            fontSize: '0.75rem',
+            fontWeight: 500,
+            textTransform: 'uppercase',
+            letterSpacing: '0.3px',
+            mb: 0.5,
+            lineHeight: 1.2
+          }}
+        >
+          {title}
+        </Typography>
+
+        {/* 主要数值 */}
+        <Typography
+          variant="h4"
+          sx={{
+            fontWeight: 700,
+            fontSize: { xs: '1.5rem', md: '1.75rem' },
+            lineHeight: 1.1,
+            color: theme.palette.text.primary,
+            mb: subtitle ? 0.25 : 0
+          }}
+        >
+          {value}
+        </Typography>
+
+        {/* 副标题 */}
+        {subtitle && (
           <Typography
-            variant="body2"
+            variant="caption"
             sx={{
               color: theme.palette.text.secondary,
-              mb: 0.5,
-              fontSize: '0.9rem',
-              fontWeight: 500,
-              textTransform: 'uppercase',
-              letterSpacing: '0.5px'
+              fontSize: '0.7rem',
+              fontWeight: 400,
+              opacity: 0.8,
+              lineHeight: 1.2
             }}
           >
-            {title}
+            {subtitle}
           </Typography>
-
-          <Typography
-            variant="h4"
-            sx={{
-              fontWeight: 800,
-              background: `linear-gradient(135deg, ${color} 0%, ${alpha(color, 0.8)} 100%)`,
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              mb: subtitle ? 0.5 : 0,
-              fontSize: { xs: '1.5rem', md: '2rem' }
-            }}
-          >
-            {value}
-          </Typography>
-
-          {subtitle && (
-            <Typography
-              variant="caption"
-              sx={{
-                color: theme.palette.text.secondary,
-                fontSize: '0.8rem'
-              }}
-            >
-              {subtitle}
-            </Typography>
-          )}
-
-          {trend && (
-            <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
-              <Chip
-                size="small"
-                label={trend}
-                sx={{
-                  background: trend.startsWith('+')
-                    ? 'linear-gradient(135deg, #10b981, #059669)'
-                    : 'linear-gradient(135deg, #ef4444, #dc2626)',
-                  color: 'white',
-                  fontWeight: 600,
-                  fontSize: '0.75rem'
-                }}
-              />
-            </Box>
-          )}
-        </Box>
-      </Stack>
-    </PremiumCard>
+        )}
+      </CardContent>
+    </Card>
   );
 };
   

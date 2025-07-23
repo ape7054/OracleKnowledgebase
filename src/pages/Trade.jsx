@@ -1,8 +1,14 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Box, Grid, Typography, TextField, MenuItem, Button, Slider, Paper, Divider, Chip } from '@mui/material';
-import { styled, useTheme, alpha } from '@mui/system';
+import { styled, useTheme, alpha, keyframes } from '@mui/system';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
+
+// 动画定义
+const float = keyframes`
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+`;
 
 const GlassmorphicPaper = styled(Paper)(({ theme }) => ({
     padding: '24px',
@@ -20,7 +26,8 @@ const GlassmorphicPaper = styled(Paper)(({ theme }) => ({
           boxShadow: '0 10px 40px 0 rgba(0, 0, 0, 0.45)',
         }
       : {
-          backgroundColor: theme.palette.background.paper,
+          backgroundColor: 'rgba(255, 255, 255, 0.7)',
+          backdropFilter: 'blur(16px)',
           border: `1px solid ${theme.palette.divider}`,
           boxShadow: theme.shadows[8],
         }),
@@ -957,7 +964,28 @@ function Trade() {
     };
 
   return (
-      <Box sx={{ width: '100%', maxWidth: '100%', minHeight: '80vh' }}>
+      <Box sx={{
+        width: '100%',
+        maxWidth: '100%',
+        minHeight: '100vh',
+        background: theme.palette.mode === 'dark'
+          ? 'radial-gradient(ellipse at top, rgba(102, 126, 234, 0.1) 0%, rgba(15, 23, 42, 0.9) 50%), linear-gradient(135deg, #0f172a 0%, #1e293b 100%)'
+          : 'radial-gradient(ellipse at top, rgba(59, 130, 246, 0.08) 0%, rgba(255, 255, 255, 0.9) 50%), linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+        {/* 动态背景元素 */}
+        <Box sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          opacity: 0.05,
+          background: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23${theme.palette.primary.main.slice(1)}' fill-opacity='0.4'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          animation: `${float} 20s ease-in-out infinite`
+        }} />
+
         <style jsx global>{`
           button:focus, [role="button"]:focus, .MuiButtonBase-root:focus, .MuiButtonBase-root.MuiButton-root:focus {
             outline: none !important;
@@ -973,7 +1001,8 @@ function Trade() {
             box-shadow: none !important;
           }
         `}</style>
-        
+
+        <Box sx={{ position: 'relative', zIndex: 1, py: 4, px: 2 }}>
         <Box sx={{
           display: 'flex',
           alignItems: 'center',
@@ -1197,6 +1226,7 @@ function Trade() {
                 )}
             </Grid>
         </Grid>
+        </Box>
       </Box>
   );
 }

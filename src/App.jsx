@@ -334,7 +334,7 @@ function AppContent() {
           component="main"
           sx={{
             flexGrow: 1, // This allows the content area to take up the remaining space.
-            bgcolor: 'background.default',
+            // bgcolor: 'background.default', // Removed to allow page-specific backgrounds
             overflow: 'auto', // Add a scrollbar if content overflows.
             width: '100%',
             p: 3, // Padding on all sides.
