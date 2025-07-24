@@ -334,7 +334,29 @@ func TestGetTrades(t *testing.T) {
 
 ## 🚀 部署配置
 
-### Docker配置
+### 开发环境与生产环境区别
+
+| 环境 | 前端 | 后端 | 数据库 |
+|------|------|------|--------|
+| **开发环境** | Vite 开发服务器<br>(localhost:5173) | Go 直接运行<br>(localhost:8080) | 本地 MySQL<br>(localhost:3306) |
+| **生产环境** | Nginx 静态文件服务 | Docker 容器 | Docker MySQL 容器 |
+
+### 开发环境配置
+```go
+// 开发环境数据库连接示例
+func InitDatabase() (*sql.DB, error) {
+    dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+        "market_pulse_user",
+        "wBYXZkiLTExiEAHF",
+        "localhost",  // 本地MySQL
+        "3306",
+        "market_pulse_db")
+    
+    return sql.Open("mysql", dsn)
+}
+```
+
+### 生产环境 Docker 配置
 ```dockerfile
 # 后端Dockerfile
 FROM golang:1.22-alpine AS builder
@@ -349,6 +371,42 @@ RUN apk --no-cache add ca-certificates
 WORKDIR /root/
 COPY --from=builder /app/main .
 CMD ["./main"]
+```
+
+### Docker Compose 部署配置
+```yaml
+services:
+  # 数据库服务
+  db:
+    image: mysql:8.0
+    container_name: market-pulse-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_NAME:-market_pulse_db}
+      MYSQL_USER: ${DB_USER:-market_pulse_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-wBYXZkiLTExiEAHF}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - market-pulse-network
+
+  # 后端服务
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: market-pulse-backend
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db  # 容器名称作为主机名
+      DB_PORT: 3306
+      DB_USER: ${DB_USER:-market_pulse_user}
+      DB_PASSWORD: ${DB_PASSWORD:-wBYXZkiLTExiEAHF}
+      DB_NAME: ${DB_NAME:-market_pulse_db}
+    networks:
+      - market-pulse-network
 ```
 
 ### Nginx配置

@@ -3,7 +3,7 @@ echo Starting Full-Stack Development Environment...
 
 echo.
 echo ========================================
-echo   MarketPulse Development Setup
+echo   MarketPulse Development Setup (No Docker)
 echo ========================================
 
 echo.
@@ -31,29 +31,29 @@ if errorlevel 1 (
 echo ✓ Go:
 go version
 
-:: Check Docker (for database)
-echo Checking Docker...
-docker --version >nul 2>&1
-if errorlevel 1 (
-    echo ERROR: Docker is not installed or not running!
-    echo Please install Docker Desktop and make sure it's running
-    goto :error
-)
-echo ✓ Docker:
-docker --version
+:: Check Docker (for database) - SKIPPED
+rem echo Checking Docker...
+rem docker --version >nul 2>&1
+rem if errorlevel 1 (
+rem     echo ERROR: Docker is not installed or not running!
+rem     echo Please install Docker Desktop and make sure it's running
+rem     goto :error
+rem )
+rem echo ✓ Docker:
+rem docker --version
 
 echo.
-echo 2. Starting database (MySQL in Docker)...
-docker-compose up -d db
-if errorlevel 1 (
-    echo ERROR: Failed to start database!
-    goto :error
-)
-echo ✓ Database starting...
+echo 2. Starting database (MySQL in Docker)... - SKIPPED
+rem docker-compose up -d db
+rem if errorlevel 1 (
+rem     echo ERROR: Failed to start database!
+rem     goto :error
+rem )
+rem echo ✓ Database starting...
 
 echo.
-echo 3. Waiting for database to be ready...
-timeout /t 10 /nobreak >nul
+echo 3. Waiting for database to be ready... - SKIPPED
+rem timeout /t 10 /nobreak >nul
 
 echo.
 echo 4. Installing frontend dependencies...
@@ -78,11 +78,11 @@ start "Frontend Server" cmd /k "echo Starting Vite frontend server... && npm run
 
 echo.
 echo ========================================
-echo   🚀 Development Environment Ready!
+echo   🚀 Development Environment Ready! (No Docker)
 echo ========================================
 echo   Frontend:  http://localhost:5173
 echo   Backend:   http://localhost:8080
-echo   Database:  localhost:3307
+echo   Database:  Not started (Docker is disabled)
 echo   API Test:  http://localhost:8080/api/health
 echo ========================================
 echo.
