@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Box,
   Container,
@@ -6,37 +6,34 @@ import {
   Card,
   CardContent,
   Grid,
-  Paper,
   Chip,
-  Avatar,
   IconButton,
   Button,
-  TextField,
-  InputAdornment,
   Divider,
   Stack,
   Badge,
   Fade,
-  ButtonGroup,
-  useMediaQuery
+  useMediaQuery,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Slide
 } from '@mui/material';
 import {
-  Search,
   TrendingUp,
   TrendingDown,
   AccessTime,
   Visibility,
   BookmarkBorder,
   Share,
-  FilterList,
   Notifications,
-  Star,
-  Timeline,
   Assessment,
   FiberManualRecord,
   OpenInNew,
   Refresh,
-  ArrowUpward
+  Close,
+  Source
 } from '@mui/icons-material';
 import { useTheme, alpha, keyframes } from '@mui/material/styles';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
@@ -78,9 +75,9 @@ const fetchCryptoNews = async () => {
 
     if (data.status === 'ok' && data.items) {
       return data.items.slice(0, 20).map((item, index) => ({
-        id: index + 1,
+        id: item.guid || index + 1,
         title: item.title,
-        summary: item.description?.replace(/<[^>]*>/g, '').substring(0, 200) + '...' || 'No summary available',
+        summary: item.description?.replace(/<[^>]*>/g, '').substring(0, 400) + '...' || 'No summary available',
         source: 'CoinDesk',
         time: formatTimeAgo(new Date(item.pubDate)),
         category: getCategoryFromContent(item.title + ' ' + item.description),
@@ -153,6 +150,11 @@ const getImpactFromContent = (title) => {
   return 'low';
 };
 
+// 弹窗过渡动画
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
 // Fallback news data (used when API fails)
 const getFallbackNews = () => [
   {
@@ -221,6 +223,17 @@ const NewsProfessional = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [news, setNews] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [newArticleId, setNewArticleId] = useState(null); // 用于高亮新文章
+  const ws = useRef(null);
+  const [selectedArticle, setSelectedArticle] = useState(null); // 用于弹窗显示的文章
+
+  const handleOpenDialog = (article) => {
+    setSelectedArticle(article);
+  };
+
+  const handleCloseDialog = () => {
+    setSelectedArticle(null);
+  };
 
   // 手动刷新新闻
   const handleRefreshNews = async () => {
@@ -236,7 +249,7 @@ const NewsProfessional = () => {
   };
 
   useEffect(() => {
-    // 获取真实新闻数据
+    // 1. 先通过HTTP加载初始新闻列表
     const loadNews = async () => {
       setLoading(true);
       try {
@@ -253,11 +266,51 @@ const NewsProfessional = () => {
 
     loadNews();
 
-    // 设置自动刷新，每5分钟获取一次新数据
-    const refreshInterval = setInterval(loadNews, 5 * 60 * 1000);
+    // 2. 建立WebSocket连接以接收实时更新
+    const connect = () => {
+      // 假设后端在 /ws/news 提供新闻的WebSocket服务
+      const wsUrl = `ws://localhost:8080/ws/news`;
+      ws.current = new WebSocket(wsUrl);
 
-    return () => clearInterval(refreshInterval);
+      ws.current.onopen = () => {
+        console.log('新闻WebSocket已连接');
+      };
+
+      ws.current.onmessage = (event) => {
+        try {
+          const newArticle = JSON.parse(event.data);
+          // 将新文章添加到列表顶部
+          setNews(prevNews => [newArticle, ...prevNews]);
+          // 设置新文章ID用于高亮
+          setNewArticleId(newArticle.id);
+          // 几秒后移除高亮
+          setTimeout(() => setNewArticleId(null), 5000);
+        } catch (error) {
+          console.error('解析WebSocket消息失败:', error);
+        }
+      };
+
+      ws.current.onerror = (error) => {
+        console.error('WebSocket 错误:', error);
+      };
+
+      ws.current.onclose = () => {
+        console.log('新闻WebSocket已断开. 5秒后尝试重连...');
+        // 简单的重连逻辑
+        setTimeout(connect, 5000);
+      };
+    };
+
+    connect();
+
+    // 组件卸载时关闭WebSocket连接
+    return () => {
+      if (ws.current) {
+        ws.current.close();
+      }
+    };
   }, []);
+
 
   const getSentimentColor = (sentiment) => {
     switch (sentiment) {
@@ -485,21 +538,24 @@ const NewsProfessional = () => {
           {/* 左侧新闻列表 */}
           <Grid item xs={12} lg={8}>
             <Stack spacing={3}>
-              {news.map((item, index) => (
+              {news.map((item, index) => {
+                const isNew = item.id === newArticleId;
+                return (
                 <Fade in timeout={1000 + index * 200} key={item.id}>
                   <Card
-                    onClick={() => item.link && window.open(item.link, '_blank')}
+                    onClick={() => handleOpenDialog(item)}
                     sx={{
                       background: theme.palette.mode === 'dark'
                         ? 'linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%)'
                         : 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.98) 100%)',
-                      border: `1px solid ${alpha(theme.palette.primary.main, 0.08)}`,
+                      border: isNew ? `2px solid ${theme.palette.success.main}` : `1px solid ${alpha(theme.palette.primary.main, 0.08)}`,
                       borderRadius: 4,
                       overflow: 'hidden',
                       transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                      cursor: item.link ? 'pointer' : 'default',
+                      cursor: 'pointer',
                       backdropFilter: 'blur(20px)',
                       position: 'relative',
+                      boxShadow: isNew ? `0 0 25px ${alpha(theme.palette.success.main, 0.5)}` : 'none',
                       '&::before': {
                         content: '""',
                         position: 'absolute',
@@ -513,7 +569,7 @@ const NewsProfessional = () => {
                       },
                       '&:hover': {
                         transform: 'translateY(-8px) scale(1.02)',
-                        boxShadow: `0 20px 40px ${alpha(theme.palette.primary.main, 0.15)}`,
+                        boxShadow: isNew ? `0 0 25px ${alpha(theme.palette.success.main, 0.7)}` : `0 20px 40px ${alpha(theme.palette.primary.main, 0.15)}`,
                         border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
                         '&::before': {
                           opacity: 1
@@ -651,7 +707,7 @@ const NewsProfessional = () => {
                     </CardContent>
                   </Card>
                 </Fade>
-              ))}
+              )})}
             </Stack>
           </Grid>
 
@@ -798,6 +854,84 @@ const NewsProfessional = () => {
           </Grid>
         </Grid>
       </Container>
+
+      {/* 新闻详情弹窗 */}
+      <Dialog
+        open={Boolean(selectedArticle)}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleCloseDialog}
+        aria-describedby="alert-dialog-slide-description"
+        maxWidth="md"
+        fullWidth
+        sx={{
+          '& .MuiDialog-paper': {
+            borderRadius: 4,
+            background: alpha(theme.palette.background.paper, 0.85),
+            backdropFilter: 'blur(20px)',
+          }
+        }}
+      >
+        {selectedArticle && (
+          <>
+            <DialogTitle sx={{ p: 3, pb: 2 }}>
+              <Typography variant="h5" component="div" sx={{ fontWeight: 'bold' }}>
+                {selectedArticle.title}
+              </Typography>
+              <IconButton
+                aria-label="close"
+                onClick={handleCloseDialog}
+                sx={{
+                  position: 'absolute',
+                  right: 8,
+                  top: 8,
+                  color: (theme) => theme.palette.grey[500],
+                }}
+              >
+                <Close />
+              </IconButton>
+            </DialogTitle>
+            <DialogContent dividers sx={{ p: 3, borderColor: alpha(theme.palette.divider, 0.2) }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 2, mb: 2, color: 'text.secondary' }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Source fontSize="small" />
+                    <Typography variant="body2">{selectedArticle.source}</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <AccessTime fontSize="small" />
+                    <Typography variant="body2">{selectedArticle.time}</Typography>
+                  </Box>
+              </Box>
+              <Box
+                component="img"
+                src={selectedArticle.image}
+                alt={selectedArticle.title}
+                sx={{
+                  width: '100%',
+                  maxHeight: '400px',
+                  objectFit: 'cover',
+                  borderRadius: 2,
+                  my: 2,
+                  boxShadow: '0 4px 16px rgba(0,0,0,0.1)'
+                }}
+              />
+              <Typography gutterBottom sx={{ lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>
+                {selectedArticle.summary.replace(/...$/, '')}
+              </Typography>
+            </DialogContent>
+            <DialogActions sx={{ p: 2 }}>
+              <Button onClick={handleCloseDialog}>关闭</Button>
+              <Button 
+                variant="contained" 
+                onClick={() => window.open(selectedArticle.link, '_blank')}
+                endIcon={<OpenInNew />}
+              >
+                阅读原文
+              </Button>
+            </DialogActions>
+          </>
+        )}
+      </Dialog>
     </Box>
   );
 };

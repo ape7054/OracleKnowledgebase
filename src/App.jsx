@@ -9,8 +9,8 @@ import { ThemeContext } from './context/ThemeContext';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import Trade from './pages/Trade';
-import Account from './pages/AccountPremium';
-import News from './pages/NewsProfessional';
+import Account from './pages/Account';
+import News from './pages/News';
 import { styled } from '@mui/system';
 
 // Define the width of the navigation drawer
