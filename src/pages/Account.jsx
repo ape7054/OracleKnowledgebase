@@ -46,7 +46,7 @@ import DogeIcon from 'cryptocurrency-icons/svg/color/doge.svg?react';
 // Premium animations
 const float = keyframes`
   0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-8px); }
+  50% { transform: translateY(-12px); }
 `;
 
 const glow = keyframes`

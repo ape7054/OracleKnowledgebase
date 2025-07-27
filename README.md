@@ -86,41 +86,49 @@ MarketPulse 是一个现代化的加密货币市场智能平台，采用全栈�
 
 ### 📋 环境要求
 确保您的系统已安装以下软件：
-- ✅ **Node.js** (v18+) - 前端开发环境
-- ✅ **Go** (v1.22+) - 后端开发环境
-- ✅ **Docker Desktop** - 数据库容器
-- ✅ **Git** - 版本控制
+- ✅ **Node.js** (v18+)
+- ✅ **Go** (v1.22+)
+- ✅ **Docker & Docker Compose**
+- ✅ **Git**
 
-### ⚡ 一键启动
-```bash
-# Windows用户
-start-dev.bat
-
-# Linux/Mac用户 (即将支持)
-./start-dev.sh
-```
-
-🎉 **启动成功后访问**：
-- 🌐 **前端应用**: http://localhost:5173
-- 🔧 **后端API**: http://localhost:8080/api/health
-- 🗄️ **数据库**: localhost:3307 (用户: market_pulse_user)
-
-### 🔧 手动启动 (可选)
+### ⚡ 开发环境一键启动 (推荐)
+这是启动本地开发环境最简单的方式，包含了后端服务和数据库。
 ```bash
 # 1. 克隆项目
 git clone https://github.com/ape7054/trading-dashboard.git
 cd market-pulse
 
-# 2. 启动数据库容器
-docker-compose up -d db
+# 2. 启动 Docker 容器 (后端 + 数据库)
+# 这将以后台模式启动所有在 docker-compose.yml 中定义的服务
+docker-compose up -d
 
-# 3. 安装前端依赖
+# 3. 在项目根目录安装前端依赖
 npm install
 
-# 4. 启动后端服务 (新终端)
-cd backend && go run cmd/market-pulse-backend/main.go
+# 4. 启动前端开发服务器
+# 前端应用将在 http://localhost:5173 上运行
+npm run dev
+```
 
-# 5. 启动前端开发服务器 (新终端)
+🎉 **开发环境访问地址**:
+- 🌐 **前端应用**: `http://localhost:5173`
+- 🔧 **后端健康检查**: `http://localhost:8080/api/health`
+- 🗄️ **数据库 (外部连接)**: 主机: `localhost`, 端口: `3307`
+
+### 🔧 手动启动 (可选)
+如果您不想使用 Docker，也可以在本地手动运行所有服务。
+```bash
+# 1. 启动数据库
+# 确保你本地有正在运行的 MySQL 8.0 实例
+
+# 2. 启动后端服务 (新终端)
+cd backend
+# (根据你的本地环境配置 .env 文件)
+go run cmd/market-pulse-backend/main.go
+
+# 3. 启动前端开发服务器 (新终端)
+# (返回根目录)
+npm install
 npm run dev
 ```
 
@@ -137,7 +145,7 @@ market-pulse/
 │   ├── 📁 context/           # React Context
 │   ├── 📁 pages/             # 页面组件
 │   │   ├── 🏠 Home.jsx       # 着陆页
-│   │   ├── 📊 Dashboard.jsx  # 仪表板
+│   │   ├── �� Dashboard.jsx  # 仪表板
 │   │   ├── 💹 Trade.jsx      # 交易界面
 │   │   └── 👤 Account.jsx    # 账户管理
 │   ├── ⚛️ App.jsx            # 主应用组件
@@ -223,7 +231,7 @@ market-pulse/
 - **🐛 Bug修复** - 发现并修复问题
 - **✨ 新功能** - 添加有用的新特性
 - **📚 文档改进** - 完善文档和注释
-- **🎨 UI/UX优化** - 改进用户界面和体验
+- **�� UI/UX优化** - 改进用户界面和体验
 - **🧪 测试补充** - 增加测试覆盖率
 - **⚡ 性能优化** - 提升应用性能
 
@@ -254,7 +262,7 @@ market-pulse/
 #### `/AI-Protocol-Lab/` - 完整AI协作工具箱 🤖
 - 📖 [工具箱总览](AI-Protocol-Lab/README.md) - 完整功能介绍
 - 🚀 [快速上下文指南](AI-Protocol-Lab/project-docs/ai-collaboration/AI-CONTEXT-GUIDE.md) - 30秒了解项目状态
-- 📊 [项目状态报告](AI-Protocol-Lab/project-docs/ai-collaboration/PROJECT-STATUS-2025-07-20.md) - 完整进度跟踪
+- �� [项目状态报告](AI-Protocol-Lab/project-docs/ai-collaboration/PROJECT-STATUS-2025-07-20.md) - 完整进度跟踪
 - 🎯 [Prompt库](AI-Protocol-Lab/prompts/) - 专业AI助手提示词
 - 💬 [AI对话记录](AI-Protocol-Lab/conversations/) - AI开发对话历史
 - 🔧 [工具脚本](AI-Protocol-Lab/scripts/) - 自动化工具
