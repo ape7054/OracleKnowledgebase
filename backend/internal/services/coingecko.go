@@ -17,16 +17,16 @@ type CoinGeckoService struct {
 
 // CoinData 表示单个加密货币的数据
 type CoinData struct {
-	ID                string  `json:"id"`
-	Symbol            string  `json:"symbol"`
-	Name              string  `json:"name"`
-	CurrentPrice      float64 `json:"current_price"`
-	MarketCap         float64 `json:"market_cap"`
-	MarketCapRank     int     `json:"market_cap_rank"`
-	TotalVolume       float64 `json:"total_volume"`
-	PriceChange24h    float64 `json:"price_change_24h"`
+	ID                       string  `json:"id"`
+	Symbol                   string  `json:"symbol"`
+	Name                     string  `json:"name"`
+	CurrentPrice             float64 `json:"current_price"`
+	MarketCap                float64 `json:"market_cap"`
+	MarketCapRank            int     `json:"market_cap_rank"`
+	TotalVolume              float64 `json:"total_volume"`
+	PriceChange24h           float64 `json:"price_change_24h"`
 	PriceChangePercentage24h float64 `json:"price_change_percentage_24h"`
-	LastUpdated       string  `json:"last_updated"`
+	LastUpdated              string  `json:"last_updated"`
 }
 
 // HistoricalPrice 表示历史价格数据点
@@ -52,9 +52,9 @@ func NewCoinGeckoService() *CoinGeckoService {
 
 // GetTopCoins 获取市值排名前N的加密货币
 func (c *CoinGeckoService) GetTopCoins(limit int) ([]CoinData, error) {
-	url := fmt.Sprintf("%s/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=%d&page=1&sparkline=false", 
+	url := fmt.Sprintf("%s/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=%d&page=1&sparkline=false",
 		c.baseURL, limit)
-	
+
 	resp, err := c.httpClient.Get(url)
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch data from CoinGecko: %w", err)
@@ -81,7 +81,7 @@ func (c *CoinGeckoService) GetTopCoins(limit int) ([]CoinData, error) {
 // GetCoinByID 根据ID获取特定加密货币的详细信息
 func (c *CoinGeckoService) GetCoinByID(coinID string) (*CoinData, error) {
 	url := fmt.Sprintf("%s/coins/markets?vs_currency=usd&ids=%s", c.baseURL, coinID)
-	
+
 	resp, err := c.httpClient.Get(url)
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch coin data: %w", err)
@@ -117,7 +117,7 @@ func (c *CoinGeckoService) GetMultipleCoins(coinIDs []string) ([]CoinData, error
 
 	idsParam := strings.Join(coinIDs, ",")
 	url := fmt.Sprintf("%s/coins/markets?vs_currency=usd&ids=%s", c.baseURL, idsParam)
-	
+
 	resp, err := c.httpClient.Get(url)
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch coins data: %w", err)
@@ -143,9 +143,9 @@ func (c *CoinGeckoService) GetMultipleCoins(coinIDs []string) ([]CoinData, error
 
 // GetHistoricalPrices 获取指定加密货币的历史价格数据
 func (c *CoinGeckoService) GetHistoricalPrices(coinID string, days int) ([]HistoricalPrice, error) {
-	url := fmt.Sprintf("%s/coins/%s/market_chart?vs_currency=usd&days=%d", 
+	url := fmt.Sprintf("%s/coins/%s/market_chart?vs_currency=usd&days=%d",
 		c.baseURL, coinID, days)
-	
+
 	resp, err := c.httpClient.Get(url)
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch historical data: %w", err)
@@ -183,7 +183,7 @@ func (c *CoinGeckoService) GetHistoricalPrices(coinID string, days int) ([]Histo
 // GetSupportedCoins 获取支持的加密货币列表
 func (c *CoinGeckoService) GetSupportedCoins() ([]map[string]interface{}, error) {
 	url := fmt.Sprintf("%s/coins/list", c.baseURL)
-	
+
 	resp, err := c.httpClient.Get(url)
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch supported coins: %w", err)
@@ -210,7 +210,7 @@ func (c *CoinGeckoService) GetSupportedCoins() ([]map[string]interface{}, error)
 // Ping 检查CoinGecko API的连接状态
 func (c *CoinGeckoService) Ping() error {
 	url := fmt.Sprintf("%s/ping", c.baseURL)
-	
+
 	resp, err := c.httpClient.Get(url)
 	if err != nil {
 		return fmt.Errorf("failed to ping CoinGecko API: %w", err)

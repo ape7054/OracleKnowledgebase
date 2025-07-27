@@ -1,6 +1,6 @@
 # 📂 MarketPulse 开发文档中心
 
-欢迎来到 `MarketPulse` 项目的技术开发文档中心。本目录 (`/development`) 储存了项目从规划到实现的所有核心技术文档，是团队成员的技术“真理来源 (Source of Truth)”。
+欢迎来到 `MarketPulse` 项目的技术开发文档中心。本目录 (`/development`) 储存了项目从规划到实现的所有核心技术文档，是团队成员的技术"真理来源 (Source of Truth)"。
 
 ## 📚 文档索引
 
@@ -11,32 +11,34 @@
 | **[🗺️ 开发路线图 (ROADMAP)](./DEVELOPMENT-ROADMAP.md)** | 项目的阶段规划、功能排期、里程碑和未来方向。 | 了解项目**要做什么**以及**何时做**。 |
 | **[🏗️ 技术架构 (ARCHITECTURE)](./TECHNICAL-ARCHITECTURE.md)** | 系统的整体架构、技术选型、数据流和核心组件设计。 | 了解项目**如何构建**以及**技术决策**。 |
 | **[🌐 API接口规范 (API-SPEC)](./API-SPECIFICATION.md)** | 所有后端API的详细定义、请求/响应格式和使用示例。 | **前后端对接**和API功能查询。 |
-| **[🛠️ 开发与部署指南 (SETUP-GUIDE)](./setup-guide.md)** | 详细的环境搭建步骤、开发工作流和生产部署方法。 | **新成员上手**或进行**本地开发/部署**。 |
+| **[🐳 Docker开发指南](./DOCKER-SETUP-GUIDE.md)** | 详细的Docker开发环境设置和工作流。 | **使用Docker**进行开发和部署。 |
+| **[🛠️ 开发与部署指南](./setup-guide.md)** | 详细的环境搭建步骤和生产部署方法。 | 其他**开发方式**和**部署选项**。 |
 
 ---
 
-## 🚀 快速开始：本地开发
-
-本节内容提炼自 **[开发与部署指南](./setup-guide.md)**，方便快速启动。
+## 🚀 快速开始：Docker开发 (推荐)
 
 ### 1. 环境要求
+- **Docker** 和 **Docker Compose**
 - **Node.js** (v18+)
-- **Go** (v1.22+)
-- **MySQL** (v8.0+)
 
 ### 2. 启动开发环境
 ```bash
-# 在项目根目录运行此脚本 (Windows)
-./start-dev.bat
+# 启动后端和数据库
+docker-compose up -d
+
+# 启动前端开发服务器
+npm install
+npm run dev
 ```
-此脚本会自动检查依赖、安装前端包并同时启动前端和后端服务。
 
 ### 3. 访问地址
 - **前端服务**: `http://localhost:5173`
 - **后端服务**: `http://localhost:8080`
+- **数据库**: `localhost:3307` (MySQL)
 
 > 💡 **需要更详细的步骤？**
-> 如果遇到任何问题，或需要关于Docker部署、故障排除等更详细的信息，请务必查阅完整的 **[开发与部署指南](./setup-guide.md)**。
+> 请参考完整的 [Docker开发指南](./DOCKER-SETUP-GUIDE.md)。
 
 ---
 
