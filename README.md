@@ -132,7 +132,7 @@ npm install
 npm run dev
 ```
 
-> 📚 **需要帮助？** 查看 [开发环境搭建指南](docs/development/README-DEV.md) 获取详细的安装配置说明和故障排除方法
+> 📚 **需要帮助？** 查看 [开发环境搭建指南](AI-Protocol-Lab/project-docs/development/setup-guide.md) 获取详细的安装配置说明和故障排除方法
 
 ## 📁 项目架构
 
@@ -145,7 +145,7 @@ market-pulse/
 │   ├── 📁 context/           # React Context
 │   ├── 📁 pages/             # 页面组件
 │   │   ├── 🏠 Home.jsx       # 着陆页
-│   │   ├── �� Dashboard.jsx  # 仪表板
+│   │   ├──  dashboard/      # 仪表板
 │   │   ├── 💹 Trade.jsx      # 交易界面
 │   │   └── 👤 Account.jsx    # 账户管理
 │   ├── ⚛️ App.jsx            # 主应用组件
@@ -158,35 +158,32 @@ market-pulse/
 │   │   ├── 📁 models/        # 数据模型
 │   │   └── 📁 websocket/     # WebSocket处理
 │   └── 📄 go.mod             # Go模块定义
-├── 📁 docs/                  # 项目文档
-│   ├── 📋 README-DEV.md      # 开发指南
-│   ├── 🗺️ DEVELOPMENT-ROADMAP.md # 开发路线图
-│   ├── 🏗️ TECHNICAL-GUIDE.md # 技术指南
-│   └── 🌐 API-SPECIFICATION.md # API文档
-├── 📁 dist/                  # 构建输出
+├── 📁 AI-Protocol-Lab/       # AI协作与项目文档
+│   ├── 📁 project-docs/      # 核心项目文档
+│   └── 📁 prompts/           # AI Prompt库
 ├── 🐳 docker-compose.yml     # Docker编排
 ├── 🚀 start-dev.bat          # 启动脚本
 └── ⚙️ vite.config.js         # Vite配置
 ```
 
-> 🔍 **详细架构**: 查看 [技术实现指南](docs/TECHNICAL-GUIDE.md) 了解完整的系统架构设计
+> 🔍 **详细架构**: 查看 [AI协作与项目文档](AI-Protocol-Lab/) 了解完整的系统架构设计与文档
 
 ## 📚 完整文档
 
-我们提供了详细的文档来帮助您快速上手和深入了解项目：
+我们提供了详细的文档来帮助您快速上手和深入了解项目。所有文档和AI协作资源均通过`AI-Protocol-Lab`工具箱进行统一管理。
 
-| 📖 文档 | 📝 描述 | 👥 适用人群 |
-|---------|---------|------------|
-| [📋 文档导航](docs/DOCUMENTATION-INDEX.md) | 文档中心和使用指南 | 🌟 所有用户 |
-| [🚀 开发指南](docs/development/README-DEV.md) | 环境搭建和快速启动 | 👨‍💻 开发者 |
-| [🗺️ 开发路线图](docs/development/DEVELOPMENT-ROADMAP.md) | 项目规划和开发优先级 | 📊 项目管理者 |
-| [🏗️ 技术指南](docs/development/TECHNICAL-GUIDE.md) | 系统架构和技术实现 | 🔧 技术人员 |
-| [🌐 API规范](docs/development/API-SPECIFICATION.md) | 接口文档和使用说明 | 🔌 前后端开发者 |
+| 📖 文档 | 📝 描述 |
+|---------|---------|
+| [🤖 AI协作工具箱](AI-Protocol-Lab/README.md) | 完整功能介绍和导航 |
+| [🚀 开发环境指南](AI-Protocol-Lab/project-docs/development/README.md) | 环境搭建和快速启动 |
+| [🗺️ 开发路线图](AI-Protocol-Lab/project-docs/development/DEVELOPMENT-ROADMAP.md) | 项目规划和开发优先级 |
+| [🌐 API规范](AI-Protocol-Lab/project-docs/development/API-SPECIFICATION.md) | 接口文档和使用说明 |
+| [💡 AI上下文指南](AI-Protocol-Lab/project-docs/ai-collaboration/AI-CONTEXT-GUIDE.md) | 30秒了解项目状态 |
 
 ### 📖 推荐阅读顺序
-1. **新手开发者**: 开发指南 → 开发路线图 → 技术指南
-2. **有经验开发者**: 技术指南 → API规范 → 开发路线图
-3. **项目管理者**: 开发路线图 → 文档中心 → 开发指南
+1.  **新手开发者**: 开发环境指南 → 开发路线图
+2.  **有经验开发者**: 开发环境指南 → API规范 → 开发路线图
+3.  **项目管理者**: 开发路线图 → AI上下文指南
 
 ## 🎯 开发路线图
 
@@ -251,7 +248,7 @@ market-pulse/
 
 - 🐛 **Bug报告**: [GitHub Issues](https://github.com/ape7054/trading-dashboard/issues)
 - 💬 **功能讨论**: [GitHub Discussions](https://github.com/ape7054/trading-dashboard/discussions)
-- 📖 **文档问题**: 查看 [文档导航](docs/DOCUMENTATION-INDEX.md)
+- 📖 **文档问题**: 查看 [AI协作与项目文档](AI-Protocol-Lab/)
 - 🤖 **AI协作**: 使用 [AI-Protocol-Lab](AI-Protocol-Lab/) 完整工具箱
 - 📧 **直接联系**: 项目维护者
 
@@ -262,22 +259,21 @@ market-pulse/
 #### `/AI-Protocol-Lab/` - 完整AI协作工具箱 🤖
 - 📖 [工具箱总览](AI-Protocol-Lab/README.md) - 完整功能介绍
 - 🚀 [快速上下文指南](AI-Protocol-Lab/project-docs/ai-collaboration/AI-CONTEXT-GUIDE.md) - 30秒了解项目状态
-- �� [项目状态报告](AI-Protocol-Lab/project-docs/ai-collaboration/PROJECT-STATUS-2025-07-20.md) - 完整进度跟踪
 - 🎯 [Prompt库](AI-Protocol-Lab/prompts/) - 专业AI助手提示词
 - 💬 [AI对话记录](AI-Protocol-Lab/conversations/) - AI开发对话历史
 - 🔧 [工具脚本](AI-Protocol-Lab/scripts/) - 自动化工具
 
 #### 项目技术文档 (`/AI-Protocol-Lab/project-docs/`)
-- 📖 [文档导航](AI-Protocol-Lab/project-docs/DOCUMENTATION-INDEX.md) - 完整的文档索引
-- 🛠️ [开发指南](AI-Protocol-Lab/project-docs/development/README-DEV.md) - 环境搭建和开发流程
+- 📖 [文档导航](AI-Protocol-Lab/project-docs/README.md) - 完整的文档索引
+- 🛠️ [开发环境指南](AI-Protocol-Lab/project-docs/development/README.md) - 环境搭建和开发流程
 - 📋 [API规范](AI-Protocol-Lab/project-docs/development/API-SPECIFICATION.md) - 接口文档
-- 🏗️ [技术架构](AI-Protocol-Lab/project-docs/development/TECHNICAL-GUIDE.md) - 系统架构说明
+- 🗺️ [开发路线图](AI-Protocol-Lab/project-docs/development/DEVELOPMENT-ROADMAP.md) - 完整的开发计划
 - 💬 [所有对话记录](AI-Protocol-Lab/conversations/) - AI对话和项目讨论统一管理
 
 ### 🆘 常见问题
-- **启动失败？** 查看 [开发指南](docs/development/README-DEV.md) 的故障排除部分
-- **API错误？** 参考 [API文档](docs/development/API-SPECIFICATION.md)
-- **架构疑问？** 阅读 [技术指南](docs/development/TECHNICAL-GUIDE.md)
+- **启动失败？** 查看 [开发环境指南](AI-Protocol-Lab/project-docs/development/README.md) 的故障排除部分
+- **API错误？** 参考 [API规范](AI-Protocol-Lab/project-docs/development/API-SPECIFICATION.md)
+- **架构疑问？** 查看 [AI协作与项目文档](AI-Protocol-Lab/)
 - **AI协作？** 查看 [AI-Protocol-Lab](AI-Protocol-Lab/) 快速上手
 
 ---
@@ -286,7 +282,7 @@ market-pulse/
 
 **⭐ 觉得项目有用？请给我们一个 Star 支持！**
 
-**🚀 准备开始开发？查看 [快速开始指南](docs/development/README-DEV.md)**
+**🚀 准备开始开发？查看 [开发环境指南](AI-Protocol-Lab/project-docs/development/README.md)**
 
 **💡 有想法或建议？欢迎提交 [Issue](https://github.com/ape7054/trading-dashboard/issues) 或 [Discussion](https://github.com/ape7054/trading-dashboard/discussions)**
 
