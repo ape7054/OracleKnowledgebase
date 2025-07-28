@@ -17,16 +17,22 @@ type CoinGeckoService struct {
 
 // CoinData 表示单个加密货币的数据
 type CoinData struct {
-	ID                       string  `json:"id"`
-	Symbol                   string  `json:"symbol"`
-	Name                     string  `json:"name"`
-	CurrentPrice             float64 `json:"current_price"`
-	MarketCap                float64 `json:"market_cap"`
-	MarketCapRank            int     `json:"market_cap_rank"`
-	TotalVolume              float64 `json:"total_volume"`
-	PriceChange24h           float64 `json:"price_change_24h"`
-	PriceChangePercentage24h float64 `json:"price_change_percentage_24h"`
-	LastUpdated              string  `json:"last_updated"`
+	ID                       string    `json:"id"`
+	Symbol                   string    `json:"symbol"`
+	Name                     string    `json:"name"`
+	CurrentPrice             float64   `json:"current_price"`
+	MarketCap                float64   `json:"market_cap"`
+	MarketCapRank            int       `json:"market_cap_rank"`
+	TotalVolume              float64   `json:"total_volume"`
+	PriceChange24h           float64   `json:"price_change_24h"`
+	PriceChangePercentage24h float64   `json:"price_change_percentage_24h"`
+	LastUpdated              string    `json:"last_updated"`
+	SparklineIn7d            Sparkline `json:"sparkline_in_7d"`
+}
+
+// Sparkline represents the sparkline data for 7 days
+type Sparkline struct {
+	Price []float64 `json:"price"`
 }
 
 // HistoricalPrice 表示历史价格数据点
@@ -110,13 +116,13 @@ func (c *CoinGeckoService) GetCoinByID(coinID string) (*CoinData, error) {
 }
 
 // GetMultipleCoins 获取多个指定加密货币的数据
-func (c *CoinGeckoService) GetMultipleCoins(coinIDs []string) ([]CoinData, error) {
+func (c *CoinGeckoService) GetMultipleCoins(coinIDs []string, sparkline bool) ([]CoinData, error) {
 	if len(coinIDs) == 0 {
 		return []CoinData{}, nil
 	}
 
 	idsParam := strings.Join(coinIDs, ",")
-	url := fmt.Sprintf("%s/coins/markets?vs_currency=usd&ids=%s", c.baseURL, idsParam)
+	url := fmt.Sprintf("%s/coins/markets?vs_currency=usd&ids=%s&sparkline=%t", c.baseURL, idsParam, sparkline)
 
 	resp, err := c.httpClient.Get(url)
 	if err != nil {

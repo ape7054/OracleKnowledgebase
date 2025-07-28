@@ -75,15 +75,10 @@ export const marketApi = {
   async getMultipleCoins(coinIds) {
     try {
       const params = {
-        vs_currency: 'usd',
         ids: coinIds.join(','),
-        order: 'market_cap_desc',
-        per_page: coinIds.length,
-        page: 1,
-        sparkline: true,
-        price_change_percentage: '24h,7d'
+        sparkline: true
       };
-      const response = await apiClient.get('market/coins/markets', { params });
+      const response = await apiClient.get('/api/market/coins', { params });
       return response.data;
     } catch (error) {
       console.error('Failed to fetch multiple coins data:', error);

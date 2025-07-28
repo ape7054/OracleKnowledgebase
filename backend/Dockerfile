@@ -21,6 +21,9 @@ RUN CGO_ENABLED=0 go build -o /app/market-pulse-backend ./cmd/market-pulse-backe
 # 使用一个非常小的基础镜像
 FROM alpine:3.18
 
+# 安装 wget
+RUN apk --no-cache add wget
+
 # 设置工作目录
 WORKDIR /app
 

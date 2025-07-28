@@ -18,16 +18,16 @@ import (
 
 // API struct holds dependencies for the database and WebSocket hub
 type API struct {
-	DB              *sql.DB
-	Hub             *websocket.Hub
+	DB               *sql.DB
+	Hub              *websocket.Hub
 	CoinGeckoService *services.CoinGeckoService
 }
 
 // NewAPI creates a new API instance
 func NewAPI(db *sql.DB, hub *websocket.Hub) *API {
 	return &API{
-		DB:              db,
-		Hub:             hub,
+		DB:               db,
+		Hub:              hub,
 		CoinGeckoService: services.NewCoinGeckoService(),
 	}
 }
@@ -163,7 +163,7 @@ func (a *API) GetMarketData(c *gin.Context) {
 	if err != nil {
 		log.Printf("Error fetching market data: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "Failed to fetch market data",
+			"error":   "Failed to fetch market data",
 			"details": err.Error(),
 		})
 		return
@@ -171,8 +171,8 @@ func (a *API) GetMarketData(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
-		"data": coins,
-		"count": len(coins),
+		"data":    coins,
+		"count":   len(coins),
 	})
 }
 
@@ -190,7 +190,7 @@ func (a *API) GetCoinDetails(c *gin.Context) {
 	if err != nil {
 		log.Printf("Error fetching coin details for %s: %v", coinID, err)
 		c.JSON(http.StatusNotFound, gin.H{
-			"error": "Coin not found",
+			"error":   "Coin not found",
 			"details": err.Error(),
 		})
 		return
@@ -198,7 +198,7 @@ func (a *API) GetCoinDetails(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
-		"data": coin,
+		"data":    coin,
 	})
 }
 
@@ -225,7 +225,7 @@ func (a *API) GetHistoricalData(c *gin.Context) {
 	if err != nil {
 		log.Printf("Error fetching historical data for %s: %v", coinID, err)
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "Failed to fetch historical data",
+			"error":   "Failed to fetch historical data",
 			"details": err.Error(),
 		})
 		return
@@ -233,8 +233,8 @@ func (a *API) GetHistoricalData(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
-		"data": prices,
-		"count": len(prices),
+		"data":    prices,
+		"count":   len(prices),
 	})
 }
 
@@ -247,6 +247,9 @@ func (a *API) GetMultipleCoins(c *gin.Context) {
 		})
 		return
 	}
+
+	sparklineStr := c.DefaultQuery("sparkline", "false")
+	sparkline, _ := strconv.ParseBool(sparklineStr)
 
 	// 解析逗号分隔的ID列表
 	coinIDs := []string{}
@@ -264,11 +267,11 @@ func (a *API) GetMultipleCoins(c *gin.Context) {
 		return
 	}
 
-	coins, err := a.CoinGeckoService.GetMultipleCoins(coinIDs)
+	coins, err := a.CoinGeckoService.GetMultipleCoins(coinIDs, sparkline)
 	if err != nil {
 		log.Printf("Error fetching multiple coins data: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "Failed to fetch coins data",
+			"error":   "Failed to fetch coins data",
 			"details": err.Error(),
 		})
 		return
@@ -276,8 +279,8 @@ func (a *API) GetMultipleCoins(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
-		"data": coins,
-		"count": len(coins),
+		"data":    coins,
+		"count":   len(coins),
 	})
 }
 
@@ -288,7 +291,7 @@ func (a *API) PingCoinGecko(c *gin.Context) {
 		log.Printf("CoinGecko API ping failed: %v", err)
 		c.JSON(http.StatusServiceUnavailable, gin.H{
 			"success": false,
-			"error": "CoinGecko API is not available",
+			"error":   "CoinGecko API is not available",
 			"details": err.Error(),
 		})
 		return

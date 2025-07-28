@@ -192,7 +192,7 @@ function AccountPremium() {
 
         fetchPortfolioData();
     }, []);
-    
+
     if (loading) {
         return <Container maxWidth="xl" sx={{ py: 4, textAlign: 'center' }}><Typography>Loading Portfolio...</Typography></Container>;
     }
@@ -324,8 +324,8 @@ function AccountPremium() {
                         {portfolioData.assets.map((asset, index) => (
                             <Grid item xs={12} sm={6} lg={3} key={asset.id}>
                                 <Fade in timeout={500 + index * 100}>
-                                    <AssetCard
-                                        sx={{
+                                <AssetCard
+                                    sx={{
                                             //animation: `${slideUp} ${0.2 * (index + 1)}s ease-out`,
                                             height: '100%',
                                             display: 'flex',
@@ -333,117 +333,117 @@ function AccountPremium() {
                                             // '&:hover': {
                                             //     animation: `${float} 3s ease-in-out infinite`
                                             // }
-                                        }}
-                                        onClick={() => setSelectedAsset(asset)}
-                                    >
-                                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                                            <Box sx={{
-                                                width: 48,
-                                                height: 48,
-                                                borderRadius: '50%',
-                                                background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)}, ${alpha(theme.palette.secondary.main, 0.1)})`,
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                mr: 2,
-                                                border: `2px solid ${alpha(theme.palette.primary.main, 0.2)}`
-                                            }}>
-                                                <asset.icon style={{ width: 28, height: 28 }} />
-                                            </Box>
-                                            <Box sx={{ flex: 1 }}>
-                                                <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
-                                                    {asset.name}
-                                                </Typography>
-                                                <Typography variant="body2" color="text.secondary">
-                                                    {asset.symbol}
-                                                </Typography>
-                                            </Box>
-                                            <IconButton size="small">
-                                                <StarBorder />
-                                            </IconButton>
+                                    }}
+                                    onClick={() => setSelectedAsset(asset)}
+                                >
+                                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                                        <Box sx={{
+                                            width: 48,
+                                            height: 48,
+                                            borderRadius: '50%',
+                                            background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)}, ${alpha(theme.palette.secondary.main, 0.1)})`,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            mr: 2,
+                                            border: `2px solid ${alpha(theme.palette.primary.main, 0.2)}`
+                                        }}>
+                                            <asset.icon style={{ width: 28, height: 28 }} />
                                         </Box>
+                                        <Box sx={{ flex: 1 }}>
+                                            <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
+                                                {asset.name}
+                                            </Typography>
+                                            <Typography variant="body2" color="text.secondary">
+                                                {asset.symbol}
+                                            </Typography>
+                                        </Box>
+                                        <IconButton size="small">
+                                            <StarBorder />
+                                        </IconButton>
+                                    </Box>
 
                                         <Box sx={{ mb: 2, flexGrow: 1 }}>
-                                            <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
-                                                Balance
-                                            </Typography>
+                                        <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
+                                            Balance
+                                        </Typography>
                                             <Typography variant="h5" sx={{ fontWeight: 700, mb: 1, wordBreak: 'break-all' }}>
-                                                {balanceVisible ? `${asset.balance.toFixed(6)} ${asset.symbol}` : '••••••'}
-                                            </Typography>
-                                            <Typography variant="h6" sx={{
+                                            {balanceVisible ? `${asset.balance.toFixed(6)} ${asset.symbol}` : '••••••'}
+                                        </Typography>
+                                        <Typography variant="h6" sx={{
+                                            fontWeight: 600,
+                                            color: theme.palette.text.secondary
+                                        }}>
+                                            {balanceVisible ? `$${asset.value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '••••••'}
+                                        </Typography>
+                                    </Box>
+
+                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                                        <Typography variant="body2" color="text.secondary">
+                                            ${asset.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                        </Typography>
+                                        <Chip
+                                            size="small"
+                                            label={`${asset.change24h > 0 ? '+' : ''}${asset.change24h.toFixed(2)}%`}
+                                            sx={{
+                                                background: asset.change24h > 0
+                                                    ? `linear-gradient(135deg, ${theme.palette.success.main}, ${theme.palette.success.dark})`
+                                                    : `linear-gradient(135deg, ${theme.palette.error.main}, ${theme.palette.error.dark})`,
+                                                color: '#fff',
                                                 fontWeight: 600,
-                                                color: theme.palette.text.secondary
-                                            }}>
-                                                {balanceVisible ? `$${asset.value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '••••••'}
-                                            </Typography>
-                                        </Box>
+                                                fontSize: '0.75rem'
+                                            }}
+                                        />
+                                    </Box>
 
-                                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                                            <Typography variant="body2" color="text.secondary">
-                                                ${asset.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                            </Typography>
-                                            <Chip
-                                                size="small"
-                                                label={`${asset.change24h > 0 ? '+' : ''}${asset.change24h.toFixed(2)}%`}
-                                                sx={{
-                                                    background: asset.change24h > 0
-                                                        ? `linear-gradient(135deg, ${theme.palette.success.main}, ${theme.palette.success.dark})`
-                                                        : `linear-gradient(135deg, ${theme.palette.error.main}, ${theme.palette.error.dark})`,
-                                                    color: '#fff',
-                                                    fontWeight: 600,
-                                                    fontSize: '0.75rem'
-                                                }}
-                                            />
-                                        </Box>
+                                    <Box sx={{ height: 60, mb: 2 }}>
+                                        <ResponsiveContainer width="100%" height="100%">
+                                            <AreaChart data={asset.sparkline.map((value, index) => ({ value, index }))}>
+                                                <defs>
+                                                    <linearGradient id={`gradient-${asset.id}`} x1="0" y1="0" x2="0" y2="1">
+                                                        <stop offset="5%" stopColor={asset.change24h > 0 ? theme.palette.success.main : theme.palette.error.main} stopOpacity={0.3}/>
+                                                        <stop offset="95%" stopColor={asset.change24h > 0 ? theme.palette.success.main : theme.palette.error.main} stopOpacity={0}/>
+                                                    </linearGradient>
+                                                </defs>
+                                                <Area
+                                                    type="monotone"
+                                                    dataKey="value"
+                                                    stroke={asset.change24h > 0 ? theme.palette.success.main : theme.palette.error.main}
+                                                    strokeWidth={2}
+                                                    fill={`url(#gradient-${asset.id})`}
+                                                    dot={false}
+                                                />
+                                            </AreaChart>
+                                        </ResponsiveContainer>
+                                    </Box>
 
-                                        <Box sx={{ height: 60, mb: 2 }}>
-                                            <ResponsiveContainer width="100%" height="100%">
-                                                <AreaChart data={asset.sparkline.map((value, index) => ({ value, index }))}>
-                                                    <defs>
-                                                        <linearGradient id={`gradient-${asset.id}`} x1="0" y1="0" x2="0" y2="1">
-                                                            <stop offset="5%" stopColor={asset.change24h > 0 ? theme.palette.success.main : theme.palette.error.main} stopOpacity={0.3}/>
-                                                            <stop offset="95%" stopColor={asset.change24h > 0 ? theme.palette.success.main : theme.palette.error.main} stopOpacity={0}/>
-                                                        </linearGradient>
-                                                    </defs>
-                                                    <Area
-                                                        type="monotone"
-                                                        dataKey="value"
-                                                        stroke={asset.change24h > 0 ? theme.palette.success.main : theme.palette.error.main}
-                                                        strokeWidth={2}
-                                                        fill={`url(#gradient-${asset.id})`}
-                                                        dot={false}
-                                                    />
-                                                </AreaChart>
-                                            </ResponsiveContainer>
-                                        </Box>
-
-                                        <Box sx={{ display: 'flex', gap: 1 }}>
-                                            <Button
-                                                size="small"
-                                                variant="outlined"
-                                                sx={{
-                                                    flex: 1,
-                                                    borderRadius: '8px',
-                                                    textTransform: 'none',
-                                                    fontWeight: 600
-                                                }}
-                                            >
-                                                Buy
-                                            </Button>
-                                            <Button
-                                                size="small"
-                                                variant="outlined"
-                                                sx={{
-                                                    flex: 1,
-                                                    borderRadius: '8px',
-                                                    textTransform: 'none',
-                                                    fontWeight: 600
-                                                }}
-                                            >
-                                                Sell
-                                            </Button>
-                                        </Box>
-                                    </AssetCard>
+                                    <Box sx={{ display: 'flex', gap: 1 }}>
+                                        <Button
+                                            size="small"
+                                            variant="outlined"
+                                            sx={{
+                                                flex: 1,
+                                                borderRadius: '8px',
+                                                textTransform: 'none',
+                                                fontWeight: 600
+                                            }}
+                                        >
+                                            Buy
+                                        </Button>
+                                        <Button
+                                            size="small"
+                                            variant="outlined"
+                                            sx={{
+                                                flex: 1,
+                                                borderRadius: '8px',
+                                                textTransform: 'none',
+                                                fontWeight: 600
+                                            }}
+                                        >
+                                            Sell
+                                        </Button>
+                                    </Box>
+                                </AssetCard>
                                 </Fade>
                             </Grid>
                         ))}

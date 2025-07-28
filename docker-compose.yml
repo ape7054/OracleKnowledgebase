@@ -39,6 +39,11 @@ services:
       - "8080:8080"  # 映射到主机端口，让nginx可以访问
     networks:
       - market-pulse-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "-O", "/dev/null", "http://localhost:8080/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   # Nginx 服务，用于反向代理和提供静态文件
   nginx:
@@ -51,7 +56,8 @@ services:
       - ./dist:/usr/share/nginx/html
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     networks:
       - market-pulse-network
 
