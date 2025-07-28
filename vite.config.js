@@ -11,17 +11,23 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      // 如果有需要的话可以添加路径别名
+      '@': '/src'
     }
   },
   server: {
     host: '0.0.0.0',
     port: 5173,
     proxy: {
+      '/api/market': {
+        target: 'https://api.coingecko.com/api/v3',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/market/, ''),
+      },
       '/api': {
         // 开发环境默认使用本地后端
-        target: process.env.VITE_API_TARGET || 'http://localhost:8080',
+        target: 'http://localhost:8080',
         changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '/api'),
         configure: (proxy, options) => {
           proxy.on('error', (err, req, res) => {
             console.log('🔴 API Proxy Error:', err.message);

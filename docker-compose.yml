@@ -40,6 +40,21 @@ services:
     networks:
       - market-pulse-network
 
+  # Nginx 服务，用于反向代理和提供静态文件
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: market-pulse-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./dist:/usr/share/nginx/html
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - backend
+    networks:
+      - market-pulse-network
+
   # 前端服务 (现在由nginx直接服务静态文件，不需要容器)
   # frontend:
   #   build:

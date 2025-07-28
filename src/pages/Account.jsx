@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   Box, 
   Typography, 
@@ -42,6 +42,8 @@ import XrpIcon from 'cryptocurrency-icons/svg/color/xrp.svg?react';
 import WbtcIcon from 'cryptocurrency-icons/svg/color/wbtc.svg?react';
 import UsdcIcon from 'cryptocurrency-icons/svg/color/usdc.svg?react';
 import DogeIcon from 'cryptocurrency-icons/svg/color/doge.svg?react';
+
+import { marketApi } from '@/api/marketApi.js';
 
 // Premium animations
 const float = keyframes`
@@ -110,195 +112,96 @@ function AccountPremium() {
     const theme = useTheme();
     const [balanceVisible, setBalanceVisible] = useState(true);
     const [selectedAsset, setSelectedAsset] = useState(null);
+    const [portfolioData, setPortfolioData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     
-    // Complete portfolio data with all 15 assets
-    const portfolioData = {
-        totalBalance: 362834.00,
-        totalChange24h: 8.7,
-        totalChange7d: 23.4,
-        assets: [
-            {
-                id: 'bitcoin',
-                name: 'Bitcoin',
-                symbol: 'BTC',
-                icon: BtcIcon,
-                balance: 1.26,
-                value: 149244,
-                price: 118424.38,
-                change24h: 12.8,
-                allocation: 41.1,
-                sparkline: [110000, 115000, 122000, 118424, 125000, 120000, 118424]
-            },
-            {
-                id: 'ethereum',
-                name: 'Ethereum',
-                symbol: 'ETH',
-                icon: EthIcon,
-                balance: 14.5,
-                value: 54561,
-                price: 3762.69,
-                change24h: 8.5,
-                allocation: 15.0,
-                sparkline: [3400, 3550, 3820, 3763, 3900, 3650, 3763]
-            },
-            {
-                id: 'ripple',
-                name: 'XRP',
-                symbol: 'XRP',
-                icon: XrpIcon,
-                balance: 8500,
-                value: 29750,
-                price: 3.50,
-                change24h: 15.7,
-                allocation: 8.2,
-                sparkline: [2.95, 3.20, 3.80, 3.45, 3.65, 3.30, 3.50]
-            },
-            {
-                id: 'tether',
-                name: 'Tether',
-                symbol: 'USDT',
-                icon: UsdtIcon,
-                balance: 25000,
-                value: 25000,
-                price: 1.00,
-                change24h: 0.1,
-                allocation: 6.9,
-                sparkline: [1.002, 0.999, 1.001, 0.998, 1.000, 1.001, 1.000]
-            },
-            {
-                id: 'binancecoin',
-                name: 'BNB',
-                symbol: 'BNB',
-                icon: BnbIcon,
-                balance: 32.1,
-                value: 22514,
-                price: 701.38,
-                change24h: 11.3,
-                allocation: 6.2,
-                sparkline: [620, 650, 750, 690, 720, 680, 701]
-            },
-            {
-                id: 'solana',
-                name: 'Solana',
-                symbol: 'SOL',
-                icon: SolIcon,
-                balance: 95.3,
-                value: 17765,
-                price: 186.49,
-                change24h: 18.2,
-                allocation: 4.9,
-                sparkline: [155, 170, 200, 186, 210, 175, 186]
-            },
-            {
-                id: 'usd-coin',
-                name: 'USDC',
-                symbol: 'USDC',
-                icon: UsdcIcon,
-                balance: 15000,
-                value: 15000,
-                price: 1.00,
-                change24h: -0.1,
-                allocation: 4.1,
-                sparkline: [1.001, 0.999, 1.000, 0.998, 1.001, 1.000, 1.000]
-            },
-            {
-                id: 'dogecoin',
-                name: 'Dogecoin',
-                symbol: 'DOGE',
-                icon: DogeIcon,
-                balance: 28500,
-                value: 10545,
-                price: 0.37,
-                change24h: 24.6,
-                allocation: 2.9,
-                sparkline: [0.28, 0.31, 0.42, 0.37, 0.45, 0.35, 0.37]
-            },
-            {
-                id: 'cardano',
-                name: 'Cardano',
-                symbol: 'ADA',
-                icon: AdaIcon,
-                balance: 18750,
-                value: 8438,
-                price: 0.45,
-                change24h: -8.3,
-                allocation: 2.3,
-                sparkline: [0.52, 0.48, 0.42, 0.45, 0.40, 0.47, 0.45]
-            },
-            {
-                id: 'tron',
-                name: 'TRON',
-                symbol: 'TRX',
-                icon: TrxIcon,
-                balance: 25000,
-                value: 7000,
-                price: 0.28,
-                change24h: 9.4,
-                allocation: 1.9,
-                sparkline: [0.24, 0.26, 0.32, 0.28, 0.35, 0.27, 0.28]
-            },
-            {
-                id: 'avalanche-2',
-                name: 'Avalanche',
-                symbol: 'AVAX',
-                icon: AvaxIcon,
-                balance: 145.2,
-                value: 6120,
-                price: 42.15,
-                change24h: 14.7,
-                allocation: 1.7,
-                sparkline: [35.8, 40.2, 48.8, 44.3, 50.15, 38.0, 42.15]
-            },
-            {
-                id: 'chainlink',
-                name: 'Chainlink',
-                symbol: 'LINK',
-                icon: LinkIcon,
-                balance: 185.4,
-                value: 4760,
-                price: 25.68,
-                change24h: 19.8,
-                allocation: 1.3,
-                sparkline: [20.2, 22.8, 28.1, 25.9, 30.67, 24.0, 25.68]
-            },
-            {
-                id: 'bitcoin-cash',
-                name: 'Bitcoin Cash',
-                symbol: 'BCH',
-                icon: BchIcon,
-                balance: 8.5,
-                value: 4355,
-                price: 512.35,
-                change24h: -12.5,
-                allocation: 1.2,
-                sparkline: [580, 550, 490, 510, 475, 520, 512]
-            },
-            {
-                id: 'wrapped-bitcoin',
-                name: 'Wrapped Bitcoin',
-                symbol: 'WBTC',
-                icon: WbtcIcon,
-                balance: 0.035,
-                value: 4142,
-                price: 118342.86,
-                change24h: 12.6,
-                allocation: 1.1,
-                sparkline: [105000, 110000, 125000, 118400, 130000, 115000, 118343]
-            },
-            {
-                id: 'stellar',
-                name: 'Stellar',
-                symbol: 'XLM',
-                icon: XlmIcon,
-                balance: 7500,
-                value: 3600,
-                price: 0.48,
-                change24h: 22.1,
-                allocation: 1.0,
-                sparkline: [0.38, 0.42, 0.52, 0.49, 0.55, 0.45, 0.48]
+    // Static data representing user's holdings. In a real app, this would come from a user-specific API.
+    const userHoldings = [
+        { id: 'bitcoin', symbol: 'BTC', balance: 1.26, icon: BtcIcon, name: 'Bitcoin' },
+        { id: 'ethereum', symbol: 'ETH', balance: 14.5, icon: EthIcon, name: 'Ethereum' },
+        { id: 'ripple', symbol: 'XRP', balance: 8500, icon: XrpIcon, name: 'XRP' },
+        { id: 'tether', symbol: 'USDT', balance: 25000, icon: UsdtIcon, name: 'Tether' },
+        { id: 'binancecoin', symbol: 'BNB', balance: 32.1, icon: BnbIcon, name: 'BNB' },
+        { id: 'solana', symbol: 'SOL', balance: 95.3, icon: SolIcon, name: 'Solana' },
+        { id: 'usd-coin', symbol: 'USDC', balance: 15000, icon: UsdcIcon, name: 'USDC' },
+        { id: 'dogecoin', symbol: 'DOGE', balance: 28500, icon: DogeIcon, name: 'Dogecoin' },
+        { id: 'cardano', symbol: 'ADA', balance: 18750, icon: AdaIcon, name: 'Cardano' },
+        { id: 'tron', symbol: 'TRX', balance: 25000, icon: TrxIcon, name: 'TRON' },
+        { id: 'avalanche-2', symbol: 'AVAX', balance: 145.2, icon: AvaxIcon, name: 'Avalanche' },
+        { id: 'chainlink', symbol: 'LINK', balance: 185.4, icon: LinkIcon, name: 'Chainlink' },
+        { id: 'bitcoin-cash', symbol: 'BCH', balance: 8.5, icon: BchIcon, name: 'Bitcoin Cash' },
+        { id: 'wrapped-bitcoin', symbol: 'WBTC', balance: 0.035, icon: WbtcIcon, name: 'Wrapped Bitcoin' },
+        { id: 'stellar', symbol: 'XLM', balance: 7500, icon: XlmIcon, name: 'Stellar' }
+    ];
+
+    useEffect(() => {
+        const fetchPortfolioData = async () => {
+            try {
+                setLoading(true);
+                const coinIds = userHoldings.map(asset => asset.id);
+                const marketData = await marketApi.getMultipleCoins(coinIds);
+
+                let totalBalance = 0;
+                const assets = userHoldings.map(holding => {
+                    const marketInfo = marketData.find(coin => coin.id === holding.id);
+                    if (!marketInfo) {
+                        return { ...holding, value: 0, price: 0, change24h: 0, sparkline: [] };
+                    }
+
+                    const value = holding.balance * marketInfo.current_price;
+                    totalBalance += value;
+                    
+                    // Use historical data for sparkline, downsample for better visualization
+                    const rawSparkline = marketInfo.sparkline_in_7d?.price || [];
+                    const sparklineData = rawSparkline.length > 7 
+                        ? rawSparkline.filter((_, i) => i % Math.floor(rawSparkline.length / 7) === 0).slice(0, 7)
+                        : rawSparkline;
+
+
+                    return {
+                        ...holding,
+                        value,
+                        price: marketInfo.current_price,
+                        change24h: marketInfo.price_change_percentage_24h,
+                        sparkline: sparklineData.length > 1 ? sparklineData : [0, 1]
+                    };
+                });
+
+                const totalChange24h = assets.reduce((acc, asset) => {
+                    if (asset.value > 0) {
+                        return acc + (asset.value * (asset.change24h / 100));
+                    }
+                    return acc;
+                }, 0) / totalBalance * 100;
+
+                setPortfolioData({
+                    totalBalance,
+                    totalChange24h,
+                    totalChange7d: 0, // 7d change would require more complex calculation
+                    assets
+                });
+                setError(null);
+            } catch (err) {
+                console.error("Failed to fetch portfolio data:", err);
+                setError("Failed to load portfolio data. Please try again later.");
+            } finally {
+                setLoading(false);
             }
-        ]
-    };
+        };
+
+        fetchPortfolioData();
+    }, []);
+    
+    if (loading) {
+        return <Container maxWidth="xl" sx={{ py: 4, textAlign: 'center' }}><Typography>Loading Portfolio...</Typography></Container>;
+    }
+    if (error) {
+        return <Container maxWidth="xl" sx={{ py: 4, textAlign: 'center' }}><Typography color="error">{error}</Typography></Container>;
+    }
+    if (!portfolioData) {
+        return null;
+    }
 
     return (
         <Container maxWidth="xl" sx={{ py: 4 }}>
@@ -343,7 +246,7 @@ function AccountPremium() {
                                             WebkitTextFillColor: 'transparent'
                                         }}
                                     >
-                                        {balanceVisible ? `$${portfolioData.totalBalance.toLocaleString()}` : '••••••'}
+                                        {balanceVisible ? `$${portfolioData.totalBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '••••••'}
                                     </Typography>
                                     <IconButton 
                                         onClick={() => setBalanceVisible(!balanceVisible)}
@@ -395,7 +298,7 @@ function AccountPremium() {
                         
                         <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
                             <Chip
-                                label={`24h: ${portfolioData.totalChange24h > 0 ? '+' : ''}${portfolioData.totalChange24h}%`}
+                                label={`24h: ${portfolioData.totalChange24h > 0 ? '+' : ''}${portfolioData.totalChange24h.toFixed(2)}%`}
                                 sx={{
                                     background: portfolioData.totalChange24h > 0 
                                         ? `linear-gradient(135deg, ${theme.palette.success.main}, ${theme.palette.success.dark})`
@@ -406,7 +309,7 @@ function AccountPremium() {
                                 }}
                             />
                             <Chip
-                                label={`7d: ${portfolioData.totalChange7d > 0 ? '+' : ''}${portfolioData.totalChange7d}%`}
+                                label={`7d: ${portfolioData.totalChange7d > 0 ? '+' : ''}${portfolioData.totalChange7d.toFixed(2)}%`}
                                 sx={{
                                     background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
                                     color: '#fff',
@@ -420,123 +323,128 @@ function AccountPremium() {
                     <Grid container spacing={3}>
                         {portfolioData.assets.map((asset, index) => (
                             <Grid item xs={12} sm={6} lg={3} key={asset.id}>
-                                <AssetCard
-                                    sx={{
-                                        animation: `${slideUp} ${0.2 * (index + 1)}s ease-out`,
-                                        '&:hover': {
-                                            animation: `${float} 3s ease-in-out infinite`
-                                        }
-                                    }}
-                                    onClick={() => setSelectedAsset(asset)}
-                                >
-                                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                                        <Box sx={{
-                                            width: 48,
-                                            height: 48,
-                                            borderRadius: '50%',
-                                            background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)}, ${alpha(theme.palette.secondary.main, 0.1)})`,
+                                <Fade in timeout={500 + index * 100}>
+                                    <AssetCard
+                                        sx={{
+                                            //animation: `${slideUp} ${0.2 * (index + 1)}s ease-out`,
+                                            height: '100%',
                                             display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            mr: 2,
-                                            border: `2px solid ${alpha(theme.palette.primary.main, 0.2)}`
-                                        }}>
-                                            <asset.icon style={{ width: 28, height: 28 }} />
+                                            flexDirection: 'column',
+                                            // '&:hover': {
+                                            //     animation: `${float} 3s ease-in-out infinite`
+                                            // }
+                                        }}
+                                        onClick={() => setSelectedAsset(asset)}
+                                    >
+                                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                                            <Box sx={{
+                                                width: 48,
+                                                height: 48,
+                                                borderRadius: '50%',
+                                                background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)}, ${alpha(theme.palette.secondary.main, 0.1)})`,
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                mr: 2,
+                                                border: `2px solid ${alpha(theme.palette.primary.main, 0.2)}`
+                                            }}>
+                                                <asset.icon style={{ width: 28, height: 28 }} />
+                                            </Box>
+                                            <Box sx={{ flex: 1 }}>
+                                                <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
+                                                    {asset.name}
+                                                </Typography>
+                                                <Typography variant="body2" color="text.secondary">
+                                                    {asset.symbol}
+                                                </Typography>
+                                            </Box>
+                                            <IconButton size="small">
+                                                <StarBorder />
+                                            </IconButton>
                                         </Box>
-                                        <Box sx={{ flex: 1 }}>
-                                            <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
-                                                {asset.name}
-                                            </Typography>
-                                            <Typography variant="body2" color="text.secondary">
-                                                {asset.symbol}
-                                            </Typography>
-                                        </Box>
-                                        <IconButton size="small">
-                                            <StarBorder />
-                                        </IconButton>
-                                    </Box>
 
-                                    <Box sx={{ mb: 2 }}>
-                                        <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
-                                            Balance
-                                        </Typography>
-                                        <Typography variant="h5" sx={{ fontWeight: 700, mb: 1 }}>
-                                            {balanceVisible ? asset.balance.toFixed(6) : '••••••'} {asset.symbol}
-                                        </Typography>
-                                        <Typography variant="h6" sx={{
-                                            fontWeight: 600,
-                                            color: theme.palette.text.secondary
-                                        }}>
-                                            {balanceVisible ? `$${asset.value.toLocaleString()}` : '••••••'}
-                                        </Typography>
-                                    </Box>
-
-                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                                        <Typography variant="body2" color="text.secondary">
-                                            ${asset.price.toLocaleString()}
-                                        </Typography>
-                                        <Chip
-                                            size="small"
-                                            label={`${asset.change24h > 0 ? '+' : ''}${asset.change24h}%`}
-                                            sx={{
-                                                background: asset.change24h > 0
-                                                    ? `linear-gradient(135deg, ${theme.palette.success.main}, ${theme.palette.success.dark})`
-                                                    : `linear-gradient(135deg, ${theme.palette.error.main}, ${theme.palette.error.dark})`,
-                                                color: '#fff',
+                                        <Box sx={{ mb: 2, flexGrow: 1 }}>
+                                            <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
+                                                Balance
+                                            </Typography>
+                                            <Typography variant="h5" sx={{ fontWeight: 700, mb: 1, wordBreak: 'break-all' }}>
+                                                {balanceVisible ? `${asset.balance.toFixed(6)} ${asset.symbol}` : '••••••'}
+                                            </Typography>
+                                            <Typography variant="h6" sx={{
                                                 fontWeight: 600,
-                                                fontSize: '0.75rem'
-                                            }}
-                                        />
-                                    </Box>
+                                                color: theme.palette.text.secondary
+                                            }}>
+                                                {balanceVisible ? `$${asset.value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '••••••'}
+                                            </Typography>
+                                        </Box>
 
-                                    <Box sx={{ height: 60, mb: 2 }}>
-                                        <ResponsiveContainer width="100%" height="100%">
-                                            <AreaChart data={asset.sparkline.map((value, index) => ({ value, index }))}>
-                                                <defs>
-                                                    <linearGradient id={`gradient-${asset.id}`} x1="0" y1="0" x2="0" y2="1">
-                                                        <stop offset="5%" stopColor={asset.change24h > 0 ? theme.palette.success.main : theme.palette.error.main} stopOpacity={0.3}/>
-                                                        <stop offset="95%" stopColor={asset.change24h > 0 ? theme.palette.success.main : theme.palette.error.main} stopOpacity={0}/>
-                                                    </linearGradient>
-                                                </defs>
-                                                <Area
-                                                    type="monotone"
-                                                    dataKey="value"
-                                                    stroke={asset.change24h > 0 ? theme.palette.success.main : theme.palette.error.main}
-                                                    strokeWidth={2}
-                                                    fill={`url(#gradient-${asset.id})`}
-                                                    dot={false}
-                                                />
-                                            </AreaChart>
-                                        </ResponsiveContainer>
-                                    </Box>
+                                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                                            <Typography variant="body2" color="text.secondary">
+                                                ${asset.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                            </Typography>
+                                            <Chip
+                                                size="small"
+                                                label={`${asset.change24h > 0 ? '+' : ''}${asset.change24h.toFixed(2)}%`}
+                                                sx={{
+                                                    background: asset.change24h > 0
+                                                        ? `linear-gradient(135deg, ${theme.palette.success.main}, ${theme.palette.success.dark})`
+                                                        : `linear-gradient(135deg, ${theme.palette.error.main}, ${theme.palette.error.dark})`,
+                                                    color: '#fff',
+                                                    fontWeight: 600,
+                                                    fontSize: '0.75rem'
+                                                }}
+                                            />
+                                        </Box>
 
-                                    <Box sx={{ display: 'flex', gap: 1 }}>
-                                        <Button
-                                            size="small"
-                                            variant="outlined"
-                                            sx={{
-                                                flex: 1,
-                                                borderRadius: '8px',
-                                                textTransform: 'none',
-                                                fontWeight: 600
-                                            }}
-                                        >
-                                            Buy
-                                        </Button>
-                                        <Button
-                                            size="small"
-                                            variant="outlined"
-                                            sx={{
-                                                flex: 1,
-                                                borderRadius: '8px',
-                                                textTransform: 'none',
-                                                fontWeight: 600
-                                            }}
-                                        >
-                                            Sell
-                                        </Button>
-                                    </Box>
-                                </AssetCard>
+                                        <Box sx={{ height: 60, mb: 2 }}>
+                                            <ResponsiveContainer width="100%" height="100%">
+                                                <AreaChart data={asset.sparkline.map((value, index) => ({ value, index }))}>
+                                                    <defs>
+                                                        <linearGradient id={`gradient-${asset.id}`} x1="0" y1="0" x2="0" y2="1">
+                                                            <stop offset="5%" stopColor={asset.change24h > 0 ? theme.palette.success.main : theme.palette.error.main} stopOpacity={0.3}/>
+                                                            <stop offset="95%" stopColor={asset.change24h > 0 ? theme.palette.success.main : theme.palette.error.main} stopOpacity={0}/>
+                                                        </linearGradient>
+                                                    </defs>
+                                                    <Area
+                                                        type="monotone"
+                                                        dataKey="value"
+                                                        stroke={asset.change24h > 0 ? theme.palette.success.main : theme.palette.error.main}
+                                                        strokeWidth={2}
+                                                        fill={`url(#gradient-${asset.id})`}
+                                                        dot={false}
+                                                    />
+                                                </AreaChart>
+                                            </ResponsiveContainer>
+                                        </Box>
+
+                                        <Box sx={{ display: 'flex', gap: 1 }}>
+                                            <Button
+                                                size="small"
+                                                variant="outlined"
+                                                sx={{
+                                                    flex: 1,
+                                                    borderRadius: '8px',
+                                                    textTransform: 'none',
+                                                    fontWeight: 600
+                                                }}
+                                            >
+                                                Buy
+                                            </Button>
+                                            <Button
+                                                size="small"
+                                                variant="outlined"
+                                                sx={{
+                                                    flex: 1,
+                                                    borderRadius: '8px',
+                                                    textTransform: 'none',
+                                                    fontWeight: 600
+                                                }}
+                                            >
+                                                Sell
+                                            </Button>
+                                        </Box>
+                                    </AssetCard>
+                                </Fade>
                             </Grid>
                         ))}
                     </Grid>

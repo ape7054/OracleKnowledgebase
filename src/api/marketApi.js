@@ -6,7 +6,7 @@ const API_BASE_URL = '/api';
 // 创建axios实例
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 10000,
+  timeout: 30000,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -74,8 +74,16 @@ export const marketApi = {
   // 获取多个币种数据
   async getMultipleCoins(coinIds) {
     try {
-      const idsParam = Array.isArray(coinIds) ? coinIds.join(',') : coinIds;
-      const response = await apiClient.get(`/market/coins?ids=${idsParam}`);
+      const params = {
+        vs_currency: 'usd',
+        ids: coinIds.join(','),
+        order: 'market_cap_desc',
+        per_page: coinIds.length,
+        page: 1,
+        sparkline: true,
+        price_change_percentage: '24h,7d'
+      };
+      const response = await apiClient.get('market/coins/markets', { params });
       return response.data;
     } catch (error) {
       console.error('Failed to fetch multiple coins data:', error);
