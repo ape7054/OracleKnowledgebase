@@ -10,7 +10,8 @@ import {
   Tooltip,
   Container,
   Grid,
-  Fade
+  Fade,
+  Stack
 } from '@mui/material';
 import { styled, useTheme, alpha, keyframes } from '@mui/system';
 import { 
@@ -22,9 +23,13 @@ import {
   TrendingUp,
   TrendingDown,
   Star,
-  StarBorder
+  StarBorder,
+  Verified,
+  Security,
+  FileDownload,
+  Refresh
 } from '@mui/icons-material';
-import { ResponsiveContainer, AreaChart, Area } from 'recharts';
+import { ResponsiveContainer, AreaChart, Area, LineChart, Line, YAxis } from 'recharts';
 
 // Import crypto icons
 import BtcIcon from 'cryptocurrency-icons/svg/color/btc.svg?react';
@@ -65,6 +70,11 @@ const slideUp = keyframes`
     opacity: 1;
     transform: translateY(0);
   }
+`;
+
+const pulse = keyframes`
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
 `;
 
 // Premium Card Component
@@ -135,71 +145,104 @@ function AccountPremium() {
         { id: 'stellar', symbol: 'XLM', balance: 7500, icon: XlmIcon, name: 'Stellar' }
     ];
 
-    useEffect(() => {
-        const fetchPortfolioData = async () => {
-            try {
-                setLoading(true);
-                const coinIds = userHoldings.map(asset => asset.id);
-                const marketData = await marketApi.getMultipleCoins(coinIds);
+    const fetchPortfolioData = async () => {
+        try {
+            setLoading(true);
+            const coinIds = userHoldings.map(asset => asset.id);
+            const marketData = await marketApi.getMultipleCoins(coinIds);
 
-                if (!marketData || !marketData.data || !Array.isArray(marketData.data)) {
-                    throw new Error('Invalid API response format');
+            if (!marketData || !marketData.data || !Array.isArray(marketData.data)) {
+                throw new Error('Invalid API response format');
+            }
+
+            let totalBalance = 0;
+            const assets = userHoldings.map(holding => {
+                const marketInfo = marketData.data.find(coin => coin.id === holding.id);
+                if (!marketInfo) {
+                    return { ...holding, value: 0, price: 0, change24h: 0, sparkline: [] };
                 }
 
-                let totalBalance = 0;
-                const assets = userHoldings.map(holding => {
-                    const marketInfo = marketData.data.find(coin => coin.id === holding.id);
-                    if (!marketInfo) {
-                        return { ...holding, value: 0, price: 0, change24h: 0, sparkline: [] };
-                    }
+                const value = holding.balance * marketInfo.current_price;
+                totalBalance += value;
+                
+                // 生成sparkline数据 - 因为API可能不返回sparkline数据
+                const basePrice = marketInfo.current_price;
+                const priceChange = marketInfo.price_change_percentage_24h || 0;
+                const direction = priceChange >= 0 ? 1 : -1;
+                
+                // 生成合成的图表数据
+                const sparklineData = marketInfo.sparkline_in_7d?.price && Array.isArray(marketInfo.sparkline_in_7d.price) && marketInfo.sparkline_in_7d.price.length > 0
+                    ? marketInfo.sparkline_in_7d.price
+                    : generateExaggeratedSparkline(basePrice, priceChange, direction, holding.symbol);
 
-                    const value = holding.balance * marketInfo.current_price;
-                    totalBalance += value;
+                return {
+                    ...holding,
+                    value,
+                    price: marketInfo.current_price,
+                    change24h: marketInfo.price_change_percentage_24h,
+                    sparkline: sparklineData
+                };
+            });
+
+            // 生成夸张的波动数据
+            function generateExaggeratedSparkline(basePrice, priceChange, direction, symbol) {
+                const pointCount = 24;
+                const isStablecoin = symbol === 'USDT' || symbol === 'USDC';
+
+                if (isStablecoin) {
+                    // 对稳定币，返回带有极小噪音的平线
+                    const noise = basePrice * 0.0005; // 0.05% 的噪音
+                    return Array.from({ length: pointCount }, () => basePrice + (Math.random() - 0.5) * noise);
+                }
+
+                // 对所有其他高波动币种
+                const volatilityFactor = 0.30; // 30% 的基础波动率
+                const volatilityRange = basePrice * volatilityFactor;
+
+                const data = [];
+                data.push(basePrice);
+
+                for (let i = 1; i < pointCount; i++) {
+                    const progress = i / (pointCount - 1);
                     
-                    // 生成sparkline数据 - 因为API可能不返回sparkline数据
-                    const basePrice = marketInfo.current_price;
-                    const priceChange = marketInfo.price_change_percentage_24h || 0;
-                    const direction = priceChange >= 0 ? 1 : -1;
+                    // 趋势
+                    const trend = (priceChange / 100) * basePrice * progress;
                     
-                    // 生成合成的图表数据
-                    const sparklineData = marketInfo.sparkline_in_7d?.price && Array.isArray(marketInfo.sparkline_in_7d.price) && marketInfo.sparkline_in_7d.price.length > 0
-                        ? marketInfo.sparkline_in_7d.price
-                        : [0, 1, 2, 3, 4, 5, 6].map(i => {
-                            const randomVariation = direction * Math.random() * Math.abs(basePrice * priceChange / 100) * 0.2;
-                            return basePrice + randomVariation;
-                        });
-
-                    return {
-                        ...holding,
-                        value,
-                        price: marketInfo.current_price,
-                        change24h: marketInfo.price_change_percentage_24h,
-                        sparkline: sparklineData
-                    };
-                });
-
-                const totalChange24h = assets.reduce((acc, asset) => {
-                    if (asset.value > 0) {
-                        return acc + (asset.value * (asset.change24h / 100));
-                    }
-                    return acc;
-                }, 0) / totalBalance * 100;
-
-                setPortfolioData({
-                    totalBalance,
-                    totalChange24h,
-                    totalChange7d: 2.8, // 假设的7天变化
-                    assets
-                });
-                setError(null);
-            } catch (err) {
-                console.error("Failed to fetch portfolio data:", err);
-                setError("Failed to load portfolio data. Please try again later.");
-            } finally {
-                setLoading(false);
+                    // 季节性/周期性波动
+                    const seasonal = Math.sin(progress * Math.PI * 2.5) * volatilityRange * 0.4;
+                    
+                    // 随机噪音
+                    const noise = (Math.random() - 0.5) * volatilityRange * 0.6;
+                    
+                    const newPrice = basePrice + trend + seasonal + noise;
+                    data.push(Math.max(0, newPrice)); // 确保价格不为负
+                }
+                return data;
             }
-        };
 
+            const totalChange24h = assets.reduce((acc, asset) => {
+                if (asset.value > 0) {
+                    return acc + (asset.value * (asset.change24h / 100));
+                }
+                return acc;
+            }, 0) / totalBalance * 100;
+
+            setPortfolioData({
+                totalBalance,
+                totalChange24h,
+                totalChange7d: 2.8, // 假设的7天变化
+                assets
+            });
+            setError(null);
+        } catch (err) {
+            console.error("Failed to fetch portfolio data:", err);
+            setError("Failed to load portfolio data. Please try again later.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
         fetchPortfolioData();
     }, []);
     
@@ -218,23 +261,92 @@ function AccountPremium() {
             <Fade in timeout={800}>
                 <Box>
                     {/* Header */}
-                    <Box sx={{ mb: 4 }}>
-                        <Typography 
-                            variant="h3" 
-                            sx={{ 
-                                fontWeight: 800,
-                                background: `linear-gradient(135deg, ${theme.palette.text.primary}, ${theme.palette.primary.main})`,
-                                backgroundClip: 'text',
-                                WebkitBackgroundClip: 'text',
-                                WebkitTextFillColor: 'transparent',
-                                mb: 1
-                            }}
-                        >
-                            Portfolio
-                        </Typography>
-                        <Typography variant="body1" color="text.secondary">
-                            Manage your digital assets with institutional-grade security
-                        </Typography>
+                    <Box sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'flex-start',
+                        mb: 4
+                    }}>
+                        <Box>
+                            <Typography
+                                variant="h2"
+                                sx={{
+                                    fontWeight: 900,
+                                    fontSize: { xs: '2.5rem', md: '3.5rem' },
+                                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
+                                    backgroundClip: 'text',
+                                    WebkitBackgroundClip: 'text',
+                                    WebkitTextFillColor: 'transparent',
+                                    mb: 1,
+                                    letterSpacing: '-0.02em'
+                                }}
+                            >
+                                Digital Asset Portfolio
+                            </Typography>
+                            <Typography
+                                variant="h6"
+                                sx={{
+                                    color: theme.palette.text.secondary,
+                                    fontWeight: 400,
+                                    mb: 2
+                                }}
+                            >
+                                A complete overview of your crypto holdings and performance.
+                            </Typography>
+                            <Stack direction="row" spacing={2} alignItems="center">
+                                <Chip
+                                    icon={<Security sx={{ fontSize: 16 }} />}
+                                    label="Institutional-grade Security"
+                                    sx={{
+                                        background: 'linear-gradient(135deg, #10b981, #059669)',
+                                        color: 'white',
+                                        fontWeight: 600,
+                                        animation: `${pulse} 2s ease-in-out infinite`
+                                    }}
+                                />
+                                <Chip
+                                    icon={<Verified sx={{ fontSize: 16 }} />}
+                                    label="Real-time Valuations"
+                                    variant="outlined"
+                                    sx={{
+                                        borderColor: theme.palette.primary.main,
+                                        color: theme.palette.primary.main
+                                    }}
+                                />
+                            </Stack>
+                        </Box>
+
+                        <Stack direction="row" spacing={1.5}>
+                            <Tooltip title="Refresh Data">
+                                <IconButton
+                                    onClick={fetchPortfolioData}
+                                    sx={{
+                                        background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))',
+                                        backdropFilter: 'blur(20px)',
+                                        border: '1px solid rgba(102, 126, 234, 0.2)',
+                                        '&:hover': {
+                                            background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2))',
+                                        }
+                                    }}
+                                >
+                                    <Refresh />
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Export Report (CSV)">
+                                <IconButton
+                                    sx={{
+                                        background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))',
+                                        backdropFilter: 'blur(20px)',
+                                        border: '1px solid rgba(102, 126, 234, 0.2)',
+                                        '&:hover': {
+                                            background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2))',
+                                        }
+                                    }}
+                                >
+                                    <FileDownload />
+                                </IconButton>
+                            </Tooltip>
+                        </Stack>
                     </Box>
 
                     {/* Premium Balance Card */}
@@ -406,24 +518,37 @@ function AccountPremium() {
                                             />
                                         </Box>
 
-                                        <Box sx={{ height: 60, mb: 2 }}>
+                                        <Box sx={{ height: 100, mb: 2 }}>
                                             <ResponsiveContainer width="100%" height="100%">
-                                                <AreaChart data={asset.sparkline.map((value, index) => ({ value, index }))}>
+                                                <LineChart 
+                                                    data={asset.sparkline.map((value, index) => ({ value, index }))}
+                                                    margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
+                                                    >
                                                     <defs>
                                                         <linearGradient id={`gradient-${asset.id}`} x1="0" y1="0" x2="0" y2="1">
-                                                            <stop offset="5%" stopColor={asset.change24h > 0 ? theme.palette.success.main : theme.palette.error.main} stopOpacity={0.3}/>
+                                                            <stop offset="5%" stopColor={asset.change24h > 0 ? theme.palette.success.main : theme.palette.error.main} stopOpacity={0.5}/>
                                                             <stop offset="95%" stopColor={asset.change24h > 0 ? theme.palette.success.main : theme.palette.error.main} stopOpacity={0}/>
                                                         </linearGradient>
                                                     </defs>
-                                                    <Area
+                                                    <Line
                                                         type="monotone"
                                                         dataKey="value"
                                                         stroke={asset.change24h > 0 ? theme.palette.success.main : theme.palette.error.main}
-                                                        strokeWidth={2}
-                                                        fill={`url(#gradient-${asset.id})`}
+                                                        strokeWidth={2.5} // 线条宽度
+                                                        animationDuration={800}
+                                                        animationEasing="ease-in-out"
+                                                        isAnimationActive={true}
                                                         dot={false}
                                                     />
-                                                </AreaChart>
+                                                    <YAxis 
+                                                        hide={true} 
+                                                        domain={
+                                                            asset.symbol === 'USDT' || asset.symbol === 'USDC'
+                                                                ? [0.995, 1.005] // 对稳定币使用固定的Y轴范围，强制其看起来平坦
+                                                                : [dataMin => (dataMin * 0.9), dataMax => (dataMax * 1.1)] // 对其他币种使用动态范围，增加10%的上下边距
+                                                        }
+                                                    />
+                                                </LineChart>
                                             </ResponsiveContainer>
                                         </Box>
 

@@ -1236,55 +1236,55 @@ function Dashboard() {
       const basePrice = coin.price || 0;
 
       // 大幅增加波动幅度，让图表更加动态
-      const volatility = Math.abs(changePercent) > 5 ? 0.35 :  // 从0.15增加到0.35
-                        Math.abs(changePercent) > 2 ? 0.25 :   // 从0.08增加到0.25
-                        0.15;                                   // 从0.04增加到0.15
+      const volatility = Math.abs(changePercent) > 5 ? 0.60 :  // 从0.35增加到0.60
+                        Math.abs(changePercent) > 2 ? 0.45 :   // 从0.25增加到0.45
+                        0.30;                                  // 从0.15增加到0.30
 
       // 生成带趋势的价格数据
       const sparkline = Array.from({ length: 24 }, (_, i) => {
         const progress = i / 23; // 0 to 1
 
         // 基础趋势（根据24h变化）- 增强趋势影响
-        const trendComponent = basePrice * (changePercent / 100) * progress * 1.5; // 增加1.5倍
+        const trendComponent = basePrice * (changePercent / 100) * progress * 2.5; // 从1.5倍增加到2.5倍
 
         // 大幅增强随机波动
-        const randomWalk = Math.sin(i * 0.8 + Math.random() * 3) * volatility * basePrice; // 增加频率和幅度
-        const microFluctuation = (Math.random() - 0.5) * 0.08 * basePrice; // 从0.02增加到0.08
+        const randomWalk = Math.sin(i * 0.8 + Math.random() * 5) * volatility * basePrice * 1.5; // 增加频率、幅度和乘以1.5
+        const microFluctuation = (Math.random() - 0.5) * 0.15 * basePrice; // 从0.08增加到0.15
 
         // 添加更强烈的价格模式
         let patternComponent = 0;
         if (symbol === 'BTC' || symbol === 'WBTC') {
           // BTC通常有较大的波动 - 大幅增强
-          patternComponent = Math.sin(i * 0.6) * 0.12 * basePrice + // 从0.03增加到0.12
-                            Math.cos(i * 0.4) * 0.08 * basePrice;   // 添加额外波动
+          patternComponent = Math.sin(i * 0.6) * 0.20 * basePrice + // 从0.12增加到0.20
+                            Math.cos(i * 0.4) * 0.15 * basePrice;   // 从0.08增加到0.15
         } else if (symbol === 'ETH' || symbol === 'STETH') {
           // ETH可能有不同的波动模式 - 增强
-          patternComponent = Math.cos(i * 0.7) * 0.10 * basePrice + // 从0.025增加到0.10
-                            Math.sin(i * 0.9) * 0.06 * basePrice;   // 添加额外波动
+          patternComponent = Math.cos(i * 0.7) * 0.18 * basePrice + // 从0.10增加到0.18
+                            Math.sin(i * 0.9) * 0.12 * basePrice;   // 从0.06增加到0.12
         } else if (symbol === 'SOL') {
           // Solana通常波动较大
-          patternComponent = Math.sin(i * 1.2) * 0.15 * basePrice +
-                            Math.cos(i * 0.8) * 0.10 * basePrice;
+          patternComponent = Math.sin(i * 1.2) * 0.25 * basePrice + // 从0.15增加到0.25
+                            Math.cos(i * 0.8) * 0.18 * basePrice;   // 从0.10增加到0.18
         } else if (symbol === 'DOGE') {
           // Dogecoin波动更加剧烈
-          patternComponent = Math.sin(i * 1.5) * 0.20 * basePrice +
-                            (Math.random() - 0.5) * 0.15 * basePrice;
+          patternComponent = Math.sin(i * 1.5) * 0.30 * basePrice + // 从0.20增加到0.30
+                            (Math.random() - 0.5) * 0.25 * basePrice; // 从0.15增加到0.25
         } else if (symbol === 'USDT' || symbol === 'USDC') {
           // 稳定币保持微小波动
-          return basePrice + (Math.random() - 0.5) * 0.003 * basePrice; // 稍微增加一点
+          return basePrice + (Math.random() - 0.5) * 0.005 * basePrice; // 稍微增加一点，从0.003到0.005
         } else {
           // 其他币种也增加波动
-          patternComponent = Math.sin(i * 0.5 + Math.random()) * 0.08 * basePrice +
-                            Math.cos(i * 0.3 + Math.random()) * 0.05 * basePrice;
+          patternComponent = Math.sin(i * 0.5 + Math.random()) * 0.15 * basePrice + // 从0.08增加到0.15
+                            Math.cos(i * 0.3 + Math.random()) * 0.10 * basePrice; // 从0.05增加到0.10
         }
 
         // 添加一些随机的价格跳跃，模拟真实市场
-        const priceJump = Math.random() < 0.3 ? (Math.random() - 0.5) * 0.06 * basePrice : 0;
+        const priceJump = Math.random() < 0.3 ? (Math.random() - 0.5) * 0.12 * basePrice : 0; // 从0.06增加到0.12
 
         const finalPrice = basePrice + trendComponent + randomWalk + microFluctuation + patternComponent + priceJump;
 
         // 确保价格不会变成负数，但允许更大的波动范围
-        return Math.max(basePrice * 0.7, finalPrice); // 允许最多30%的下跌
+        return Math.max(basePrice * 0.6, finalPrice); // 允许最多40%的下跌，从0.7到0.6
       });
 
       return {
