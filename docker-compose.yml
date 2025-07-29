@@ -18,25 +18,30 @@ services:
       - mysql-data:/var/lib/mysql
     networks:
       - market-pulse-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   # 后端服务
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    image: market-pulse_backend:latest
     container_name: market-pulse-backend
     restart: unless-stopped
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       DB_HOST: db
       DB_PORT: 3306
       DB_USER: ${DB_USER:-market_pulse_user}
       DB_PASSWORD: ${DB_PASSWORD:-wBYXZkiLTExiEAHF}
       DB_NAME: ${DB_NAME:-market_pulse_db}
-      SERVER_PORT: 8080
+      GIN_MODE: ${GIN_MODE:-debug}
+      COINGECKO_API_KEY: ${COINGECKO_API_KEY}
     ports:
-      - "8080:8080"  # 映射到主机端口，让nginx可以访问
+      - "8080:8080"  # 直接暴露后端服务的 8080 端口
     networks:
       - market-pulse-network
     healthcheck:
@@ -51,7 +56,7 @@ services:
     container_name: market-pulse-nginx
     restart: unless-stopped
     ports:
-      - "80:80"
+      - "9088:80"
     volumes:
       - ./dist:/usr/share/nginx/html
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf

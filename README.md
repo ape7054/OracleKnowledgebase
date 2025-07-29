@@ -87,32 +87,47 @@ MarketPulse 是一个现代化的加密货币市场智能平台，采用全栈�
 ### 📋 环境要求
 确保您的系统已安装以下软件：
 - ✅ **Node.js** (v18+)
-- ✅ **Go** (v1.22+)
+- ✅ **Go** (v1.21+)
 - ✅ **Docker & Docker Compose**
 - ✅ **Git**
 
-### ⚡ 开发环境一键启动 (推荐)
+### ⚡ Docker方式启动 (推荐)
 这是启动本地开发环境最简单的方式，包含了后端服务和数据库。
 ```bash
 # 1. 克隆项目
 git clone https://github.com/ape7054/trading-dashboard.git
 cd market-pulse
 
-# 2. 启动 Docker 容器 (后端 + 数据库)
-# 这将以后台模式启动所有在 docker-compose.yml 中定义的服务
-docker-compose up -d
+# 2. 清理并重建Docker环境
+docker-compose down --volumes
+docker-compose up --build -d
 
-# 3. 在项目根目录安装前端依赖
+# 3. 检查服务状态
+docker-compose ps
+
+# 4. 访问应用
+# 前端静态文件通过Nginx提供服务: http://localhost:8088
+# 后端API直接访问: http://localhost:8080/api/health
+```
+
+### 🖥️ 前端开发模式启动
+如果您想在开发模式下运行前端（支持热重载）：
+```bash
+# 1. 安装前端依赖
 npm install
 
-# 4. 启动前端开发服务器
-# 前端应用将在 http://localhost:5173 上运行
-npm run dev
+# 2. 启动前端开发服务器
+# 确保先关闭可能占用端口的进程
+lsof -t -i:5173 -i:5174 -i:5175 -i:5176 -i:5177 | xargs -r kill -9
+
+# 3. 指定端口启动开发服务器
+npm run dev -- --port 5175
 ```
 
 🎉 **开发环境访问地址**:
-- 🌐 **前端应用**: `http://localhost:5173`
-- 🔧 **后端健康检查**: `http://localhost:8080/api/health`
+- 🌐 **前端应用(Docker)**: `http://localhost:8088`
+- 🌐 **前端应用(开发模式)**: `http://localhost:5175`
+- 🔧 **后端API**: `http://localhost:8080/api`
 - 🗄️ **数据库 (外部连接)**: 主机: `localhost`, 端口: `3307`
 
 ### 🔧 手动启动 (可选)
@@ -129,10 +144,14 @@ go run cmd/market-pulse-backend/main.go
 # 3. 启动前端开发服务器 (新终端)
 # (返回根目录)
 npm install
-npm run dev
+npm run dev -- --port 5175
 ```
 
-> 📚 **需要帮助？** 查看 [开发环境搭建指南](AI-Protocol-Lab/project-docs/development/setup-guide.md) 获取详细的安装配置说明和故障排除方法
+> 📚 **故障排除**:
+> - 如果遇到Docker容器启动问题，尝试完全清理: `docker-compose down --volumes` 然后重新构建
+> - 端口冲突问题可使用 `lsof -i :端口号` 查找占用进程
+> - 前端API连接问题请检查 `vite.config.js` 中的代理配置
+> - 详细指南请查看 [开发环境搭建指南](AI-Protocol-Lab/project-docs/development/setup-guide.md)
 
 ## 📁 项目架构
 
@@ -228,7 +247,7 @@ market-pulse/
 - **🐛 Bug修复** - 发现并修复问题
 - **✨ 新功能** - 添加有用的新特性
 - **📚 文档改进** - 完善文档和注释
-- **�� UI/UX优化** - 改进用户界面和体验
+- **🎨 UI/UX优化** - 改进用户界面和体验
 - **🧪 测试补充** - 增加测试覆盖率
 - **⚡ 性能优化** - 提升应用性能
 

@@ -18,11 +18,7 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 5173,
     proxy: {
-      '/api/market': {
-        target: 'https://api.coingecko.com/api/v3',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api\/market/, ''),
-      },
+      // 删除 /api/market 的特殊代理，将所有 API 请求统一发送到后端
       '/api': {
         // 开发环境默认使用本地后端
         target: 'http://localhost:8080',

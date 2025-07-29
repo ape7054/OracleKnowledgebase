@@ -78,7 +78,8 @@ export const marketApi = {
         ids: coinIds.join(','),
         sparkline: true
       };
-      const response = await apiClient.get('/api/market/coins', { params });
+      // 使用正确的API路径，与后端router.go文件中定义的一致
+      const response = await apiClient.get('/market/coins', { params });
       return response.data;
     } catch (error) {
       console.error('Failed to fetch multiple coins data:', error);

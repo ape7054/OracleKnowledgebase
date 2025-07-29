@@ -2,6 +2,8 @@ module market-pulse/backend
 
 go 1.22
 
+toolchain go1.23.0
+
 require (
 	github.com/gin-contrib/cors v1.5.0
 	github.com/gin-gonic/gin v1.9.1
