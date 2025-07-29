@@ -120,13 +120,22 @@ const AssetCard = styled(Paper)(({ theme }) => ({
 
 function AccountPremium() {
     const theme = useTheme();
+
+    // Step 1: Initialization
+    // We use `useState` hooks to create and manage the component's internal state.
+    // - `balanceVisible`: controls whether sensitive financial numbers are shown or hidden.
+    // - `selectedAsset`: tracks which asset card the user clicks on.
+    // - `portfolioData`: will store all the calculated data for the portfolio.
+    // - `loading`: a boolean (true/false) to show a loading indicator while fetching data.
+    // - `error`: will store an error message if data fetching fails.
     const [balanceVisible, setBalanceVisible] = useState(true);
     const [selectedAsset, setSelectedAsset] = useState(null);
     const [portfolioData, setPortfolioData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     
-    // Static data representing user's holdings. In a real app, this would come from a user-specific API.
+    // This is static (静态的) data. In a real application, you would fetch this 
+    // user-specific data from your backend server.
     const userHoldings = [
         { id: 'bitcoin', symbol: 'BTC', balance: 1.26, icon: BtcIcon, name: 'Bitcoin' },
         { id: 'ethereum', symbol: 'ETH', balance: 14.5, icon: EthIcon, name: 'Ethereum' },
@@ -145,16 +154,26 @@ function AccountPremium() {
         { id: 'stellar', symbol: 'XLM', balance: 7500, icon: XlmIcon, name: 'Stellar' }
     ];
 
+    // Step 3: Data Fetching Logic
+    // This `async` function is responsible for getting all the data from the crypto API.
     const fetchPortfolioData = async () => {
         try {
+            // Set loading to true at the beginning of the fetch.
             setLoading(true);
             const coinIds = userHoldings.map(asset => asset.id);
+
+            // Step 4: API Call
+            // We call `getMultipleCoins` to make the network request (网络请求).
+            // `await` pauses the function until the data is received from the API.
             const marketData = await marketApi.getMultipleCoins(coinIds);
 
             if (!marketData || !marketData.data || !Array.isArray(marketData.data)) {
                 throw new Error('Invalid API response format');
             }
 
+            // Step 5: Data Processing
+            // After receiving the data, we process it to calculate values 
+            // and prepare it for display in the UI.
             let totalBalance = 0;
             const assets = userHoldings.map(holding => {
                 const marketInfo = marketData.data.find(coin => coin.id === holding.id);
@@ -227,35 +246,51 @@ function AccountPremium() {
                 return acc;
             }, 0) / totalBalance * 100;
 
+            // Step 6: State Update
+            // We update the component's state with the newly fetched and processed data.
+            // Calling a `set` function like `setPortfolioData` tells React to re-render the component.
             setPortfolioData({
                 totalBalance,
                 totalChange24h,
-                totalChange7d: 2.8, // 假设的7天变化
+                totalChange7d: 2.8, // Assumed 7-day change, for demonstration
                 assets
             });
-            setError(null);
+            setError(null); // Clear any previous errors.
         } catch (err) {
+            // If any part of the `try` block fails, we catch the error here.
             console.error("Failed to fetch portfolio data:", err);
             setError("Failed to load portfolio data. Please try again later.");
         } finally {
+            // This `finally` block runs whether the fetch succeeded or failed.
+            // We set `loading` to false to hide the loading indicator.
             setLoading(false);
         }
     };
 
+    // Step 2: Triggering the Data Fetch
+    // The `useEffect` hook runs after the component's first render.
+    // The empty dependency array `[]` means it will only run once when the component "mounts" (挂载).
     useEffect(() => {
         fetchPortfolioData();
     }, []);
     
+    // Step 2a: Conditional Rendering (条件渲染)
+    // Before we have data, we show a loading message. This is the first thing the user sees.
     if (loading) {
         return <Container maxWidth="xl" sx={{ py: 4, textAlign: 'center' }}><Typography>Loading Portfolio...</Typography></Container>;
     }
+    // If an error occurred during the fetch, we show the error message.
     if (error) {
         return <Container maxWidth="xl" sx={{ py: 4, textAlign: 'center' }}><Typography color="error">{error}</Typography></Container>;
     }
+    // If for some reason we have no data and no error, render nothing.
     if (!portfolioData) {
         return null;
     }
 
+    // Step 7: Final Render
+    // Once `loading` is false and `portfolioData` has data, React renders this main JSX.
+    // This is the complete UI for the portfolio page.
     return (
         <Container maxWidth="xl" sx={{ py: 4 }}>
             <Fade in timeout={800}>
