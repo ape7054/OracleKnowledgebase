@@ -142,7 +142,9 @@ function AppContent() {
     setMobileOpen(!mobileOpen);
   };
 
-  // The content of the drawer (sidebar). This is defined once and used for both mobile and desktop.
+  // ANALOGY: The 'drawerContent' is like the "Elevator Panel" in our building.
+  // It is defined once and contains the buttons for all the "floors" (pages) of the application.
+  // This panel will be displayed inside the sidebar.
   const drawerContent = (
     <>
       {/* Top section of the drawer with the logo and brand name. */}
@@ -191,7 +193,10 @@ function AppContent() {
           { text: 'Trade', icon: <TradeIcon />, path: '/trade' },
           { text: 'Account', icon: <AccountIcon />, path: '/account' },
         ].map((item) => (
-          // Each item in the list is a NavLink to handle routing.
+          // Each item is a "button" on our "Elevator Panel".
+          // It's a <StyledNavLink> which is a styled version of React Router's NavLink.
+          // When you click this, you are telling the "Elevator System" (React Router) which "floor" (URL) to go to.
+          // It does NOT directly call any code in the page components like Account.jsx.
           <ListItem key={item.text} disablePadding sx={{ mb: 0.5 }}>
             <StyledNavLink to={item.path} end={item.path === '/'}>
               {/* Use a render prop to get the 'isActive' state from NavLink. */}
@@ -232,6 +237,8 @@ function AppContent() {
     </>
   );
 
+  // ANALOGY: This return statement describes the entire "Building Layout".
+  // It includes the sidebar (for desktop) or app bar (for mobile) and the main content area.
   return (
       <Box sx={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
         {/* CssBaseline normalizes styles across browsers. */}
@@ -309,6 +316,7 @@ function AppContent() {
         </StyledDrawer>
         
         {/* Sidebar - Desktop Version (Permanent Drawer) */}
+        {/* This is the permanent sidebar for larger screens. It holds our "Elevator Panel" (drawerContent). */}
         <StyledDrawer
           variant="permanent" // This drawer is always visible.
           sx={{
@@ -326,6 +334,8 @@ function AppContent() {
         </StyledDrawer>
         
         {/* Main Content Area */}
+        {/* ANALOGY: This is the large open space in our "Lobby". */}
+        {/* The "Elevator Controller" (<Routes>) sits here and decides which "floor" (Component) to display. */}
         <Box
           component="main"
           sx={{
@@ -337,7 +347,9 @@ function AppContent() {
             pt: { xs: 8, md: 3 }, // Add padding top on mobile to avoid being hidden by the app bar.
           }}
         >
-          {/* Defines the routes for the application. */}
+          {/* ANALOGY: This is the "Elevator Controller" (the brains of the system). */}
+          {/* It looks at the current URL (the "floor" you requested) and renders the correct component. */}
+          {/* For example, if the URL is '/account', it will render the <Account /> component below. */}
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/dashboard" element={<Dashboard />} />
