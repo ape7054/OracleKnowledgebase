@@ -26,9 +26,14 @@ services:
 
   # 后端服务
   backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     image: market-pulse_backend:latest
     container_name: market-pulse-backend
     restart: unless-stopped
+    env_file:
+      - ./backend/.env
     depends_on:
       db:
         condition: service_healthy

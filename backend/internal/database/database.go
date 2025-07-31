@@ -1,66 +1,46 @@
 package database
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 	"os"
 
 	_ "github.com/go-sql-driver/mysql" // _ import for side-effect: registering mysql driver
+
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+
+	"market-pulse/backend/internal/models"
 )
 
-var db *sql.DB
+var DB *gorm.DB
 
-// Init 初始化数据库连接
-func Init() error {
+// Init initializes the database connection and auto-migrates schemas.
+func Init() {
 	// 从环境变量中读取数据库连接信息
-	dbUser := getEnv("DB_USER", "market_pulse_user")
-	dbPassword := getEnv("DB_PASSWORD", "wBYXZkiLTExiEAHF")
-	dbHost := getEnv("DB_HOST", "db") // 在 Docker Compose 网络中，主机名就是服务名
-	dbPort := getEnv("DB_PORT", "3306")
-	dbName := getEnv("DB_NAME", "market_pulse_db")
-
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true",
-		dbUser, dbPassword, dbHost, dbPort, dbName)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+		os.Getenv("DB_USER"),
+		os.Getenv("DB_PASSWORD"),
+		os.Getenv("DB_HOST"),
+		os.Getenv("DB_PORT"),
+		os.Getenv("DB_NAME"),
+	)
 
 	var err error
-	db, err = sql.Open("mysql", dsn)
+	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
-		return fmt.Errorf("无法打开数据库: %v", err)
+		log.Fatalf("Failed to connect to database: %v", err)
 	}
 
-	if err = db.Ping(); err != nil {
-		return fmt.Errorf("无法连接到数据库: %v", err)
+	fmt.Println("Database connection established successfully.")
+
+	// Auto-migrate the schemas
+	fmt.Println("Running database migrations...")
+	err = DB.AutoMigrate(&models.MarketData{}, &models.User{})
+	if err != nil {
+		log.Fatalf("Failed to migrate database: %v", err)
 	}
-
-	log.Println("成功连接到数据库!")
-	return createTable()
-}
-
-// GetDB 返回数据库连接实例
-func GetDB() *sql.DB {
-	return db
-}
-
-func createTable() error {
-	// 创建基础表
-	query := `
-	CREATE TABLE IF NOT EXISTS trades (
-		id INT AUTO_INCREMENT PRIMARY KEY,
-		price VARCHAR(50) NOT NULL,
-		amount VARCHAR(50) NOT NULL,
-		trade_time TIMESTAMP NOT NULL,
-		trade_type VARCHAR(10) NOT NULL,
-		user_id INT DEFAULT NULL,
-		user_name VARCHAR(50) DEFAULT 'Anonymous'
-	);`
-
-	if _, err := db.Exec(query); err != nil {
-		return fmt.Errorf("无法创建 'trades' 表: %v", err)
-	}
-
-	log.Println("'trades' 表已准备就绪.")
-	return nil
+	fmt.Println("Database migration completed.")
 }
 
 // getEnv 从环境变量中获取值，如果不存在则返回默认值

@@ -12,6 +12,15 @@ const apiClient = axios.create({
   },
 });
 
+// Function to set the auth token for all subsequent requests
+const setAuthToken = (token) => {
+  if (token) {
+    apiClient.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  } else {
+    delete apiClient.defaults.headers.common['Authorization'];
+  }
+};
+
 // 请求拦截器
 apiClient.interceptors.request.use(
   (config) => {
@@ -32,6 +41,12 @@ apiClient.interceptors.response.use(
   },
   (error) => {
     console.error('API Response Error:', error.response?.status, error.message);
+    if (error.response.status === 401) {
+      // For example, redirect to login page
+      console.error('Unauthorized, redirecting to login');
+      localStorage.removeItem('authToken');
+      window.location.href = '/login';
+    }
     return Promise.reject(error);
   }
 );
@@ -107,8 +122,44 @@ export const marketApi = {
       console.error('Health check failed:', error);
       throw error;
     }
-  }
+  },
+
+  // 登录
+  async login(username, password) {
+    try {
+      const response = await apiClient.post('/auth/login', { username, password });
+      const token = response.data.token;
+      if (token) {
+        localStorage.setItem('authToken', token);
+        setAuthToken(token);
+      }
+      return response.data;
+    } catch (error) {
+      console.error('Login failed:', error);
+      throw error;
+    }
+  },
+
+  // 注册
+  async register(username, password) {
+    try {
+      const response = await apiClient.post('/auth/register', { username, password });
+      return response.data;
+    } catch (error) {
+      console.error('Registration failed:', error);
+      throw error;
+    }
+  },
+
+  // 设置认证token
+  setAuthToken: setAuthToken
 };
+
+// On initial load, check if a token exists and set it
+const token = localStorage.getItem('authToken');
+if (token) {
+  setAuthToken(token);
+}
 
 // 数据转换工具函数
 export const dataTransformers = {

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Routes, Route, NavLink } from 'react-router-dom';
+import { Routes, Route, NavLink, Navigate } from 'react-router-dom';
 import { Box, CssBaseline, AppBar, Toolbar, Typography, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, IconButton, useTheme, useMediaQuery } from '@mui/material';
 import { Dashboard as DashboardIcon, SwapHoriz as TradeIcon, AccountCircle as AccountIcon, Menu as MenuIcon, TrendingUp, Home as HomeIcon, Article as NewsIcon } from '@mui/icons-material';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
@@ -8,9 +8,11 @@ import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 import { ThemeContext } from './context/ThemeContext';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
-import Trade from './pages/Trade';
 import Account from './pages/Account';
 import News from './pages/News';
+import Trade from './pages/Trade';
+import Login from './pages/Login';
+import Register from './pages/Register';
 import { styled } from '@mui/system';
 
 // Define the width of the navigation drawer
@@ -351,11 +353,21 @@ function AppContent() {
           {/* It looks at the current URL (the "floor" you requested) and renders the correct component. */}
           {/* For example, if the URL is '/account', it will render the <Account /> component below. */}
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/home" element={<Home />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route
+              path="/account"
+              element={
+                <ProtectedRoute>
+                  <Account />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/news" element={<News />} />
             <Route path="/trade" element={<Trade />} />
-            <Route path="/account" element={<Account />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
           </Routes>
         </Box>
         
@@ -398,6 +410,19 @@ function AppContent() {
       </Box>
   );
 }
+
+// A wrapper for protected routes
+function ProtectedRoute({ children }) {
+  const token = localStorage.getItem('authToken');
+  if (!token) {
+    // Redirect them to the /login page, but save the current location they were
+    // trying to go to. This allows us to send them along to that page after they
+    // login, which is a nicer user experience than dropping them off on the home page.
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+}
+
 
 // The root 'App' component. Its only job is to provide the theme context.
 function App() {

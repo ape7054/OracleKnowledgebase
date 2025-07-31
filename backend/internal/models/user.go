@@ -1,11 +1,12 @@
 package models
 
-// User 定义了用户数据结构
+import "gorm.io/gorm"
+
+// User represents a user in the system
 type User struct {
-	ID       int    `json:"id"`
-	Username string `json:"username"`
-	Email    string `json:"email"`
-	// 注意：密码不包含在JSON中，保护隐私
+	gorm.Model
+	Username     string `gorm:"uniqueIndex;not null"`
+	PasswordHash string `gorm:"not null"`
 }
 
 // LoginRequest 登录请求结构

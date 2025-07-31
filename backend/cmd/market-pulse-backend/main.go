@@ -3,39 +3,61 @@ package main
 import (
 	"log"
 	"os"
+	"strconv"
+	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 
 	"market-pulse/backend/internal/api"
 	"market-pulse/backend/internal/database"
-	"market-pulse/backend/internal/websocket"
-
-	"github.com/joho/godotenv"
 )
 
 func main() {
-	// 加载 .env 文件
-	if err := godotenv.Load(); err != nil {
-		log.Println("警告: 未找到 .env 文件或无法加载. 将使用系统环境变量.")
+	// Load .env file
+	err := godotenv.Load()
+	if err != nil {
+		log.Println("No .env file found, using environment variables")
 	}
 
-	// 初始化数据库
-	if err := database.Init(); err != nil {
-		log.Fatalf("数据库初始化失败: %v", err)
+	// Initialize database
+	database.Init()
+
+	// Initialize Gin router
+	router := gin.Default()
+
+	// Setup CORS policy
+	router.Use(func(c *gin.Context) {
+		c.Next()
+	})
+
+	// Setup routes
+	apiV1 := router.Group("/api")
+	{
+		// Market data routes
+		marketHandler := api.NewMarketHandler()
+		marketHandler.RegisterRoutes(apiV1.Group("/market"))
+
+		// Authentication routes
+		jwtSecret := os.Getenv("JWT_SECRET")
+		if jwtSecret == "" {
+			log.Fatal("JWT_SECRET environment variable not set")
+		}
+		jwtExpiresHours, err := strconv.Atoi(os.Getenv("JWT_EXPIRATION_HOURS"))
+		if err != nil {
+			jwtExpiresHours = 72 // Default to 72 hours
+		}
+		authHandler := api.NewAuthHandler(database.DB, jwtSecret, time.Hour*time.Duration(jwtExpiresHours))
+		authHandler.RegisterRoutes(apiV1.Group("/auth"))
+
+		// Health check route
+		api.RegisterHealthCheck(apiV1)
 	}
-
-	// 初始化 WebSocket Hub
-	hub := websocket.NewHub()
-	go hub.Run()
-
-	// 创建 API 实例并注入依赖
-	apiInstance := api.NewAPI(database.GetDB(), hub)
-
-	// 设置路由
-	router := api.SetupRouter(apiInstance)
 
 	// 启动服务器
-	serverPort := getEnv("SERVER_PORT", "8080")
-	log.Printf("后端服务器启动在 http://localhost:%s", serverPort)
-	if err := router.Run(":" + serverPort); err != nil {
+	port := os.Getenv("SERVER_PORT")
+	log.Printf("后端服务器启动在 http://localhost:%s", port)
+	if err := router.Run(":" + port); err != nil {
 		log.Fatalf("无法启动服务器: %v", err)
 	}
 }
