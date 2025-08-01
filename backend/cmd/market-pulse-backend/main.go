@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"net/http"
 	"os"
 	"strconv"
 	"time"
@@ -34,11 +35,12 @@ func main() {
 	// Setup routes
 	apiV1 := router.Group("/api")
 	{
-		// Market data routes
+		// --- Public Routes ---
+		// Market data routes are public
 		marketHandler := api.NewMarketHandler()
 		marketHandler.RegisterRoutes(apiV1.Group("/market"))
 
-		// Authentication routes
+		// Authentication routes are public
 		jwtSecret := os.Getenv("JWT_SECRET")
 		if jwtSecret == "" {
 			log.Fatal("JWT_SECRET environment variable not set")
@@ -50,8 +52,23 @@ func main() {
 		authHandler := api.NewAuthHandler(database.DB, jwtSecret, time.Hour*time.Duration(jwtExpiresHours))
 		authHandler.RegisterRoutes(apiV1.Group("/auth"))
 
-		// Health check route
+		// Health check route is public
 		api.RegisterHealthCheck(apiV1)
+
+		// --- Protected Routes ---
+		// All routes in this group require authentication
+		protected := apiV1.Group("/account")
+		protected.Use(api.AuthMiddleware(jwtSecret))
+		{
+			// Example protected route
+			protected.GET("/profile", func(c *gin.Context) {
+				userID, _ := c.Get("userID")
+				c.JSON(http.StatusOK, gin.H{
+					"message": "This is a protected route",
+					"user_id": userID,
+				})
+			})
+		}
 	}
 
 	// 启动服务器

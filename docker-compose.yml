@@ -10,11 +10,8 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD:-wBYXZkiLTExiEAHF}
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpassword}
     ports:
-      # 为了方便从外部（如 MySQL Workbench）连接调试，将容器的 3306 端口映射到主机的 3307 端口
-      # 注意：我们使用 3307 是为了避免与你本地可能正在运行的 MySQL 实例（通常在 3306）冲突
       - "3307:3306"
     volumes:
-      # 将数据库文件持久化到本地，防止容器删除后数据丢失
       - mysql-data:/var/lib/mysql
     networks:
       - market-pulse-network
@@ -33,24 +30,15 @@ services:
     container_name: market-pulse-backend
     restart: unless-stopped
     env_file:
-      - ./backend/.env
+      - ./backend/.env.docker
     depends_on:
-      db:
-        condition: service_healthy
-    environment:
-      DB_HOST: db
-      DB_PORT: 3306
-      DB_USER: ${DB_USER:-market_pulse_user}
-      DB_PASSWORD: ${DB_PASSWORD:-wBYXZkiLTExiEAHF}
-      DB_NAME: ${DB_NAME:-market_pulse_db}
-      GIN_MODE: ${GIN_MODE:-debug}
-      COINGECKO_API_KEY: ${COINGECKO_API_KEY}
+      - db
     ports:
-      - "8080:8080"  # 直接暴露后端服务的 8080 端口
+      - "8080:8080"
     networks:
       - market-pulse-network
 
-  # Nginx 服务，用于反向代理和提供静态文件
+  # Nginx 服务
   nginx:
     image: nginx:1.25-alpine
     container_name: market-pulse-nginx
@@ -62,27 +50,13 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
     networks:
       - market-pulse-network
+    depends_on:
+      - backend
 
-  # 前端服务 (现在由nginx直接服务静态文件，不需要容器)
-  # frontend:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   container_name: market-pulse-frontend
-  #   restart: unless-stopped
-  #   depends_on:
-  #     - backend
-  #   ports:
-  #     - "80:80"  # 端口被nginx使用
-  #   networks:
-  #     - market-pulse-network
-
-# 定义数据卷
 volumes:
   mysql-data:
-    driver: local 
+    driver: local
 
-# 定义网络
 networks:
   market-pulse-network:
     driver: bridge 
