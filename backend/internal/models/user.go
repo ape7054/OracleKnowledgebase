@@ -5,8 +5,8 @@ import "gorm.io/gorm"
 // User represents a user in the system
 type User struct {
 	gorm.Model
-	Username     string `gorm:"uniqueIndex;not null"`
-	PasswordHash string `gorm:"not null"`
+	Username     string `gorm:"type:varchar(100);uniqueIndex;not null"`
+	PasswordHash string `gorm:"type:varchar(255);not null"`
 }
 
 // LoginRequest 登录请求结构

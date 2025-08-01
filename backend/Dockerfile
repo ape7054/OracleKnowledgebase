@@ -1,14 +1,14 @@
-# --- 1. Build Stage (Only for copying the binary) ---
-FROM alpine:3.18 as final
+# 使用一个极简的基础镜像
+FROM alpine:3.18
 
-# Set working directory
+# 设置工作目录
 WORKDIR /app
 
-# Copy the pre-compiled binary from the host
+# 从构建上下文复制我们已经在本地编译好的二进制文件
 COPY market-pulse-backend-linux .
 
-# Expose port 8080 to the outside world
+# 暴露端口
 EXPOSE 8080
 
-# Command to run the executable
+# 运行应用
 CMD ["./market-pulse-backend-linux"] 
