@@ -18,8 +18,13 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Slide
+  Slide,
+  Avatar,
+  LinearProgress,
+  Tooltip,
+  Paper
 } from '@mui/material';
+import { fetchCryptoNews } from '../services/newsService';
 import {
   TrendingUp,
   TrendingDown,
@@ -33,186 +38,159 @@ import {
   OpenInNew,
   Refresh,
   Close,
-  Source
+  Source,
+  FlashOn,
+  Language,
+  FilterList,
+  Search,
+  Star,
+  AttachMoney,
+  Security,
+  TrendingFlat
 } from '@mui/icons-material';
 import { useTheme, alpha, keyframes } from '@mui/material/styles';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, AreaChart, Area, PieChart, Pie, Cell, RadialBarChart, RadialBar } from 'recharts';
 
-// 动画定义
-const pulseAnimation = keyframes`
-  0% { opacity: 1; }
-  50% { opacity: 0.5; }
-  100% { opacity: 1; }
+// 增强的动画定义
+const gradientShift = keyframes`
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 `;
 
-const slideInAnimation = keyframes`
+const floatingAnimation = keyframes`
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+`;
+
+const rotateAnimation = keyframes`
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+`;
+
+const pulseGlow = keyframes`
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+    border-color: rgba(16, 185, 129, 0.5);
+  }
+  50% { 
+    box-shadow: 0 0 40px rgba(16, 185, 129, 0.6);
+    border-color: rgba(16, 185, 129, 0.8);
+  }
+`;
+
+const slideInFromLeft = keyframes`
   from {
-    transform: translateY(20px);
+    transform: translateX(-100px);
     opacity: 0;
   }
   to {
-    transform: translateY(0);
+    transform: translateX(0);
     opacity: 1;
   }
 `;
 
-// 新闻API配置
-const NEWS_API_CONFIG = {
-  // 使用免费的CryptoNews API
-  cryptoNews: 'https://cryptonews-api.com/api/v1/category',
-  // 备用API - CoinDesk RSS转JSON
-  coinDesk: 'https://api.rss2json.com/v1/api.json?rss_url=https://feeds.feedburner.com/CoinDesk',
-  // 备用API - CoinTelegraph
-  coinTelegraph: 'https://api.rss2json.com/v1/api.json?rss_url=https://cointelegraph.com/rss'
-};
+const slideInFromRight = keyframes`
+  from {
+    transform: translateX(100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+`;
 
-// 获取真实新闻数据
-const fetchCryptoNews = async () => {
+// 本地新闻获取函数 - 使用真实API
+const loadCryptoNews = async () => {
   try {
-    // 首先尝试CoinDesk RSS API（免费且稳定）
-    const response = await fetch(NEWS_API_CONFIG.coinDesk);
-    const data = await response.json();
-
-    if (data.status === 'ok' && data.items) {
-      return data.items.slice(0, 20).map((item, index) => ({
-        id: item.guid || index + 1,
-        title: item.title,
-        summary: item.description?.replace(/<[^>]*>/g, '').substring(0, 400) + '...' || 'No summary available',
-        source: 'CoinDesk',
-        time: formatTimeAgo(new Date(item.pubDate)),
-        category: getCategoryFromContent(item.title + ' ' + item.description),
-        sentiment: getSentimentFromContent(item.title + ' ' + item.description),
-        impact: getImpactFromContent(item.title),
-        views: Math.floor(Math.random() * 50000) + 1000 + '',
-        image: item.thumbnail || item.enclosure?.link || `https://via.placeholder.com/300x200/1976d2/ffffff?text=${encodeURIComponent(item.title.substring(0, 20))}`,
-        link: item.link,
-        pubDate: item.pubDate
-      }));
-    }
-
-    // 如果CoinDesk失败，返回备用数据
-    return getFallbackNews();
-
+    // 使用真实API获取新闻数据
+    const newsData = await fetchCryptoNews({ 
+      maxItems: 20, 
+      useRealAPI: true 
+    });
+    
+    // 转换数据格式以适配UI
+    return newsData.map(item => ({
+      id: item.id,
+      title: item.title,
+      summary: item.summary,
+      source: item.source,
+      time: item.time,
+      category: item.category || '市场',
+      sentiment: item.sentiment,
+      impact: item.impact,
+      views: item.views || Math.floor(Math.random() * 50000) + 1000 + '',
+      image: `https://via.placeholder.com/400x250/1976d2/ffffff?text=${encodeURIComponent(item.title.substring(0, 20))}`,
+      link: item.sourceUrl,
+      coins: item.coins || ['CRYPTO'],
+      tags: item.tags || []
+    }));
   } catch (error) {
-    console.error('获取新闻失败:', error);
+    console.error('获取真实新闻失败:', error);
     return getFallbackNews();
   }
 };
 
-// 时间格式化函数
-const formatTimeAgo = (date) => {
-  const now = new Date();
-  const diffInMinutes = Math.floor((now - date) / (1000 * 60));
-
-  if (diffInMinutes < 60) {
-    return `${diffInMinutes}分钟前`;
-  } else if (diffInMinutes < 1440) {
-    return `${Math.floor(diffInMinutes / 60)}小时前`;
-  } else {
-    return `${Math.floor(diffInMinutes / 1440)}天前`;
-  }
-};
-
-// 从内容判断分类
-const getCategoryFromContent = (content) => {
-  const lowerContent = content.toLowerCase();
-  if (lowerContent.includes('regulation') || lowerContent.includes('sec') || lowerContent.includes('government')) return '监管';
-  if (lowerContent.includes('defi') || lowerContent.includes('protocol') || lowerContent.includes('smart contract')) return 'DeFi';
-  if (lowerContent.includes('bitcoin') || lowerContent.includes('btc')) return 'Bitcoin';
-  if (lowerContent.includes('ethereum') || lowerContent.includes('eth')) return 'Ethereum';
-  if (lowerContent.includes('nft') || lowerContent.includes('collectible')) return 'NFT';
-  if (lowerContent.includes('hack') || lowerContent.includes('attack') || lowerContent.includes('security')) return '安全';
-  return '市场';
-};
-
-// 从内容判断情绪
-const getSentimentFromContent = (content) => {
-  const lowerContent = content.toLowerCase();
-  const positiveWords = ['surge', 'rise', 'gain', 'bull', 'high', 'breakthrough', 'success', 'approve'];
-  const negativeWords = ['fall', 'drop', 'crash', 'bear', 'low', 'hack', 'attack', 'decline', 'loss'];
-
-  const positiveCount = positiveWords.filter(word => lowerContent.includes(word)).length;
-  const negativeCount = negativeWords.filter(word => lowerContent.includes(word)).length;
-
-  if (positiveCount > negativeCount) return 'positive';
-  if (negativeCount > positiveCount) return 'negative';
-  return 'neutral';
-};
-
-// 从标题判断影响力
-const getImpactFromContent = (title) => {
-  const lowerTitle = title.toLowerCase();
-  const highImpactWords = ['bitcoin', 'ethereum', 'sec', 'regulation', 'etf', 'hack', 'billion'];
-  const mediumImpactWords = ['defi', 'nft', 'altcoin', 'trading', 'market'];
-
-  if (highImpactWords.some(word => lowerTitle.includes(word))) return 'high';
-  if (mediumImpactWords.some(word => lowerTitle.includes(word))) return 'medium';
-  return 'low';
-};
-
-// 弹窗过渡动画
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-// Fallback news data (used when API fails)
 const getFallbackNews = () => [
   {
     id: 1,
-    title: "Bitcoin Price Breaks All-Time High as Institutional Investors Continue Buying",
-    summary: "Bitcoin price reaches new highs driven by continued institutional investor purchases, market sentiment remains optimistic...",
+    title: "Why Michael Saylor Calls Strategy's STRC Preferred Stock His Firm's 'iPhone Moment'",
+    summary: "Michael Saylor likens Strategy's latest Bitcoin-backed preferred stock to Apple's iPhone, calling STRC a breakthrough in corporate finance with massive market potential...",
     source: "CoinDesk",
-    time: "1 hour ago",
+    time: "10 hours ago",
     category: "Bitcoin",
     sentiment: "positive",
     impact: "high",
-    views: "25.3K",
-    image: "https://via.placeholder.com/300x200/f7931e/ffffff?text=Bitcoin"
+    views: "28.7K",
+    image: "https://via.placeholder.com/400x250/f7931e/ffffff?text=Bitcoin+Strategy"
   },
   {
     id: 2,
-    title: "Ethereum Network Upgrade Successfully Reduces Transaction Fees",
-    summary: "Ethereum's latest network upgrade successfully implemented, significantly reducing user transaction costs and boosting developer activity...",
-    source: "Ethereum Foundation",
-    time: "3 hours ago",
-    category: "Ethereum",
-    sentiment: "positive",
+    title: "Arthur Hayes Dumps Millions in Crypto Amid Bearish Bet on U.S. Tariff Impact",
+    summary: "Hayes suggested that markets will be impacted by President Trump's tariffs and a weaker-than-expected US jobs report, predicting a bearish scenario for crypto...",
+    source: "CoinDesk",
+    time: "13 hours ago",
+    category: "市场",
+    sentiment: "negative",
     impact: "medium",
-    views: "18.7K",
-    image: "https://via.placeholder.com/300x200/627eea/ffffff?text=Ethereum"
-  },
-  {
-    id: 3,
-    title: "DeFi Protocol Total Value Locked Reaches New Record",
-    summary: "Decentralized finance protocols' total value locked reaches new highs, demonstrating strong growth in the DeFi ecosystem...",
-    source: "DeFiPulse",
-    time: "5 hours ago",
-    category: "DeFi",
-    sentiment: "positive",
-    impact: "medium",
-    views: "12.1K",
-    image: "https://via.placeholder.com/300x200/9c27b0/ffffff?text=DeFi"
+    views: "48.4K",
+    image: "https://via.placeholder.com/400x250/e74c3c/ffffff?text=Market+Analysis"
   }
 ];
 
-// 市场情绪数据
+// 增强的市场情绪数据
 const sentimentData = [
-  { time: '00:00', sentiment: 65, volume: 120 },
-  { time: '04:00', sentiment: 70, volume: 150 },
-  { time: '08:00', sentiment: 75, volume: 180 },
-  { time: '12:00', sentiment: 80, volume: 200 },
-  { time: '16:00', sentiment: 85, volume: 220 },
-  { time: '20:00', sentiment: 90, volume: 250 },
-  { time: '24:00', sentiment: 88, volume: 240 }
+  { time: '00:00', sentiment: 65, volume: 120, fear: 25, greed: 75 },
+  { time: '04:00', sentiment: 70, volume: 150, fear: 20, greed: 80 },
+  { time: '08:00', sentiment: 75, volume: 180, fear: 15, greed: 85 },
+  { time: '12:00', sentiment: 80, volume: 200, fear: 12, greed: 88 },
+  { time: '16:00', sentiment: 85, volume: 220, fear: 10, greed: 90 },
+  { time: '20:00', sentiment: 90, volume: 250, fear: 8, greed: 92 },
+  { time: '24:00', sentiment: 88, volume: 240, fear: 10, greed: 90 }
 ];
 
-// 热门标签
-const trendingTags = [
-  { name: 'Bitcoin ETF', count: 156, trend: 'up' },
-  { name: 'Ethereum 2.0', count: 134, trend: 'up' },
-  { name: 'DeFi Security', count: 98, trend: 'down' },
-  { name: 'NFT Market', count: 87, trend: 'up' },
-  { name: 'Regulation', count: 76, trend: 'neutral' }
+// 恐惧贪婪指数数据
+const fearGreedData = [
+  { name: 'Extreme Fear', value: 10, fill: '#e74c3c' },
+  { name: 'Fear', value: 15, fill: '#f39c12' },
+  { name: 'Neutral', value: 10, fill: '#95a5a6' },
+  { name: 'Greed', value: 25, fill: '#3498db' },
+  { name: 'Extreme Greed', value: 40, fill: '#27ae60' }
+];
+
+// 新闻分类数据
+const newsCategories = [
+  { name: 'Bitcoin', count: 156, color: '#f7931e', trend: 12 },
+  { name: 'Ethereum', count: 134, color: '#627eea', trend: 8 },
+  { name: 'DeFi', count: 98, color: '#9c27b0', trend: -3 },
+  { name: 'NFT', count: 87, color: '#ff5722', trend: 15 },
+  { name: '监管', count: 76, color: '#795548', trend: -5 },
+  { name: '安全', count: 65, color: '#f44336', trend: 7 }
 ];
 
 const NewsProfessional = () => {
@@ -223,9 +201,9 @@ const NewsProfessional = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [news, setNews] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-  const [newArticleId, setNewArticleId] = useState(null); // 用于高亮新文章
+  const [newArticleId, setNewArticleId] = useState(null);
   const ws = useRef(null);
-  const [selectedArticle, setSelectedArticle] = useState(null); // 用于弹窗显示的文章
+  const [selectedArticle, setSelectedArticle] = useState(null);
 
   const handleOpenDialog = (article) => {
     setSelectedArticle(article);
@@ -235,11 +213,10 @@ const NewsProfessional = () => {
     setSelectedArticle(null);
   };
 
-  // 手动刷新新闻
   const handleRefreshNews = async () => {
     setRefreshing(true);
     try {
-      const newsData = await fetchCryptoNews();
+      const newsData = await loadCryptoNews();
       setNews(newsData);
     } catch (error) {
       console.error('刷新新闻失败:', error);
@@ -249,15 +226,13 @@ const NewsProfessional = () => {
   };
 
   useEffect(() => {
-    // 1. 先通过HTTP加载初始新闻列表
     const loadNews = async () => {
       setLoading(true);
       try {
-        const newsData = await fetchCryptoNews();
+        const newsData = await loadCryptoNews();
         setNews(newsData);
       } catch (error) {
         console.error('加载新闻失败:', error);
-        // 使用备用数据
         setNews(getFallbackNews());
       } finally {
         setLoading(false);
@@ -265,52 +240,7 @@ const NewsProfessional = () => {
     };
 
     loadNews();
-
-    // 2. 建立WebSocket连接以接收实时更新
-    const connect = () => {
-      // 假设后端在 /ws/news 提供新闻的WebSocket服务
-      const wsUrl = `ws://localhost:8080/ws/news`;
-      ws.current = new WebSocket(wsUrl);
-
-      ws.current.onopen = () => {
-        console.log('新闻WebSocket已连接');
-      };
-
-      ws.current.onmessage = (event) => {
-        try {
-          const newArticle = JSON.parse(event.data);
-          // 将新文章添加到列表顶部
-          setNews(prevNews => [newArticle, ...prevNews]);
-          // 设置新文章ID用于高亮
-          setNewArticleId(newArticle.id);
-          // 几秒后移除高亮
-          setTimeout(() => setNewArticleId(null), 5000);
-        } catch (error) {
-          console.error('解析WebSocket消息失败:', error);
-        }
-      };
-
-      ws.current.onerror = (error) => {
-        console.error('WebSocket 错误:', error);
-      };
-
-      ws.current.onclose = () => {
-        console.log('新闻WebSocket已断开. 5秒后尝试重连...');
-        // 简单的重连逻辑
-        setTimeout(connect, 5000);
-      };
-    };
-
-    connect();
-
-    // 组件卸载时关闭WebSocket连接
-    return () => {
-      if (ws.current) {
-        ws.current.close();
-      }
-    };
   }, []);
-
 
   const getSentimentColor = (sentiment) => {
     switch (sentiment) {
@@ -336,29 +266,68 @@ const NewsProfessional = () => {
         alignItems: 'center',
         minHeight: '100vh',
         background: theme.palette.mode === 'dark'
-          ? 'radial-gradient(ellipse at top, rgba(16, 185, 129, 0.15) 0%, rgba(15, 23, 42, 0.8) 50%, rgba(15, 23, 42, 1) 100%)'
-          : 'radial-gradient(ellipse at top, rgba(16, 185, 129, 0.1) 0%, rgba(248, 250, 252, 0.8) 50%, rgba(248, 250, 252, 1) 100%)'
+          ? 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%)'
+          : 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%)',
+        position: 'relative',
+        overflow: 'hidden'
       }}>
-        <Box sx={{ textAlign: 'center' }}>
+        {/* 动态背景元素 */}
+        {[...Array(5)].map((_, i) => (
+          <Box
+            key={i}
+            sx={{
+              position: 'absolute',
+              width: `${100 + i * 50}px`,
+              height: `${100 + i * 50}px`,
+              borderRadius: '50%',
+              background: `linear-gradient(45deg, ${alpha(theme.palette.primary.main, 0.1)}, ${alpha(theme.palette.secondary.main, 0.1)})`,
+              animation: `${floatingAnimation} ${3 + i}s ease-in-out infinite`,
+              top: `${Math.random() * 80}%`,
+              left: `${Math.random() * 80}%`,
+            }}
+          />
+        ))}
+        
+        <Box sx={{ textAlign: 'center', zIndex: 10, position: 'relative' }}>
           <Box sx={{
-            width: 80,
-            height: 80,
+            width: 120,
+            height: 120,
             borderRadius: '50%',
             background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            margin: '0 auto 16px',
-            animation: `${pulseAnimation} 2s infinite`
+            margin: '0 auto 24px',
+            animation: `${rotateAnimation} 2s linear infinite`,
+            boxShadow: `0 0 50px ${alpha(theme.palette.primary.main, 0.3)}`
           }}>
-            <Notifications sx={{ fontSize: 40, color: 'white' }} />
+            <FlashOn sx={{ fontSize: 60, color: 'white' }} />
           </Box>
-          <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
-            正在获取最新新闻...
+          <Typography variant="h4" sx={{ 
+            mb: 2, 
+            fontWeight: 800,
+            background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+            backgroundClip: 'text',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent'
+          }}>
+            正在加载全球加密新闻
           </Typography>
-          <Typography variant="body2" color="text.secondary">
-            连接全球加密货币新闻源
+          <Typography variant="h6" color="text.secondary" sx={{ mb: 3 }}>
+            连接最新资讯源，获取实时市场动态
           </Typography>
+          <LinearProgress 
+            sx={{ 
+              width: 300, 
+              height: 8, 
+              borderRadius: 4,
+              backgroundColor: alpha(theme.palette.primary.main, 0.1),
+              '& .MuiLinearProgress-bar': {
+                background: `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                borderRadius: 4
+              }
+            }} 
+          />
         </Box>
       </Box>
     );
@@ -368,274 +337,422 @@ const NewsProfessional = () => {
     <Box sx={{
       minHeight: '100vh',
       background: theme.palette.mode === 'dark'
-        ? 'radial-gradient(ellipse at top, rgba(16, 185, 129, 0.15) 0%, rgba(15, 23, 42, 0.8) 50%, rgba(15, 23, 42, 1) 100%)'
-        : 'radial-gradient(ellipse at top, rgba(16, 185, 129, 0.1) 0%, rgba(248, 250, 252, 0.8) 50%, rgba(248, 250, 252, 1) 100%)',
+        ? 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%)'
+        : 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%)',
       position: 'relative',
       overflow: 'hidden'
     }}>
-      {/* 背景装饰 */}
+      {/* 高级背景装饰 */}
       <Box sx={{
         position: 'absolute',
         top: 0,
         left: 0,
         right: 0,
         bottom: 0,
-        opacity: 0.03,
-        background: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23${theme.palette.primary.main.slice(1)}' fill-opacity='0.4'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+        background: `
+          radial-gradient(circle at 20% 80%, ${alpha(theme.palette.primary.main, 0.15)} 0%, transparent 50%),
+          radial-gradient(circle at 80% 20%, ${alpha(theme.palette.secondary.main, 0.15)} 0%, transparent 50%),
+          radial-gradient(circle at 40% 40%, ${alpha(theme.palette.success.main, 0.1)} 0%, transparent 50%)
+        `,
       }} />
 
+      {/* 动态粒子效果 */}
+      {[...Array(20)].map((_, i) => (
+        <Box
+          key={i}
+          sx={{
+            position: 'absolute',
+            width: `${2 + Math.random() * 4}px`,
+            height: `${2 + Math.random() * 4}px`,
+            borderRadius: '50%',
+            background: theme.palette.primary.main,
+            opacity: 0.3,
+            animation: `${floatingAnimation} ${5 + Math.random() * 10}s ease-in-out infinite`,
+            top: `${Math.random() * 100}%`,
+            left: `${Math.random() * 100}%`,
+          }}
+        />
+      ))}
+
       <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1, py: 4 }}>
-        {/* 页面头部 - 高级样式 */}
+        {/* 顶级头部设计 */}
         <Fade in timeout={800}>
           <Box sx={{ mb: 6 }}>
-            {/* 主标题区域 */}
+            {/* 超现代化标题区域 */}
             <Box sx={{
               textAlign: 'center',
-              mb: 4,
+              mb: 6,
               position: 'relative'
             }}>
-              {/* 背景装饰 */}
-              <Box sx={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                width: 200,
-                height: 200,
-                background: `radial-gradient(circle, ${alpha(theme.palette.primary.main, 0.1)} 0%, transparent 70%)`,
-                borderRadius: '50%',
-                zIndex: 0
-              }} />
-
-              {/* 主标题 */}
-              <Box sx={{ position: 'relative', zIndex: 1 }}>
-                <Typography variant="h2" sx={{
-                  fontWeight: 800,
-                  fontSize: { xs: '2.5rem', md: '3.5rem' },
-                  background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+              {/* 3D 标题效果 */}
+              <Typography 
+                variant="h1" 
+                sx={{
+                  fontWeight: 900,
+                  fontSize: { xs: '3rem', md: '5rem', lg: '6rem' },
+                  background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main}, ${theme.palette.success.main})`,
+                  backgroundSize: '200% 200%',
                   backgroundClip: 'text',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
+                  animation: `${gradientShift} 3s ease infinite`,
                   mb: 2,
-                  letterSpacing: '-0.02em'
-                }}>
-                  Crypto News Hub
+                  letterSpacing: '-0.03em',
+                  textShadow: `
+                    0 0 20px ${alpha(theme.palette.primary.main, 0.5)},
+                    0 0 40px ${alpha(theme.palette.secondary.main, 0.3)}
+                  `,
+                  position: 'relative',
+                  '&::before': {
+                    content: '"CRYPTO NEWS HUB"',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    background: alpha(theme.palette.text.primary, 0.1),
+                    backgroundClip: 'text',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    transform: 'translate(2px, 2px)',
+                    zIndex: -1
+                  }
+                }}
+              >
+                CRYPTO NEWS HUB
                 </Typography>
 
-                <Typography variant="h6" sx={{
+              <Typography 
+                variant="h5" 
+                sx={{
                   color: 'text.secondary',
-                  fontWeight: 400,
-                  mb: 3,
-                  maxWidth: 600,
+                  fontWeight: 300,
+                  mb: 4,
+                  maxWidth: 800,
                   mx: 'auto',
-                  lineHeight: 1.6
-                }}>
-                  Real-time tracking of global cryptocurrency market dynamics, latest industry news and in-depth analysis
+                  lineHeight: 1.8,
+                  fontSize: { xs: '1.1rem', md: '1.4rem' },
+                  letterSpacing: '0.02em'
+                }}
+              >
+                Real-time Market Intelligence & Insights
                 </Typography>
 
-                {/* Statistics */}
+              {/* 增强的统计仪表板 */}
+              <Grid container spacing={3} sx={{ mb: 4, maxWidth: 900, mx: 'auto' }}>
+                {[
+                  { label: 'Breaking News', value: news.length, icon: FlashOn, color: theme.palette.primary.main, suffix: '' },
+                  { label: 'Active Sources', value: '24/7', icon: Language, color: theme.palette.success.main, suffix: '' },
+                  { label: 'Market Updates', value: '98', icon: Assessment, color: theme.palette.warning.main, suffix: '%' },
+                  { label: 'Analysis Reports', value: '150', icon: TrendingUp, color: theme.palette.info.main, suffix: '+' }
+                ].map((stat, index) => (
+                  <Grid item xs={6} md={3} key={index}>
+                    <Paper
+                      elevation={0}
+                      sx={{
+                        p: 3,
+                        textAlign: 'center',
+                        background: `linear-gradient(135deg, ${alpha(stat.color, 0.1)}, ${alpha(stat.color, 0.05)})`,
+                        border: `1px solid ${alpha(stat.color, 0.2)}`,
+                        borderRadius: 3,
+                        backdropFilter: 'blur(20px)',
+                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                        cursor: 'pointer',
+                        animation: `${slideInFromLeft} 0.6s ease-out ${index * 0.1}s both`,
+                        '&:hover': {
+                          transform: 'translateY(-8px) scale(1.02)',
+                          boxShadow: `0 20px 40px ${alpha(stat.color, 0.2)}`,
+                          border: `2px solid ${alpha(stat.color, 0.4)}`
+                        }
+                      }}
+                    >
                 <Box sx={{
                   display: 'flex',
+                        alignItems: 'center',
                   justifyContent: 'center',
-                  gap: 4,
-                  flexWrap: 'wrap'
-                }}>
-                  <Box sx={{ textAlign: 'center' }}>
-                    <Typography variant="h4" sx={{
-                      fontWeight: 700,
-                      color: theme.palette.primary.main,
-                      mb: 0.5
-                    }}>
-                      {news.length}
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      Live News
-                    </Typography>
+                        mb: 2
+                      }}>
+                        <Box sx={{
+                          p: 1.5,
+                          borderRadius: '50%',
+                          background: `linear-gradient(135deg, ${stat.color}, ${alpha(stat.color, 0.7)})`,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}>
+                          <stat.icon sx={{ fontSize: 24, color: 'white' }} />
                   </Box>
-                  <Box sx={{ textAlign: 'center' }}>
+                      </Box>
                     <Typography variant="h4" sx={{
-                      fontWeight: 700,
-                      color: theme.palette.success.main,
-                      mb: 0.5
-                    }}>
-                      24/7
+                        fontWeight: 800,
+                        color: stat.color,
+                        mb: 0.5,
+                        fontSize: { xs: '1.8rem', md: '2.2rem' }
+                      }}>
+                        {stat.value}{stat.suffix}
                     </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      Real-time Updates
+                      <Typography variant="body2" color="text.secondary" sx={{
+                        fontWeight: 600,
+                        fontSize: '0.85rem',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.05em'
+                      }}>
+                        {stat.label}
                     </Typography>
-                  </Box>
-                  <Box sx={{ textAlign: 'center' }}>
-                    <Typography variant="h4" sx={{
-                      fontWeight: 700,
-                      color: theme.palette.warning.main,
-                      mb: 0.5
-                    }}>
-                      AI
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      Smart Analysis
-                    </Typography>
-                  </Box>
-                </Box>
-              </Box>
-            </Box>
+                    </Paper>
+                  </Grid>
+                ))}
+              </Grid>
 
-            {/* 操作按钮区域 */}
+              {/* 高级操作中心 */}
             <Box sx={{
               display: 'flex',
               justifyContent: 'center',
-              gap: 2
+                gap: 3,
+                flexWrap: 'wrap'
             }}>
+                <Tooltip title="Refresh Global News" arrow>
               <IconButton
                 onClick={handleRefreshNews}
                 disabled={refreshing}
                 sx={{
-                  bgcolor: alpha(theme.palette.primary.main, 0.1),
-                  color: theme.palette.primary.main,
-                  width: 56,
-                  height: 56,
+                      width: 70,
+                      height: 70,
+                      background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
+                      color: 'white',
+                      boxShadow: `0 8px 32px ${alpha(theme.palette.primary.main, 0.4)}`,
+                      border: `2px solid ${alpha(theme.palette.primary.light, 0.3)}`,
+                      animation: refreshing ? `${rotateAnimation} 1s linear infinite` : 'none',
                   '&:hover': {
-                    bgcolor: alpha(theme.palette.primary.main, 0.2),
-                    transform: 'scale(1.05)'
+                        transform: 'scale(1.1)',
+                        boxShadow: `0 12px 48px ${alpha(theme.palette.primary.main, 0.6)}`,
+                        background: `linear-gradient(135deg, ${theme.palette.primary.dark}, ${theme.palette.primary.main})`
                   },
                   '&:disabled': {
-                    bgcolor: alpha(theme.palette.primary.main, 0.05),
+                        background: alpha(theme.palette.primary.main, 0.3),
+                        color: alpha('#fff', 0.5)
                   },
-                  transition: 'all 0.3s ease',
-                  boxShadow: `0 4px 20px ${alpha(theme.palette.primary.main, 0.2)}`
+                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
                 }}
               >
-                <Refresh sx={{
-                  animation: refreshing ? `${pulseAnimation} 1s infinite` : 'none',
-                  fontSize: 28
-                }} />
+                    <Refresh sx={{ fontSize: 32 }} />
               </IconButton>
+                </Tooltip>
 
-              <Badge badgeContent={3} color="error">
+                <Badge badgeContent={5} color="error" sx={{
+                  '& .MuiBadge-badge': {
+                    animation: `${pulseGlow} 2s ease-in-out infinite`,
+                    fontSize: '0.75rem',
+                    minWidth: 22,
+                    height: 22
+                  }
+                }}>
+                  <Tooltip title="Important News Alerts" arrow>
                 <IconButton
                   sx={{
-                    bgcolor: alpha(theme.palette.warning.main, 0.1),
-                    color: theme.palette.warning.main,
-                    width: 56,
-                    height: 56,
+                        width: 70,
+                        height: 70,
+                        background: `linear-gradient(135deg, ${theme.palette.warning.main}, ${theme.palette.warning.dark})`,
+                        color: 'white',
+                        boxShadow: `0 8px 32px ${alpha(theme.palette.warning.main, 0.4)}`,
+                        border: `2px solid ${alpha(theme.palette.warning.light, 0.3)}`,
                     '&:hover': {
-                      bgcolor: alpha(theme.palette.warning.main, 0.2),
-                      transform: 'scale(1.05)'
+                          transform: 'scale(1.1)',
+                          boxShadow: `0 12px 48px ${alpha(theme.palette.warning.main, 0.6)}`,
+                          background: `linear-gradient(135deg, ${theme.palette.warning.dark}, ${theme.palette.warning.main})`
                     },
-                    transition: 'all 0.3s ease',
-                    boxShadow: `0 4px 20px ${alpha(theme.palette.warning.main, 0.2)}`
+                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
                   }}
                 >
-                  <Notifications sx={{ fontSize: 28 }} />
+                      <Notifications sx={{ fontSize: 32 }} />
                 </IconButton>
+                  </Tooltip>
               </Badge>
+
+                <Tooltip title="Smart Filter" arrow>
+                  <IconButton
+                    sx={{
+                      width: 70,
+                      height: 70,
+                      background: `linear-gradient(135deg, ${theme.palette.info.main}, ${theme.palette.info.dark})`,
+                      color: 'white',
+                      boxShadow: `0 8px 32px ${alpha(theme.palette.info.main, 0.4)}`,
+                      border: `2px solid ${alpha(theme.palette.info.light, 0.3)}`,
+                      '&:hover': {
+                        transform: 'scale(1.1)',
+                        boxShadow: `0 12px 48px ${alpha(theme.palette.info.main, 0.6)}`,
+                        background: `linear-gradient(135deg, ${theme.palette.info.dark}, ${theme.palette.info.main})`
+                      },
+                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+                    }}
+                  >
+                    <FilterList sx={{ fontSize: 32 }} />
+                  </IconButton>
+                </Tooltip>
+              </Box>
             </Box>
           </Box>
         </Fade>
 
         {/* 主要内容区域 */}
-        <Grid container spacing={3}>
-          {/* 左侧新闻列表 */}
+        <Grid container spacing={4}>
+          {/* 左侧新闻列表 - 升级版 */}
           <Grid item xs={12} lg={8}>
-            <Stack spacing={3}>
+            <Stack spacing={4}>
               {news.map((item, index) => {
                 const isNew = item.id === newArticleId;
                 return (
                 <Fade in timeout={1000 + index * 200} key={item.id}>
-                  <Card
+                    <Paper
                     onClick={() => handleOpenDialog(item)}
+                      elevation={0}
                     sx={{
                       background: theme.palette.mode === 'dark'
-                        ? 'linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%)'
-                        : 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.98) 100%)',
-                      border: isNew ? `2px solid ${theme.palette.success.main}` : `1px solid ${alpha(theme.palette.primary.main, 0.08)}`,
+                          ? `linear-gradient(135deg, 
+                              ${alpha('#1e293b', 0.9)} 0%, 
+                              ${alpha('#334155', 0.8)} 50%, 
+                              ${alpha('#475569', 0.7)} 100%)`
+                          : `linear-gradient(135deg, 
+                              ${alpha('#ffffff', 0.95)} 0%, 
+                              ${alpha('#f8fafc', 0.9)} 50%, 
+                              ${alpha('#e2e8f0', 0.85)} 100%)`,
+                        border: isNew 
+                          ? `2px solid ${theme.palette.success.main}` 
+                          : `1px solid ${alpha(theme.palette.divider, 0.1)}`,
                       borderRadius: 4,
                       overflow: 'hidden',
-                      transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                       cursor: 'pointer',
                       backdropFilter: 'blur(20px)',
                       position: 'relative',
-                      boxShadow: isNew ? `0 0 25px ${alpha(theme.palette.success.main, 0.5)}` : 'none',
+                        transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                        animation: `${slideInFromLeft} 0.8s ease-out ${index * 0.1}s both`,
+                        boxShadow: isNew 
+                          ? `0 0 30px ${alpha(theme.palette.success.main, 0.3)}` 
+                          : `0 4px 20px ${alpha('#000', theme.palette.mode === 'dark' ? 0.3 : 0.1)}`,
                       '&::before': {
                         content: '""',
                         position: 'absolute',
                         top: 0,
                         left: 0,
                         right: 0,
-                        height: '3px',
-                        background: `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                          height: '4px',
+                          background: `linear-gradient(90deg, 
+                            ${theme.palette.primary.main}, 
+                            ${theme.palette.secondary.main}, 
+                            ${theme.palette.success.main})`,
+                          backgroundSize: '200% 100%',
+                          animation: `${gradientShift} 3s ease infinite`,
                         opacity: 0,
                         transition: 'opacity 0.3s ease'
                       },
                       '&:hover': {
-                        transform: 'translateY(-8px) scale(1.02)',
-                        boxShadow: isNew ? `0 0 25px ${alpha(theme.palette.success.main, 0.7)}` : `0 20px 40px ${alpha(theme.palette.primary.main, 0.15)}`,
-                        border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+                          transform: 'translateY(-12px) scale(1.02)',
+                          boxShadow: `0 25px 50px ${alpha(theme.palette.primary.main, 0.2)}`,
+                          border: `1px solid ${alpha(theme.palette.primary.main, 0.3)}`,
                         '&::before': {
                           opacity: 1
                         }
-                      },
-                      animation: `${slideInAnimation} 0.6s ease-out ${index * 0.1}s both`
-                    }}>
+                        }
+                      }}
+                    >
                     <CardContent sx={{ p: 4 }}>
-                      {/* 新闻头部 */}
-                      <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 3 }}>
-                        <Box sx={{ flex: 1, mr: 3 }}>
+                        {/* 增强的新闻头部 */}
+                        <Box sx={{ display: 'flex', gap: 3, mb: 3 }}>
+                          {/* 新闻图片 */}
+                          <Box
+                            component="img"
+                            src={item.image || 'https://via.placeholder.com/120x80/667eea/ffffff?text=News'}
+                            sx={{
+                              width: 120,
+                              height: 80,
+                              borderRadius: 2,
+                              objectFit: 'cover',
+                              border: `2px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+                              transition: 'all 0.3s ease',
+                              '&:hover': {
+                                transform: 'scale(1.05)',
+                                border: `2px solid ${theme.palette.primary.main}`
+                              }
+                            }}
+                          />
+
+                          {/* 新闻内容 */}
+                          <Box sx={{ flex: 1 }}>
                           <Typography variant="h5" sx={{
                             fontWeight: 700,
-                            lineHeight: 1.4,
+                              lineHeight: 1.3,
                             mb: 2,
                             display: '-webkit-box',
                             WebkitLineClamp: 2,
                             WebkitBoxOrient: 'vertical',
                             overflow: 'hidden',
-                            fontSize: { xs: '1.1rem', md: '1.25rem' }
+                              fontSize: { xs: '1.1rem', md: '1.3rem' },
+                              color: 'text.primary'
                           }}>
                             {item.title}
                           </Typography>
 
-                          {/* 来源和时间 */}
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                            {/* 增强的元数据 */}
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2, flexWrap: 'wrap' }}>
                             <Chip
+                                avatar={<Avatar sx={{ bgcolor: theme.palette.primary.main, width: 24, height: 24 }}>
+                                  <Source sx={{ fontSize: 14 }} />
+                                </Avatar>}
                               label={item.source}
                               size="small"
                               sx={{
                                 bgcolor: alpha(theme.palette.primary.main, 0.1),
                                 color: theme.palette.primary.main,
                                 fontWeight: 600,
-                                fontSize: '0.75rem',
-                                height: 28,
-                                '& .MuiChip-label': {
-                                  px: 1.5
-                                }
-                              }}
-                            />
+                                  border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`
+                                }}
+                              />
+                              
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                               <AccessTime sx={{ fontSize: 16, color: 'text.secondary' }} />
                               <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
                                 {item.time}
                               </Typography>
                             </Box>
+
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                <Visibility sx={{ fontSize: 16, color: 'text.secondary' }} />
+                                <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
+                                  {item.views}
+                              </Typography>
+                            </Box>
                           </Box>
                         </Box>
 
-                          {/* 右侧操作按钮 */}
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          {/* 右侧操作区 */}
+                          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, alignItems: 'flex-end' }}>
                             <IconButton
                               size="small"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                // 书签功能
+                              }}
+                              sx={{
+                                bgcolor: alpha(theme.palette.warning.main, 0.1),
+                                color: theme.palette.warning.main,
+                                '&:hover': {
+                                  bgcolor: alpha(theme.palette.warning.main, 0.2),
+                                  transform: 'scale(1.1)'
+                                }
                               }}
                             >
-                              <BookmarkBorder sx={{ fontSize: 18 }} />
+                              <Star sx={{ fontSize: 18 }} />
                             </IconButton>
+                            
                             <IconButton
                               size="small"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                if (item.link) {
-                                  window.open(item.link, '_blank');
+                                if (item.link) window.open(item.link, '_blank');
+                              }}
+                              sx={{
+                                bgcolor: alpha(theme.palette.info.main, 0.1),
+                                color: theme.palette.info.main,
+                                '&:hover': {
+                                  bgcolor: alpha(theme.palette.info.main, 0.2),
+                                  transform: 'scale(1.1)'
                                 }
                               }}
                             >
@@ -646,52 +763,63 @@ const NewsProfessional = () => {
 
                         {/* 新闻摘要 */}
                         <Typography variant="body2" color="text.secondary" sx={{
-                          mb: 2,
+                          mb: 3,
                           display: '-webkit-box',
                           WebkitLineClamp: 2,
                           WebkitBoxOrient: 'vertical',
                           overflow: 'hidden',
-                          lineHeight: 1.5
+                          lineHeight: 1.6,
+                          fontSize: '0.95rem'
                         }}>
                           {item.summary}
                         </Typography>
 
-                        {/* 底部标签和统计 */}
+                        {/* 增强的底部标签区 */}
                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flexWrap: 'wrap' }}>
                             <Chip
                               label={item.category}
                               size="small"
                               sx={{
-                                bgcolor: alpha(theme.palette.primary.main, 0.1),
+                                bgcolor: alpha(theme.palette.primary.main, 0.15),
                                 color: theme.palette.primary.main,
-                                fontSize: '0.75rem'
+                                fontWeight: 600,
+                                border: `1px solid ${alpha(theme.palette.primary.main, 0.3)}`
                               }}
                             />
+                            
                             <Chip
-                              icon={<FiberManualRecord sx={{ fontSize: 6 }} />}
-                              label={item.impact}
+                              icon={<FiberManualRecord sx={{ fontSize: 8 }} />}
+                              label={item.impact.toUpperCase()}
                               size="small"
                               sx={{
-                                bgcolor: alpha(getImpactColor(item.impact), 0.1),
+                                bgcolor: alpha(getImpactColor(item.impact), 0.15),
                                 color: getImpactColor(item.impact),
-                                fontSize: '0.75rem'
+                                fontWeight: 600,
+                                border: `1px solid ${alpha(getImpactColor(item.impact), 0.3)}`
                               }}
                             />
-                          </Box>
 
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                              <Visibility sx={{ fontSize: 14, color: 'text.secondary' }} />
-                              <Typography variant="caption" color="text.secondary">
-                                {item.views}
-                              </Typography>
+                            <Chip
+                              icon={item.sentiment === 'positive' ? <TrendingUp sx={{ fontSize: 14 }} /> : 
+                                    item.sentiment === 'negative' ? <TrendingDown sx={{ fontSize: 14 }} /> :
+                                    <TrendingFlat sx={{ fontSize: 14 }} />}
+                              label={item.sentiment === 'positive' ? 'Bullish' : 
+                                    item.sentiment === 'negative' ? 'Bearish' : 'Neutral'}
+                              size="small"
+                              sx={{
+                                bgcolor: alpha(getSentimentColor(item.sentiment), 0.15),
+                                color: getSentimentColor(item.sentiment),
+                                fontWeight: 600,
+                                border: `1px solid ${alpha(getSentimentColor(item.sentiment), 0.3)}`
+                              }}
+                            />
                             </Box>
+
                             <IconButton
                               size="small"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                // 分享功能
                                 if (navigator.share && item.link) {
                                   navigator.share({
                                     title: item.title,
@@ -699,234 +827,428 @@ const NewsProfessional = () => {
                                   });
                                 }
                               }}
-                            >
-                              <Share sx={{ fontSize: 14 }} />
+                            sx={{
+                              bgcolor: alpha(theme.palette.success.main, 0.1),
+                              color: theme.palette.success.main,
+                              '&:hover': {
+                                bgcolor: alpha(theme.palette.success.main, 0.2),
+                                transform: 'scale(1.1)'
+                              }
+                            }}
+                          >
+                            <Share sx={{ fontSize: 16 }} />
                             </IconButton>
-                          </Box>
                         </Box>
                     </CardContent>
-                  </Card>
+                    </Paper>
                 </Fade>
-              )})}
+                );
+              })}
             </Stack>
           </Grid>
 
-          {/* Right Sidebar */}
+          {/* 右侧边栏 - 超级升级版 */}
           <Grid item xs={12} lg={4}>
-            <Stack spacing={3}>
-              {/* Market Sentiment */}
+            <Stack spacing={4}>
+              {/* 市场情绪分析 - 3D效果 */}
               <Fade in timeout={1200}>
-                <Card sx={{
+                <Paper
+                  elevation={0}
+                  sx={{
                   background: theme.palette.mode === 'dark'
-                    ? 'linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%)'
-                    : 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%)',
-                  border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
-                  borderRadius: 3
-                }}>
-                  <CardContent>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                      <Assessment sx={{ mr: 1, color: theme.palette.primary.main }} />
-                      <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                        Market Sentiment
+                      ? `linear-gradient(135deg, 
+                          ${alpha('#1e293b', 0.95)} 0%, 
+                          ${alpha('#334155', 0.9)} 50%, 
+                          ${alpha('#475569', 0.85)} 100%)`
+                      : `linear-gradient(135deg, 
+                          ${alpha('#ffffff', 0.95)} 0%, 
+                          ${alpha('#f8fafc', 0.9)} 50%, 
+                          ${alpha('#e2e8f0', 0.85)} 100%)`,
+                    border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+                    borderRadius: 4,
+                    backdropFilter: 'blur(20px)',
+                    overflow: 'hidden',
+                    position: 'relative',
+                    animation: `${slideInFromRight} 0.8s ease-out`,
+                    '&::before': {
+                      content: '""',
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      height: '3px',
+                      background: `linear-gradient(90deg, #00ff88, #10b981, #059669)`,
+                      backgroundSize: '200% 100%',
+                      animation: `${gradientShift} 2s ease infinite`
+                    }
+                  }}
+                >
+                  <CardContent sx={{ p: 4 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+                      <Box sx={{
+                        p: 1.5,
+                        borderRadius: '50%',
+                        background: `linear-gradient(135deg, #00ff88, #10b981)`,
+                        mr: 2
+                      }}>
+                        <Assessment sx={{ color: 'white', fontSize: 24 }} />
+                      </Box>
+                      <Typography variant="h5" sx={{ fontWeight: 700 }}>
+                        Market Sentiment Index
                       </Typography>
                     </Box>
 
-                    <Box sx={{ textAlign: 'center', mb: 3 }}>
-                      <Typography variant="h2" sx={{
-                        fontWeight: 700,
-                        color: '#00ff88',
-                        mb: 1
+                    {/* 大型情绪指数显示 */}
+                    <Box sx={{ textAlign: 'center', mb: 4 }}>
+                      <Box sx={{ position: 'relative', display: 'inline-block' }}>
+                        <Typography variant="h1" sx={{
+                          fontWeight: 900,
+                          fontSize: '4rem',
+                          background: 'linear-gradient(135deg, #00ff88, #10b981)',
+                          backgroundClip: 'text',
+                          WebkitBackgroundClip: 'text',
+                          WebkitTextFillColor: 'transparent',
+                          mb: 1,
+                          textShadow: '0 0 20px rgba(0, 255, 136, 0.3)'
                       }}>
                         85
                       </Typography>
-                      <Typography variant="h6" color="text.secondary">
-                        Extremely Bullish
+                        <Typography variant="h6" sx={{
+                          color: '#00ff88',
+                          fontWeight: 600,
+                          letterSpacing: '0.1em',
+                          textTransform: 'uppercase'
+                        }}>
+                          Extremely Positive
                       </Typography>
+                      </Box>
                     </Box>
 
-                    <Box sx={{ height: 200, mb: 2 }}>
+                    {/* 增强的情绪图表 */}
+                    <Box sx={{ height: 200, mb: 3 }}>
                       <ResponsiveContainer width="100%" height="100%">
                         <AreaChart data={sentimentData}>
+                          <defs>
+                            <linearGradient id="sentimentGradient" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#00ff88" stopOpacity={0.8}/>
+                              <stop offset="95%" stopColor="#00ff88" stopOpacity={0.1}/>
+                            </linearGradient>
+                          </defs>
                           <CartesianGrid strokeDasharray="3 3" stroke={alpha(theme.palette.text.primary, 0.1)} />
-                          <XAxis dataKey="time" stroke={theme.palette.text.secondary} fontSize={12} />
-                          <YAxis stroke={theme.palette.text.secondary} fontSize={12} />
-                          <Tooltip
+                          <XAxis 
+                            dataKey="time" 
+                            stroke={theme.palette.text.secondary} 
+                            fontSize={11}
+                            tick={{ fill: theme.palette.text.secondary }}
+                          />
+                          <YAxis 
+                            stroke={theme.palette.text.secondary} 
+                            fontSize={11}
+                            tick={{ fill: theme.palette.text.secondary }}
+                          />
+                          <RechartsTooltip
                             contentStyle={{
-                              backgroundColor: theme.palette.background.paper,
-                              border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
-                              borderRadius: 8
+                              backgroundColor: alpha(theme.palette.background.paper, 0.9),
+                              border: `1px solid ${alpha(theme.palette.primary.main, 0.3)}`,
+                              borderRadius: 8,
+                              backdropFilter: 'blur(10px)'
                             }}
                           />
                           <Area
                             type="monotone"
                             dataKey="sentiment"
                             stroke="#00ff88"
-                            fill={alpha('#00ff88', 0.2)}
-                            strokeWidth={2}
+                            strokeWidth={3}
+                            fill="url(#sentimentGradient)"
+                            dot={{ fill: '#00ff88', strokeWidth: 2, r: 4 }}
+                            activeDot={{ r: 6, stroke: '#00ff88', strokeWidth: 2 }}
                           />
                         </AreaChart>
                       </ResponsiveContainer>
                     </Box>
 
+                    {/* 情绪分析指标 */}
                     <Grid container spacing={2}>
-                      <Grid item xs={4}>
-                        <Box sx={{ textAlign: 'center' }}>
-                          <Typography variant="h6" sx={{ color: '#00ff88' }}>24</Typography>
-                          <Typography variant="caption" color="text.secondary">Bullish</Typography>
+                      {[
+                        { label: 'Bullish', value: 24, color: '#00ff88', icon: TrendingUp },
+                        { label: 'Bearish', value: 3, color: '#ff4757', icon: TrendingDown },
+                        { label: 'Neutral', value: 8, color: '#a4b0be', icon: TrendingFlat }
+                      ].map((item, index) => (
+                        <Grid item xs={4} key={index}>
+                          <Box sx={{ 
+                            textAlign: 'center',
+                            p: 2,
+                            borderRadius: 2,
+                            background: alpha(item.color, 0.1),
+                            border: `1px solid ${alpha(item.color, 0.2)}`,
+                            transition: 'all 0.3s ease',
+                            '&:hover': {
+                              transform: 'scale(1.05)',
+                              boxShadow: `0 8px 25px ${alpha(item.color, 0.2)}`
+                            }
+                          }}>
+                            <item.icon sx={{ fontSize: 20, color: item.color, mb: 1 }} />
+                            <Typography variant="h6" sx={{ color: item.color, fontWeight: 700 }}>
+                              {item.value}
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
+                              {item.label}
+                            </Typography>
                         </Box>
                       </Grid>
-                      <Grid item xs={4}>
-                        <Box sx={{ textAlign: 'center' }}>
-                          <Typography variant="h6" sx={{ color: '#ff4757' }}>3</Typography>
-                          <Typography variant="caption" color="text.secondary">Bearish</Typography>
-                        </Box>
-                      </Grid>
-                      <Grid item xs={4}>
-                        <Box sx={{ textAlign: 'center' }}>
-                          <Typography variant="h6" sx={{ color: '#a4b0be' }}>8</Typography>
-                          <Typography variant="caption" color="text.secondary">Neutral</Typography>
-                        </Box>
-                      </Grid>
+                      ))}
                     </Grid>
                   </CardContent>
-                </Card>
+                </Paper>
               </Fade>
 
-              {/* Trending Topics */}
+              {/* 新闻分类分析 */}
               <Fade in timeout={1400}>
-                <Card sx={{
+                <Paper
+                  elevation={0}
+                  sx={{
                   background: theme.palette.mode === 'dark'
-                    ? 'linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%)'
-                    : 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%)',
-                  border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
-                  borderRadius: 3
-                }}>
-                  <CardContent>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                      <TrendingUp sx={{ mr: 1, color: theme.palette.primary.main }} />
-                      <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                        Trending Topics
+                      ? `linear-gradient(135deg, 
+                          ${alpha('#1e293b', 0.95)} 0%, 
+                          ${alpha('#334155', 0.9)} 50%, 
+                          ${alpha('#475569', 0.85)} 100%)`
+                      : `linear-gradient(135deg, 
+                          ${alpha('#ffffff', 0.95)} 0%, 
+                          ${alpha('#f8fafc', 0.9)} 50%, 
+                          ${alpha('#e2e8f0', 0.85)} 100%)`,
+                    border: `1px solid ${alpha(theme.palette.secondary.main, 0.2)}`,
+                    borderRadius: 4,
+                    backdropFilter: 'blur(20px)',
+                    overflow: 'hidden',
+                    position: 'relative',
+                    animation: `${slideInFromRight} 0.8s ease-out 0.2s both`,
+                    '&::before': {
+                      content: '""',
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      height: '3px',
+                      background: `linear-gradient(90deg, ${theme.palette.secondary.main}, ${theme.palette.primary.main})`,
+                      backgroundSize: '200% 100%',
+                      animation: `${gradientShift} 2s ease infinite`
+                    }
+                  }}
+                >
+                  <CardContent sx={{ p: 4 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+                      <Box sx={{
+                        p: 1.5,
+                        borderRadius: '50%',
+                        background: `linear-gradient(135deg, ${theme.palette.secondary.main}, ${theme.palette.primary.main})`,
+                        mr: 2
+                      }}>
+                        <TrendingUp sx={{ color: 'white', fontSize: 24 }} />
+                      </Box>
+                      <Typography variant="h5" sx={{ fontWeight: 700 }}>
+                        Popular Categories
                       </Typography>
                     </Box>
 
                     <Stack spacing={2}>
-                      {trendingTags.map((tag, index) => (
-                        <Box key={tag.name} sx={{
+                      {newsCategories.map((category, index) => (
+                        <Box key={category.name} sx={{
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'space-between',
-                          p: 2,
-                          borderRadius: 2,
-                          backgroundColor: alpha(theme.palette.background.paper, 0.3),
-                          border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
-                          transition: 'all 0.2s ease',
+                          p: 3,
+                          borderRadius: 3,
+                          background: alpha(category.color, 0.1),
+                          border: `1px solid ${alpha(category.color, 0.2)}`,
+                          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                          animation: `${slideInFromRight} 0.6s ease-out ${index * 0.1}s both`,
+                          cursor: 'pointer',
                           '&:hover': {
-                            backgroundColor: alpha(theme.palette.primary.main, 0.05),
-                            cursor: 'pointer'
+                            transform: 'translateX(8px) scale(1.02)',
+                            boxShadow: `0 8px 25px ${alpha(category.color, 0.3)}`,
+                            border: `2px solid ${alpha(category.color, 0.4)}`
                           }
                         }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <Typography variant="h6" sx={{ 
-                              color: theme.palette.primary.main,
-                              fontWeight: 600,
-                              minWidth: 24
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                            <Box sx={{
+                              width: 40,
+                              height: 40,
+                              borderRadius: '50%',
+                              background: `linear-gradient(135deg, ${category.color}, ${alpha(category.color, 0.7)})`,
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontWeight: 800,
+                              color: 'white',
+                              fontSize: '0.9rem'
                             }}>
                               #{index + 1}
+                            </Box>
+                            <Box>
+                              <Typography variant="body1" sx={{ fontWeight: 700, mb: 0.5 }}>
+                                {category.name}
                             </Typography>
-                            <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                              {tag.name}
+                              <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.85rem' }}>
+                                {category.count} news
                             </Typography>
                           </Box>
+                          </Box>
+                          
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <Typography variant="body2" color="text.secondary">
-                              {tag.count}
-                            </Typography>
-                            {tag.trend === 'up' && <TrendingUp sx={{ fontSize: 16, color: '#00ff88' }} />}
-                            {tag.trend === 'down' && <TrendingDown sx={{ fontSize: 16, color: '#ff4757' }} />}
+                            <Chip
+                              label={`${category.trend > 0 ? '+' : ''}${category.trend}%`}
+                              size="small"
+                              icon={category.trend > 0 ? 
+                                <TrendingUp sx={{ fontSize: 14 }} /> : 
+                                category.trend < 0 ? 
+                                <TrendingDown sx={{ fontSize: 14 }} /> :
+                                <TrendingFlat sx={{ fontSize: 14 }} />
+                              }
+                              sx={{
+                                bgcolor: alpha(
+                                  category.trend > 0 ? '#00ff88' : 
+                                  category.trend < 0 ? '#ff4757' : '#a4b0be', 
+                                  0.15
+                                ),
+                                color: category.trend > 0 ? '#00ff88' : 
+                                       category.trend < 0 ? '#ff4757' : '#a4b0be',
+                                fontWeight: 600,
+                                border: `1px solid ${alpha(
+                                  category.trend > 0 ? '#00ff88' : 
+                                  category.trend < 0 ? '#ff4757' : '#a4b0be', 
+                                  0.3
+                                )}`
+                              }}
+                            />
                           </Box>
                         </Box>
                       ))}
                     </Stack>
                   </CardContent>
-                </Card>
+                </Paper>
               </Fade>
             </Stack>
           </Grid>
         </Grid>
       </Container>
 
-      {/* 新闻详情弹窗 */}
+      {/* 增强的新闻详情弹窗 */}
       <Dialog
         open={Boolean(selectedArticle)}
         TransitionComponent={Transition}
         keepMounted
         onClose={handleCloseDialog}
-        aria-describedby="alert-dialog-slide-description"
         maxWidth="md"
         fullWidth
         sx={{
           '& .MuiDialog-paper': {
             borderRadius: 4,
-            background: alpha(theme.palette.background.paper, 0.85),
+            background: alpha(theme.palette.background.paper, 0.9),
             backdropFilter: 'blur(20px)',
+            border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+            boxShadow: `0 25px 50px ${alpha('#000', 0.3)}`
           }
         }}
       >
         {selectedArticle && (
           <>
-            <DialogTitle sx={{ p: 3, pb: 2 }}>
-              <Typography variant="h5" component="div" sx={{ fontWeight: 'bold' }}>
+            <DialogTitle sx={{ p: 4, pb: 2 }}>
+              <Typography variant="h4" component="div" sx={{ 
+                fontWeight: 800,
+                lineHeight: 1.3,
+                pr: 6
+              }}>
                 {selectedArticle.title}
               </Typography>
               <IconButton
-                aria-label="close"
                 onClick={handleCloseDialog}
                 sx={{
                   position: 'absolute',
-                  right: 8,
-                  top: 8,
-                  color: (theme) => theme.palette.grey[500],
+                  right: 16,
+                  top: 16,
+                  bgcolor: alpha(theme.palette.error.main, 0.1),
+                  color: theme.palette.error.main,
+                  '&:hover': {
+                    bgcolor: alpha(theme.palette.error.main, 0.2),
+                    transform: 'scale(1.1)'
+                  }
                 }}
               >
                 <Close />
               </IconButton>
             </DialogTitle>
-            <DialogContent dividers sx={{ p: 3, borderColor: alpha(theme.palette.divider, 0.2) }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 2, mb: 2, color: 'text.secondary' }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Source fontSize="small" />
-                    <Typography variant="body2">{selectedArticle.source}</Typography>
+            
+            <DialogContent dividers sx={{ 
+              p: 4, 
+              borderColor: alpha(theme.palette.divider, 0.2),
+              maxHeight: '60vh',
+              overflowY: 'auto'
+            }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 2, mb: 3 }}>
+                <Chip
+                  icon={<Source sx={{ fontSize: 16 }} />}
+                  label={selectedArticle.source}
+                  sx={{
+                    bgcolor: alpha(theme.palette.primary.main, 0.1),
+                    color: theme.palette.primary.main,
+                    fontWeight: 600
+                  }}
+                />
+                <Chip
+                  icon={<AccessTime sx={{ fontSize: 16 }} />}
+                  label={selectedArticle.time}
+                  variant="outlined"
+                />
+                <Chip
+                  icon={<Visibility sx={{ fontSize: 16 }} />}
+                  label={`${selectedArticle.views} views`}
+                  variant="outlined"
+                />
                   </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <AccessTime fontSize="small" />
-                    <Typography variant="body2">{selectedArticle.time}</Typography>
-                  </Box>
-              </Box>
+              
               <Box
                 component="img"
                 src={selectedArticle.image}
                 alt={selectedArticle.title}
                 sx={{
                   width: '100%',
-                  maxHeight: '400px',
+                  maxHeight: '300px',
                   objectFit: 'cover',
-                  borderRadius: 2,
-                  my: 2,
-                  boxShadow: '0 4px 16px rgba(0,0,0,0.1)'
+                  borderRadius: 3,
+                  my: 3,
+                  border: `2px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+                  boxShadow: `0 8px 32px ${alpha('#000', 0.1)}`
                 }}
               />
-              <Typography gutterBottom sx={{ lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>
+              
+              <Typography sx={{ 
+                lineHeight: 1.8, 
+                whiteSpace: 'pre-wrap',
+                fontSize: '1.1rem',
+                color: 'text.primary'
+              }}>
                 {selectedArticle.summary.replace(/...$/, '')}
               </Typography>
             </DialogContent>
-            <DialogActions sx={{ p: 2 }}>
-              <Button onClick={handleCloseDialog}>关闭</Button>
+            
+            <DialogActions sx={{ p: 3, gap: 2 }}>
+              <Button 
+                onClick={handleCloseDialog}
+                variant="outlined"
+                sx={{ minWidth: 100 }}
+              >
+                Close
+              </Button>
               <Button 
                 variant="contained" 
                 onClick={() => window.open(selectedArticle.link, '_blank')}
                 endIcon={<OpenInNew />}
+                sx={{
+                  background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                  minWidth: 140
+                }}
               >
-                阅读原文
+                Read Full Article
               </Button>
             </DialogActions>
           </>

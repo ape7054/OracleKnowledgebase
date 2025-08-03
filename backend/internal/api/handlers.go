@@ -37,7 +37,7 @@ func createHTTPClient() *http.Client {
 	}
 	return &http.Client{
 		Transport: tr,
-		Timeout:   30 * time.Second,
+		Timeout:   10 * time.Second, // 减少超时时间到10秒
 	}
 }
 
@@ -76,10 +76,12 @@ func GetMarketData(c *gin.Context) {
 	}
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		// 不返回500错误，而是返回空数据让前端使用Mock数据
+		c.JSON(http.StatusOK, gin.H{
 			"success": false,
-			"error":   "Failed to fetch market data from CoinGecko API",
-			"message": err.Error(),
+			"data":    []map[string]interface{}{},
+			"error":   "CoinGecko API temporarily unavailable",
+			"message": "使用Mock数据替代",
 		})
 		return
 	}
@@ -87,20 +89,22 @@ func GetMarketData(c *gin.Context) {
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"success": false,
+			"data":    []map[string]interface{}{},
 			"error":   "Failed to read API response",
-			"message": err.Error(),
+			"message": "使用Mock数据替代",
 		})
 		return
 	}
 
 	var data []map[string]interface{}
 	if err := json.Unmarshal(body, &data); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"success": false,
+			"data":    []map[string]interface{}{},
 			"error":   "Failed to parse API response",
-			"message": err.Error(),
+			"message": "使用Mock数据替代",
 		})
 		return
 	}
@@ -146,10 +150,12 @@ func GetCoinsData(c *gin.Context) {
 	}
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		// 不返回500错误，而是返回空数据让前端使用Mock数据
+		c.JSON(http.StatusOK, gin.H{
 			"success": false,
-			"error":   "Failed to fetch coins data from CoinGecko API",
-			"message": err.Error(),
+			"data":    []map[string]interface{}{},
+			"error":   "CoinGecko API temporarily unavailable",
+			"message": "使用Mock数据替代",
 		})
 		return
 	}
@@ -157,20 +163,22 @@ func GetCoinsData(c *gin.Context) {
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"success": false,
+			"data":    []map[string]interface{}{},
 			"error":   "Failed to read API response",
-			"message": err.Error(),
+			"message": "使用Mock数据替代",
 		})
 		return
 	}
 
 	var data []map[string]interface{}
 	if err := json.Unmarshal(body, &data); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"success": false,
+			"data":    []map[string]interface{}{},
 			"error":   "Failed to parse API response",
-			"message": err.Error(),
+			"message": "使用Mock数据替代",
 		})
 		return
 	}

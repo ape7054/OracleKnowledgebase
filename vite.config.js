@@ -16,7 +16,11 @@ export default defineConfig({
   },
   server: {
     host: '0.0.0.0',
-    port: 5173,
+    port: 5175,
+    hmr: {
+      port: 24678, // 使用不同的端口避免冲突
+      host: 'localhost'
+    },
     proxy: {
       // 删除 /api/market 的特殊代理，将所有 API 请求统一发送到后端
       '/api': {

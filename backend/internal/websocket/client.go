@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 )
 
@@ -43,34 +44,38 @@ func (c *Client) readPump() {
 		c.hub.unregister <- c
 		c.conn.Close()
 	}()
+
 	c.conn.SetReadLimit(maxMessageSize)
 	c.conn.SetReadDeadline(time.Now().Add(pongWait))
-	c.conn.SetPongHandler(func(string) error { c.conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
+	c.conn.SetPongHandler(func(string) error {
+		c.conn.SetReadDeadline(time.Now().Add(pongWait))
+		return nil
+	})
+
 	for {
 		_, _, err := c.conn.ReadMessage()
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-				log.Printf("error: %v", err)
+				log.Printf("WebSocket读取错误: %v", err)
 			}
 			break
 		}
-		// 我们目前忽略从客户端收到的消息，因为我们只做服务器->客户端的推送
 	}
 }
 
-// writePump 将消息从 Hub 泵送到 WebSocket 连接。
+// writePump 从 Hub 中读取消息并将其泵送到 WebSocket 连接。
 func (c *Client) writePump() {
 	ticker := time.NewTicker(pingPeriod)
 	defer func() {
 		ticker.Stop()
 		c.conn.Close()
 	}()
+
 	for {
 		select {
 		case message, ok := <-c.send:
 			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if !ok {
-				// Hub 关闭了通道。
 				c.conn.WriteMessage(websocket.CloseMessage, []byte{})
 				return
 			}
@@ -81,7 +86,7 @@ func (c *Client) writePump() {
 			}
 			w.Write(message)
 
-			// 将排队的消息添加到当前 WebSocket 消息中。
+			// 添加队列中等待的消息到当前WebSocket消息
 			n := len(c.send)
 			for i := 0; i < n; i++ {
 				w.Write([]byte{'\n'})
@@ -100,17 +105,23 @@ func (c *Client) writePump() {
 	}
 }
 
-// ServeWs 处理来自 peer 的 WebSocket 请求。
-func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
-	conn, err := upgrader.Upgrade(w, r, nil)
+// HandleWebSocket 处理WebSocket升级请求
+func (hub *Hub) HandleWebSocket(c *gin.Context) {
+	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
-		log.Println(err)
+		log.Printf("WebSocket升级失败: %v", err)
 		return
 	}
-	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256)}
+
+	client := &Client{
+		hub:  hub,
+		conn: conn,
+		send: make(chan []byte, 256),
+	}
+
 	client.hub.register <- client
 
-	// 允许在独立的 goroutine 中并发执行读写操作。
+	// 在新的goroutine中运行，允许收集内存引用的方法
 	go client.writePump()
 	go client.readPump()
 }

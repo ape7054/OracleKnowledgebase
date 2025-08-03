@@ -1,6 +1,20 @@
 package websocket
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"log"
+)
+
+// TradeMessage 交易消息结构
+type TradeMessage struct {
+	ID       uint   `json:"id"`
+	Price    string `json:"price"`
+	Amount   string `json:"amount"`
+	Type     string `json:"type"`
+	Symbol   string `json:"symbol"`
+	UserName string `json:"user_name"`
+	Time     string `json:"time"`
+}
 
 // Hub 维护一组活跃的客户端，并将消息广播给这些客户端。
 type Hub struct {
@@ -30,16 +44,16 @@ func (h *Hub) Run() {
 	for {
 		select {
 		case client := <-h.register:
-			// 当有新客户端连接时，将其添加到 clients 集合中。
 			h.clients[client] = true
+			log.Printf("WebSocket客户端已连接，当前连接数: %d", len(h.clients))
+
 		case client := <-h.unregister:
-			// 当客户端断开连接时，将其从 clients 集合中移除。
 			if _, ok := h.clients[client]; ok {
 				delete(h.clients, client)
 				close(client.send)
+				log.Printf("WebSocket客户端已断开连接，当前连接数: %d", len(h.clients))
 			}
 		case message := <-h.broadcast:
-			// 当有新消息需要广播时，将其发送给所有已连接的客户端。
 			for client := range h.clients {
 				select {
 				case client.send <- message:
@@ -52,15 +66,18 @@ func (h *Hub) Run() {
 	}
 }
 
-// BroadcastTrade 会将交易信息序列化为 JSON 并发送到广播通道。
-func (h *Hub) BroadcastTrade(trade interface{}) {
-	// 将 trade 结构体序列化为 JSON
+// BroadcastTrade 广播交易消息
+func (h *Hub) BroadcastTrade(trade TradeMessage) {
 	message, err := json.Marshal(trade)
 	if err != nil {
-		// 在实际应用中，这里应该有更完善的日志记录
-		println("无法序列化交易信息:", err)
+		log.Printf("交易消息序列化失败: %v", err)
 		return
 	}
-	// 将 JSON 消息发送到广播通道
-	h.broadcast <- message
+
+	select {
+	case h.broadcast <- message:
+		log.Printf("已广播交易消息: %s %s %s", trade.Type, trade.Amount, trade.Symbol)
+	default:
+		log.Println("广播通道已满，跳过消息")
+	}
 }

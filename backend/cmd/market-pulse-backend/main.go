@@ -12,23 +12,40 @@ import (
 
 	"market-pulse/backend/internal/api"
 	"market-pulse/backend/internal/database"
+	"market-pulse/backend/internal/websocket"
 )
 
 func main() {
-	// Load .env file
-	err := godotenv.Load()
-	if err != nil {
-		log.Println("No .env file found, using environment variables")
+	// Load .env file (try different names)
+	envFiles := []string{".env", ".env.local", ".env.docker"}
+	for _, envFile := range envFiles {
+		if err := godotenv.Load(envFile); err == nil {
+			log.Printf("已加载环境配置: %s", envFile)
+			break
+		}
 	}
 
 	// Initialize database
 	database.Init()
+
+	// Initialize WebSocket hub
+	hub := websocket.NewHub()
+	go hub.Run()
 
 	// Initialize Gin router
 	router := gin.Default()
 
 	// Setup CORS policy
 	router.Use(func(c *gin.Context) {
+		c.Header("Access-Control-Allow-Origin", "*")
+		c.Header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		c.Header("Access-Control-Allow-Headers", "Origin, Content-Type, Authorization")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+
 		c.Next()
 	})
 
@@ -39,6 +56,13 @@ func main() {
 		// Market data routes are public
 		marketHandler := api.NewMarketHandler()
 		marketHandler.RegisterRoutes(apiV1.Group("/market"))
+
+		// Trade data routes - GET is public, POST requires auth
+		tradeHandler := api.NewTradeHandler(database.DB, hub)
+		tradeGroup := apiV1.Group("/trades")
+		{
+			tradeGroup.GET("", tradeHandler.GetTrades) // 公开访问交易历史
+		}
 
 		// Authentication routes are public
 		jwtSecret := os.Getenv("JWT_SECRET")
@@ -69,13 +93,32 @@ func main() {
 				})
 			})
 		}
+
+		// Protected trade routes - require authentication
+		protectedTrades := apiV1.Group("/trades")
+		protectedTrades.Use(api.AuthMiddleware(jwtSecret))
+		{
+			protectedTrades.POST("", tradeHandler.CreateTrade) // 创建交易需要认证
+		}
+	}
+
+	// WebSocket routes
+	wsGroup := router.Group("/ws")
+	{
+		wsGroup.GET("/trades", hub.HandleWebSocket)
 	}
 
 	// 启动服务器
 	port := os.Getenv("SERVER_PORT")
-	log.Printf("后端服务器启动在 http://localhost:%s", port)
+	if port == "" {
+		port = "8080"
+	}
+	log.Printf("🚀 后端服务器启动 -> http://localhost:%s", port)
+	log.Printf("🔌 WebSocket服务 -> ws://localhost:%s/ws/trades", port)
+	log.Printf("📊 API文档 -> http://localhost:%s/api/health", port)
+
 	if err := router.Run(":" + port); err != nil {
-		log.Fatalf("无法启动服务器: %v", err)
+		log.Fatalf("❌ 服务器启动失败: %v", err)
 	}
 }
 

@@ -1,5 +1,6 @@
 
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Box, 
   Typography, 
@@ -11,7 +12,11 @@ import {
   Container,
   Grid,
   Fade,
-  Stack
+  Stack,
+  Card,
+  CardContent,
+  Avatar,
+  Divider
 } from '@mui/material';
 import { styled, useTheme, alpha, keyframes } from '@mui/system';
 import { 
@@ -27,9 +32,13 @@ import {
   Verified,
   Security,
   FileDownload,
-  Refresh
+  Refresh,
+  Logout,
+  Person,
+  Email
 } from '@mui/icons-material';
 import { ResponsiveContainer, AreaChart, Area, LineChart, Line, YAxis } from 'recharts';
+import { useAuth } from '../context/AuthContext';
 
 // Import crypto icons
 import BtcIcon from 'cryptocurrency-icons/svg/color/btc.svg?react';
@@ -117,6 +126,184 @@ const AssetCard = styled(Paper)(({ theme }) => ({
     border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
   }
 }));
+
+// User Profile Card Component
+const UserProfileCard = () => {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const theme = useTheme();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
+  return (
+    <Card
+      sx={{
+        mb: 4,
+        background: `linear-gradient(135deg, 
+          ${alpha('#00ff88', 0.1)}, 
+          ${alpha('#0099ff', 0.1)})`,
+        border: `2px solid ${alpha('#00ff88', 0.3)}`,
+        borderRadius: 4,
+        overflow: 'hidden',
+        position: 'relative',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'radial-gradient(circle at 20% 20%, rgba(0, 255, 136, 0.1) 0%, transparent 50%)',
+          zIndex: 0,
+        }
+      }}
+    >
+      <CardContent sx={{ p: 4, position: 'relative', zIndex: 1 }}>
+        <Box display="flex" alignItems="center" justifyContent="space-between" mb={3}>
+          <Typography
+            variant="h5"
+            sx={{
+              color: '#00ff88',
+              fontWeight: 'bold',
+              textShadow: '0 0 20px rgba(0, 255, 136, 0.3)',
+            }}
+          >
+            Account Information
+          </Typography>
+          <Chip
+            icon={<Verified />}
+            label="Authenticated"
+            sx={{
+              background: 'linear-gradient(135deg, #00ff88, #0099ff)',
+              color: 'white',
+              fontWeight: 'bold',
+              '& .MuiChip-icon': {
+                color: 'white',
+              },
+            }}
+          />
+        </Box>
+
+        <Grid container spacing={4} alignItems="center">
+          <Grid item xs={12} md={8}>
+            <Box display="flex" alignItems="center" gap={3}>
+              <Avatar
+                sx={{
+                  width: 80,
+                  height: 80,
+                  background: 'linear-gradient(135deg, #00ff88, #0099ff)',
+                  fontSize: '2rem',
+                  fontWeight: 'bold',
+                  boxShadow: '0 10px 30px rgba(0, 255, 136, 0.3)',
+                }}
+              >
+                {user?.username?.charAt(0).toUpperCase() || 'U'}
+              </Avatar>
+              
+              <Box>
+                <Box display="flex" alignItems="center" gap={2} mb={1}>
+                  <Person sx={{ color: '#0099ff', fontSize: 20 }} />
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      color: 'white',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    {user?.username || 'User'}
+                  </Typography>
+                </Box>
+                
+                <Box display="flex" alignItems="center" gap={2} mb={2}>
+                  <Email sx={{ color: '#0099ff', fontSize: 20 }} />
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      color: 'rgba(255, 255, 255, 0.8)',
+                    }}
+                  >
+                    {user?.email || 'user@example.com'}
+                  </Typography>
+                </Box>
+
+                <Box display="flex" gap={2}>
+                  <Chip
+                    label={`User ID: ${user?.id || '1'}`}
+                    size="small"
+                    variant="outlined"
+                    sx={{
+                      color: 'rgba(255, 255, 255, 0.7)',
+                      borderColor: 'rgba(255, 255, 255, 0.3)',
+                    }}
+                  />
+                  <Chip
+                    label="Premium Member"
+                    size="small"
+                    sx={{
+                      background: alpha('#ffaa00', 0.2),
+                      color: '#ffaa00',
+                      border: '1px solid #ffaa00',
+                    }}
+                  />
+                </Box>
+              </Box>
+            </Box>
+          </Grid>
+
+          <Grid item xs={12} md={4}>
+            <Box display="flex" flexDirection="column" gap={2} alignItems="flex-end">
+              <Button
+                variant="outlined"
+                startIcon={<Person />}
+                sx={{
+                  color: '#0099ff',
+                  borderColor: '#0099ff',
+                  '&:hover': {
+                    backgroundColor: alpha('#0099ff', 0.1),
+                    borderColor: '#0099ff',
+                  },
+                }}
+              >
+                Edit Profile
+              </Button>
+              
+              <Button
+                variant="contained"
+                startIcon={<Logout />}
+                onClick={handleLogout}
+                sx={{
+                  background: 'linear-gradient(135deg, #ff4444, #ff6666)',
+                  '&:hover': {
+                    background: 'linear-gradient(135deg, #ff6666, #ff4444)',
+                    transform: 'translateY(-2px)',
+                  },
+                  transition: 'all 0.3s ease',
+                }}
+              >
+                Logout
+              </Button>
+            </Box>
+          </Grid>
+        </Grid>
+        
+        <Divider sx={{ my: 3, borderColor: 'rgba(255, 255, 255, 0.1)' }} />
+        
+        <Typography
+          variant="body2"
+          sx={{
+            color: 'rgba(255, 255, 255, 0.6)',
+            textAlign: 'center',
+          }}
+        >
+          Welcome to your MarketPulse account dashboard. Manage your portfolio and preferences below.
+        </Typography>
+      </CardContent>
+    </Card>
+  );
+};
 
 function AccountPremium() {
     const theme = useTheme();
@@ -295,6 +482,9 @@ function AccountPremium() {
         <Container maxWidth="xl" sx={{ py: 4 }}>
             <Fade in timeout={800}>
                 <Box>
+                    {/* User Profile Card */}
+                    <UserProfileCard />
+                    
                     {/* Header */}
                     <Box sx={{
                         display: 'flex',

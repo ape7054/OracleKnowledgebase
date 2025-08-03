@@ -1,11 +1,14 @@
 import React, { useContext, useState } from 'react';
 import { Routes, Route, NavLink, Navigate } from 'react-router-dom';
-import { Box, CssBaseline, AppBar, Toolbar, Typography, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, IconButton, useTheme, useMediaQuery } from '@mui/material';
-import { Dashboard as DashboardIcon, SwapHoriz as TradeIcon, AccountCircle as AccountIcon, Menu as MenuIcon, TrendingUp, Home as HomeIcon, Article as NewsIcon } from '@mui/icons-material';
+import { Box, CssBaseline, AppBar, Toolbar, Typography, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, IconButton, useTheme, useMediaQuery, Avatar, Menu, MenuItem, Divider, Chip } from '@mui/material';
+import { Dashboard as DashboardIcon, SwapHoriz as TradeIcon, AccountCircle as AccountIcon, Menu as MenuIcon, TrendingUp, Home as HomeIcon, Article as NewsIcon, Logout, Settings, Person } from '@mui/icons-material';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
+import { alpha } from '@mui/material/styles';
 import { ThemeContext } from './context/ThemeContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import Account from './pages/Account';
@@ -128,6 +131,138 @@ const BrandLogo = styled(Box)(({ theme }) => ({
   }
 }));
 
+// User profile component for the sidebar
+const UserProfile = () => {
+  const { user, isAuthenticated, logout } = useAuth();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const theme = useTheme();
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    logout();
+    handleMenuClose();
+  };
+
+  if (!isAuthenticated) {
+    return (
+      <Box sx={{ p: 2, textAlign: 'center' }}>
+        <Chip
+          label="Not Logged In"
+          variant="outlined"
+          size="small"
+          sx={{
+            color: 'text.secondary',
+            borderColor: alpha(theme.palette.text.secondary, 0.3),
+          }}
+        />
+      </Box>
+    );
+  }
+
+  return (
+    <Box sx={{ p: 2 }}>
+      <Box
+        onClick={handleMenuOpen}
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 2,
+          p: 1,
+          borderRadius: 2,
+          cursor: 'pointer',
+          transition: 'all 0.2s ease',
+          background: alpha(theme.palette.primary.main, 0.1),
+          border: `1px solid ${alpha(theme.palette.primary.main, 0.3)}`,
+          '&:hover': {
+            background: alpha(theme.palette.primary.main, 0.15),
+            transform: 'translateY(-2px)',
+          },
+        }}
+      >
+        <Avatar
+          sx={{
+            width: 32,
+            height: 32,
+            background: 'linear-gradient(135deg, #00ff88, #0099ff)',
+            fontSize: '0.9rem',
+            fontWeight: 'bold',
+          }}
+        >
+          {user?.username?.charAt(0).toUpperCase() || 'U'}
+        </Avatar>
+        <Box sx={{ flex: 1, minWidth: 0 }}>
+          <Typography
+            variant="body2"
+            sx={{
+              fontWeight: 600,
+              color: 'text.primary',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {user?.username || 'User'}
+          </Typography>
+          <Typography
+            variant="caption"
+            sx={{
+              color: 'text.secondary',
+              fontSize: '0.7rem',
+            }}
+          >
+            Online
+          </Typography>
+        </Box>
+      </Box>
+
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleMenuClose}
+        PaperProps={{
+          sx: {
+            mt: 1,
+            minWidth: 200,
+            borderRadius: 2,
+            background: theme.palette.mode === 'dark'
+              ? 'rgba(22, 28, 36, 0.95)'
+              : 'rgba(255, 255, 255, 0.95)',
+            backdropFilter: 'blur(20px)',
+            border: `1px solid ${theme.palette.divider}`,
+          },
+        }}
+      >
+        <MenuItem onClick={handleMenuClose}>
+          <ListItemIcon>
+            <Person fontSize="small" />
+          </ListItemIcon>
+          Profile
+        </MenuItem>
+        <MenuItem onClick={handleMenuClose}>
+          <ListItemIcon>
+            <Settings fontSize="small" />
+          </ListItemIcon>
+          Settings
+        </MenuItem>
+        <Divider />
+        <MenuItem onClick={handleLogout}>
+          <ListItemIcon>
+            <Logout fontSize="small" />
+          </ListItemIcon>
+          Logout
+        </MenuItem>
+      </Menu>
+    </Box>
+  );
+};
+
 // This is the main content component that holds the entire UI.
 function AppContent() {
   // Get theme mode ('light' or 'dark') and the function to toggle it from context.
@@ -186,6 +321,10 @@ function AppContent() {
           </Box>
         </BrandLogo>
       </Toolbar>
+      
+      {/* User Profile Section */}
+      <UserProfile />
+      
       {/* Container for the navigation list items. */}
       <Box sx={{ p: 1, mt: 1 }}>
         {[
@@ -411,24 +550,12 @@ function AppContent() {
   );
 }
 
-// A wrapper for protected routes
-function ProtectedRoute({ children }) {
-  const token = localStorage.getItem('authToken');
-  if (!token) {
-    // Redirect them to the /login page, but save the current location they were
-    // trying to go to. This allows us to send them along to that page after they
-    // login, which is a nicer user experience than dropping them off on the home page.
-    return <Navigate to="/login" replace />;
-  }
-  return children;
-}
-
-
 // The root 'App' component. Its only job is to provide the theme context.
 function App() {
   return (
-    // AppWrapper consumes the theme and passes it to Material-UI.
+    <AuthProvider>
       <AppWrapper />
+    </AuthProvider>
   );
 }
 

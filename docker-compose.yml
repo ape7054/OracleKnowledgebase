@@ -21,6 +21,28 @@ services:
       timeout: 5s
       retries: 5
 
+  # phpMyAdmin - MySQL Web管理界面
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:5.2
+    container_name: market-pulse-phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: ${DB_USER:-market_pulse_user}
+      PMA_PASSWORD: ${DB_PASSWORD:-wBYXZkiLTExiEAHF}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpassword}
+      # 允许连接到任意服务器
+      PMA_ARBITRARY: 1
+      # 设置上传限制
+      UPLOAD_LIMIT: 300M
+    ports:
+      - "8081:80"
+    depends_on:
+      - db
+    networks:
+      - market-pulse-network
+
   # 后端服务
   backend:
     build:
@@ -55,7 +77,7 @@ services:
 
 volumes:
   mysql-data:
-    driver: local
+    driver: local 
 
 networks:
   market-pulse-network:
