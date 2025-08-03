@@ -97,6 +97,7 @@ const fetchFromCryptoCompare = async () => {
       summary: item.body?.substring(0, 200) + '...',
       source: item.source_info?.name || 'CryptoCompare',
       sourceUrl: item.url,
+      imageUrl: item.imageurl || `https://via.placeholder.com/400x250/1976d2/ffffff?text=${encodeURIComponent(item.title?.substring(0, 20) || 'News')}`,
       time: formatTime(item.published_on * 1000),
       sentiment: analyzeSentiment(item.title, item.body || ''),
       coins: extractCoins(item.title, item.body || ''),

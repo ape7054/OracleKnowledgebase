@@ -110,22 +110,22 @@ const loadCryptoNews = async () => {
       useRealAPI: true 
     });
     
-    // 转换数据格式以适配UI
-    return newsData.map(item => ({
-      id: item.id,
-      title: item.title,
-      summary: item.summary,
-      source: item.source,
-      time: item.time,
-      category: item.category || '市场',
-      sentiment: item.sentiment,
-      impact: item.impact,
-      views: item.views || Math.floor(Math.random() * 50000) + 1000 + '',
-      image: `https://via.placeholder.com/400x250/1976d2/ffffff?text=${encodeURIComponent(item.title.substring(0, 20))}`,
-      link: item.sourceUrl,
-      coins: item.coins || ['CRYPTO'],
-      tags: item.tags || []
-    }));
+         // 转换数据格式以适配UI
+     return newsData.map(item => ({
+       id: item.id,
+       title: item.title,
+       summary: item.summary,
+       source: item.source,
+       time: item.time,
+       category: item.category || '市场',
+       sentiment: item.sentiment,
+       impact: item.impact,
+       views: item.views || Math.floor(Math.random() * 50000) + 1000 + '',
+       image: item.imageUrl || `https://via.placeholder.com/400x250/1976d2/ffffff?text=${encodeURIComponent(item.title.substring(0, 20))}`,
+       link: item.sourceUrl,
+       coins: item.coins || ['CRYPTO'],
+       tags: item.tags || []
+     }));
   } catch (error) {
     console.error('获取真实新闻失败:', error);
     return getFallbackNews();
@@ -659,7 +659,11 @@ const NewsProfessional = () => {
                           {/* 新闻图片 */}
                           <Box
                             component="img"
-                            src={item.image || 'https://via.placeholder.com/120x80/667eea/ffffff?text=News'}
+                            src={item.image || `https://via.placeholder.com/120x80/667eea/ffffff?text=${encodeURIComponent(item.title.substring(0, 10))}`}
+                            onError={(e) => {
+                              // 图片加载失败时使用占位符
+                              e.target.src = `https://via.placeholder.com/120x80/667eea/ffffff?text=${encodeURIComponent(item.title.substring(0, 10))}`;
+                            }}
                             sx={{
                               width: 120,
                               height: 80,

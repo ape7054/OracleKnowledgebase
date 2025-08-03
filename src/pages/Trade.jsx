@@ -1,1286 +1,902 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Box, Grid, Typography, TextField, MenuItem, Button, Slider, Paper, Divider, Chip } from '@mui/material';
+import { Box, Grid, Typography, TextField, MenuItem, Button, Slider, Paper, Divider, Chip, Container, Card, CardContent, Avatar, IconButton, Tooltip, LinearProgress } from '@mui/material';
 import { styled, useTheme, alpha, keyframes } from '@mui/system';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
+import { Timeline, ShowChart, Bolt, AutoGraph, CandlestickChart, Assessment, MonetizationOn, Speed, Security, FlashOn } from '@mui/icons-material';
 
-// 动画定义
-const float = keyframes`
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+// 🌟 震撼动画定义
+const particleFloat = keyframes`
+  0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg); opacity: 0.7; }
+  25% { transform: translateY(-20px) translateX(10px) rotate(90deg); opacity: 1; }
+  50% { transform: translateY(-10px) translateX(-15px) rotate(180deg); opacity: 0.8; }
+  75% { transform: translateY(-30px) translateX(5px) rotate(270deg); opacity: 0.9; }
 `;
 
-const GlassmorphicPaper = styled(Paper)(({ theme }) => ({
-    padding: '24px',
-    borderRadius: '16px',
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    transition: 'background-color 0.3s ease, box-shadow 0.3s ease',
+const neonGlow = keyframes`
+  0%, 100% { box-shadow: 0 0 20px rgba(0, 255, 136, 0.3), 0 0 40px rgba(0, 255, 136, 0.1), inset 0 0 20px rgba(0, 255, 136, 0.1); }
+  50% { box-shadow: 0 0 30px rgba(0, 255, 136, 0.6), 0 0 60px rgba(0, 255, 136, 0.2), inset 0 0 30px rgba(0, 255, 136, 0.2); }
+`;
 
-    ...(theme.palette.mode === 'dark'
-      ? {
-          backgroundColor: 'rgba(22, 27, 34, 0.85)',
-          backdropFilter: 'blur(16px)',
-          border: '1px solid rgba(255, 255, 255, 0.08)',
-          boxShadow: '0 10px 40px 0 rgba(0, 0, 0, 0.45)',
-        }
-      : {
-          backgroundColor: 'rgba(255, 255, 255, 0.7)',
-          backdropFilter: 'blur(16px)',
-          border: `1px solid ${theme.palette.divider}`,
-          boxShadow: theme.shadows[8],
-        }),
+const priceFlicker = keyframes`
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.02); }
+`;
+
+const gradientShift = keyframes`
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+`;
+
+const digitalPulse = keyframes`
+  0%, 100% { border-color: rgba(0, 255, 136, 0.3); }
+  50% { border-color: rgba(0, 255, 136, 0.8); }
+`;
+
+// 🎨 专业级背景容器
+const TradingBackground = styled(Box)(({ theme }) => ({
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  background: theme.palette.mode === 'dark' 
+    ? `
+      radial-gradient(circle at 20% 20%, rgba(0, 255, 136, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 60%, rgba(13, 110, 253, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 40% 80%, rgba(255, 193, 7, 0.08) 0%, transparent 50%),
+      linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 25%, #16213e 50%, #0f3460 100%)
+    `
+    : `
+      radial-gradient(circle at 20% 20%, rgba(0, 255, 136, 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 80% 60%, rgba(13, 110, 253, 0.08) 0%, transparent 50%),
+      linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #dee2e6 100%)
+    `,
+  backgroundSize: '400% 400%',
+  animation: `${gradientShift} 20s ease infinite`,
+  zIndex: -2,
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundImage: theme.palette.mode === 'dark'
+      ? `radial-gradient(circle, rgba(0, 255, 136, 0.1) 1px, transparent 1px)`
+      : `radial-gradient(circle, rgba(13, 110, 253, 0.05) 1px, transparent 1px)`,
+    backgroundSize: '100px 100px',
+    animation: `${particleFloat} 15s linear infinite`,
+    opacity: 0.3,
+  }
+}));
+
+// 💎 顶级玻璃态卡片
+const TradingCard = styled(Card)(({ theme, variant = 'default' }) => ({
+  position: 'relative',
+  background: theme.palette.mode === 'dark' 
+    ? `linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.05) 0%, 
+        rgba(255, 255, 255, 0.02) 50%, 
+        rgba(0, 0, 0, 0.1) 100%)`
+    : `linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.9) 0%, 
+        rgba(255, 255, 255, 0.7) 50%, 
+        rgba(255, 255, 255, 0.5) 100%)`,
+  backdropFilter: 'blur(20px)',
+  borderRadius: '24px',
+  border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+  boxShadow: theme.palette.mode === 'dark'
+    ? `0 20px 40px rgba(0, 0, 0, 0.3), 
+       0 10px 20px rgba(0, 0, 0, 0.2), 
+       inset 0 1px 0 rgba(255, 255, 255, 0.1)`
+    : `0 20px 40px rgba(0, 0, 0, 0.1), 
+       0 10px 20px rgba(0, 0, 0, 0.05)`,
+  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+  overflow: 'hidden',
   
-    color: theme.palette.text.primary,
-
-    '&:hover': {
-        ...(theme.palette.mode === 'dark' && {
-            backgroundColor: 'rgba(22, 27, 34, 0.95)',
-            boxShadow: '0 12px 48px 0 rgba(0, 0, 0, 0.55)',
-        }),
-    },
-}));
-
-const StyledTextField = styled(TextField)(({ theme }) => ({
-  '& .MuiInputBase-root': {
-    color: theme.palette.text.primary,
-    '&:before': {
-      borderBottomColor: theme.palette.divider,
-    },
-    '&:hover:not(.Mui-disabled):before': {
-      borderBottomColor: theme.palette.text.primary,
-    },
+  // 变体样式
+  ...(variant === 'buy' && {
+    border: `1px solid ${alpha(theme.palette.success.main, 0.4)}`,
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      height: '4px',
+      background: `linear-gradient(90deg, ${theme.palette.success.main}, #00ff88)`,
+      animation: `${neonGlow} 2s ease-in-out infinite`,
+    }
+  }),
+  
+  ...(variant === 'sell' && {
+    border: `1px solid ${alpha(theme.palette.error.main, 0.4)}`,
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      height: '4px',
+      background: `linear-gradient(90deg, ${theme.palette.error.main}, #ff4757)`,
+      animation: `${neonGlow} 2s ease-in-out infinite`,
+    }
+  }),
+  
+  ...(variant === 'orderbook' && {
+    border: `1px solid ${alpha(theme.palette.info.main, 0.4)}`,
+    animation: `${digitalPulse} 3s ease-in-out infinite`,
+  }),
+  
+  '&:hover': {
+    transform: 'translateY(-4px) scale(1.02)',
+    boxShadow: theme.palette.mode === 'dark'
+      ? `0 25px 50px rgba(0, 0, 0, 0.4), 
+         0 15px 30px rgba(0, 0, 0, 0.3), 
+         inset 0 1px 0 rgba(255, 255, 255, 0.2)`
+      : `0 25px 50px rgba(0, 0, 0, 0.15), 
+         0 15px 30px rgba(0, 0, 0, 0.1)`,
   },
-  '& .MuiInputLabel-root': {
-    color: theme.palette.text.secondary,
+  
+  '&::after': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: `linear-gradient(135deg, 
+      transparent 0%, 
+      ${alpha(theme.palette.primary.main, 0.05)} 50%, 
+      transparent 100%)`,
+    opacity: 0,
+    transition: 'opacity 0.4s ease',
   },
-  '& .MuiOutlinedInput-root:focus, & .MuiOutlinedInput-root:focus-within': {
-    outline: 'none',
-  },
-  '& .MuiInputBase-root:focus, & .MuiInputBase-root:focus-within': {
-    outline: 'none',
-  },
-}));
-
-const StyledSelect = styled(TextField)(({ theme }) => ({
-    color: theme.palette.text.primary,
-    '& .MuiOutlinedInput-notchedOutline': {
-        borderColor: theme.palette.divider,
-    },
-    '&:hover .MuiOutlinedInput-notchedOutline': {
-        borderColor: theme.palette.text.primary,
-    },
-    '& .MuiSvgIcon-root': {
-        color: theme.palette.text.primary,
-    },
-    '& .MuiOutlinedInput-root:focus, & .MuiOutlinedInput-root:focus-within': {
-        outline: 'none',
-    },
-    '& .MuiSelect-select:focus': {
-        outline: 'none',
-        background: 'transparent',
-    },
-}));
-
-const StyledSlider = styled(Slider)(({ theme, tradeType }) => ({
-  color: tradeType === 'sell' ? theme.palette.error.main : theme.palette.success.main,
-  height: 6,
-  '& .MuiSlider-thumb': {
-    height: 18,
-    width: 18,
-    boxShadow: 'none',
-    '&:hover, &.Mui-focusVisible': {
-        boxShadow: `0 0 0 8px ${tradeType === 'sell' ? 'rgba(239, 83, 80, 0.16)' : 'rgba(46, 125, 50, 0.16)'}`,
-    },
-  },
-  '& .MuiSlider-track': {
-    border: 'none',
-    height: 6,
-  },
-  '& .MuiSlider-rail': {
-    height: 6,
-    backgroundColor: tradeType === 'sell' 
-      ? theme.palette.mode === 'dark' ? 'rgba(255, 99, 71, 0.3)' : 'rgba(255, 99, 71, 0.2)'
-      : theme.palette.mode === 'dark' ? 'rgba(76, 175, 80, 0.3)' : 'rgba(76, 175, 80, 0.2)',
+  
+  '&:hover::after': {
     opacity: 1,
-  },
-  '& .MuiSlider-mark': {
-    backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.2)',
-    height: 8,
-    width: 1,
-    marginTop: -1,
-  },
+  }
 }));
 
-const OrderBookRow = ({ side, price, amount, total, maxTotal }) => {
-    const theme = useTheme();
-    const isAsk = side === 'asks';
-    const percentage = (total / maxTotal) * 100;
+// 🔥 专业交易按钮
+const TradingButton = styled(Button)(({ theme, variant, tradetype }) => ({
+  position: 'relative',
+  borderRadius: '16px',
+  padding: '16px 32px',
+  fontSize: '1.1rem',
+  fontWeight: 700,
+  textTransform: 'none',
+  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+  overflow: 'hidden',
+  
+  ...(tradetype === 'buy' && {
+    background: `linear-gradient(135deg, #00ff88 0%, #00d26a 100%)`,
+    color: '#000',
+    boxShadow: `0 8px 32px rgba(0, 255, 136, 0.4)`,
+    '&:hover': {
+      background: `linear-gradient(135deg, #00d26a 0%, #00ff88 100%)`,
+      boxShadow: `0 12px 40px rgba(0, 255, 136, 0.6)`,
+      transform: 'translateY(-2px) scale(1.05)',
+    }
+  }),
+  
+  ...(tradetype === 'sell' && {
+    background: `linear-gradient(135deg, #ff4757 0%, #ff3742 100%)`,
+    color: '#fff',
+    boxShadow: `0 8px 32px rgba(255, 71, 87, 0.4)`,
+    '&:hover': {
+      background: `linear-gradient(135deg, #ff3742 0%, #ff4757 100%)`,
+      boxShadow: `0 12px 40px rgba(255, 71, 87, 0.6)`,
+      transform: 'translateY(-2px) scale(1.05)',
+    }
+  }),
+  
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: '-100%',
+    width: '100%',
+    height: '100%',
+    background: `linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent)`,
+    transition: 'left 0.5s ease',
+  },
+  
+  '&:hover::before': {
+    left: '100%',
+  }
+}));
 
-    // 使用ref来直接操作DOM，避免React重新渲染导致的跳跃
-    const backgroundRef = useRef(null);
-    const [isInitialized, setIsInitialized] = useState(false);
+// 💰 专业价格显示
+const PriceDisplay = styled(Typography)(({ theme, pricetype }) => ({
+  fontFamily: '"JetBrains Mono", "Roboto Mono", monospace',
+  fontWeight: 700,
+  fontSize: '1.2rem',
+  padding: '8px 16px',
+  borderRadius: '12px',
+  display: 'inline-block',
+  position: 'relative',
+  
+  ...(pricetype === 'buy' && {
+    color: theme.palette.success.main,
+    background: `linear-gradient(135deg, ${alpha(theme.palette.success.main, 0.1)} 0%, ${alpha(theme.palette.success.main, 0.05)} 100%)`,
+    animation: `${priceFlicker} 2s ease-in-out infinite`,
+  }),
+  
+  ...(pricetype === 'sell' && {
+    color: theme.palette.error.main,
+    background: `linear-gradient(135deg, ${alpha(theme.palette.error.main, 0.1)} 0%, ${alpha(theme.palette.error.main, 0.05)} 100%)`,
+    animation: `${priceFlicker} 2s ease-in-out infinite`,
+  }),
+  
+  '&::before': {
+    content: '"$"',
+    position: 'absolute',
+    left: '8px',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    fontSize: '0.9em',
+    opacity: 0.7,
+  }
+}));
 
-    useEffect(() => {
-        if (backgroundRef.current) {
-            if (!isInitialized) {
-                // 首次渲染，直接设置宽度，不需要动画
-                backgroundRef.current.style.width = `${percentage}%`;
-                backgroundRef.current.style.transition = 'width 2s ease-out';
-                setIsInitialized(true);
-            } else {
-                // 后续更新，使用平滑动画
-                backgroundRef.current.style.width = `${percentage}%`;
-            }
-        }
-    }, [percentage, isInitialized]);
+// 📊 专业数据行
+const DataRow = styled(Box)(({ theme, side }) => ({
+  display: 'grid',
+  gridTemplateColumns: '1fr 1fr 1fr',
+  padding: '8px 16px',
+  borderRadius: '8px',
+  position: 'relative',
+  transition: 'all 0.2s ease',
+  cursor: 'pointer',
+  
+  '&:hover': {
+    background: alpha(theme.palette.primary.main, 0.1),
+    transform: 'scale(1.02)',
+  },
+  
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    bottom: 0,
+    width: '4px',
+    background: side === 'buy' ? theme.palette.success.main : theme.palette.error.main,
+    opacity: 0.7,
+    borderRadius: '0 4px 4px 0',
+  }
+}));
+
+// Mock数据生成 - 更真实的交易数据
+const generateMockTrades = () => {
+  const basePrice = 63500;
+  const traders = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank', 'Grace', 'Henry'];
+  
+  return Array.from({ length: 20 }, (_, i) => {
+    const priceVariation = (Math.random() - 0.5) * 1000; // ±500价格变动
+    const isBuy = Math.random() > 0.5;
+    const amount = (Math.random() * 2 + 0.1).toFixed(4);
+    const price = (basePrice + priceVariation).toFixed(2);
     
-    const rowStyle = {
-        position: 'relative',
-        cursor: 'pointer',
-        borderRadius: '6px',
-        my: 0.2,
-        transition: 'background-color 0.3s ease',
-        '&:hover': {
-            backgroundColor: alpha(theme.palette.action.hover, 0.4),
-        },
+    return {
+      id: `trade-${i}`,
+      type: isBuy ? 'BUY' : 'SELL',
+      symbol: 'BTC/USDT',
+      price: price,
+      amount: amount,
+      total: (parseFloat(price) * parseFloat(amount)).toFixed(2),
+      time: new Date(Date.now() - Math.random() * 3600000).toLocaleTimeString(),
+      trader: traders[Math.floor(Math.random() * traders.length)],
+      status: 'completed'
     };
-
-    const backgroundStyle = {
-        position: 'absolute',
-        top: 0,
-        bottom: 0,
-        [isAsk ? 'right' : 'left']: 0,
-        width: '0%', // 初始宽度，会通过ref动态设置
-        backgroundColor: isAsk
-          ? alpha(theme.palette.error.main, 0.12)
-          : alpha(theme.palette.success.main, 0.12),
-        borderRadius: '6px',
-        transition: 'width 2s ease-out, background-color 0.3s ease',
-    };
-
-    return (
-        <Box sx={rowStyle}>
-            <Box ref={backgroundRef} sx={backgroundStyle} />
-            <Grid container spacing={0} sx={{ p: 0.8, position: 'relative', zIndex: 2 }}>
-                <Grid item xs={4} sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Box
-                        component="span"
-                        sx={{
-                            display: 'inline-flex',
-                            mr: 0.8,
-                            p: 0.3,
-                            borderRadius: '4px',
-                            backgroundColor: alpha(
-                                isAsk ? theme.palette.error.main : theme.palette.success.main,
-                                0.1
-                            ),
-                            transition: 'background-color 0.2s ease',
-                        }}
-                    >
-                        {isAsk ? (
-                            <TrendingDownIcon
-                                fontSize="small"
-                                sx={{
-                                    color: theme.palette.error.main,
-                                    fontSize: '0.9rem'
-                                }}
-                            />
-                        ) : (
-                            <TrendingUpIcon
-                                fontSize="small"
-                                sx={{
-                                    color: theme.palette.success.main,
-                                    fontSize: '0.9rem'
-                                }}
-                            />
-                        )}
-                    </Box>
-                    <Typography
-                        variant="body2"
-                        sx={{
-                            color: isAsk ? theme.palette.error.main : theme.palette.success.main,
-                            fontWeight: 600,
-                            fontFamily: 'monospace',
-                            fontSize: '0.875rem',
-                            transition: 'color 0.3s ease',
-                        }}
-                    >
-                        {parseFloat(price).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                    </Typography>
-                </Grid>
-                <Grid item xs={4}>
-                    <Typography
-                        variant="body2"
-                        sx={{
-                            textAlign: 'right',
-                            fontFamily: 'monospace',
-                            fontWeight: 600,
-                            fontSize: '0.875rem',
-                            color: theme.palette.text.primary,
-                        }}
-                    >
-                        {parseFloat(amount).toFixed(4)}
-                    </Typography>
-                </Grid>
-                <Grid item xs={4}>
-                    <Typography
-                        variant="body2"
-                        sx={{
-                            textAlign: 'right',
-                            fontFamily: 'monospace',
-                            color: theme.palette.text.secondary,
-                            fontWeight: 500,
-                            fontSize: '0.8rem',
-                        }}
-                    >
-                        {parseFloat(total).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                    </Typography>
-                </Grid>
-            </Grid>
-        </Box>
-    );
-};
-
-const OrderBook = ({ asks, bids }) => {
-  const theme = useTheme();
-  const maxAsksTotal = Math.max(...asks.map(a => parseFloat(a.total)), 0);
-  const maxBidsTotal = Math.max(...bids.map(b => parseFloat(b.total)), 0);
-  const maxTotal = Math.max(maxAsksTotal, maxBidsTotal);
-
-  const headerStyle = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    padding: '10px 8px',
-    borderBottom: `1px solid ${alpha(theme.palette.divider, 0.8)}`,
-    color: theme.palette.text.secondary,
-    fontSize: '0.75rem',
-    fontWeight: 'bold',
-    mb: 1,
-  };
-
-  return (
-    <GlassmorphicPaper sx={{ p: 3, height: '100%' }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-          <Box
-            sx={{
-              width: 4,
-              height: 24,
-              background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-              borderRadius: '2px',
-            }}
-          />
-          <Typography
-            variant="h6"
-            sx={{
-              fontWeight: 700,
-              background: `linear-gradient(135deg, ${theme.palette.text.primary}, ${theme.palette.primary.main})`,
-              backgroundClip: 'text',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              fontSize: { xs: '1.1rem', sm: '1.25rem' },
-            }}
-          >
-            Order Book
-          </Typography>
-        </Box>
-        <Chip
-          label="BTC/USDT"
-          size="small"
-          sx={{
-            background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-            color: '#fff',
-            fontWeight: 600,
-            boxShadow: `0 4px 12px ${alpha(theme.palette.primary.main, 0.3)}`,
-          }}
-        />
-      </Box>
-      
-      <Box sx={headerStyle}>
-          <Typography variant="caption" sx={{ flex: 1 }}>Price (USDT)</Typography>
-          <Typography variant="caption" sx={{ flex: 1, textAlign: 'right' }}>Amount (BTC)</Typography>
-          <Typography variant="caption" sx={{ flex: 1, textAlign: 'right' }}>Total</Typography>
-      </Box>
-      <Box sx={{
-        flexGrow: 1,
-        overflowY: 'auto',
-        display: 'flex',
-        flexDirection: 'column-reverse',
-        mb: 2,
-        '&::-webkit-scrollbar': {
-          width: '4px',
-        },
-        '&::-webkit-scrollbar-track': {
-          background: alpha(theme.palette.divider, 0.1),
-          borderRadius: '2px',
-        },
-        '&::-webkit-scrollbar-thumb': {
-          background: alpha(theme.palette.primary.main, 0.3),
-          borderRadius: '2px',
-          '&:hover': {
-            background: alpha(theme.palette.primary.main, 0.5),
-          },
-        },
-      }}>
-          {asks.slice(0, 7).reverse().map((ask, index) => (
-              <OrderBookRow
-                key={`ask-${index}`}
-                side="asks"
-                {...ask}
-                maxTotal={maxTotal}
-              />
-          ))}
-      </Box>
-
-      <Box sx={{ 
-        textAlign: 'center', 
-        py: 1.5, 
-        backgroundColor: theme.palette.mode === 'dark' ? alpha(theme.palette.background.paper, 0.4) : alpha(theme.palette.background.paper, 0.7),
-        borderRadius: '8px',
-        mb: 2,
-        border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
-      }}>
-        <Typography variant="h5" sx={{ color: theme.palette.primary.main, fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
-            <Box component="span" sx={{ fontSize: '0.9rem', color: theme.palette.text.secondary }}>$</Box>
-            63,500.50
-        </Typography>
-        <Typography variant="caption" sx={{ color: theme.palette.success.main, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0.5 }}>
-          <TrendingUpIcon fontSize="small" />
-          +2.4%
-        </Typography>
-      </Box>
-
-      <Box sx={{
-        flexGrow: 1,
-        overflowY: 'auto',
-        '&::-webkit-scrollbar': {
-          width: '4px',
-        },
-        '&::-webkit-scrollbar-track': {
-          background: alpha(theme.palette.divider, 0.1),
-          borderRadius: '2px',
-        },
-        '&::-webkit-scrollbar-thumb': {
-          background: alpha(theme.palette.primary.main, 0.3),
-          borderRadius: '2px',
-          '&:hover': {
-            background: alpha(theme.palette.primary.main, 0.5),
-          },
-        },
-      }}>
-          {bids.slice(0, 7).map((bid, index) => (
-              <OrderBookRow
-                key={`bid-${index}`}
-                side="bids"
-                {...bid}
-                maxTotal={maxTotal}
-              />
-          ))}
-      </Box>
-    </GlassmorphicPaper>
-  );
-};
-
-const RecentTrades = ({ trades, page, totalPages, handlePrevPage, handleNextPage }) => {
-  const theme = useTheme();
-  const [filter, setFilter] = useState('All');
-
-  const handleFilterChange = (newFilter) => {
-    setFilter(newFilter);
-  };
-
-  const filteredTrades = trades.filter(trade => {
-    if (filter === 'All') return true;
-    if (filter === 'Buy') return trade.type === 'buy';
-    if (filter === 'Sell') return trade.type === 'sell';
-    return true;
   });
+};
 
-  const headerStyle = {
-    padding: '16px 12px 12px 12px',
-    borderBottom: `2px solid ${alpha(theme.palette.divider, 0.12)}`,
-    color: theme.palette.text.secondary,
-    fontSize: '0.7rem',
-    fontWeight: 700,
-    textTransform: 'uppercase',
-    letterSpacing: '0.8px',
-    background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)}, ${alpha(theme.palette.background.default, 0.4)})`,
-    backdropFilter: 'blur(10px)',
-    mb: 1,
+// Mock订单簿数据
+const generateOrderBookData = () => {
+  const basePrice = 63500;
+  const bids = Array.from({ length: 10 }, (_, i) => ({
+    price: (basePrice - (i + 1) * Math.random() * 50).toFixed(2),
+    amount: (Math.random() * 5 + 0.1).toFixed(4),
+    total: 0
+  }));
+  
+  const asks = Array.from({ length: 10 }, (_, i) => ({
+    price: (basePrice + (i + 1) * Math.random() * 50).toFixed(2),
+    amount: (Math.random() * 5 + 0.1).toFixed(4),
+    total: 0
+  }));
+  
+  // 计算累计总额
+  bids.forEach((bid, i) => {
+    bid.total = bids.slice(0, i + 1).reduce((sum, b) => sum + parseFloat(b.amount), 0).toFixed(4);
+  });
+  
+  asks.forEach((ask, i) => {
+    ask.total = asks.slice(0, i + 1).reduce((sum, a) => sum + parseFloat(a.amount), 0).toFixed(4);
+  });
+  
+  return { bids, asks };
+};
+
+// 主要组件开始
+const Trade = () => {
+  const theme = useTheme();
+  const [tradeType, setTradeType] = useState('buy');
+  const [price, setPrice] = useState('');
+  const [amount, setAmount] = useState('');
+  const [percentage, setPercentage] = useState(0);
+  const [trades, setTrades] = useState([]);
+  const [orderBook, setOrderBook] = useState({ bids: [], asks: [] });
+  const [currentPrice, setCurrentPrice] = useState(63500.50);
+  const [priceChange, setPriceChange] = useState(2.4);
+  const [loading, setLoading] = useState(false);
+
+  // 初始化数据
+  useEffect(() => {
+    const mockTrades = generateMockTrades();
+    const mockOrderBook = generateOrderBookData();
+    setTrades(mockTrades);
+    setOrderBook(mockOrderBook);
+  }, []);
+
+  // 计算总价
+  const total = price && amount ? (parseFloat(price) * parseFloat(amount)).toFixed(2) : '0.00';
+
+  // 处理交易提交
+  const handleCreateTrade = async () => {
+    if (!price || !amount) return;
+    
+    setLoading(true);
+    
+    // 模拟API调用
+    setTimeout(() => {
+      const newTrade = {
+        id: `trade-${Date.now()}`,
+        type: tradeType.toUpperCase(),
+        symbol: 'BTC/USDT',
+        price: price,
+        amount: amount,
+        total: total,
+        time: new Date().toLocaleTimeString(),
+        trader: 'You',
+        status: 'completed'
+      };
+      
+      setTrades(prev => [newTrade, ...prev.slice(0, 19)]);
+      setPrice('');
+      setAmount('');
+      setPercentage(0);
+      setLoading(false);
+    }, 1000);
   };
 
   return (
-    <GlassmorphicPaper sx={{ p: 3, height: '100%' }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-          <Box
-            sx={{
-              width: 4,
-              height: 24,
-              background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-              borderRadius: '2px',
-            }}
-          />
-          <Typography
-            variant="h6"
-            sx={{
-              fontWeight: 700,
-              background: `linear-gradient(135deg, ${theme.palette.text.primary}, ${theme.palette.primary.main})`,
-              backgroundClip: 'text',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              fontSize: { xs: '1.1rem', sm: '1.25rem' },
-            }}
-          >
-            Recent Trades
-          </Typography>
-        </Box>
-        <Box sx={{ display: 'flex', gap: 1 }}>
-          <Chip 
-            label="All" 
-            size="small" 
-            clickable
-            onClick={() => handleFilterChange('All')}
-            sx={{ 
-              backgroundColor: filter === 'All' ? theme.palette.primary.main : (theme.palette.mode === 'dark' ? alpha(theme.palette.background.paper, 0.3) : alpha(theme.palette.background.paper, 0.7)),
-              color: filter === 'All' ? '#fff' : theme.palette.text.secondary,
-              fontWeight: 600,
-              transition: 'all 0.3s',
-            }} 
-          />
-          <Chip 
-            label="Buy" 
-            size="small" 
-            clickable
-            onClick={() => handleFilterChange('Buy')}
-            sx={{ 
-              backgroundColor: filter === 'Buy' ? theme.palette.success.main : (theme.palette.mode === 'dark' ? alpha(theme.palette.background.paper, 0.3) : alpha(theme.palette.background.paper, 0.7)),
-              color: filter === 'Buy' ? '#fff' : theme.palette.text.secondary,
-              fontWeight: 600,
-              transition: 'all 0.3s',
-            }} 
-          />
-          <Chip 
-            label="Sell" 
-            size="small" 
-            clickable
-            onClick={() => handleFilterChange('Sell')}
-            sx={{ 
-              backgroundColor: filter === 'Sell' ? theme.palette.error.main : (theme.palette.mode === 'dark' ? alpha(theme.palette.background.paper, 0.3) : alpha(theme.palette.background.paper, 0.7)),
-              color: filter === 'Sell' ? '#fff' : theme.palette.text.secondary,
-              fontWeight: 600,
-              transition: 'all 0.3s',
-            }} 
-          />
-        </Box>
-      </Box>
-      
-      <Grid container spacing={0} sx={headerStyle}>
-        <Grid item xs={3} sm={3} md={3}>
-          <Typography variant="caption" sx={{ fontWeight: 700, letterSpacing: '0.5px' }}>
-            Price (USDT)
-          </Typography>
-        </Grid>
-        <Grid item xs={2.5} sm={2.5} md={2.5} sx={{ textAlign: 'right' }}>
-          <Typography variant="caption" sx={{ fontWeight: 700, letterSpacing: '0.5px' }}>
-            Amount
-          </Typography>
-        </Grid>
-        <Grid item xs={3.5} sm={3.5} md={3.5} sx={{ textAlign: 'center' }}>
-          <Typography variant="caption" sx={{ fontWeight: 700, letterSpacing: '0.5px' }}>
-            Trader
-          </Typography>
-        </Grid>
-        <Grid item xs={3} sm={3} md={3} sx={{ textAlign: 'right' }}>
-          <Typography variant="caption" sx={{ fontWeight: 700, letterSpacing: '0.5px' }}>
-            Time
-          </Typography>
-        </Grid>
-      </Grid>
-
-      <Box sx={{
-        overflowY: 'auto',
-        flexGrow: 1,
-        '&::-webkit-scrollbar': {
-          width: '6px',
-        },
-        '&::-webkit-scrollbar-track': {
-          background: alpha(theme.palette.divider, 0.1),
-          borderRadius: '3px',
-        },
-        '&::-webkit-scrollbar-thumb': {
-          background: alpha(theme.palette.primary.main, 0.3),
-          borderRadius: '3px',
-          '&:hover': {
-            background: alpha(theme.palette.primary.main, 0.5),
-          },
-        },
-      }}>
-        {filteredTrades.length === 0 ? (
-          <Box sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            py: 8,
-            opacity: 0.7,
-          }}>
-            <Typography variant="h6" sx={{
-              color: theme.palette.text.secondary,
-              mb: 1,
-              fontWeight: 600,
-            }}>
-              No trades found
-            </Typography>
-            <Typography variant="body2" sx={{
-              color: alpha(theme.palette.text.secondary, 0.7),
-              textAlign: 'center',
-            }}>
-              Trade history will appear here once transactions are made
-            </Typography>
-          </Box>
-        ) : (
-          filteredTrades.map((trade, index) => (
-          <Box
-            key={trade.id}
-            sx={{
-              position: 'relative',
-              cursor: 'pointer',
-              borderRadius: '8px',
-              my: 0.5,
-              mx: 0.5,
-              transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-              border: `1px solid ${alpha(theme.palette.divider, 0.08)}`,
-              background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.6)}, ${alpha(theme.palette.background.default, 0.3)})`,
-              backdropFilter: 'blur(8px)',
-              '&:hover': {
-                backgroundColor: alpha(theme.palette.action.hover, 0.8),
-                transform: 'translateY(-1px)',
-                boxShadow: `0 4px 20px ${alpha(theme.palette.common.black, 0.1)}`,
-                border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
-              },
-              '&:active': {
-                transform: 'translateY(0px)',
-              },
-            }}
-          >
-            <Grid container spacing={0} sx={{ p: { xs: 1, sm: 1.5 } }}>
-              <Grid item xs={3} sm={3} md={3} sx={{ display: 'flex', alignItems: 'center' }}>
-                <Box
-                  component="span"
-                  sx={{
-                    display: 'inline-flex',
-                    mr: 1,
-                    p: 0.5,
-                    borderRadius: '50%',
-                    backgroundColor: alpha(
-                      trade.type === 'buy' ? theme.palette.success.main : theme.palette.error.main,
-                      0.1
-                    ),
-                  }}
-                >
-                  {trade.type === 'buy' ? (
-                    <TrendingUpIcon
-                      fontSize="small"
-                      sx={{
-                        color: theme.palette.success.main,
-                        fontSize: '1rem'
-                      }}
-                    />
-                  ) : (
-                    <TrendingDownIcon
-                      fontSize="small"
-                      sx={{
-                        color: theme.palette.error.main,
-                        fontSize: '1rem'
-                      }}
-                    />
-                  )}
+    <>
+      <TradingBackground />
+      <Container maxWidth="xl" sx={{ py: 4, position: 'relative', zIndex: 1 }}>
+        {/* 🔥 超炫酷顶部价格横幅 */}
+        <TradingCard variant="orderbook" sx={{ mb: 4, overflow: 'visible' }}>
+          <CardContent sx={{ p: 3 }}>
+            <Grid container spacing={3} alignItems="center">
+              {/* 主要价格显示 */}
+              <Grid item xs={12} md={4}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                  <Avatar sx={{ 
+                    bgcolor: alpha(theme.palette.warning.main, 0.2), 
+                    color: theme.palette.warning.main,
+                    width: 56, 
+                    height: 56 
+                  }}>
+                    <MonetizationOn fontSize="large" />
+                  </Avatar>
+                  <Box>
+                    <Typography variant="h3" sx={{ 
+                      fontFamily: '"JetBrains Mono", monospace',
+                      fontWeight: 900,
+                      background: `linear-gradient(135deg, ${theme.palette.warning.main}, ${theme.palette.primary.main})`,
+                      backgroundClip: 'text',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      mb: 0.5
+                    }}>
+                      ${currentPrice.toLocaleString()}
+                    </Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <TrendingUpIcon sx={{ color: theme.palette.success.main, fontSize: 20 }} />
+                      <Typography variant="h6" sx={{ 
+                        color: theme.palette.success.main, 
+                        fontWeight: 700 
+                      }}>
+                        +{priceChange}%
+                      </Typography>
+                    </Box>
+                  </Box>
                 </Box>
-                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                  <Typography
-                    variant="body2"
+              </Grid>
+              
+              {/* 交易对信息 */}
+              <Grid item xs={12} md={4}>
+                <Box sx={{ textAlign: 'center' }}>
+                  <Chip
+                    label="BTC/USDT"
+                    size="large"
                     sx={{
-                      color: trade.type === 'buy' ? theme.palette.success.main : theme.palette.error.main,
+                      fontSize: '1.2rem',
                       fontWeight: 700,
-                      fontFamily: 'monospace',
-                      fontSize: '0.875rem',
-                      lineHeight: 1.2,
+                      padding: '12px 24px',
+                      background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                      color: '#fff',
+                      boxShadow: `0 8px 32px ${alpha(theme.palette.primary.main, 0.4)}`,
+                      animation: `${neonGlow} 2s ease-in-out infinite`,
                     }}
-                  >
-                    ${parseFloat(trade.price).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                  </Typography>
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      color: alpha(theme.palette.text.secondary, 0.7),
-                      fontSize: '0.65rem',
-                      textTransform: 'uppercase',
-                      fontWeight: 600,
-                      letterSpacing: '0.5px'
-                    }}
-                  >
-                    {trade.type}
-                  </Typography>
+                    icon={<CandlestickChart />}
+                  />
                 </Box>
               </Grid>
-              <Grid item xs={2.5} sm={2.5} md={2.5} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center' }}>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    fontFamily: 'monospace',
-                    fontWeight: 600,
-                    fontSize: '0.875rem',
-                    color: theme.palette.text.primary,
-                    lineHeight: 1.2,
-                  }}
-                >
-                  {parseFloat(trade.amount).toFixed(4)}
-                </Typography>
-                <Typography
-                  variant="caption"
-                  sx={{
-                    color: alpha(theme.palette.text.secondary, 0.7),
-                    fontSize: '0.65rem',
-                    fontWeight: 500,
-                  }}
-                >
-                  BTC
-                </Typography>
-              </Grid>
-              <Grid item xs={3.5} sm={3.5} md={3.5} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    color: theme.palette.primary.main,
-                    fontWeight: 600,
-                    fontSize: '0.875rem',
-                    textAlign: 'center',
-                    px: 1,
-                    py: 0.5,
-                    borderRadius: '6px',
-                    backgroundColor: alpha(theme.palette.primary.main, 0.1),
-                    border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
-                  }}
-                >
-                  {trade.user_name || 'Anonymous'}
-                </Typography>
-              </Grid>
-              <Grid item xs={3} sm={3} md={3} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center' }}>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    color: theme.palette.text.primary,
-                    fontWeight: 600,
-                    fontSize: '0.875rem',
-                    fontFamily: 'monospace',
-                    lineHeight: 1.2,
-                  }}
-                >
-                  {trade.time}
-                </Typography>
-                <Typography
-                  variant="caption"
-                  sx={{
-                    color: alpha(theme.palette.text.secondary, 0.7),
-                    fontSize: '0.65rem',
-                    fontWeight: 500,
-                  }}
-                >
-                  Today
-                </Typography>
+              
+              {/* 市场统计 */}
+              <Grid item xs={12} md={4}>
+                <Grid container spacing={2}>
+                  {[
+                    { label: '24h Vol', value: '2.4B', icon: <Assessment />, color: 'info' },
+                    { label: '24h High', value: '65,250', icon: <TrendingUpIcon />, color: 'success' },
+                    { label: '24h Low', value: '62,180', icon: <TrendingDownIcon />, color: 'error' }
+                  ].map((stat, index) => (
+                    <Grid item xs={4} key={index}>
+                      <Box sx={{ textAlign: 'center' }}>
+                        <Box sx={{ 
+                          color: theme.palette[stat.color].main, 
+                          mb: 0.5,
+                          display: 'flex',
+                          justifyContent: 'center'
+                        }}>
+                          {stat.icon}
+                        </Box>
+                        <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
+                          {stat.label}
+                        </Typography>
+                        <Typography variant="subtitle2" sx={{ fontWeight: 700, fontFamily: 'monospace' }}>
+                          {stat.value}
+                        </Typography>
+                      </Box>
+                    </Grid>
+                  ))}
+                </Grid>
               </Grid>
             </Grid>
-          </Box>
-          ))
-        )}
-      </Box>
-      <Box sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        pt: 3,
-        mt: 'auto',
-        borderTop: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
-        background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.4)}, ${alpha(theme.palette.background.default, 0.2)})`,
-        backdropFilter: 'blur(8px)',
-        borderRadius: '0 0 12px 12px',
-        mx: -3,
-        px: 3,
-        py: 2,
-      }}>
-        <Button
-          onClick={handlePrevPage}
-          disabled={page <= 1}
-          variant="outlined"
-          size="small"
-          sx={{
-            borderRadius: '8px',
-            textTransform: 'none',
-            fontWeight: 600,
-            minWidth: '80px',
-            '&:disabled': {
-              opacity: 0.5,
-            }
-          }}
-        >
-          Previous
-        </Button>
-        <Box sx={{
-          mx: 3,
-          px: 2,
-          py: 1,
-          borderRadius: '8px',
-          background: alpha(theme.palette.primary.main, 0.1),
-          border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
-        }}>
-          <Typography variant="body2" sx={{
-            fontFamily: 'monospace',
-            fontWeight: 600,
-            color: theme.palette.primary.main,
-          }}>
-            Page {page} of {totalPages}
-          </Typography>
-        </Box>
-        <Button
-          onClick={handleNextPage}
-          disabled={page >= totalPages}
-          variant="outlined"
-          size="small"
-          sx={{
-            borderRadius: '8px',
-            textTransform: 'none',
-            fontWeight: 600,
-            minWidth: '80px',
-            '&:disabled': {
-              opacity: 0.5,
-            }
-          }}
-        >
-          Next
-        </Button>
-      </Box>
-    </GlassmorphicPaper>
+          </CardContent>
+        </TradingCard>
+
+        {/* 主要交易界面 */}
+        <Grid container spacing={4}>
+          {/* 左侧：交易操作面板 */}
+          <Grid item xs={12} lg={4}>
+            <TradingCard variant={tradeType} sx={{ height: 'fit-content' }}>
+              <CardContent sx={{ p: 4 }}>
+                {/* 买卖切换标签 */}
+                <Box sx={{ mb: 4 }}>
+                  <Box sx={{ 
+                    display: 'flex', 
+                    p: 1, 
+                    borderRadius: '16px',
+                    background: alpha(theme.palette.background.paper, 0.5),
+                    border: `1px solid ${alpha(theme.palette.divider, 0.2)}`
+                  }}>
+                    {['buy', 'sell'].map((type) => (
+                      <Button
+                        key={type}
+                        fullWidth
+                        variant={tradeType === type ? 'contained' : 'text'}
+                        onClick={() => setTradeType(type)}
+                        sx={{
+                          borderRadius: '12px',
+                          py: 1.5,
+                          fontSize: '1.1rem',
+                          fontWeight: 700,
+                          textTransform: 'capitalize',
+                          ...(tradeType === type && {
+                            background: type === 'buy' 
+                              ? `linear-gradient(135deg, #00ff88, #00d26a)`
+                              : `linear-gradient(135deg, #ff4757, #ff3742)`,
+                            color: type === 'buy' ? '#000' : '#fff',
+                            boxShadow: `0 8px 24px ${alpha(
+                              type === 'buy' ? theme.palette.success.main : theme.palette.error.main, 
+                              0.4
+                            )}`,
+                          })
+                        }}
+                      >
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          {type === 'buy' ? <TrendingUpIcon /> : <TrendingDownIcon />}
+                          {type}
+                        </Box>
+                      </Button>
+                    ))}
+                  </Box>
+                </Box>
+
+                {/* 价格输入 */}
+                <Box sx={{ mb: 3 }}>
+                  <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 600 }}>
+                    Price (USDT)
+                  </Typography>
+                  <TextField
+                    fullWidth
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    placeholder="Market Price"
+                    variant="outlined"
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        borderRadius: '12px',
+                        fontSize: '1.1rem',
+                        fontFamily: 'monospace',
+                        background: alpha(theme.palette.background.paper, 0.5),
+                        '&:hover': {
+                          boxShadow: `0 0 20px ${alpha(theme.palette.primary.main, 0.2)}`,
+                        },
+                        '&.Mui-focused': {
+                          boxShadow: `0 0 30px ${alpha(theme.palette.primary.main, 0.3)}`,
+                        }
+                      }
+                    }}
+                  />
+                </Box>
+
+                {/* 数量输入 */}
+                <Box sx={{ mb: 3 }}>
+                  <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 600 }}>
+                    Amount (BTC)
+                  </Typography>
+                  <TextField
+                    fullWidth
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    placeholder="0.00000000"
+                    variant="outlined"
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        borderRadius: '12px',
+                        fontSize: '1.1rem',
+                        fontFamily: 'monospace',
+                        background: alpha(theme.palette.background.paper, 0.5),
+                        '&:hover': {
+                          boxShadow: `0 0 20px ${alpha(theme.palette.primary.main, 0.2)}`,
+                        },
+                        '&.Mui-focused': {
+                          boxShadow: `0 0 30px ${alpha(theme.palette.primary.main, 0.3)}`,
+                        }
+                      }
+                    }}
+                  />
+                </Box>
+
+                {/* 百分比滑块 */}
+                <Box sx={{ mb: 4 }}>
+                  <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 600 }}>
+                    Percentage
+                  </Typography>
+                  <Slider
+                    value={percentage}
+                    onChange={(e, value) => setPercentage(value)}
+                    min={0}
+                    max={100}
+                    step={25}
+                    marks={[
+                      { value: 0, label: '0%' },
+                      { value: 25, label: '25%' },
+                      { value: 50, label: '50%' },
+                      { value: 75, label: '75%' },
+                      { value: 100, label: '100%' }
+                    ]}
+                    sx={{
+                      color: tradeType === 'buy' ? theme.palette.success.main : theme.palette.error.main,
+                      height: 8,
+                      '& .MuiSlider-thumb': {
+                        width: 24,
+                        height: 24,
+                        boxShadow: `0 0 20px ${alpha(
+                          tradeType === 'buy' ? theme.palette.success.main : theme.palette.error.main, 
+                          0.5
+                        )}`,
+                      },
+                      '& .MuiSlider-track': {
+                        height: 8,
+                        borderRadius: 4,
+                      },
+                      '& .MuiSlider-rail': {
+                        height: 8,
+                        borderRadius: 4,
+                        opacity: 0.3,
+                      }
+                    }}
+                  />
+                </Box>
+
+                {/* 总计显示 */}
+                <Box sx={{ 
+                  mb: 4, 
+                  p: 3, 
+                  borderRadius: '16px',
+                  background: alpha(theme.palette.background.paper, 0.3),
+                  border: `1px solid ${alpha(theme.palette.divider, 0.2)}`
+                }}>
+                  <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
+                    Total
+                  </Typography>
+                  <Typography variant="h5" sx={{ 
+                    fontFamily: 'monospace', 
+                    fontWeight: 700,
+                    color: tradeType === 'buy' ? theme.palette.success.main : theme.palette.error.main
+                  }}>
+                    {total} USDT
+                  </Typography>
+                </Box>
+
+                {/* 交易按钮 */}
+                <TradingButton
+                  fullWidth
+                  tradetype={tradeType}
+                  onClick={handleCreateTrade}
+                  disabled={loading || !price || !amount}
+                  sx={{ py: 2 }}
+                >
+                  {loading ? (
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                      <LinearProgress sx={{ width: 100, borderRadius: 2 }} />
+                      Processing...
+                    </Box>
+                  ) : (
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                      <Bolt />
+                      {tradeType === 'buy' ? 'Buy BTC' : 'Sell BTC'}
+                    </Box>
+                  )}
+                </TradingButton>
+              </CardContent>
+            </TradingCard>
+          </Grid>
+
+          {/* 中间：订单簿 */}
+          <Grid item xs={12} lg={4}>
+            <TradingCard variant="orderbook">
+              <CardContent sx={{ p: 4, height: '700px', display: 'flex', flexDirection: 'column' }}>
+                {/* 标题 */}
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Avatar sx={{ 
+                      bgcolor: alpha(theme.palette.info.main, 0.2), 
+                      color: theme.palette.info.main 
+                    }}>
+                      <ShowChart />
+                    </Avatar>
+                    <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                      Order Book
+                    </Typography>
+                  </Box>
+                  <Chip label="BTC/USDT" size="small" variant="outlined" />
+                </Box>
+
+                {/* 表头 */}
+                <Box sx={{ 
+                  display: 'grid', 
+                  gridTemplateColumns: '1fr 1fr 1fr',
+                  gap: 2,
+                  mb: 2,
+                  p: 2,
+                  borderRadius: '8px',
+                  background: alpha(theme.palette.background.paper, 0.3)
+                }}>
+                  <Typography variant="caption" sx={{ fontWeight: 600, textAlign: 'left' }}>
+                    Price (USDT)
+                  </Typography>
+                  <Typography variant="caption" sx={{ fontWeight: 600, textAlign: 'center' }}>
+                    Amount (BTC)
+                  </Typography>
+                  <Typography variant="caption" sx={{ fontWeight: 600, textAlign: 'right' }}>
+                    Total
+                  </Typography>
+                </Box>
+
+                {/* 卖单 (红色) */}
+                <Box sx={{ flex: 1, overflowY: 'auto', mb: 2 }}>
+                  {orderBook.asks.slice(0, 8).reverse().map((ask, index) => (
+                    <DataRow key={`ask-${index}`} side="sell">
+                      <PriceDisplay pricetype="sell" variant="body2">
+                        {parseFloat(ask.price).toFixed(2)}
+                      </PriceDisplay>
+                      <Typography variant="body2" sx={{ 
+                        textAlign: 'center', 
+                        fontFamily: 'monospace',
+                        fontWeight: 600 
+                      }}>
+                        {ask.amount}
+                      </Typography>
+                      <Typography variant="body2" sx={{ 
+                        textAlign: 'right', 
+                        fontFamily: 'monospace',
+                        color: 'text.secondary' 
+                      }}>
+                        {ask.total}
+                      </Typography>
+                    </DataRow>
+                  ))}
+                </Box>
+
+                {/* 中间价格 */}
+                <Box sx={{ 
+                  textAlign: 'center', 
+                  py: 2, 
+                  mb: 2,
+                  borderRadius: '12px',
+                  background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)}, ${alpha(theme.palette.secondary.main, 0.1)})`,
+                  border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`
+                }}>
+                  <Typography variant="h5" sx={{ 
+                    fontFamily: 'monospace', 
+                    fontWeight: 900,
+                    color: theme.palette.primary.main,
+                    animation: `${priceFlicker} 2s ease-in-out infinite`
+                  }}>
+                    {currentPrice.toFixed(2)}
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    Last Price
+                  </Typography>
+                </Box>
+
+                {/* 买单 (绿色) */}
+                <Box sx={{ flex: 1, overflowY: 'auto' }}>
+                  {orderBook.bids.slice(0, 8).map((bid, index) => (
+                    <DataRow key={`bid-${index}`} side="buy">
+                      <PriceDisplay pricetype="buy" variant="body2">
+                        {parseFloat(bid.price).toFixed(2)}
+                      </PriceDisplay>
+                      <Typography variant="body2" sx={{ 
+                        textAlign: 'center', 
+                        fontFamily: 'monospace',
+                        fontWeight: 600 
+                      }}>
+                        {bid.amount}
+                      </Typography>
+                      <Typography variant="body2" sx={{ 
+                        textAlign: 'right', 
+                        fontFamily: 'monospace',
+                        color: 'text.secondary' 
+                      }}>
+                        {bid.total}
+                      </Typography>
+                    </DataRow>
+                  ))}
+                </Box>
+              </CardContent>
+            </TradingCard>
+          </Grid>
+
+          {/* 右侧：最近交易 */}
+          <Grid item xs={12} lg={4}>
+            <TradingCard>
+              <CardContent sx={{ p: 4, height: '700px', display: 'flex', flexDirection: 'column' }}>
+                {/* 标题 */}
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Avatar sx={{ 
+                      bgcolor: alpha(theme.palette.warning.main, 0.2), 
+                      color: theme.palette.warning.main 
+                    }}>
+                      <Timeline />
+                    </Avatar>
+                    <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                      Recent Trades
+                    </Typography>
+                  </Box>
+                  <Chip 
+                    label={`${trades.length} trades`} 
+                    size="small" 
+                    variant="outlined"
+                    sx={{ fontFamily: 'monospace' }}
+                  />
+                </Box>
+
+                {/* 表头 */}
+                <Box sx={{ 
+                  display: 'grid', 
+                  gridTemplateColumns: '80px 1fr 80px 60px',
+                  gap: 1,
+                  mb: 2,
+                  p: 2,
+                  borderRadius: '8px',
+                  background: alpha(theme.palette.background.paper, 0.3)
+                }}>
+                  <Typography variant="caption" sx={{ fontWeight: 600 }}>Price</Typography>
+                  <Typography variant="caption" sx={{ fontWeight: 600 }}>Amount</Typography>
+                  <Typography variant="caption" sx={{ fontWeight: 600 }}>Time</Typography>
+                  <Typography variant="caption" sx={{ fontWeight: 600 }}>Type</Typography>
+                </Box>
+
+                {/* 交易列表 */}
+                <Box sx={{ flex: 1, overflowY: 'auto' }}>
+                  {trades.map((trade) => (
+                    <Box
+                      key={trade.id}
+                      sx={{
+                        display: 'grid',
+                        gridTemplateColumns: '80px 1fr 80px 60px',
+                        gap: 1,
+                        p: 2,
+                        mb: 1,
+                        borderRadius: '8px',
+                        background: alpha(
+                          trade.type === 'BUY' ? theme.palette.success.main : theme.palette.error.main, 
+                          0.05
+                        ),
+                        border: `1px solid ${alpha(
+                          trade.type === 'BUY' ? theme.palette.success.main : theme.palette.error.main, 
+                          0.1
+                        )}`,
+                        transition: 'all 0.2s ease',
+                        '&:hover': {
+                          background: alpha(
+                            trade.type === 'BUY' ? theme.palette.success.main : theme.palette.error.main, 
+                            0.1
+                          ),
+                          transform: 'scale(1.02)',
+                        }
+                      }}
+                    >
+                      <Typography 
+                        variant="body2" 
+                        sx={{ 
+                          fontFamily: 'monospace',
+                          fontWeight: 600,
+                          color: trade.type === 'BUY' ? theme.palette.success.main : theme.palette.error.main
+                        }}
+                      >
+                        {parseFloat(trade.price).toFixed(2)}
+                      </Typography>
+                      <Typography 
+                        variant="body2" 
+                        sx={{ 
+                          fontFamily: 'monospace',
+                          fontSize: '0.85rem'
+                        }}
+                      >
+                        {trade.amount}
+                      </Typography>
+                      <Typography 
+                        variant="caption" 
+                        color="text.secondary"
+                        sx={{ fontFamily: 'monospace' }}
+                      >
+                        {trade.time}
+                      </Typography>
+                      <Chip
+                        label={trade.type}
+                        size="small"
+                        sx={{
+                          fontSize: '0.7rem',
+                          height: 20,
+                          background: trade.type === 'BUY' 
+                            ? alpha(theme.palette.success.main, 0.2)
+                            : alpha(theme.palette.error.main, 0.2),
+                          color: trade.type === 'BUY' ? theme.palette.success.main : theme.palette.error.main,
+                          fontWeight: 700
+                        }}
+                      />
+                    </Box>
+                  ))}
+                </Box>
+              </CardContent>
+            </TradingCard>
+          </Grid>
+        </Grid>
+      </Container>
+    </>
   );
 };
-
-function Trade() {
-    const [asks, setAsks] = useState([]);
-    const [bids, setBids] = useState([]);
-    const [trades, setTrades] = useState([]);
-    const [tradeType, setTradeType] = useState('buy');
-    const [priceType, setPriceType] = useState('market');
-    
-    const [price, setPrice] = useState('');
-    const [amount, setAmount] = useState('');
-    
-    const [sliderValue, setSliderValue] = useState(50);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [page, setPage] = useState(1);
-    const [limit, setLimit] = useState(20);
-    const [totalRecords, setTotalRecords] = useState(0);
-    const [loading, setLoading] = useState(false);
-    const theme = useTheme();
-
-    const fetchTrades = async () => {
-        setLoading(true);
-        try {
-            const response = await fetch(`http://localhost:8080/api/trades?page=${page}&limit=${limit}`);
-            
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            
-            const data = await response.json();
-            setTrades(data.data || []);
-            setTotalRecords(data.total_records || 0);
-            if(isLoading) setIsLoading(false);
-        } catch (err) {
-            console.error('Error fetching trades:', err);
-            // 显示Mock数据而不是错误
-            console.log('使用Mock交易数据');
-            const mockTrades = generateMockTrades();
-            setTrades(mockTrades);
-            setTotalRecords(50); // 假设总共50条记录
-            setError(null); // 清除错误状态
-            if(isLoading) setIsLoading(false);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    // 生成Mock交易数据
-    const generateMockTrades = () => {
-        const mockTrades = [];
-        const users = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank', 'Grace', 'Henry'];
-        const types = ['buy', 'sell'];
-        
-        for (let i = 0; i < 20; i++) {
-            const basePrice = 63500 + (Math.random() - 0.5) * 2000;
-            const type = types[Math.floor(Math.random() * types.length)];
-            const amount = (0.1 + Math.random() * 2).toFixed(4);
-            const user = users[Math.floor(Math.random() * users.length)];
-            const time = new Date(Date.now() - Math.random() * 3600000).toLocaleTimeString('en-US', { hour12: false });
-            
-            mockTrades.push({
-                id: i + 1,
-                price: basePrice.toFixed(2),
-                amount: amount,
-                type: type,
-                user_name: user,
-                time: time.substring(0, 8) // HH:MM:SS格式
-            });
-        }
-        
-        return mockTrades;
-    };
-
-    useEffect(() => {
-        fetchTrades();
-    }, [page, limit]);
-
-    useEffect(() => {
-        let basePrice = 63500;
-        let previousAsks = [];
-        let previousBids = [];
-
-        const mockOrderBook = () => {
-             // 更平滑的价格变化，使用更小的波动范围
-             const priceVariation = (Math.random() - 0.5) * 8; // ±4的变化，更小的波动
-             basePrice = Math.max(63200, Math.min(63800, basePrice + priceVariation));
-
-             // 生成新的订单数据，但保持一定的连续性
-             const newAsks = Array.from({ length: 7 }, (_, i) => {
-                 const baseAskPrice = basePrice + (i + 1) * (3 + Math.random() * 6);
-                 const prevAsk = previousAsks[i];
-
-                 // 如果有之前的数据，让价格变化更平滑
-                 const smoothedPrice = prevAsk ?
-                     (parseFloat(prevAsk.price) * 0.7 + baseAskPrice * 0.3) :
-                     baseAskPrice;
-
-                 return {
-                     price: smoothedPrice.toFixed(2),
-                     amount: (0.2 + Math.random() * 1.6).toFixed(4),
-                     total: (15000 + Math.random() * 75000).toFixed(2)
-                 };
-             });
-
-             const newBids = Array.from({ length: 7 }, (_, i) => {
-                 const baseBidPrice = basePrice - (i + 1) * (3 + Math.random() * 6);
-                 const prevBid = previousBids[i];
-
-                 // 如果有之前的数据，让价格变化更平滑
-                 const smoothedPrice = prevBid ?
-                     (parseFloat(prevBid.price) * 0.7 + baseBidPrice * 0.3) :
-                     baseBidPrice;
-
-                 return {
-                     price: smoothedPrice.toFixed(2),
-                     amount: (0.2 + Math.random() * 1.6).toFixed(4),
-                     total: (15000 + Math.random() * 75000).toFixed(2)
-                 };
-             });
-
-             // 保存当前数据作为下次的参考
-             previousAsks = newAsks;
-             previousBids = newBids;
-
-             setAsks(newAsks);
-             setBids(newBids);
-        };
-
-        mockOrderBook();
-
-        // --- WebSocket 连接 ---
-        const socket = new WebSocket('ws://localhost:8080/ws/trades');
-
-        socket.onopen = () => {
-            console.log('WebSocket 连接已建立');
-        };
-
-        socket.onmessage = (event) => {
-            try {
-                const newTrade = JSON.parse(event.data);
-                // 将新交易添加到列表的开头
-                setTrades(prevTrades => [newTrade, ...prevTrades]);
-            } catch (error) {
-                console.error('无法解析收到的交易数据:', error);
-            }
-        };
-
-        socket.onclose = () => {
-            console.log('WebSocket 连接已关闭');
-        };
-
-        socket.onerror = (error) => {
-            console.log('WebSocket 连接失败，使用模拟模式:', error);
-            // 不显示错误，静默处理
-        };
-        
-        // 订单簿使用更平滑的轮询间隔，让动画有足够时间完成
-        const orderBookInterval = setInterval(mockOrderBook, 4000);
-        
-        // --- 清理 ---
-        return () => {
-            socket.close(); // 组件卸载时关闭 WebSocket 连接
-            clearInterval(orderBookInterval);
-        };
-    }, []);
-
-    const totalPages = Math.ceil(totalRecords / limit);
-
-    const handleNextPage = () => {
-      if (page < totalPages) {
-        setPage(prevPage => prevPage + 1);
-      }
-    };
-
-    const handlePrevPage = () => {
-      if (page > 1) {
-        setPage(prevPage => prevPage - 1);
-      }
-    };
-
-    const handleCreateTrade = async () => {
-        if (!price || !amount) {
-            alert('Price and Amount cannot be empty.');
-            return;
-        }
-
-        const newTrade = {
-            price: price,
-            amount: amount,
-            type: tradeType,
-        };
-
-        try {
-            const response = await fetch('http://localhost:8080/api/trades', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('authToken')}` // 添加认证头
-                },
-                body: JSON.stringify(newTrade),
-            });
-
-            if (!response.ok) {
-                throw new Error('API不可用');
-            }
-
-            const result = await response.json();
-            if (result.success) {
-            setPrice('');
-            setAmount('');
-                // 真实API成功，不需要手动添加到列表（WebSocket会处理）
-            }
-        } catch (error) {
-            console.log('API不可用，使用模拟模式创建交易');
-            
-            // 模拟创建交易成功
-            const mockTrade = {
-                id: Date.now(),
-                price: price,
-                amount: amount,
-                type: tradeType,
-                user_name: 'You',
-                time: new Date().toLocaleTimeString('en-US', { hour12: false }).substring(0, 8)
-            };
-            
-            // 添加到交易列表开头
-            setTrades(prevTrades => [mockTrade, ...prevTrades.slice(0, 19)]); // 保持最多20条
-            
-            setPrice('');
-            setAmount('');
-            
-            // 显示成功消息
-            setTimeout(() => {
-                console.log('模拟交易创建成功');
-            }, 100);
-        }
-    };
-
-    const handleTradeTypeChange = (type) => {
-        setTradeType(type);
-    };
-
-    const handlePriceTypeChange = (event) => {
-        setPriceType(event.target.value);
-    };
-
-    const handleSliderChange = (event, newValue) => {
-        setSliderValue(newValue);
-    };
-
-  return (
-      <Box sx={{
-        width: '100%',
-        maxWidth: '100%',
-        minHeight: '100vh',
-        background: theme.palette.mode === 'dark'
-          ? 'radial-gradient(ellipse at top, rgba(102, 126, 234, 0.1) 0%, rgba(15, 23, 42, 0.9) 50%), linear-gradient(135deg, #0f172a 0%, #1e293b 100%)'
-          : 'radial-gradient(ellipse at top, rgba(59, 130, 246, 0.08) 0%, rgba(255, 255, 255, 0.9) 50%), linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
-        position: 'relative',
-        overflow: 'hidden'
-      }}>
-        {/* 动态背景元素 */}
-        <Box sx={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          opacity: 0.05,
-          background: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23${theme.palette.primary.main.slice(1)}' fill-opacity='0.4'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          animation: `${float} 20s ease-in-out infinite`
-        }} />
-
-        <style jsx global>{`
-          button:focus, [role="button"]:focus, .MuiButtonBase-root:focus, .MuiButtonBase-root.MuiButton-root:focus {
-            outline: none !important;
-            box-shadow: none !important;
-          }
-          .MuiOutlinedInput-root:focus, .MuiOutlinedInput-root:focus-within,
-          .MuiInputBase-root:focus, .MuiInputBase-root:focus-within,
-          .MuiSelect-select:focus, .MuiMenuItem-root:focus,
-          .MuiListItemButton-root:focus, .MuiChip-root:focus,
-          .MuiTab-root:focus, .MuiTabs-root:focus,
-          .MuiPaginationItem-root:focus {
-            outline: none !important;
-            box-shadow: none !important;
-          }
-        `}</style>
-
-        <Box sx={{ position: 'relative', zIndex: 1, py: 4, px: 2 }}>
-        <Box sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          mb: 3,
-          position: { md: 'relative' },
-          zIndex: { md: 1100 },
-          pr: { md: '60px' }
-        }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Box
-              sx={{
-                width: 6,
-                height: 32,
-                background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-                borderRadius: '3px',
-              }}
-            />
-            <Typography
-              variant="h4"
-              sx={{
-                fontWeight: 700,
-                background: `linear-gradient(135deg, ${theme.palette.text.primary}, ${theme.palette.primary.main})`,
-                backgroundClip: 'text',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-              }}
-            >
-              Trade
-            </Typography>
-          </Box>
-          <Box sx={{ display: 'flex', gap: 2 }}>
-            <Chip
-              label="BTC/USDT"
-              sx={{
-                background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-                color: '#fff',
-                fontWeight: 'bold',
-                fontSize: '1rem',
-                py: 2.5,
-                boxShadow: `0 4px 12px ${alpha(theme.palette.primary.main, 0.3)}`,
-              }}
-            />
-            <Chip
-              icon={<TrendingUpIcon />}
-              label="+2.4%"
-              sx={{
-                background: `linear-gradient(135deg, ${theme.palette.success.main}, ${theme.palette.success.dark})`,
-                color: '#fff',
-                fontWeight: 'bold',
-                py: 2.5,
-                boxShadow: `0 4px 12px ${alpha(theme.palette.success.main, 0.3)}`,
-              }}
-            />
-          </Box>
-        </Box>
-        
-        <Grid container spacing={3} sx={{ width: '100%', m: 0 }}>
-            <Grid item xs={12} md={5} lg={4}>
-                <GlassmorphicPaper>
-                    <Box sx={{ 
-                      display: 'flex', 
-                      borderBottom: 1, 
-                      borderColor: 'divider', 
-                      mb: 3,
-                      borderRadius: '8px',
-                      overflow: 'hidden'
-                    }}>
-                    <Button
-                      sx={{
-                        flex: 1, py: 2, borderRadius: 0, transition: 'all 0.3s',
-                        background: tradeType === 'buy'
-                          ? `linear-gradient(135deg, ${theme.palette.success.main}, ${theme.palette.success.dark})`
-                          : 'transparent',
-                        color: tradeType === 'buy' ? 'white' : 'text.secondary',
-                        fontWeight: 'bold', fontSize: '1rem',
-                        boxShadow: tradeType === 'buy' ? `0 4px 12px ${alpha(theme.palette.success.main, 0.3)}` : 'none',
-                        '&:hover': {
-                          background: tradeType === 'buy'
-                            ? `linear-gradient(135deg, ${theme.palette.success.dark}, ${theme.palette.success.main})`
-                            : `linear-gradient(135deg, ${alpha(theme.palette.success.main, 0.1)}, ${alpha(theme.palette.success.main, 0.05)})`,
-                          boxShadow: `0 6px 16px ${alpha(theme.palette.success.main, 0.4)}`,
-                        }
-                      }}
-                      onClick={() => handleTradeTypeChange('buy')}
-                    >
-                      BUY
-                    </Button>
-                    <Button
-                      sx={{
-                        flex: 1, py: 2, borderRadius: 0, transition: 'all 0.3s',
-                        background: tradeType === 'sell'
-                          ? `linear-gradient(135deg, ${theme.palette.error.main}, ${theme.palette.error.dark})`
-                          : 'transparent',
-                        color: tradeType === 'sell' ? 'white' : 'text.secondary',
-                        fontWeight: 'bold', fontSize: '1rem',
-                        boxShadow: tradeType === 'sell' ? `0 4px 12px ${alpha(theme.palette.error.main, 0.3)}` : 'none',
-                        '&:hover': {
-                          background: tradeType === 'sell'
-                            ? `linear-gradient(135deg, ${theme.palette.error.dark}, ${theme.palette.error.main})`
-                            : `linear-gradient(135deg, ${alpha(theme.palette.error.main, 0.1)}, ${alpha(theme.palette.error.main, 0.05)})`,
-                          boxShadow: `0 6px 16px ${alpha(theme.palette.error.main, 0.4)}`,
-                        }
-                      }}
-                      onClick={() => handleTradeTypeChange('sell')}
-                    >
-                      SELL
-                    </Button>
-                    </Box>
-
-                    <Box sx={{ px: 3, py: 2, display: 'flex', flexDirection: 'column', gap: 3 }}>
-                        <StyledTextField
-                          label="Price"
-                          variant="standard"
-                          select
-                          value={priceType}
-                          onChange={handlePriceTypeChange}
-                          fullWidth
-                        >
-                            <MenuItem value="market">Market Price</MenuItem>
-                            <MenuItem value="limit">Limit Price</MenuItem>
-                        </StyledTextField>
-                        
-                        <StyledTextField
-                           label={"Price"}
-                           variant="standard"
-                           type="number"
-                           placeholder="0.00"
-                           value={price}
-                           onChange={(e) => setPrice(e.target.value)}
-                           InputLabelProps={{ shrink: true }}
-                           fullWidth
-                           InputProps={{
-                             endAdornment: <Typography variant="body2" color="text.secondary">USDT</Typography>
-                           }}
-                        />
-
-                         <StyledTextField 
-                           label="Amount" 
-                           variant="standard" 
-                           type="number"
-                           placeholder="0.00"
-                           value={amount}
-                           onChange={(e) => setAmount(e.target.value)}
-                           fullWidth
-                           InputProps={{
-                             endAdornment: <Typography variant="body2" color="text.secondary">BTC</Typography>
-                           }}
-                         />
-                         
-                         <Box sx={{ px: 1, pt: 2 }}>
-                           <StyledSlider 
-                             value={sliderValue} 
-                             onChange={handleSliderChange} 
-                             aria-labelledby="input-slider" 
-                             marks={[{value: 0, label: '0%'}, {value: 25, label: '25%'}, {value: 50, label: '50%'}, {value: 75, label: '75%'}, {value: 100, label: '100%'}]}
-                             tradeType={tradeType}
-                           />
-                         </Box>
-                         
-                         <Box sx={{ 
-                           backgroundColor: theme.palette.mode === 'dark' ? alpha(theme.palette.background.paper, 0.4) : alpha(theme.palette.background.paper, 0.7),
-                           p: 2, borderRadius: '8px', border: `1px solid ${alpha(theme.palette.divider, 0.1)}`, mt: 1
-                         }}>
-                           <Typography variant="body2" sx={{ color: theme.palette.text.secondary }}>Total:</Typography>
-                           <Typography variant="h6" sx={{ fontWeight: 'bold', fontFamily: 'monospace' }}>
-                             { (price && amount) ? (parseFloat(price) * parseFloat(amount)).toFixed(2) : '0.00' } USDT
-                           </Typography>
-                         </Box>
-                         
-                         <Button
-                           variant="contained"
-                           size="large"
-                           onClick={handleCreateTrade}
-                           sx={{
-                             mt: 2, py: 1.5, fontWeight: 'bold', fontSize: '1rem',
-                             background: tradeType === 'sell'
-                               ? `linear-gradient(135deg, ${theme.palette.error.main}, ${theme.palette.error.dark})`
-                               : `linear-gradient(135deg, ${theme.palette.success.main}, ${theme.palette.success.dark})`,
-                             boxShadow: tradeType === 'sell'
-                               ? `0 8px 20px ${alpha(theme.palette.error.main, 0.4)}`
-                               : `0 8px 20px ${alpha(theme.palette.success.main, 0.4)}`,
-                             '&:hover': {
-                               background: tradeType === 'sell'
-                                 ? `linear-gradient(135deg, ${theme.palette.error.dark}, ${theme.palette.error.main})`
-                                 : `linear-gradient(135deg, ${theme.palette.success.dark}, ${theme.palette.success.main})`,
-                               boxShadow: tradeType === 'sell'
-                                 ? `0 12px 24px ${alpha(theme.palette.error.main, 0.5)}`
-                                 : `0 12px 24px ${alpha(theme.palette.success.main, 0.5)}`,
-                               transform: 'translateY(-2px)',
-                             }
-                           }}
-                         >
-                           {tradeType === 'buy' ? 'Buy BTC' : 'Sell BTC'}
-                         </Button>
-                    </Box>
-                </GlassmorphicPaper>
-            </Grid>
-            <Grid item xs={12} md={4} lg={4}>
-                <OrderBook asks={asks} bids={bids} />
-            </Grid>
-            <Grid item xs={12} md={3} lg={4}>
-                {error ? (
-                    <GlassmorphicPaper sx={{ p: 3, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <Typography color="error" align="center">
-                            无法加载交易数据: {error}
-                        </Typography>
-                    </GlassmorphicPaper>
-                ) : isLoading ? (
-                    <GlassmorphicPaper sx={{ p: 3, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <Typography>加载交易数据中...</Typography>
-                    </GlassmorphicPaper>
-                ) : (
-                    <RecentTrades 
-                      trades={trades}
-                      page={page}
-                      totalPages={totalPages}
-                      handlePrevPage={handlePrevPage}
-                      handleNextPage={handleNextPage}
-                    />
-                )}
-            </Grid>
-        </Grid>
-        </Box>
-      </Box>
-  );
-}
 
 export default Trade;
