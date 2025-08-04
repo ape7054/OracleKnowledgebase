@@ -57,13 +57,6 @@ func main() {
 		marketHandler := api.NewMarketHandler()
 		marketHandler.RegisterRoutes(apiV1.Group("/market"))
 
-		// Trade data routes - GET is public, POST requires auth
-		tradeHandler := api.NewTradeHandler(database.DB, hub)
-		tradeGroup := apiV1.Group("/trades")
-		{
-			tradeGroup.GET("", tradeHandler.GetTrades) // 公开访问交易历史
-		}
-
 		// Authentication routes are public
 		jwtSecret := os.Getenv("JWT_SECRET")
 		if jwtSecret == "" {
@@ -75,6 +68,17 @@ func main() {
 		}
 		authHandler := api.NewAuthHandler(database.DB, jwtSecret, time.Hour*time.Duration(jwtExpiresHours))
 		authHandler.RegisterRoutes(apiV1.Group("/auth"))
+
+		// Trade data routes - separate public and protected
+		tradeHandler := api.NewTradeHandler(database.DB, hub)
+
+		// Public route for getting trades
+		apiV1.GET("/trades", tradeHandler.GetTrades)
+
+		// Protected route for creating trades (requires authentication)
+		protectedTrades := apiV1.Group("/trades")
+		protectedTrades.Use(api.AuthMiddleware(jwtSecret))
+		protectedTrades.POST("", tradeHandler.CreateTrade)
 
 		// Health check route is public
 		api.RegisterHealthCheck(apiV1)
@@ -92,13 +96,6 @@ func main() {
 					"user_id": userID,
 				})
 			})
-		}
-
-		// Protected trade routes - require authentication
-		protectedTrades := apiV1.Group("/trades")
-		protectedTrades.Use(api.AuthMiddleware(jwtSecret))
-		{
-			protectedTrades.POST("", tradeHandler.CreateTrade) // 创建交易需要认证
 		}
 	}
 

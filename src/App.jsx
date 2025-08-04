@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Routes, Route, NavLink, Navigate } from 'react-router-dom';
+import { Routes, Route, NavLink, Navigate, BrowserRouter as Router } from 'react-router-dom';
 import { Box, CssBaseline, AppBar, Toolbar, Typography, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, IconButton, useTheme, useMediaQuery, Avatar, Menu, MenuItem, Divider, Chip } from '@mui/material';
 import { Dashboard as DashboardIcon, SwapHoriz as TradeIcon, AccountCircle as AccountIcon, Menu as MenuIcon, TrendingUp, Home as HomeIcon, Article as NewsIcon, Logout, Settings, Person } from '@mui/icons-material';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
@@ -17,6 +17,7 @@ import Trade from './pages/Trade';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import { styled } from '@mui/system';
+import { Toaster } from 'react-hot-toast';
 
 // Define the width of the navigation drawer
 const drawerWidth = 240;
@@ -492,7 +493,7 @@ function AppContent() {
           {/* It looks at the current URL (the "floor" you requested) and renders the correct component. */}
           {/* For example, if the URL is '/account', it will render the <Account /> component below. */}
           <Routes>
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route
@@ -546,6 +547,32 @@ function AppContent() {
             {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
           </IconButton>
         </Box>
+        <Toaster 
+          position="top-center"
+          reverseOrder={false}
+          toastOptions={{
+            // Define default options
+            className: '',
+            style: {
+              margin: '40px',
+              background: '#363636',
+              color: '#fff',
+              zIndex: 1,
+            },
+            duration: 5000,
+            // Default options for specific types
+            success: {
+              duration: 3000,
+              theme: {
+                primary: 'green',
+                secondary: 'black',
+              },
+            },
+            error: {
+              duration: 5000,
+            },
+          }}
+        />
       </Box>
   );
 }

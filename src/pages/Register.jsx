@@ -138,7 +138,7 @@ function Register() {
               }}
             >
               Create your account to get started
-            </Typography>
+        </Typography>
           </Box>
 
           {error && (
@@ -173,18 +173,18 @@ function Register() {
             </Fade>
           )}
 
-          <Box component="form" onSubmit={handleSubmit} noValidate>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="username"
-              label="Username"
-              name="username"
-              autoComplete="username"
-              autoFocus
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+        <Box component="form" onSubmit={handleSubmit} noValidate>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="username"
+            label="Username"
+            name="username"
+            autoComplete="username"
+            autoFocus
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
               disabled={loading}
               sx={{
                 mb: 2,
@@ -210,18 +210,18 @@ function Register() {
                   color: 'white',
                 },
               }}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="new-password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="new-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
               disabled={loading}
               sx={{
                 mb: 2,
@@ -286,10 +286,10 @@ function Register() {
               }}
             />
             
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
               disabled={loading}
               sx={{
                 mt: 2,
@@ -320,11 +320,11 @@ function Register() {
               ) : (
                 'Create Account'
               )}
-            </Button>
+          </Button>
             
             <Box textAlign="center">
               <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-                Already have an account?{' '}
+            Already have an account?{' '}
                 <MuiLink 
                   component={Link}
                   to="/login"
@@ -338,12 +338,12 @@ function Register() {
                     },
                   }}
                 >
-                  Sign In
-                </MuiLink>
-              </Typography>
+              Sign In
+            </MuiLink>
+          </Typography>
             </Box>
-          </Box>
-        </RegisterPaper>
+        </Box>
+      </RegisterPaper>
       </Fade>
     </RegisterPageContainer>
   );

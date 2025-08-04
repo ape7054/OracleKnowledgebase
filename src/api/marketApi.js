@@ -151,6 +151,17 @@ export const marketApi = {
     }
   },
 
+  // 创建交易
+  async createTrade(tradeData) {
+    try {
+      const response = await apiClient.post('/trades', tradeData);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to create trade:', error);
+      throw error;
+    }
+  },
+
   // 设置认证token
   setAuthToken: setAuthToken
 };

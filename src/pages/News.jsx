@@ -113,7 +113,7 @@ const loadCryptoNews = async () => {
          // 转换数据格式以适配UI
      return newsData.map(item => ({
        id: item.id,
-       title: item.title,
+        title: item.title,
        summary: item.summary,
        source: item.source,
        time: item.time,
@@ -469,7 +469,7 @@ const NewsProfessional = () => {
                         alignItems: 'center',
                   justifyContent: 'center',
                         mb: 2
-                      }}>
+                }}>
                         <Box sx={{
                           p: 1.5,
                           borderRadius: '50%',
@@ -486,7 +486,7 @@ const NewsProfessional = () => {
                         color: stat.color,
                         mb: 0.5,
                         fontSize: { xs: '1.8rem', md: '2.2rem' }
-                      }}>
+                    }}>
                         {stat.value}{stat.suffix}
                     </Typography>
                       <Typography variant="body2" color="text.secondary" sx={{
@@ -707,8 +707,8 @@ const NewsProfessional = () => {
                                 color: theme.palette.primary.main,
                                 fontWeight: 600,
                                   border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`
-                                }}
-                              />
+                              }}
+                            />
                               
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                               <AccessTime sx={{ fontSize: 16, color: 'text.secondary' }} />
@@ -838,8 +838,8 @@ const NewsProfessional = () => {
                                 bgcolor: alpha(theme.palette.success.main, 0.2),
                                 transform: 'scale(1.1)'
                               }
-                            }}
-                          >
+                              }}
+                            >
                             <Share sx={{ fontSize: 16 }} />
                             </IconButton>
                         </Box>

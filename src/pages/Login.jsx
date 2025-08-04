@@ -126,7 +126,7 @@ function Login() {
               }}
             >
               Sign in to your MarketPulse account
-            </Typography>
+        </Typography>
           </Box>
 
           {error && (
@@ -145,18 +145,18 @@ function Login() {
             </Fade>
           )}
 
-          <Box component="form" onSubmit={handleSubmit} noValidate>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="username"
-              label="Username"
-              name="username"
-              autoComplete="username"
-              autoFocus
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+        <Box component="form" onSubmit={handleSubmit} noValidate>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="username"
+            label="Username"
+            name="username"
+            autoComplete="username"
+            autoFocus
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
               disabled={loading}
               sx={{
                 mb: 2,
@@ -182,18 +182,18 @@ function Login() {
                   color: 'white',
                 },
               }}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
               type={showPassword ? 'text' : 'password'}
-              id="password"
-              autoComplete="current-password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+            id="password"
+            autoComplete="current-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
               disabled={loading}
               sx={{
                 mb: 3,
@@ -221,10 +221,10 @@ function Login() {
               }}
             />
             
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
               disabled={loading}
               sx={{
                 mt: 2,
@@ -255,11 +255,11 @@ function Login() {
               ) : (
                 'Sign In'
               )}
-            </Button>
+          </Button>
             
             <Box textAlign="center">
               <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-                Don't have an account?{' '}
+            Don't have an account?{' '}
                 <MuiLink 
                   component={Link}
                   to="/register"
@@ -274,11 +274,11 @@ function Login() {
                   }}
                 >
                   Create Account
-                </MuiLink>
-              </Typography>
+            </MuiLink>
+          </Typography>
             </Box>
-          </Box>
-        </LoginPaper>
+        </Box>
+      </LoginPaper>
       </Fade>
     </LoginPageContainer>
   );
