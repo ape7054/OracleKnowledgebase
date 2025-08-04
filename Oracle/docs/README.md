@@ -27,7 +27,7 @@ AI Protocol Lab是一个通用的AI助手工具箱，包含多种专业化的pro
 
 1. **复制Prompt内容**
    ```bash
-   cat /www/wwwroot/market-pulse/AI-Protocol-Lab/prompts/project_progress_manager.prompt.md
+   cat /www/wwwroot/market-pulse/Oracle/prompts/project_progress_manager.prompt.md
    ```
 
 2. **粘贴给新的AI助手**
@@ -55,7 +55,7 @@ AI Protocol Lab是一个通用的AI助手工具箱，包含多种专业化的pro
 ### 核心文档位置
 ```
 /www/wwwroot/market-pulse/
-├── AI-Protocol-Lab/
+├── Oracle/
 │   ├── prompts/
 │   │   └── project_progress_manager.prompt.md  # 主要Prompt
 │   └── README-PROGRESS-MANAGER.md              # 本使用指南
@@ -143,7 +143,7 @@ AI Protocol Lab是一个通用的AI助手工具箱，包含多种专业化的pro
 1. **立即执行**：
    ```bash
    cd /www/wwwroot/market-pulse
-   cat AI-Protocol-Lab/prompts/project_progress_manager.prompt.md
+   cat Oracle/prompts/project_progress_manager.prompt.md
    ```
 
 2. **复制给新AI**：整个prompt内容

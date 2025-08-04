@@ -15,10 +15,10 @@
 #### 使用方法
 ```bash
 # 在项目根目录执行
-./AI-Protocol-Lab/scripts/get-ai-context.sh
+./Oracle/scripts/get-ai-context.sh
 
 # 或者指定输出文件
-./AI-Protocol-Lab/scripts/get-ai-context.sh > project-context.md
+./Oracle/scripts/get-ai-context.sh > project-context.md
 ```
 
 #### 输出内容
@@ -34,7 +34,7 @@
 ```bash
 # 1. 生成最新的项目上下文
 cd /www/wwwroot/market-pulse
-./AI-Protocol-Lab/scripts/get-ai-context.sh
+./Oracle/scripts/get-ai-context.sh
 
 # 2. 将输出内容提供给新的AI助手
 # 3. 结合AI-CONTEXT-GUIDE.md使用

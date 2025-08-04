@@ -161,8 +161,8 @@ if [ -d "docs" ]; then
     echo "├── docs/                   # 项目文档"
 fi
 
-if [ -d "AI-Protocol-Lab" ]; then
-    echo "├── AI-Protocol-Lab/        # AI协作工具箱"
+if [ -d "Oracle" ]; then
+    echo "├── Oracle/                 # AI协作工具箱"
 fi
 
 # 配置文件
@@ -248,8 +248,8 @@ if [ -f "go.mod" ]; then
 fi
 
 # 检测AI协作工具
-if [ -f "AI-Protocol-Lab/docs/README.md" ]; then
-    echo "- **AI-Protocol-Lab**: 存在 (AI协作工具箱)"
+if [ -f "Oracle/docs/README.md" ]; then
+    echo "- **Oracle**: 存在 (AI协作工具箱)"
 fi
 
 if [ "$main_files_found" = false ]; then
@@ -347,9 +347,9 @@ if [ -f "docker-compose.yml" ]; then
 fi
 
 # AI协作工具命令
-if [ -d "AI-Protocol-Lab" ]; then
+if [ -d "Oracle" ]; then
     echo "# 查看AI协作指南"
-    echo "cat AI-Protocol-Lab/docs/README.md"
+    echo "cat Oracle/docs/README.md"
 fi
 
 echo "\`\`\`"
@@ -403,4 +403,4 @@ echo ""
 
 echo "---"
 echo ""
-echo "_此上下文由 AI-Protocol-Lab 自动生成_"
+echo "_此上下文由 Oracle 自动生成_"

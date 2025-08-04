@@ -1,10 +1,10 @@
-# 🤖 AI Protocol Lab
+# 🔮 Oracle
 
-**通用AI助手工具箱** - 提升开发效率的专业化工具集合
+**智慧AI协作工具箱** - 项目决策层与大脑
 
 ## 📋 概述
 
-AI Protocol Lab是一个完整的AI助手协作工具箱，包含prompt库、对话记录、项目文档和实用脚本。既可以作为通用工具在不同项目间复用，也能管理特定项目的所有AI协作资源。
+Oracle是一个完整的AI助手协作工具箱，包含prompt库、对话记录、项目文档和实用脚本。既可以作为通用工具在不同项目间复用，也能管理特定项目的所有AI协作资源。作为项目的"神谕"和"大脑"，它记录着项目的智慧和决策。
 
 ### 🎯 核心价值
 
@@ -17,7 +17,7 @@ AI Protocol Lab是一个完整的AI助手协作工具箱，包含prompt库、对
 ## 📁 完整工具箱结构
 
 ```
-AI-Protocol-Lab/
+Oracle/
 ├── README.md                    # 本文件
 ├── docs/                       # 📖 通用AI协作工具文档
 │   └── README.md               # 工具使用指南
@@ -53,20 +53,20 @@ AI-Protocol-Lab/
 cd /path/to/your-project
 
 # 运行上下文获取脚本
-./AI-Protocol-Lab/scripts/get-ai-context.sh
+./Oracle/scripts/get-ai-context.sh
 ```
 **复制输出内容，粘贴给任何AI助手（ChatGPT、Claude等）。**
 
 #### **第二步：选择AI助手角色**
 ```bash
 # 写代码、调试问题
-cat AI-Protocol-Lab/prompts/development_assistant.prompt.md
+cat Oracle/prompts/development_assistant.prompt.md
 
 # 审查代码
-cat AI-Protocol-Lab/prompts/code_reviewer.prompt.md
+cat Oracle/prompts/code_reviewer.prompt.md
 
 # 管理项目进度
-cat AI-Protocol-Lab/prompts/project_progress_manager.prompt.md
+cat Oracle/prompts/project_progress_manager.prompt.md
 ```
 **复制prompt内容，粘贴给AI助手。**
 
@@ -78,10 +78,10 @@ cat AI-Protocol-Lab/prompts/project_progress_manager.prompt.md
 **场景：让AI帮你写代码**
 ```bash
 # 1. 获取项目上下文
-./AI-Protocol-Lab/scripts/get-ai-context.sh
+./Oracle/scripts/get-ai-context.sh
 
 # 2. 选择开发助手角色
-cat AI-Protocol-Lab/prompts/development_assistant.prompt.md
+cat Oracle/prompts/development_assistant.prompt.md
 
 # 3. 在AI助手中粘贴：
 #    - 项目上下文（步骤1的输出）
@@ -94,7 +94,7 @@ cat AI-Protocol-Lab/prompts/development_assistant.prompt.md
 ## 📚 详细文档
 
 ### 通用AI协作工具文档 (`/docs/`)
-- 📋 [工具使用指南](docs/README.md) - AI Protocol Lab完整使用说明
+- 📋 [工具使用指南](docs/README.md) - Oracle完整使用说明
 
 ### 项目特定文档 (`/project-docs/`)
 这部分内容是每个项目独立的，用于存放该项目的具体文档。
@@ -111,10 +111,10 @@ cat AI-Protocol-Lab/prompts/development_assistant.prompt.md
 **解决**：
 ```bash
 # 1. 重新获取项目上下文
-./AI-Protocol-Lab/scripts/get-ai-context.sh
+./Oracle/scripts/get-ai-context.sh
 
 # 2. 重新选择角色
-cat AI-Protocol-Lab/prompts/development_assistant.prompt.md
+cat Oracle/prompts/development_assistant.prompt.md
 
 # 3. 复制粘贴给新的AI助手，立即恢复工作状态。
 ```
@@ -124,16 +124,16 @@ cat AI-Protocol-Lab/prompts/development_assistant.prompt.md
 **方法**：指导他们查看 `project-docs/` 目录下的文档。
 ```bash
 # 示例：
-cat AI-Protocol-Lab/project-docs/development/README.md
-cat AI-Protocol-Lab/project-docs/ai-collaboration/AI-CONTEXT-GUIDE.md
+cat Oracle/project-docs/development/README.md
+cat Oracle/project-docs/ai-collaboration/AI-CONTEXT-GUIDE.md
 ```
 
 ### 🔍 **代码审查 / 项目管理**
 **使用**：
 ```bash
 # 选择对应的角色prompt
-cat AI-Protocol-Lab/prompts/code_reviewer.prompt.md
-cat AI-Protocol-Lab/prompts/project_progress_manager.prompt.md
+cat Oracle/prompts/code_reviewer.prompt.md
+cat Oracle/prompts/project_progress_manager.prompt.md
 
 # 复制给AI，然后提交代码或问题进行专业审查或规划。
 ```
@@ -143,28 +143,28 @@ cat AI-Protocol-Lab/prompts/project_progress_manager.prompt.md
 ### **自动化脚本详解**
 ```bash
 # 生成完整项目上下文
-./AI-Protocol-Lab/scripts/get-ai-context.sh
+./Oracle/scripts/get-ai-context.sh
 
 # 保存上下文到文件，方便复用
-./AI-Protocol-Lab/scripts/get-ai-context.sh > current-context.md
+./Oracle/scripts/get-ai-context.sh > current-context.md
 ```
 
 ### **查看历史对话**
 ```bash
 # 查看所有对话记录的文件列表
-ls AI-Protocol-Lab/conversations/
+ls Oracle/conversations/
 
 # 查看某次具体的对话
-cat AI-Protocol-Lab/conversations/YYYY-MM-DD_topic.md
+cat Oracle/conversations/YYYY-MM-DD_topic.md
 ```
 
 ### **复制到新项目**
 ```bash
 # 1. 复制整个工具箱到新项目
-cp -r AI-Protocol-Lab /path/to/new-project/
+cp -r Oracle /path/to/new-project/
 
 # 2. (可选) 清理当前项目的特定内容
-cd /path/to/new-project/AI-Protocol-Lab
+cd /path/to/new-project/Oracle
 rm -rf conversations/* project-docs/*
 # 重新创建目录结构
 mkdir conversations project-docs
@@ -197,4 +197,4 @@ mkdir conversations project-docs
 - 📚 **知识保存**：项目经验和决策过程完整记录
 - 🎯 **即插即用**：复制到任何项目立即可用
 
-**记住**：这不只是一个工具箱，而是您在任何项目中的AI协作伙伴！🤖
+**记住**：Oracle不只是一个工具箱，而是您项目的智慧大脑和决策中枢！🔮

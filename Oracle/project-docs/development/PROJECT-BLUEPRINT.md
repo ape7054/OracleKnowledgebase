@@ -109,7 +109,7 @@ market-pulse/
 │   │   ├── 📁 models/               # 数据模型
 │   │   └── 📁 services/             # 业务服务
 │   └── Dockerfile                  # 后端容器化
-├── 📁 AI-Protocol-Lab/             # 项目文档
+├── 📁 Oracle/                      # 项目文档
 │   └── 📁 project-docs/
 │       └── 📁 development/
 │           ├── PROJECT-BLUEPRINT.md # 📍 项目蓝图(本文档)

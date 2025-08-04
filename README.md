@@ -29,7 +29,7 @@ MarketPulse 是一个现代化的加密货币市场智能平台，采用全栈�
 | 🎭 动画系统 | 90% | ✅ 优秀 | 流畅的交互动画和视觉效果 |
 | 🚀 构建部署 | 95% | ✅ 优秀 | Vite构建，Nginx部署 |
 | 📚 文档系统 | 95% | ✅ 优秀 | 完整的开发文档 + AI协作工具 |
-| 🤖 AI协作 | 90% | ✅ 创新 | AI-Protocol-Lab工具箱 |
+| 🤖 AI协作 | 90% | ✅ 创新 | Oracle工具箱 |
 
 ## ✨ 核心功能
 
@@ -151,7 +151,7 @@ npm run dev -- --port 5175
 > - 如果遇到Docker容器启动问题，尝试完全清理: `docker-compose down --volumes` 然后重新构建
 > - 端口冲突问题可使用 `lsof -i :端口号` 查找占用进程
 > - 前端API连接问题请检查 `vite.config.js` 中的代理配置
-> - 详细指南请查看 [开发环境搭建指南](AI-Protocol-Lab/project-docs/development/setup-guide.md)
+> - 详细指南请查看 [开发环境搭建指南](Oracle/project-docs/development/setup-guide.md)
 
 ## 📁 项目架构
 
@@ -177,7 +177,7 @@ market-pulse/
 │   │   ├── 📁 models/        # 数据模型
 │   │   └── 📁 websocket/     # WebSocket处理
 │   └── 📄 go.mod             # Go模块定义
-├── 📁 AI-Protocol-Lab/       # AI协作与项目文档
+├── 📁 Oracle/               # AI协作与项目文档
 │   ├── 📁 project-docs/      # 核心项目文档
 │   └── 📁 prompts/           # AI Prompt库
 ├── 🐳 docker-compose.yml     # Docker编排
@@ -185,19 +185,19 @@ market-pulse/
 └── ⚙️ vite.config.js         # Vite配置
 ```
 
-> 🔍 **详细架构**: 查看 [AI协作与项目文档](AI-Protocol-Lab/) 了解完整的系统架构设计与文档
+> 🔍 **详细架构**: 查看 [AI协作与项目文档](Oracle/) 了解完整的系统架构设计与文档
 
 ## 📚 完整文档
 
-我们提供了详细的文档来帮助您快速上手和深入了解项目。所有文档和AI协作资源均通过`AI-Protocol-Lab`工具箱进行统一管理。
+我们提供了详细的文档来帮助您快速上手和深入了解项目。所有文档和AI协作资源均通过`Oracle`工具箱进行统一管理。
 
 | 📖 文档 | 📝 描述 |
 |---------|---------|
-| [🤖 AI协作工具箱](AI-Protocol-Lab/README.md) | 完整功能介绍和导航 |
-| [🚀 开发环境指南](AI-Protocol-Lab/project-docs/development/README.md) | 环境搭建和快速启动 |
-| [🗺️ 开发路线图](AI-Protocol-Lab/project-docs/development/DEVELOPMENT-ROADMAP.md) | 项目规划和开发优先级 |
-| [🌐 API规范](AI-Protocol-Lab/project-docs/development/API-SPECIFICATION.md) | 接口文档和使用说明 |
-| [💡 AI上下文指南](AI-Protocol-Lab/project-docs/ai-collaboration/AI-CONTEXT-GUIDE.md) | 30秒了解项目状态 |
+| [🤖 AI协作工具箱](Oracle/README.md) | 完整功能介绍和导航 |
+| [🚀 开发环境指南](Oracle/project-docs/development/README.md) | 环境搭建和快速启动 |
+| [🗺️ 开发路线图](Oracle/project-docs/development/DEVELOPMENT-ROADMAP.md) | 项目规划和开发优先级 |
+| [🌐 API规范](Oracle/project-docs/development/API-SPECIFICATION.md) | 接口文档和使用说明 |
+| [💡 AI上下文指南](Oracle/project-docs/ai-collaboration/AI-CONTEXT-GUIDE.md) | 30秒了解项目状态 |
 
 ### 📖 推荐阅读顺序
 1.  **新手开发者**: 开发环境指南 → 开发路线图
@@ -267,33 +267,33 @@ market-pulse/
 
 - 🐛 **Bug报告**: [GitHub Issues](https://github.com/ape7054/trading-dashboard/issues)
 - 💬 **功能讨论**: [GitHub Discussions](https://github.com/ape7054/trading-dashboard/discussions)
-- 📖 **文档问题**: 查看 [AI协作与项目文档](AI-Protocol-Lab/)
-- 🤖 **AI协作**: 使用 [AI-Protocol-Lab](AI-Protocol-Lab/) 完整工具箱
+- 📖 **文档问题**: 查看 [AI协作与项目文档](Oracle/)
+- 🤖 **AI协作**: 使用 [Oracle](Oracle/) 完整工具箱
 - 📧 **直接联系**: 项目维护者
 
 ### 📁 文档结构
 
-项目采用AI-Protocol-Lab统一管理所有文档和AI协作资源：
+项目采用Oracle统一管理所有文档和AI协作资源：
 
-#### `/AI-Protocol-Lab/` - 完整AI协作工具箱 🤖
-- 📖 [工具箱总览](AI-Protocol-Lab/README.md) - 完整功能介绍
-- 🚀 [快速上下文指南](AI-Protocol-Lab/project-docs/ai-collaboration/AI-CONTEXT-GUIDE.md) - 30秒了解项目状态
-- 🎯 [Prompt库](AI-Protocol-Lab/prompts/) - 专业AI助手提示词
-- 💬 [AI对话记录](AI-Protocol-Lab/conversations/) - AI开发对话历史
-- 🔧 [工具脚本](AI-Protocol-Lab/scripts/) - 自动化工具
+#### `/Oracle/` - 完整AI协作工具箱 🤖
+- 📖 [工具箱总览](Oracle/README.md) - 完整功能介绍
+- 🚀 [快速上下文指南](Oracle/project-docs/ai-collaboration/AI-CONTEXT-GUIDE.md) - 30秒了解项目状态
+- 🎯 [Prompt库](Oracle/prompts/) - 专业AI助手提示词
+- 💬 [AI对话记录](Oracle/conversations/) - AI开发对话历史
+- 🔧 [工具脚本](Oracle/scripts/) - 自动化工具
 
-#### 项目技术文档 (`/AI-Protocol-Lab/project-docs/`)
-- 📖 [文档导航](AI-Protocol-Lab/project-docs/README.md) - 完整的文档索引
-- 🛠️ [开发环境指南](AI-Protocol-Lab/project-docs/development/README.md) - 环境搭建和开发流程
-- 📋 [API规范](AI-Protocol-Lab/project-docs/development/API-SPECIFICATION.md) - 接口文档
-- 🗺️ [开发路线图](AI-Protocol-Lab/project-docs/development/DEVELOPMENT-ROADMAP.md) - 完整的开发计划
-- 💬 [所有对话记录](AI-Protocol-Lab/conversations/) - AI对话和项目讨论统一管理
+#### 项目技术文档 (`/Oracle/project-docs/`)
+- 📖 [文档导航](Oracle/project-docs/README.md) - 完整的文档索引
+- 🛠️ [开发环境指南](Oracle/project-docs/development/README.md) - 环境搭建和开发流程
+- 📋 [API规范](Oracle/project-docs/development/API-SPECIFICATION.md) - 接口文档
+- 🗺️ [开发路线图](Oracle/project-docs/development/DEVELOPMENT-ROADMAP.md) - 完整的开发计划
+- 💬 [所有对话记录](Oracle/conversations/) - AI对话和项目讨论统一管理
 
 ### 🆘 常见问题
-- **启动失败？** 查看 [开发环境指南](AI-Protocol-Lab/project-docs/development/README.md) 的故障排除部分
-- **API错误？** 参考 [API规范](AI-Protocol-Lab/project-docs/development/API-SPECIFICATION.md)
-- **架构疑问？** 查看 [AI协作与项目文档](AI-Protocol-Lab/)
-- **AI协作？** 查看 [AI-Protocol-Lab](AI-Protocol-Lab/) 快速上手
+- **启动失败？** 查看 [开发环境指南](Oracle/project-docs/development/README.md) 的故障排除部分
+- **API错误？** 参考 [API规范](Oracle/project-docs/development/API-SPECIFICATION.md)
+- **架构疑问？** 查看 [AI协作与项目文档](Oracle/)
+- **AI协作？** 查看 [Oracle](Oracle/) 快速上手
 
 ---
 
@@ -301,7 +301,7 @@ market-pulse/
 
 **⭐ 觉得项目有用？请给我们一个 Star 支持！**
 
-**🚀 准备开始开发？查看 [开发环境指南](AI-Protocol-Lab/project-docs/development/README.md)**
+**🚀 准备开始开发？查看 [开发环境指南](Oracle/project-docs/development/README.md)**
 
 **💡 有想法或建议？欢迎提交 [Issue](https://github.com/ape7054/trading-dashboard/issues) 或 [Discussion](https://github.com/ape7054/trading-dashboard/discussions)**
 
