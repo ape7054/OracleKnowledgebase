@@ -96,6 +96,11 @@ import { cachedMarketApi, dataTransformers } from '../api/marketApi';
 import HypeIcon from '../assets/icons/HypeIcon';
 // import CryptoNews from '../components/CryptoNews';
 
+// Import the new chart component
+import { TradingViewChart } from '../components/TradingViewChart';
+import LoadingScreen from '../components/LoadingScreen';
+import { Assessment } from '@mui/icons-material';
+
 // 动画定义
 const glow = keyframes`
   0%, 100% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.3); }
@@ -284,6 +289,40 @@ const chartData = {
   BTC: generateRealisticPriceData(95000, 0.08), // BTC波动相对较小但绝对值大
   ETH: generateRealisticPriceData(3400, 0.12), // ETH波动中等
   SOL: generateRealisticPriceData(180, 0.18), // SOL波动较大
+};
+
+// 生成模拟K线数据的函数（简化版，用于面积图）
+const generateMockOhlcData = (basePrice, days = 30) => {
+  const data = [];
+  let currentPrice = basePrice;
+  const now = new Date();
+
+  for (let i = days - 1; i >= 0; i--) {
+    const date = new Date(now);
+    date.setDate(date.getDate() - i);
+    
+    // 生成随机的价格变动
+    const volatility = 0.03; // 3%的波动
+    const change = (Math.random() - 0.5) * 2 * volatility;
+    const newPrice = currentPrice * (1 + change);
+    
+    data.push({
+      time: Math.floor(date.getTime() / 1000), // Unix时间戳（秒）
+      close: newPrice, // 收盘价（用于面积图）
+      value: newPrice, // 也添加value字段作为备用
+    });
+    
+    currentPrice = newPrice;
+  }
+  
+  return data;
+};
+
+// 为每个币种生成模拟K线数据
+const mockOhlcData = {
+  BTC: generateMockOhlcData(95000),
+  ETH: generateMockOhlcData(3400),
+  SOL: generateMockOhlcData(180),
 };
 
 const chartMeta = {
@@ -1196,11 +1235,12 @@ const SocialMentions = () => {
 function Dashboard() {
   const theme = useTheme();
   const [selectedCoin, setSelectedCoin] = useState('BTC');
-  const [timeframe, setTimeframe] = useState('24h');
+  const [timeframe, setTimeframe] = useState('7d'); // 默认7天
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   // 新增状态管理
   const [marketData, setMarketData] = useState([]);
+  const [ohlcData, setOhlcData] = useState([]); // K线图数据
   const [marketSummary, setMarketSummary] = useState({
     totalMarketCap: '0',
     btcDominance: '0%',
@@ -1231,30 +1271,49 @@ function Dashboard() {
     'DEFAULT': <BtcIcon />
   };
 
-  // 转换API数据为Dashboard组件期望的格式  
+  // 转换API数据为Dashboard组件期望的格式
   const transformApiDataForDashboard = (apiData) => {
     // 简单安全的版本，绝对不会出错
     if (!apiData || !Array.isArray(apiData)) return [];
     
-    return apiData.map(coin => ({
-      name: coin.name || 'Unknown',
-      symbol: (coin.symbol || 'UNKNOWN').toUpperCase(),
-      price: `$${(coin.price || 0).toFixed(2)}`,
-      change: `${(coin.change || 0) >= 0 ? '+' : ''}${(coin.change || 0).toFixed(1)}%`,
-      icon: BtcIcon,
-      sparkline: Array(24).fill(coin.price || 1000)
-    }));
+    return apiData.map(coin => {
+      // 生成更真实的sparkline数据
+      const basePrice = coin.price || 1000;
+      const changePercent = (coin.change || 0) / 100;
+      const sparklineData = [];
+      
+      for (let i = 0; i < 24; i++) {
+        // 基于变化百分比生成波动数据
+        const variation = (Math.random() - 0.5) * Math.abs(changePercent) * 2;
+        const progress = i / 23; // 0 to 1
+        const trendedPrice = basePrice * (1 + changePercent * progress + variation * 0.3);
+        sparklineData.push(Math.max(0, trendedPrice));
+      }
+
+      return {
+        name: coin.name || 'Unknown',
+        symbol: (coin.symbol || 'UNKNOWN').toUpperCase(),
+        price: `$${basePrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 6 })}`,
+        change: `${changePercent >= 0 ? '+' : ''}${(changePercent * 100).toFixed(1)}%`,
+        icon: iconMap[(coin.symbol || '').toUpperCase()] || iconMap['DEFAULT'],
+        sparkline: sparklineData
+      };
+    });
   };
 
-  // 获取市场数据
+    // 获取市场数据（优化真实数据获取）
   const fetchMarketData = async () => {
     try {
       setLoading(true);
       setError(null);
 
+      // console.log('🔄 开始获取真实市场数据...');
+      // console.log('⏳ CoinGecko API通常需要20-30秒响应，请耐心等待...');
       const response = await cachedMarketApi.getMarketData(20);
 
       if (response.success && response.data && response.data.length > 0) {
+        // console.log('✅ 成功获取真实数据:', response.data.length, '个币种');
+        
         // 先转换为标准格式
         const standardData = response.data.map(dataTransformers.transformCoinData);
 
@@ -1267,148 +1326,107 @@ function Dashboard() {
         setMarketSummary(summary);
 
         setLastUpdated(new Date());
+        console.log('✅ 市场数据更新完成');
       } else {
-        // API失败或返回空数据时，使用Mock数据
-        console.log('API返回空数据或失败，使用Mock数据');
-        
-        const mockData = generateMockMarketData();
-        setMarketData(mockData);
-        
+        // console.log('⚠️ API返回空数据，使用备用数据');
+        setMarketData(staticMarketData);
         const mockSummary = {
           totalMarketCap: 2547890123456,
           marketCapChange24h: 2.34,
           totalVolume: 98765432109,
           volumeChange24h: -5.67,
           btcDominance: 52.18,
-          ethDominance: 17.23,
-          activeCryptocurrencies: 13420,
-          marketSentiment: 'bullish'
+          ethDominance: 17.25,
+          activeCryptocurrencies: 22000,
+          markets: 44500
         };
         setMarketSummary(mockSummary);
-        
         setLastUpdated(new Date());
-        setError(null); // 清除错误状态
       }
     } catch (err) {
-      console.error('API不可用，使用Mock数据:', err);
+      console.error('❌ API调用失败:', err.message);
       
-      // 使用Mock数据而不是显示错误
-      const mockData = generateMockMarketData();
-      setMarketData(mockData);
+      // 根据错误类型显示不同消息
+      if (err.message.includes('timeout') || err.message.includes('超时')) {
+        setError('数据加载中，CoinGecko API响应较慢，请耐心等待...');
+      } else {
+        setError('网络连接问题，显示备用数据');
+      }
       
+      // 失败时使用备用数据
+      setMarketData(staticMarketData);
       const mockSummary = {
         totalMarketCap: 2547890123456,
         marketCapChange24h: 2.34,
         totalVolume: 98765432109,
         volumeChange24h: -5.67,
         btcDominance: 52.18,
-        ethDominance: 17.23,
-        activeCryptocurrencies: 13420,
-        marketSentiment: 'bullish'
+        ethDominance: 17.25,
+        activeCryptocurrencies: 22000,
+        markets: 44500
       };
       setMarketSummary(mockSummary);
-      
       setLastUpdated(new Date());
-      setError(null); // 不显示错误
     } finally {
       setLoading(false);
     }
   };
 
-  // 生成Mock市场数据
-  const generateMockMarketData = () => {
-    const coins = [
-      { id: 'bitcoin', symbol: 'BTC', name: 'Bitcoin', icon: 'BTC' },
-      { id: 'ethereum', symbol: 'ETH', name: 'Ethereum', icon: 'ETH' },
-      { id: 'binancecoin', symbol: 'BNB', name: 'BNB', icon: 'BNB' },
-      { id: 'solana', symbol: 'SOL', name: 'Solana', icon: 'SOL' },
-      { id: 'ripple', symbol: 'XRP', name: 'XRP', icon: 'XRP' },
-      { id: 'tether', symbol: 'USDT', name: 'Tether', icon: 'USDT' },
-      { id: 'usd-coin', symbol: 'USDC', name: 'USD Coin', icon: 'USDC' },
-      { id: 'cardano', symbol: 'ADA', name: 'Cardano', icon: 'ADA' },
-      { id: 'dogecoin', symbol: 'DOGE', name: 'Dogecoin', icon: 'DOGE' },
-      { id: 'tron', symbol: 'TRX', name: 'TRON', icon: 'TRX' },
-      { id: 'avalanche-2', symbol: 'AVAX', name: 'Avalanche', icon: 'AVAX' },
-      { id: 'chainlink', symbol: 'LINK', name: 'Chainlink', icon: 'LINK' },
-      { id: 'bitcoin-cash', symbol: 'BCH', name: 'Bitcoin Cash', icon: 'BCH' },
-      { id: 'wrapped-bitcoin', symbol: 'WBTC', name: 'Wrapped Bitcoin', icon: 'WBTC' },
-      { id: 'stellar', symbol: 'XLM', name: 'Stellar', icon: 'XLM' }
-    ];
 
-    const basePrices = {
-      'bitcoin': 63500, 'ethereum': 3200, 'binancecoin': 635, 'solana': 185,
-      'ripple': 0.58, 'tether': 1.0, 'usd-coin': 1.0, 'cardano': 0.46,
-      'dogecoin': 0.12, 'tron': 0.18, 'avalanche-2': 42, 'chainlink': 18,
-      'bitcoin-cash': 485, 'wrapped-bitcoin': 63400, 'stellar': 0.11
-    };
-
-    return coins.map((coin, index) => {
-      const basePrice = basePrices[coin.id] || 100;
-      const changePercent = (Math.random() - 0.5) * 20; // -10% to +10%
-      const currentPrice = basePrice * (1 + changePercent / 100);
-      const volume = Math.random() * 5000000000;
-      const marketCap = currentPrice * (Math.random() * 1000000000);
-
-      // 生成趋势线数据
-      const sparklineData = [];
-      let price = basePrice;
-      for (let i = 0; i < 168; i++) { // 7天的小时数据
-        const change = (Math.random() - 0.5) * 0.1; // ±5%变化
-        price = Math.max(price * (1 + change), basePrice * 0.5); // 不低于基础价格的50%
-        sparklineData.push(price);
-      }
-
-      return {
-        id: coin.id,
-        symbol: coin.symbol,
-        name: coin.name,
-        current_price: currentPrice,
-        price_change_percentage_24h: changePercent,
-        change: changePercent >= 0 ? `+${changePercent.toFixed(2)}%` : `${changePercent.toFixed(2)}%`, // 添加格式化的change字段
-        market_cap: marketCap,
-        total_volume: volume,
-        market_cap_rank: index + 1,
-        sparkline_in_7d: { price: sparklineData },
-        icon: coin.icon,
-        isStablecoin: ['tether', 'usd-coin'].includes(coin.id)
-      };
-    });
-  };
 
   // useEffect hook - 在组件挂载时获取数据
   useEffect(() => {
-    console.log('Dashboard mounting, fetching data...');
+    // console.log('Dashboard mounting, fetching data...');
     fetchMarketData();
-    
-    // 设置定时器，每30秒更新一次数据
-    const interval = setInterval(fetchMarketData, 30000);
-    
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
 
-  // 如果没有数据且不在加载中，立即显示mock数据
+    // 完全禁用自动刷新，只在用户主动操作时更新数据
+    // const interval = setInterval(fetchMarketData, 300000); // 5分钟
+
+    return () => {
+      // clearInterval(interval);
+    };
+  }, []); // 确保依赖数组为空，只在组件首次挂载时执行
+
+
+
+  // 获取K线图数据（获取真实数据）
   useEffect(() => {
-    if (!loading && marketData.length === 0) {
-      console.log('No data found, generating mock data...');
-      const mockData = generateMockMarketData();
-      setMarketData(mockData);
-      
-      const mockSummary = {
-        totalMarketCap: 2547890123456,
-        marketCapChange24h: 2.34,
-        totalVolume: 98765432109,
-        volumeChange24h: -5.67,
-        btcDominance: 52.18,
-        ethDominance: 17.23,
-        activeCryptocurrencies: 13420,
-        marketSentiment: 'bullish'
-      };
-      setMarketSummary(mockSummary);
-      setLastUpdated(new Date());
-    }
-  }, [loading, marketData.length]);
+    const fetchOhlcData = async () => {
+      try {
+        // console.log(`开始获取${selectedCoin}的K线数据...`);
+        
+        // 币种ID映射
+        const coinIdMap = {
+          'BTC': 'bitcoin',
+          'ETH': 'ethereum',
+          'SOL': 'solana',
+        };
+        const coinId = coinIdMap[selectedCoin.toUpperCase()] || 'bitcoin';
+        
+        // 将时间范围转换为天数
+        const days = timeframe.replace('d', '');
+
+        const response = await cachedMarketApi.getOhlcData(coinId, 'usd', days);
+        
+        if (response.success && response.data) {
+          console.log(`✅ 成功获取${selectedCoin}的K线数据`);
+          const transformedData = dataTransformers.transformOhlcData(response.data);
+          setOhlcData(transformedData);
+        } else {
+          // console.log(`⚠️ K线API返回空数据，使用${selectedCoin}的备用数据`);
+          const mockData = mockOhlcData[selectedCoin] || mockOhlcData.BTC;
+          setOhlcData(mockData);
+        }
+      } catch (err) {
+        console.error(`❌ 获取${selectedCoin}K线数据失败:`, err.message);
+        // 使用模拟数据作为后备方案
+        const mockData = mockOhlcData[selectedCoin] || mockOhlcData.BTC;
+        setOhlcData(mockData);
+      }
+    };
+
+    fetchOhlcData();
+  }, [selectedCoin, timeframe]);
 
   const stats = [
     { title: "Total Market Cap", value: marketSummary.totalMarketCap, icon: <AccountBalanceWalletOutlinedIcon sx={{ color: theme.palette.primary.main }} />, color: theme.palette.primary.main },
@@ -1416,160 +1434,6 @@ function Dashboard() {
     { title: "BTC Dominance", value: marketSummary.btcDominance, icon: <ShowChartOutlinedIcon sx={{ color: theme.palette.info.main }} />, color: theme.palette.info.main },
     { title: "ETH Dominance", value: marketSummary.ethDominance, icon: <BarChartOutlinedIcon sx={{ color: theme.palette.warning.main }} />, color: theme.palette.warning.main },
   ];
-
-  // 专业级价格图表组件
-  const MemoizedAreaChart = useMemo(() => {
-    const currentData = chartData[selectedCoin];
-    const currentMeta = chartMeta[selectedCoin];
-    const minValue = Math.min(...currentData.map(d => d.value));
-    const maxValue = Math.max(...currentData.map(d => d.value));
-    const priceChange = ((currentData[currentData.length - 1].value - currentData[0].value) / currentData[0].value * 100);
-    const isPositive = priceChange >= 0;
-
-    return (
-      <Box sx={{ position: 'relative', height: '100%' }}>
-        {/* 价格信息头部 */}
-        <Box sx={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          zIndex: 10,
-          background: alpha(theme.palette.background.paper, 0.9),
-          backdropFilter: 'blur(10px)',
-          borderRadius: 2,
-          p: 2,
-          border: `1px solid ${alpha(theme.palette.divider, 0.1)}`
-        }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-            <Typography variant="h6" sx={{ fontWeight: 700, color: currentMeta.stroke }}>
-              {currentMeta.symbol}
-            </Typography>
-            <Typography variant="h6" sx={{ fontWeight: 600 }}>
-              {currentMeta.name}
-            </Typography>
-          </Box>
-          <Typography variant="h4" sx={{ fontWeight: 700, mb: 0.5 }}>
-            ${currentData[currentData.length - 1].value.toLocaleString()}
-          </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Typography
-              variant="body1"
-              sx={{
-                color: isPositive ? theme.palette.success.main : theme.palette.error.main,
-                fontWeight: 600
-              }}
-            >
-              {isPositive ? '+' : ''}{priceChange.toFixed(2)}%
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              24h
-            </Typography>
-          </Box>
-        </Box>
-
-        <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={currentData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
-            <defs>
-              {/* 主渐变 */}
-              <linearGradient id={`gradient-${currentMeta.id}`} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor={currentMeta.gradient[0]} stopOpacity={0.8}/>
-                <stop offset="50%" stopColor={currentMeta.gradient[1]} stopOpacity={0.4}/>
-                <stop offset="100%" stopColor={currentMeta.gradient[1]} stopOpacity={0.1}/>
-              </linearGradient>
-
-              {/* 发光效果 */}
-              <filter id={`glow-${currentMeta.id}`} height="300%" width="300%" x="-75%" y="-75%">
-                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                <feMerge>
-                  <feMergeNode in="coloredBlur"/>
-                  <feMergeNode in="SourceGraphic"/>
-                </feMerge>
-              </filter>
-
-              {/* 阴影效果 */}
-              <filter id={`shadow-${currentMeta.id}`} height="200%">
-                <feDropShadow dx="0" dy="4" stdDeviation="8" floodColor={currentMeta.stroke} floodOpacity="0.3"/>
-              </filter>
-            </defs>
-
-            <CartesianGrid
-              strokeDasharray="2 4"
-              stroke={alpha(theme.palette.divider, 0.3)}
-              vertical={false}
-              horizontal={true}
-            />
-
-            <XAxis
-              dataKey="name"
-              stroke={theme.palette.text.secondary}
-              tick={{ fontSize: 11, fill: theme.palette.text.secondary }}
-              axisLine={false}
-              tickLine={false}
-              interval="preserveStartEnd"
-            />
-
-            <YAxis
-              stroke={theme.palette.text.secondary}
-              tick={{ fontSize: 11, fill: theme.palette.text.secondary }}
-              tickFormatter={(value) => {
-                if (value >= 1000000) return `$${(value/1000000).toFixed(1)}M`;
-                if (value >= 1000) return `$${(value/1000).toFixed(0)}k`;
-                return `$${value.toFixed(0)}`;
-              }}
-              axisLine={false}
-              tickLine={false}
-              domain={['dataMin - 100', 'dataMax + 100']}
-            />
-
-            <Tooltip
-              content={({ active, payload, label }) => {
-                if (active && payload && payload.length) {
-                  const data = payload[0].payload;
-                  return (
-                    <Box sx={{
-                      background: alpha(theme.palette.background.paper, 0.95),
-                      backdropFilter: 'blur(10px)',
-                      border: `1px solid ${alpha(currentMeta.stroke, 0.3)}`,
-                      borderRadius: 2,
-                      p: 2,
-                      boxShadow: theme.shadows[8]
-                    }}>
-                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                        {label}
-                      </Typography>
-                      <Typography variant="h6" sx={{ fontWeight: 700, color: currentMeta.stroke }}>
-                        ${data.value.toLocaleString()}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Volume: ${(data.volume / 1000000).toFixed(1)}M
-                      </Typography>
-                    </Box>
-                  );
-                }
-                return null;
-              }}
-            />
-
-            <Area
-              type="monotone"
-              dataKey="value"
-              stroke={currentMeta.stroke}
-              strokeWidth={3}
-              fillOpacity={1}
-              fill={`url(#gradient-${currentMeta.id})`}
-              style={{
-                filter: `url(#glow-${currentMeta.id}) url(#shadow-${currentMeta.id})`,
-                strokeLinecap: 'round',
-                strokeLinejoin: 'round'
-              }}
-              animationDuration={2000}
-              animationEasing="ease-out"
-            />
-          </AreaChart>
-        </ResponsiveContainer>
-      </Box>
-    );
-  }, [selectedCoin, theme]);
 
   // 优化移动视图卡片
   const MarketCardView = () => {
@@ -2061,30 +1925,11 @@ function Dashboard() {
   // 显示加载状态
   if (loading) {
     return (
-      <Box sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '60vh',
-        flexDirection: 'column',
-        gap: 2
-      }}>
-        <Box sx={{
-          width: 60,
-          height: 60,
-          border: `4px solid ${alpha(theme.palette.primary.main, 0.1)}`,
-          borderTop: `4px solid ${theme.palette.primary.main}`,
-          borderRadius: '50%',
-          animation: 'spin 1s linear infinite',
-          '@keyframes spin': {
-            '0%': { transform: 'rotate(0deg)' },
-            '100%': { transform: 'rotate(360deg)' }
-          }
-        }} />
-        <Typography variant="h6" color="text.secondary">
-          Loading Market Data...
-        </Typography>
-      </Box>
+      <LoadingScreen 
+        title="正在加载市场数据"
+        subtitle="连接全球交易所，获取实时价格信息"
+        icon={Assessment}
+      />
     );
   }
 
@@ -2423,34 +2268,125 @@ function Dashboard() {
           <Box sx={{ 
             mt: 3, 
             mb: 2, 
+            position: 'relative',
             display: 'flex',
             alignItems: 'center',
-            backgroundColor: theme.palette.mode === 'dark' ? alpha(theme.palette.background.paper, 0.4) : alpha(theme.palette.background.paper, 0.7),
-            backdropFilter: 'blur(10px)',
-            borderRadius: 2,
-            py: 1.5,
-            px: 2,
-            border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+            background: theme.palette.mode === 'dark' 
+              ? `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)}, ${alpha(theme.palette.background.paper, 0.4)})`
+              : `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.9)}, ${alpha(theme.palette.background.paper, 0.6)})`,
+            backdropFilter: 'blur(20px)',
+            borderRadius: 3,
+            py: 2,
+            px: 3,
+            border: `1px solid ${alpha(theme.palette.divider, 0.15)}`,
+            boxShadow: theme.palette.mode === 'dark'
+              ? `0 8px 32px ${alpha(theme.palette.common.black, 0.3)}`
+              : `0 8px 32px ${alpha(theme.palette.common.black, 0.1)}`,
+            overflow: 'hidden',
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              height: '2px',
+              background: `linear-gradient(90deg, 
+                ${alpha(theme.palette.primary.main, 0.2)}, 
+                ${theme.palette.primary.main}, 
+                ${alpha(theme.palette.secondary.main, 0.6)}, 
+                ${alpha(theme.palette.primary.main, 0.2)}
+              )`,
+            },
+            '&::after': {
+              content: '""',
+              position: 'absolute',
+              top: -20,
+              right: -20,
+              width: 60,
+              height: 60,
+              borderRadius: '50%',
+              background: `radial-gradient(circle, ${alpha(theme.palette.primary.main, 0.08)}, transparent)`,
+              pointerEvents: 'none',
+            }
           }}>
             <Box
               sx={{
-                width: 4,
-                height: 24,
-                background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-                borderRadius: '2px',
-                mr: 1.5,
+                width: 5,
+                height: 32,
+                background: `linear-gradient(145deg, 
+                  ${theme.palette.primary.main}, 
+                  ${theme.palette.secondary.main}, 
+                  ${alpha(theme.palette.primary.light, 0.8)}
+                )`,
+                borderRadius: '4px',
+                mr: 2,
+                boxShadow: `0 4px 12px ${alpha(theme.palette.primary.main, 0.3)}`,
               }}
             />
-            <SignalCellularAltIcon sx={{ mr: 1.5, color: theme.palette.primary.main }} />
-            <Typography variant="h6" sx={{
-              fontWeight: 700,
-              background: `linear-gradient(135deg, ${theme.palette.text.primary}, ${theme.palette.primary.main})`,
+            <Box
+              sx={{
+                p: 1,
+                borderRadius: '12px',
+                background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)}, ${alpha(theme.palette.secondary.main, 0.05)})`,
+                border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+                mr: 2,
+              }}
+            >
+              <SignalCellularAltIcon sx={{ 
+                color: theme.palette.primary.main,
+                fontSize: '1.2rem',
+              }} />
+            </Box>
+            <Box sx={{ flex: 1 }}>
+              <Typography variant="h5" sx={{
+                fontWeight: 800,
+                background: `linear-gradient(135deg, 
+                  ${theme.palette.text.primary}, 
+                  ${theme.palette.primary.main}, 
+                  ${theme.palette.secondary.main}
+                )`,
               backgroundClip: 'text',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
+                letterSpacing: '-0.02em',
+                textShadow: 'none',
+                fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
             }}>
               Price Trends
           </Typography>
+              <Typography variant="caption" sx={{
+                color: alpha(theme.palette.text.secondary, 0.8),
+                fontWeight: 500,
+                mt: 0.5,
+                display: 'block',
+              }}>
+                Real-time market analysis
+          </Typography>
+            </Box>
+            
+            {/* 装饰性元素 */}
+            <Box sx={{
+              display: 'flex',
+              gap: 0.5,
+              alignItems: 'center',
+            }}>
+              {[1, 2, 3].map((i) => (
+                <Box
+                  key={i}
+                  sx={{
+                    width: 3,
+                    height: 3 + i * 2,
+                    borderRadius: '50%',
+                    background: `linear-gradient(45deg, ${alpha(theme.palette.primary.main, 0.6)}, ${alpha(theme.palette.secondary.main, 0.4)})`,
+                    animation: `pulse 2s ease-in-out ${i * 0.2}s infinite`,
+                    '@keyframes pulse': {
+                      '0%, 100%': { opacity: 0.4, transform: 'scale(1)' },
+                      '50%': { opacity: 1, transform: 'scale(1.2)' },
+                    },
+                  }}
+                />
+              ))}
+            </Box>
           </Box>
         </Grid>
         
@@ -2562,9 +2498,9 @@ function Dashboard() {
                 }}
               >
                 <Button 
-                  onClick={() => setTimeframe('24h')}
-                  variant={timeframe === '24h' ? 'contained' : 'outlined'}
-                  className={timeframe === '24h' ? 'Mui-selected' : ''}
+                  onClick={() => setTimeframe('1d')}
+                  variant={timeframe === '1d' ? 'contained' : 'outlined'}
+                  className={timeframe === '1d' ? 'Mui-selected' : ''}
                 >
                   24H
                 </Button>
@@ -2584,8 +2520,25 @@ function Dashboard() {
                 </Button>
               </ButtonGroup>
             </Box>
-            <Box height={isMobile ? 300 : 400}>
-              {MemoizedAreaChart}
+            <Box 
+              height={isMobile ? 350 : 450}
+              sx={{
+                position: 'relative',
+                borderRadius: 2,
+                overflow: 'hidden',
+                background: `linear-gradient(135deg, 
+                  ${alpha(theme.palette.background.paper, 0.1)}, 
+                  ${alpha(theme.palette.primary.main, 0.02)}
+                )`,
+              }}
+            >
+              <TradingViewChart data={ohlcData} colors={{
+                backgroundColor: 'transparent',
+                textColor: theme.palette.text.primary,
+                lineColor: theme.palette.primary.main,
+                areaTopColor: alpha(theme.palette.primary.main, 0.8),
+                areaBottomColor: alpha(theme.palette.primary.main, 0.1),
+              }}/>
             </Box>
           </GlassmorphicPaper>
         </Grid>

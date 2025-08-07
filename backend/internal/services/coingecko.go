@@ -1,6 +1,7 @@
 package services
 
 import (
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -51,7 +52,7 @@ func NewCoinGeckoService() *CoinGeckoService {
 	return &CoinGeckoService{
 		baseURL: "https://api.coingecko.com/api/v3",
 		httpClient: &http.Client{
-			Timeout: 30 * time.Second,
+			Timeout: 60 * time.Second, // Increased timeout
 		},
 	}
 }
@@ -228,4 +229,59 @@ func (c *CoinGeckoService) Ping() error {
 	}
 
 	return nil
+}
+
+// createHTTPClient creates a HTTP client with relaxed TLS settings
+func createHTTPClient() *http.Client {
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{
+			InsecureSkipVerify: true, // Skip certificate verification
+		},
+	}
+	return &http.Client{
+		Transport: tr,
+		Timeout:   60 * time.Second, // Increased timeout
+	}
+}
+
+// GetCoinOhlcData fetches OHLC data for a specific coin from CoinGecko API
+func GetCoinOhlcData(coinId, vsCurrency, days string) ([][]float64, error) {
+	url := fmt.Sprintf("https://api.coingecko.com/api/v3/coins/%s/ohlc?vs_currency=%s&days=%s", coinId, vsCurrency, days)
+
+	client := createHTTPClient()
+
+	var resp *http.Response
+	var err error
+	maxRetries := 3
+
+	for i := 0; i < maxRetries; i++ {
+		resp, err = client.Get(url)
+		if err == nil {
+			break
+		}
+		if i < maxRetries-1 {
+			time.Sleep(time.Duration(i+1) * time.Second)
+		}
+	}
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to fetch OHLC data from CoinGecko after %d retries: %w", maxRetries, err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("CoinGecko API returned non-200 status: %d", resp.StatusCode)
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read API response body: %w", err)
+	}
+
+	var data [][]float64
+	if err := json.Unmarshal(body, &data); err != nil {
+		return nil, fmt.Errorf("failed to parse OHLC data from API response: %w", err)
+	}
+
+	return data, nil
 }

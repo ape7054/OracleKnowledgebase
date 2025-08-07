@@ -6,7 +6,7 @@ const API_BASE_URL = '/api';
 // 创建axios实例
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 30000,
+  timeout: 35000, // 增加超时时间到35秒，适应CoinGecko API响应时间
   headers: {
     'Content-Type': 'application/json',
   },
@@ -40,8 +40,10 @@ apiClient.interceptors.response.use(
     return response;
   },
   (error) => {
-    console.error('API Response Error:', error.response?.status, error.message);
-    if (error.response.status === 401) {
+    console.error('API Response Error:', error.response?.status || 'No response', error.message);
+    
+    // 只在有response的情况下检查状态码
+    if (error.response?.status === 401) {
       // For example, redirect to login page
       console.error('Unauthorized, redirecting to login');
       localStorage.removeItem('authToken');
@@ -82,6 +84,22 @@ export const marketApi = {
       return response.data;
     } catch (error) {
       console.error(`Failed to fetch historical data for ${coinId}:`, error);
+      throw error;
+    }
+  },
+
+  // 获取OHLC数据（K线图）
+  async getOhlcData(coinId, vs_currency = 'usd', days = '7') {
+    try {
+      const response = await apiClient.get(`/market/coins/${coinId}/ohlc`, {
+        params: {
+          vs_currency,
+          days
+        }
+      });
+      return response.data;
+    } catch (error) {
+      console.error(`Failed to fetch OHLC data for ${coinId}:`, error);
       throw error;
     }
   },
@@ -199,6 +217,18 @@ export const dataTransformers = {
       }),
       price: item.price,
       date: new Date(item.timestamp).toLocaleDateString('zh-CN')
+    }));
+  },
+
+  // 转换OHLC数据为图表格式
+  transformOhlcData(ohlcData) {
+    if (!ohlcData || !Array.isArray(ohlcData)) return [];
+    return ohlcData.map(d => ({
+      time: d[0] / 1000, // lightweight-charts需要Unix时间戳(秒)
+      open: d[1],
+      high: d[2],
+      low: d[3],
+      close: d[4]
     }));
   },
 
@@ -323,6 +353,20 @@ export const cachedMarketApi = {
     }
 
     const data = await marketApi.getCoinDetails(coinId);
+    cacheManager.set(cacheKey, data);
+    return data;
+  },
+
+  async getOhlcData(coinId, vs_currency = 'usd', days = '7') {
+    const cacheKey = `ohlc-${coinId}-${vs_currency}-${days}`;
+    const cached = cacheManager.get(cacheKey);
+
+    if (cached) {
+      console.log(`Using cached OHLC data for ${coinId}`);
+      return cached;
+    }
+
+    const data = await marketApi.getOhlcData(coinId, vs_currency, days);
     cacheManager.set(cacheKey, data);
     return data;
   }

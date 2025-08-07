@@ -39,8 +39,10 @@ import {
 } from '@mui/icons-material';
 import { ResponsiveContainer, AreaChart, Area, LineChart, Line, YAxis } from 'recharts';
 import { useAuth } from '../context/AuthContext';
+import LoadingScreen from '../components/LoadingScreen';
+import { AccountBalance } from '@mui/icons-material';
 
-// Import crypto icons
+// 恢复原来的加密货币图标
 import BtcIcon from 'cryptocurrency-icons/svg/color/btc.svg?react';
 import EthIcon from 'cryptocurrency-icons/svg/color/eth.svg?react';
 import SolIcon from 'cryptocurrency-icons/svg/color/sol.svg?react';
@@ -358,6 +360,8 @@ function AccountPremium() {
                 throw new Error('Invalid API response format');
             }
 
+            // 调试信息：API返回了 ${marketData.data?.length || 0} 个币种
+
             // Step 5: Data Processing
             // After receiving the data, we process it to calculate values 
             // and prepare it for display in the UI.
@@ -365,7 +369,9 @@ function AccountPremium() {
             const assets = userHoldings.map(holding => {
                 const marketInfo = marketData.data.find(coin => coin.id === holding.id);
                 if (!marketInfo) {
-                    return { ...holding, value: 0, price: 0, change24h: 0, sparkline: [] };
+                    // 为没有市场数据的币种生成模拟sparkline
+                    const mockSparkline = generateExaggeratedSparkline(100, Math.random() * 10 - 5, 1, holding.symbol);
+                    return { ...holding, value: 0, price: 100, change24h: Math.random() * 10 - 5, sparkline: mockSparkline };
                 }
 
                 const value = holding.balance * marketInfo.current_price;
@@ -380,6 +386,8 @@ function AccountPremium() {
                 const sparklineData = marketInfo.sparkline_in_7d?.price && Array.isArray(marketInfo.sparkline_in_7d.price) && marketInfo.sparkline_in_7d.price.length > 0
                     ? marketInfo.sparkline_in_7d.price
                     : generateExaggeratedSparkline(basePrice, priceChange, direction, holding.symbol);
+                
+                // sparkline数据已生成
 
                 return {
                     ...holding,
@@ -464,7 +472,13 @@ function AccountPremium() {
     // Step 2a: Conditional Rendering (条件渲染)
     // Before we have data, we show a loading message. This is the first thing the user sees.
     if (loading) {
-        return <Container maxWidth="xl" sx={{ py: 4, textAlign: 'center' }}><Typography>Loading Portfolio...</Typography></Container>;
+        return (
+            <LoadingScreen 
+                title="正在加载投资组合"
+                subtitle="连接市场数据源，获取您的资产信息"
+                icon={AccountBalance}
+            />
+        );
     }
     // If an error occurred during the fetch, we show the error message.
     if (error) {
@@ -744,6 +758,7 @@ function AccountPremium() {
                                         </Box>
 
                                         <Box sx={{ height: 100, mb: 2 }}>
+                            {asset.sparkline && asset.sparkline.length > 0 ? (
                                             <ResponsiveContainer width="100%" height="100%">
                                                 <LineChart 
                                                     data={asset.sparkline.map((value, index) => ({ value, index }))}
@@ -775,6 +790,13 @@ function AccountPremium() {
                                                     />
                                                 </LineChart>
                                             </ResponsiveContainer>
+                                            ) : (
+                                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+                                                    <Typography variant="body2" color="text.secondary">
+                                                        图表数据加载中...
+                                                    </Typography>
+                                                </Box>
+                                            )}
                                         </Box>
 
                                         <Box sx={{ display: 'flex', gap: 1 }}>

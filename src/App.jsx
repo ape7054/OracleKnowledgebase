@@ -493,7 +493,7 @@ function AppContent() {
           {/* It looks at the current URL (the "floor" you requested) and renders the correct component. */}
           {/* For example, if the URL is '/account', it will render the <Account /> component below. */}
           <Routes>
-            <Route path="/" element={<Home />} />
+                                                    <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route
