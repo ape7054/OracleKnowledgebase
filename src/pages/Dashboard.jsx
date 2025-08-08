@@ -1302,13 +1302,20 @@ function Dashboard() {
   };
 
     // 获取市场数据（优化真实数据获取）
-  const fetchMarketData = async () => {
+  const fetchMarketData = async (forceRefresh = false) => {
     try {
       setLoading(true);
       setError(null);
 
-      // console.log('🔄 开始获取真实市场数据...');
-      // console.log('⏳ CoinGecko API通常需要20-30秒响应，请耐心等待...');
+      // 强制刷新时清除缓存
+      if (forceRefresh) {
+        console.log('🔄 强制刷新，清除缓存...');
+        import('../api/marketApi').then(module => {
+          module.cacheManager.clear();
+        });
+      }
+
+      console.log('🔄 开始获取市场数据...');
       const response = await cachedMarketApi.getMarketData(20);
 
       if (response.success && response.data && response.data.length > 0) {
@@ -1374,26 +1381,35 @@ function Dashboard() {
 
 
 
-  // useEffect hook - 在组件挂载时获取数据
+  // useEffect hook - 在组件挂载时获取数据（只执行一次）
   useEffect(() => {
-    // console.log('Dashboard mounting, fetching data...');
-    fetchMarketData();
+    let isMounted = true; // 防止组件卸载后setState
+    
+    const loadInitialData = async () => {
+      if (isMounted) {
+        console.log('Dashboard初次加载，获取市场数据...');
+        await fetchMarketData();
+      }
+    };
 
-    // 完全禁用自动刷新，只在用户主动操作时更新数据
-    // const interval = setInterval(fetchMarketData, 300000); // 5分钟
+    loadInitialData();
 
     return () => {
-      // clearInterval(interval);
+      isMounted = false; // 组件卸载时设置标志
     };
   }, []); // 确保依赖数组为空，只在组件首次挂载时执行
 
 
 
-  // 获取K线图数据（获取真实数据）
+  // 获取K线图数据（仅在用户主动切换时获取）
   useEffect(() => {
+    let isMounted = true; // 防止组件卸载后setState
+    
     const fetchOhlcData = async () => {
+      if (!isMounted) return;
+      
       try {
-        // console.log(`开始获取${selectedCoin}的K线数据...`);
+        console.log(`用户切换到${selectedCoin} ${timeframe}，获取K线数据...`);
         
         // 币种ID映射
         const coinIdMap = {
@@ -1408,24 +1424,30 @@ function Dashboard() {
 
         const response = await cachedMarketApi.getOhlcData(coinId, 'usd', days);
         
-        if (response.success && response.data) {
+        if (response.success && response.data && isMounted) {
           console.log(`✅ 成功获取${selectedCoin}的K线数据`);
           const transformedData = dataTransformers.transformOhlcData(response.data);
           setOhlcData(transformedData);
-        } else {
-          // console.log(`⚠️ K线API返回空数据，使用${selectedCoin}的备用数据`);
+        } else if (isMounted) {
+          console.log(`⚠️ K线API返回空数据，使用${selectedCoin}的备用数据`);
           const mockData = mockOhlcData[selectedCoin] || mockOhlcData.BTC;
           setOhlcData(mockData);
         }
       } catch (err) {
         console.error(`❌ 获取${selectedCoin}K线数据失败:`, err.message);
-        // 使用模拟数据作为后备方案
-        const mockData = mockOhlcData[selectedCoin] || mockOhlcData.BTC;
-        setOhlcData(mockData);
+        if (isMounted) {
+          // 使用模拟数据作为后备方案
+          const mockData = mockOhlcData[selectedCoin] || mockOhlcData.BTC;
+          setOhlcData(mockData);
+        }
       }
     };
 
     fetchOhlcData();
+    
+    return () => {
+      isMounted = false;
+    };
   }, [selectedCoin, timeframe]);
 
   const stats = [
@@ -1986,6 +2008,10 @@ function Dashboard() {
             outline: none !important;
             box-shadow: none !important;
           }
+          @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+          }
         `}</style>
 
         {/* 高级头部区域 */}
@@ -2046,22 +2072,40 @@ function Dashboard() {
                       color: theme.palette.primary.main
                     }}
                   />
+                  {lastUpdated && (
+                    <Chip
+                      label={`Updated: ${lastUpdated.toLocaleTimeString()}`}
+                      size="small"
+                      variant="outlined"
+                      sx={{
+                        borderColor: alpha(theme.palette.text.secondary, 0.3),
+                        color: theme.palette.text.secondary,
+                        fontSize: '0.75rem'
+                      }}
+                    />
+                  )}
                 </Stack>
               </Box>
 
               {/* 右侧操作按钮 */}
               <Stack direction="row" spacing={2}>
                 <IconButton
+                  onClick={() => fetchMarketData(true)}
+                  disabled={loading}
                   sx={{
                     background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))',
                     backdropFilter: 'blur(20px)',
                     border: '1px solid rgba(102, 126, 234, 0.2)',
                     '&:hover': {
                       background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2))',
+                    },
+                    '&:disabled': {
+                      opacity: 0.5
                     }
                   }}
+                  title="强制刷新数据（清除缓存）"
                 >
-                  <Refresh />
+                  <Refresh sx={{ animation: loading ? 'spin 1s linear infinite' : 'none' }} />
                 </IconButton>
                 <IconButton
                   sx={{

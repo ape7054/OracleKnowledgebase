@@ -297,7 +297,7 @@ export const dataTransformers = {
 class CacheManager {
   constructor() {
     this.cache = new Map();
-    this.cacheTimeout = 60000; // 1分钟缓存
+    this.cacheTimeout = 300000; // 5分钟缓存，避免频繁刷新
   }
 
   set(key, data) {
