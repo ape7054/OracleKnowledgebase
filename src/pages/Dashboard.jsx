@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import {
   Box,
   Grid,
@@ -22,7 +22,9 @@ import {
   IconButton,
   Fade,
   Slide,
-  Container
+  Container,
+  Skeleton,
+  LinearProgress
 } from '@mui/material';
 import {
   AreaChart,
@@ -88,12 +90,33 @@ import XrpIcon from 'cryptocurrency-icons/svg/color/xrp.svg?react';
 import WbtcIcon from 'cryptocurrency-icons/svg/color/wbtc.svg?react';
 import UsdcIcon from 'cryptocurrency-icons/svg/color/usdc.svg?react';
 import DogeIcon from 'cryptocurrency-icons/svg/color/doge.svg?react';
+import VetIcon from 'cryptocurrency-icons/svg/color/vet.svg?react';
+import ZilIcon from 'cryptocurrency-icons/svg/color/zil.svg?react';
+import ThetaIcon from 'cryptocurrency-icons/svg/color/theta.svg?react';
+import MaticIcon from 'cryptocurrency-icons/svg/color/matic.svg?react';
+import AtomIcon from 'cryptocurrency-icons/svg/color/atom.svg?react';
+import AlgoIcon from 'cryptocurrency-icons/svg/color/algo.svg?react';
+import LtcIcon from 'cryptocurrency-icons/svg/color/ltc.svg?react';
+import UniIcon from 'cryptocurrency-icons/svg/color/uni.svg?react';
+import AaveIcon from 'cryptocurrency-icons/svg/color/aave.svg?react';
+import EtcIcon from 'cryptocurrency-icons/svg/color/etc.svg?react';
+import DotIcon from 'cryptocurrency-icons/svg/color/dot.svg?react';
+// 添加更多确实存在的官方图标
+import FilIcon from 'cryptocurrency-icons/svg/color/fil.svg?react';
+import SandIcon from 'cryptocurrency-icons/svg/color/sand.svg?react';
+import ManaIcon from 'cryptocurrency-icons/svg/color/mana.svg?react';
+import IcpIcon from 'cryptocurrency-icons/svg/color/icp.svg?react';
+import GrtIcon from 'cryptocurrency-icons/svg/color/grt.svg?react';
+import XmrIcon from 'cryptocurrency-icons/svg/color/xmr.svg?react';
+import NeoIcon from 'cryptocurrency-icons/svg/color/neo.svg?react';
+import DashIcon from 'cryptocurrency-icons/svg/color/dash.svg?react';
+// 从@web3icons/react导入更多官方图标
+import { TokenARB, TokenOP, TokenAPT, TokenSUI } from '@web3icons/react';
+// 本地图标
+import HypeIcon from '../assets/icons/HypeIcon.jsx';
 
 // Import API services
 import { cachedMarketApi, dataTransformers } from '../api/marketApi';
-
-// Import custom icons
-import HypeIcon from '../assets/icons/HypeIcon';
 // import CryptoNews from '../components/CryptoNews';
 
 // Import the new chart component
@@ -1250,136 +1273,188 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [lastUpdated, setLastUpdated] = useState(null);
+  // 仅保留去抖与单次加载指示，避免重复闪烁
+  const fetchTimeoutRef = useRef(null);
+  const requestIdRef = useRef(0);
+  const [ohlcLoading, setOhlcLoading] = useState(false);
 
-  // 图标映射
-  const iconMap = {
-    'BTC': <BtcIcon />,
-    'ETH': <EthIcon />,
-    'BNB': <BnbIcon />,
-    'SOL': <SolIcon />,
-    'XRP': <XrpIcon />,
-    'USDT': <UsdtIcon />,
-    'USDC': <UsdcIcon />,
-    'ADA': <AdaIcon />,
-    'DOGE': <DogeIcon />,
-    'TRX': <TrxIcon />,
-    'AVAX': <AvaxIcon />,
-    'LINK': <LinkIcon />,
-    'BCH': <BchIcon />,
-    'WBTC': <WbtcIcon />,
-    'XLM': <XlmIcon />,
-    'DEFAULT': <BtcIcon />
-  };
+  // 币种主题色（必须在任何条件 return 之前定义，避免 hooks 次序不一致）
+  const coinAccent = useMemo(() => ({
+    BTC: '#f7931a',
+    ETH: '#627eea',
+    SOL: '#14f195'
+  }[selectedCoin] || theme.palette.primary.main), [selectedCoin, theme.palette.primary.main]);
 
-  // 转换API数据为Dashboard组件期望的格式
-  const transformApiDataForDashboard = (apiData) => {
-    // 简单安全的版本，绝对不会出错
-    if (!apiData || !Array.isArray(apiData)) return [];
+  // 统一的图标容器组件，确保所有图标尺寸一致
+  const IconWrapper = ({ children }) => (
+    <Box
+      sx={{
+        width: 28,
+        height: 28,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        '& > *': {
+          width: '28px !important',
+          height: '28px !important',
+        }
+      }}
+    >
+      {children}
+    </Box>
+  );
+
+  // 图标映射：使用已有的React组件图标 + 合理的回退策略
+  const iconMap = useMemo(() => ({
+    BTC: <IconWrapper><BtcIcon /></IconWrapper>,
+    ETH: <IconWrapper><EthIcon /></IconWrapper>,
+    BNB: <IconWrapper><BnbIcon /></IconWrapper>,
+    SOL: <IconWrapper><SolIcon /></IconWrapper>,
+    XRP: <IconWrapper><XrpIcon /></IconWrapper>,
+    USDT: <IconWrapper><UsdtIcon /></IconWrapper>,
+    USDC: <IconWrapper><UsdcIcon /></IconWrapper>,
+    ADA: <IconWrapper><AdaIcon /></IconWrapper>,
+    DOGE: <IconWrapper><DogeIcon /></IconWrapper>,
+    TRX: <IconWrapper><TrxIcon /></IconWrapper>,
+    AVAX: <IconWrapper><AvaxIcon /></IconWrapper>,
+    LINK: <IconWrapper><LinkIcon /></IconWrapper>,
+    BCH: <IconWrapper><BchIcon /></IconWrapper>,
+    WBTC: <IconWrapper><WbtcIcon /></IconWrapper>,
+    XLM: <IconWrapper><XlmIcon /></IconWrapper>,
+    VET: <IconWrapper><VetIcon /></IconWrapper>,
+    ZIL: <IconWrapper><ZilIcon /></IconWrapper>,
+    THETA: <IconWrapper><ThetaIcon /></IconWrapper>,
+    MATIC: <IconWrapper><MaticIcon /></IconWrapper>,
+    ATOM: <IconWrapper><AtomIcon /></IconWrapper>,
+    ALGO: <IconWrapper><AlgoIcon /></IconWrapper>,
+    LTC: <IconWrapper><LtcIcon /></IconWrapper>,
+    UNI: <IconWrapper><UniIcon /></IconWrapper>,
+    AAVE: <IconWrapper><AaveIcon /></IconWrapper>,
+    ETC: <IconWrapper><EtcIcon /></IconWrapper>,
+    DOT: <IconWrapper><DotIcon /></IconWrapper>,
+    // 新增的官方图标
+    FIL: <IconWrapper><FilIcon /></IconWrapper>,
+    SAND: <IconWrapper><SandIcon /></IconWrapper>,
+    MANA: <IconWrapper><ManaIcon /></IconWrapper>,
+    ICP: <IconWrapper><IcpIcon /></IconWrapper>,
+    GRT: <IconWrapper><GrtIcon /></IconWrapper>,
+    XMR: <IconWrapper><XmrIcon /></IconWrapper>,
+    NEO: <IconWrapper><NeoIcon /></IconWrapper>,
+    DASH: <IconWrapper><DashIcon /></IconWrapper>,
+    // 来自@web3icons/react的官方图标
+    ARB: <IconWrapper><TokenARB size={28} variant="branded" /></IconWrapper>,
+    OP: <IconWrapper><TokenOP size={28} variant="branded" /></IconWrapper>,
+    APT: <IconWrapper><TokenAPT size={28} variant="branded" /></IconWrapper>,
+    SUI: <IconWrapper><TokenSUI size={28} variant="branded" /></IconWrapper>,
+    // Wrapped ETH代币使用ETH图标
+    WBETH: <IconWrapper><EthIcon /></IconWrapper>,
+    WEETH: <IconWrapper><EthIcon /></IconWrapper>,
+    WSTETH: <IconWrapper><EthIcon /></IconWrapper>,
+    STETH: <IconWrapper><EthIcon /></IconWrapper>,
+    WETH: <IconWrapper><EthIcon /></IconWrapper>,
+    // 本地图标
+    HYPE: <IconWrapper><HypeIcon /></IconWrapper>
+  }), []);
+
+  // 通用占位符图标组件（用于没有官方图标的币种）
+  const PlaceholderIcon = ({ symbol }) => (
+    <Box
+      sx={{
+        width: 28,
+        height: 28,
+        borderRadius: '50%',
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: 'white',
+        fontSize: '12px',
+        fontWeight: 'bold',
+        fontFamily: 'monospace'
+      }}
+    >
+      {symbol ? symbol.slice(0, 2).toUpperCase() : '?'}
+    </Box>
+  );
+
+  // 获取图标：优先使用React组件，然后尝试官方SVG，最后回退到BTC
+  const getIcon = useCallback((symbol) => {
+    const upperSymbol = (symbol || '').toUpperCase();
     
+    // 优先使用已有的React组件图标
+    if (iconMap[upperSymbol]) {
+      return iconMap[upperSymbol];
+    }
+    
+    // 对于没有官方图标的币种，显示通用占位符
+    return <PlaceholderIcon symbol={upperSymbol} />;
+  }, [iconMap]);
+
+  // 转换API数据为Dashboard组件期望的格式（同时生成 24h sparkline 并返回 marketCap 供排序）
+  const transformApiDataForDashboard = (apiData) => {
+    if (!apiData || !Array.isArray(apiData)) return [];
+
     return apiData.map(coin => {
-      // 生成更真实的sparkline数据
-      const basePrice = coin.price || 1000;
-      const changePercent = (coin.change || 0) / 100;
-      const sparklineData = [];
-      
-      for (let i = 0; i < 24; i++) {
-        // 基于变化百分比生成波动数据
-        const variation = (Math.random() - 0.5) * Math.abs(changePercent) * 2;
-        const progress = i / 23; // 0 to 1
-        const trendedPrice = basePrice * (1 + changePercent * progress + variation * 0.3);
-        sparklineData.push(Math.max(0, trendedPrice));
-      }
+      const basePrice = Number(coin.price) || 1;
+      const changePercent = Number(coin.change) || 0; // 来自 CoinGecko 的 24h 变化百分比
+
+      // 生成 24h sparkline：围绕当前价，按变化幅度生成平滑曲线
+      const points = 24;
+      // 放大可视波动：提高最小振幅，并扩大正弦与趋势幅度
+      const amplitude = Math.max(Math.abs(changePercent) / 100, 0.02);
+      const sparklineData = Array.from({ length: points }, (_, i) => {
+        const t = i / (points - 1);
+        const wave = Math.sin(Math.PI * 2 * t) * amplitude * basePrice * 1.2;
+        const trend = (changePercent / 100) * basePrice * 1.5 * (t - 0.5);
+        const noise = (Math.random() - 0.5) * amplitude * basePrice * 0.35;
+        const price = Math.max(0, basePrice + wave + trend + noise);
+        return Number(price.toFixed(6));
+      });
 
       return {
         name: coin.name || 'Unknown',
         symbol: (coin.symbol || 'UNKNOWN').toUpperCase(),
         price: `$${basePrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 6 })}`,
-        change: `${changePercent >= 0 ? '+' : ''}${(changePercent * 100).toFixed(1)}%`,
-        icon: iconMap[(coin.symbol || '').toUpperCase()] || iconMap['DEFAULT'],
-        sparkline: sparklineData
+        change: `${changePercent >= 0 ? '+' : ''}${changePercent.toFixed(1)}%`,
+        icon: getIcon(coin.symbol),
+        sparkline: sparklineData,
+        marketCap: Number(coin.marketCap) || 0
       };
     });
   };
 
-    // 获取市场数据（优化真实数据获取）
+  // 获取市场数据（优化真实数据获取）
   const fetchMarketData = async (forceRefresh = false) => {
     try {
       setLoading(true);
       setError(null);
-
-      // 强制刷新时清除缓存
       if (forceRefresh) {
-        console.log('🔄 强制刷新，清除缓存...');
-        import('../api/marketApi').then(module => {
-          module.cacheManager.clear();
-        });
+        import('../api/marketApi').then(module => module.cacheManager.clear());
       }
 
-      console.log('🔄 开始获取市场数据...');
-      const response = await cachedMarketApi.getMarketData(20);
-
+      const response = await cachedMarketApi.getMarketData(50); // 拉多一点，方便排序与筛选
       if (response.success && response.data && response.data.length > 0) {
-        // console.log('✅ 成功获取真实数据:', response.data.length, '个币种');
-        
-        // 先转换为标准格式
         const standardData = response.data.map(dataTransformers.transformCoinData);
-
-        // 再转换为Dashboard组件期望的格式
-        const dashboardData = transformApiDataForDashboard(standardData);
+        // 确保包含重点币种（如 SOL），并按市值排序取前 N
+        const dashboardData = transformApiDataForDashboard(standardData)
+          .sort((a, b) => b.marketCap - a.marketCap)
+          .slice(0, 40); // 增加到40个币种，覆盖ARB和OP
         setMarketData(dashboardData);
 
-        // 计算市场概览数据
         const summary = dataTransformers.transformMarketSummary(response.data);
         setMarketSummary(summary);
-
-        setLastUpdated(new Date());
-        console.log('✅ 市场数据更新完成');
       } else {
-        // console.log('⚠️ API返回空数据，使用备用数据');
         setMarketData(staticMarketData);
-        const mockSummary = {
-          totalMarketCap: 2547890123456,
-          marketCapChange24h: 2.34,
-          totalVolume: 98765432109,
-          volumeChange24h: -5.67,
-          btcDominance: 52.18,
-          ethDominance: 17.25,
-          activeCryptocurrencies: 22000,
-          markets: 44500
-        };
-        setMarketSummary(mockSummary);
-        setLastUpdated(new Date());
       }
-    } catch (err) {
-      console.error('❌ API调用失败:', err.message);
-      
-      // 根据错误类型显示不同消息
-      if (err.message.includes('timeout') || err.message.includes('超时')) {
-        setError('数据加载中，CoinGecko API响应较慢，请耐心等待...');
-      } else {
-        setError('网络连接问题，显示备用数据');
-      }
-      
-      // 失败时使用备用数据
-      setMarketData(staticMarketData);
-      const mockSummary = {
-        totalMarketCap: 2547890123456,
-        marketCapChange24h: 2.34,
-        totalVolume: 98765432109,
-        volumeChange24h: -5.67,
-        btcDominance: 52.18,
-        ethDominance: 17.25,
-        activeCryptocurrencies: 22000,
-        markets: 44500
-      };
-      setMarketSummary(mockSummary);
+
       setLastUpdated(new Date());
+    } catch (err) {
+      setError('Failed to load market data');
+      setMarketData(staticMarketData);
     } finally {
       setLoading(false);
     }
   };
-
-
 
   // useEffect hook - 在组件挂载时获取数据（只执行一次）
   useEffect(() => {
@@ -1403,50 +1478,46 @@ function Dashboard() {
 
   // 获取K线图数据（仅在用户主动切换时获取）
   useEffect(() => {
-    let isMounted = true; // 防止组件卸载后setState
-    
+    let isMounted = true;
+
     const fetchOhlcData = async () => {
       if (!isMounted) return;
-      
+
+      const currentId = ++requestIdRef.current;
+      const startAt = Date.now();
+      setOhlcLoading(true);
+
       try {
-        console.log(`用户切换到${selectedCoin} ${timeframe}，获取K线数据...`);
-        
         // 币种ID映射
-        const coinIdMap = {
-          'BTC': 'bitcoin',
-          'ETH': 'ethereum',
-          'SOL': 'solana',
-        };
+        const coinIdMap = { BTC: 'bitcoin', ETH: 'ethereum', SOL: 'solana' };
         const coinId = coinIdMap[selectedCoin.toUpperCase()] || 'bitcoin';
-        
-        // 将时间范围转换为天数
         const days = timeframe.replace('d', '');
 
         const response = await cachedMarketApi.getOhlcData(coinId, 'usd', days);
-        
-        if (response.success && response.data && isMounted) {
-          console.log(`✅ 成功获取${selectedCoin}的K线数据`);
-          const transformedData = dataTransformers.transformOhlcData(response.data);
-          setOhlcData(transformedData);
-        } else if (isMounted) {
-          console.log(`⚠️ K线API返回空数据，使用${selectedCoin}的备用数据`);
-          const mockData = mockOhlcData[selectedCoin] || mockOhlcData.BTC;
-          setOhlcData(mockData);
-        }
+        if (!isMounted || currentId !== requestIdRef.current) return; // 忽略旧响应
+
+        const data = response.success && response.data
+          ? dataTransformers.transformOhlcData(response.data)
+          : (mockOhlcData[selectedCoin] || mockOhlcData.BTC);
+
+        setOhlcData(data);
       } catch (err) {
-        console.error(`❌ 获取${selectedCoin}K线数据失败:`, err.message);
-        if (isMounted) {
-          // 使用模拟数据作为后备方案
-          const mockData = mockOhlcData[selectedCoin] || mockOhlcData.BTC;
-          setOhlcData(mockData);
-        }
+        if (!isMounted || currentId !== requestIdRef.current) return;
+        setOhlcData(mockOhlcData[selectedCoin] || mockOhlcData.BTC);
+      } finally {
+        if (!isMounted || currentId !== requestIdRef.current) return;
+        const elapsed = Date.now() - startAt;
+        const remain = Math.max(0, 300 - elapsed); // 至少显示300ms，避免闪烁
+        setTimeout(() => isMounted && setOhlcLoading(false), remain);
       }
     };
 
-    fetchOhlcData();
-    
+    if (fetchTimeoutRef.current) clearTimeout(fetchTimeoutRef.current);
+    fetchTimeoutRef.current = setTimeout(fetchOhlcData, 150);
+
     return () => {
       isMounted = false;
+      if (fetchTimeoutRef.current) clearTimeout(fetchTimeoutRef.current);
     };
   }, [selectedCoin, timeframe]);
 
@@ -1483,7 +1554,7 @@ function Dashboard() {
                   fill: 'currentColor'
                 }
               }}>
-                {iconMap[coin.symbol] || iconMap['DEFAULT']}
+                {coin.icon}
               </Box>
               <Box>
                 <Typography variant="body1" sx={{ fontWeight: 600 }}>{coin.name}</Typography>
@@ -1634,7 +1705,7 @@ function Dashboard() {
                   }
                 }}
               >
-                {iconMap[coin.symbol] || iconMap['DEFAULT']}
+                {coin.icon}
               </Box>
 
               <Box>
@@ -1855,7 +1926,7 @@ function Dashboard() {
                         }
                       }}
                     >
-                      {iconMap[coin.symbol] || iconMap['DEFAULT']}
+                      {coin.icon}
                     </Box>
                     <Box>
                       <Typography variant="body1" sx={{ fontWeight: 700, mb: 0.5 }}>
@@ -2442,65 +2513,36 @@ function Dashboard() {
                 size="small" 
                 aria-label="coin selector"
                 sx={{
-                  borderRadius: '12px',
+                  borderRadius: '999px',
                   overflow: 'hidden',
+                  p: 0.25,
+                  background: theme.palette.mode === 'dark' ? alpha(theme.palette.background.paper, 0.6) : alpha('#ffffff', 0.8),
                   '& .MuiButton-root': {
-                    borderRadius: 0,
-                    px: 2,
-                    py: 1,
-                    borderColor: theme.palette.mode === 'dark' 
-                      ? alpha(theme.palette.primary.main, 0.5)
-                      : alpha(theme.palette.grey[400], 0.5),
-                    fontWeight: 600,
-                    color: theme.palette.mode === 'dark'
-                      ? theme.palette.text.primary
-                      : theme.palette.text.secondary,
-                    backgroundColor: theme.palette.mode === 'dark'
-                      ? alpha(theme.palette.background.paper, 0.6)
-                      : alpha(theme.palette.background.paper, 0.8),
-                  },
-                  '& .MuiButton-root:hover': {
-                    backgroundColor: theme.palette.mode === 'dark'
-                      ? alpha(theme.palette.primary.main, 0.2)
-                      : alpha(theme.palette.primary.main, 0.08),
-                    borderColor: theme.palette.primary.main,
+                    border: 'none',
+                    borderRadius: '999px',
+                    px: 1.5,
+                    py: 0.75,
+                    textTransform: 'none',
+                    fontWeight: 700,
+                    color: theme.palette.text.secondary,
+                    backgroundColor: 'transparent',
+                    transition: 'all .2s ease',
+                    '&:hover': { backgroundColor: alpha(coinAccent, 0.08) }
                   },
                   '& .MuiButton-root.Mui-selected': {
-                    background: theme.palette.mode === 'dark'
-                      ? `linear-gradient(135deg, ${alpha(theme.palette.primary.dark, 0.8)}, ${alpha(theme.palette.primary.main, 0.6)})`
-                      : `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.primary.light})`,
-                    color: '#fff',
-                    fontWeight: 700,
-                    borderColor: 'transparent',
-                    boxShadow: theme.palette.mode === 'dark'
-                      ? `0 0 10px ${alpha(theme.palette.primary.main, 0.5)}`
-                      : `0 4px 10px ${alpha(theme.palette.primary.main, 0.4)}`,
+                    color: '#0e1116',
+                    background: `linear-gradient(135deg, ${alpha(coinAccent, 0.95)}, ${alpha(coinAccent, 0.75)})`,
+                    boxShadow: `0 4px 16px ${alpha(coinAccent, 0.35)}`,
                   }
                 }}
               >
-                  <Button 
-                    onClick={() => setSelectedCoin('BTC')}
-                    variant={selectedCoin === 'BTC' ? 'contained' : 'outlined'}
-                  className={selectedCoin === 'BTC' ? 'Mui-selected' : ''}
-                  >
-                    BTC
-                  </Button>
-                  <Button 
-                    onClick={() => setSelectedCoin('ETH')}
-                    variant={selectedCoin === 'ETH' ? 'contained' : 'outlined'}
-                  className={selectedCoin === 'ETH' ? 'Mui-selected' : ''}
-                  >
-                    ETH
-                  </Button>
-                  <Button 
-                    onClick={() => setSelectedCoin('SOL')}
-                    variant={selectedCoin === 'SOL' ? 'contained' : 'outlined'}
-                  className={selectedCoin === 'SOL' ? 'Mui-selected' : ''}
-                  >
-                    SOL
-                  </Button>
-                </ButtonGroup>
-              
+                <Button onClick={() => setSelectedCoin('BTC')} variant={selectedCoin === 'BTC' ? 'contained' : 'text'} className={selectedCoin === 'BTC' ? 'Mui-selected' : ''} disableElevation startIcon={<BtcIcon width={18} height={18} />}>BTC</Button>
+                <Button onClick={() => setSelectedCoin('ETH')} variant={selectedCoin === 'ETH' ? 'contained' : 'text'} className={selectedCoin === 'ETH' ? 'Mui-selected' : ''} disableElevation startIcon={<EthIcon width={18} height={18} />}>ETH</Button>
+                <Button onClick={() => setSelectedCoin('SOL')} variant={selectedCoin === 'SOL' ? 'contained' : 'text'} className={selectedCoin === 'SOL' ? 'Mui-selected' : ''} disableElevation startIcon={<SolIcon width={18} height={18} />}>SOL</Button>
+              </ButtonGroup>
+
+              <Box sx={{ flex: 1 }} />
+
               <ButtonGroup 
                 variant="outlined" 
                 size="small" 
@@ -2521,23 +2563,21 @@ function Dashboard() {
                     backgroundColor: theme.palette.mode === 'dark'
                       ? alpha(theme.palette.background.paper, 0.6)
                       : alpha(theme.palette.background.paper, 0.8),
+                    transition: 'all .2s ease',
+                    '&:active': { transform: 'translateY(1px)' }
                   },
                   '& .MuiButton-root:hover': {
-                    backgroundColor: theme.palette.mode === 'dark'
-                      ? alpha(theme.palette.primary.main, 0.2)
-                      : alpha(theme.palette.primary.main, 0.08),
-                    borderColor: theme.palette.primary.main,
+                    backgroundColor: alpha(coinAccent, 0.12),
+                    borderColor: coinAccent,
+                    boxShadow: `0 4px 10px ${alpha(coinAccent, 0.25)}`,
+                    transform: 'translateY(-1px)'
                   },
                   '& .MuiButton-root.Mui-selected': {
-                    background: theme.palette.mode === 'dark'
-                      ? `linear-gradient(135deg, ${alpha(theme.palette.primary.dark, 0.8)}, ${alpha(theme.palette.primary.main, 0.6)})`
-                      : `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.primary.light})`,
-                    color: '#fff',
-                    fontWeight: 700,
+                    background: `linear-gradient(135deg, ${alpha(coinAccent, 0.9)}, ${alpha(coinAccent, 0.7)})`,
+                    color: '#0e1116',
+                    fontWeight: 800,
                     borderColor: 'transparent',
-                    boxShadow: theme.palette.mode === 'dark'
-                      ? `0 0 10px ${alpha(theme.palette.primary.main, 0.5)}`
-                      : `0 4px 10px ${alpha(theme.palette.primary.main, 0.4)}`,
+                    boxShadow: `0 6px 14px ${alpha(coinAccent, 0.35)}`,
                   }
                 }}
               >
@@ -2545,6 +2585,8 @@ function Dashboard() {
                   onClick={() => setTimeframe('1d')}
                   variant={timeframe === '1d' ? 'contained' : 'outlined'}
                   className={timeframe === '1d' ? 'Mui-selected' : ''}
+                  disableElevation
+                  disabled={ohlcLoading}
                 >
                   24H
                 </Button>
@@ -2552,6 +2594,8 @@ function Dashboard() {
                   onClick={() => setTimeframe('7d')}
                   variant={timeframe === '7d' ? 'contained' : 'outlined'}
                   className={timeframe === '7d' ? 'Mui-selected' : ''}
+                  disableElevation
+                  disabled={ohlcLoading}
                 >
                   7D
                 </Button>
@@ -2559,29 +2603,34 @@ function Dashboard() {
                   onClick={() => setTimeframe('30d')}
                   variant={timeframe === '30d' ? 'contained' : 'outlined'}
                   className={timeframe === '30d' ? 'Mui-selected' : ''}
+                  disableElevation
+                  disabled={ohlcLoading}
                 >
                   30D
                 </Button>
               </ButtonGroup>
             </Box>
+            {/* 图表区域：保持常驻 + 顶部细进度条 */}
             <Box 
               height={isMobile ? 350 : 450}
               sx={{
                 position: 'relative',
-                borderRadius: 2,
+                borderRadius: 3,
                 overflow: 'hidden',
-                background: `linear-gradient(135deg, 
-                  ${alpha(theme.palette.background.paper, 0.1)}, 
-                  ${alpha(theme.palette.primary.main, 0.02)}
-                )`,
+                background: `linear-gradient(135deg, ${alpha(coinAccent, 0.05)}, ${alpha(theme.palette.background.paper, 0.06)})`,
+                border: `1px solid ${alpha(coinAccent, 0.15)}`,
+                boxShadow: `inset 0 0 0 1px ${alpha('#ffffff', 0.02)}, 0 10px 30px ${alpha(coinAccent, 0.12)}`,
               }}
             >
+              {ohlcLoading && (
+                <LinearProgress sx={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, borderRadius: 0, zIndex: 2, '& .MuiLinearProgress-bar': { backgroundColor: coinAccent } }} />
+              )}
               <TradingViewChart data={ohlcData} colors={{
                 backgroundColor: 'transparent',
                 textColor: theme.palette.text.primary,
-                lineColor: theme.palette.primary.main,
-                areaTopColor: alpha(theme.palette.primary.main, 0.8),
-                areaBottomColor: alpha(theme.palette.primary.main, 0.1),
+                lineColor: coinAccent,
+                areaTopColor: alpha(coinAccent, 0.85),
+                areaBottomColor: alpha(coinAccent, 0.12),
               }}/>
             </Box>
           </GlassmorphicPaper>

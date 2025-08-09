@@ -13,6 +13,29 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* 保持文本可选择，但改变光标样式为默认箭头 */
+* {
+  cursor: default;
+  /* 隐藏文本插入光标（闪烁竖线） */
+  caret-color: transparent;
+  /* 确保元素不会意外变成可编辑 */
+  -webkit-user-modify: read-only;
+}
+
+/* 特定元素保持文本光标 */
+input, textarea, [contenteditable="true"] {
+  cursor: text;
+  /* 输入元素恢复正常的插入光标 */
+  caret-color: auto;
+  /* 输入元素允许编辑 */
+  -webkit-user-modify: read-write;
+}
+
+/* 按钮和可点击元素使用指针光标 */
+button, [role="button"], a {
+  cursor: pointer;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
