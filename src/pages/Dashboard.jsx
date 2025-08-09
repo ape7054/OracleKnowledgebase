@@ -1381,6 +1381,13 @@ function Dashboard() {
     </Box>
   );
 
+  /**
+   * 获取币种图标的优先级规则（从高到低）：
+   * 1) 本地手动映射的矢量图标（最清晰）
+   * 2) API 返回的 image URL（CoinGecko 提供的官方 logo）
+   * 3) @web3icons/react 动态图标；如果仍找不到，再回退到占位符
+   * 这样可以尽量补齐缺失图标（你截图里的 BGB、SUSDE 等会走 2/3）。
+   */
   // 智能图标获取：自动尝试多种图标源
   const getIcon = useCallback((symbol, imageUrl) => {
     const upperSymbol = (symbol || '').toUpperCase();
@@ -1412,7 +1419,13 @@ function Dashboard() {
     );
   }, [iconMap]);
 
-  // 转换API数据为Dashboard组件期望的格式（同时生成 24h sparkline 并返回 marketCap 供排序）
+  /**
+   * 将后端标准化的币种数据转换为列表所需结构。
+   * - 输入：dataTransformers.transformCoinData 的结果（含 price/change/marketCap/rank/volume/image）
+   * - 输出：{ name, symbol, price(字符串), change(字符串), icon(ReactNode), sparkline(数组), marketCap, rank, volume }
+   * - sparkline：用正弦波 + 少量噪声模拟 24h 走势（仅用于小图展示），不影响真实价格
+   * 这些字段随后用于稳定排序与展示。
+   */
   const transformApiDataForDashboard = (apiData) => {
     if (!apiData || !Array.isArray(apiData)) return [];
     
@@ -1460,6 +1473,12 @@ function Dashboard() {
       if (response.success && response.data && response.data.length > 0) {
         const standardData = response.data.map(dataTransformers.transformCoinData);
         // 确保包含重点币种，并用稳定排序：优先marketCap，其次rank，再次volume
+        /**
+         * 重要：稳定榜单顺序（解决"之前和现在不一样"的问题）
+         * - 有些接口项可能缺少 marketCap，旧逻辑只按市值排会退化成"接口返回顺序"
+         * - 这里先统一结构，再强制保证关键币种存在（BTC/ETH/USDT/USDC）
+         * - 排序优先级：marketCap 降序 -> rank 升序 -> volume 降序
+         */
         const all = transformApiDataForDashboard(standardData);
         const bySymbol = new Map(all.map(c => [c.symbol, c]));
         const ensureSymbols = ['BTC', 'ETH', 'USDT', 'USDC'];
