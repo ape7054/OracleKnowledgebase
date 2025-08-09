@@ -74,50 +74,14 @@ import {
   Settings
 } from '@mui/icons-material';
 
-// Import icons from the new library
-import BtcIcon from 'cryptocurrency-icons/svg/color/btc.svg?react';
-import EthIcon from 'cryptocurrency-icons/svg/color/eth.svg?react';
-import SolIcon from 'cryptocurrency-icons/svg/color/sol.svg?react';
-import UsdtIcon from 'cryptocurrency-icons/svg/color/usdt.svg?react';
-import BnbIcon from 'cryptocurrency-icons/svg/color/bnb.svg?react';
-import AdaIcon from 'cryptocurrency-icons/svg/color/ada.svg?react';
-import TrxIcon from 'cryptocurrency-icons/svg/color/trx.svg?react';
-import XlmIcon from 'cryptocurrency-icons/svg/color/xlm.svg?react';
-import LinkIcon from 'cryptocurrency-icons/svg/color/link.svg?react';
-import BchIcon from 'cryptocurrency-icons/svg/color/bch.svg?react';
-import AvaxIcon from 'cryptocurrency-icons/svg/color/avax.svg?react';
-import XrpIcon from 'cryptocurrency-icons/svg/color/xrp.svg?react';
-import WbtcIcon from 'cryptocurrency-icons/svg/color/wbtc.svg?react';
-import UsdcIcon from 'cryptocurrency-icons/svg/color/usdc.svg?react';
-import DogeIcon from 'cryptocurrency-icons/svg/color/doge.svg?react';
-import VetIcon from 'cryptocurrency-icons/svg/color/vet.svg?react';
-import ZilIcon from 'cryptocurrency-icons/svg/color/zil.svg?react';
-import ThetaIcon from 'cryptocurrency-icons/svg/color/theta.svg?react';
-import MaticIcon from 'cryptocurrency-icons/svg/color/matic.svg?react';
-import AtomIcon from 'cryptocurrency-icons/svg/color/atom.svg?react';
-import AlgoIcon from 'cryptocurrency-icons/svg/color/algo.svg?react';
-import LtcIcon from 'cryptocurrency-icons/svg/color/ltc.svg?react';
-import UniIcon from 'cryptocurrency-icons/svg/color/uni.svg?react';
-import AaveIcon from 'cryptocurrency-icons/svg/color/aave.svg?react';
-import EtcIcon from 'cryptocurrency-icons/svg/color/etc.svg?react';
-import DotIcon from 'cryptocurrency-icons/svg/color/dot.svg?react';
-// 添加更多确实存在的官方图标
-import FilIcon from 'cryptocurrency-icons/svg/color/fil.svg?react';
-import SandIcon from 'cryptocurrency-icons/svg/color/sand.svg?react';
-import ManaIcon from 'cryptocurrency-icons/svg/color/mana.svg?react';
-import IcpIcon from 'cryptocurrency-icons/svg/color/icp.svg?react';
-import GrtIcon from 'cryptocurrency-icons/svg/color/grt.svg?react';
-import XmrIcon from 'cryptocurrency-icons/svg/color/xmr.svg?react';
-import NeoIcon from 'cryptocurrency-icons/svg/color/neo.svg?react';
-import DashIcon from 'cryptocurrency-icons/svg/color/dash.svg?react';
-import EosIcon from 'cryptocurrency-icons/svg/color/eos.svg?react';
+// Removed colored cryptocurrency icon imports; neutral icons are rendered in-code
 // 从@web3icons/react导入动态组件和常用图标
 import { TokenIcon, TokenARB, TokenOP, TokenAPT, TokenSUI } from '@web3icons/react';
 // 本地图标
 import HypeIcon from '../assets/icons/HypeIcon.jsx';
 
 // Import API services
-import { cachedMarketApi, dataTransformers } from '../api/marketApi';
+import { cachedMarketApi, dataTransformers, cacheManager } from '../api/marketApi';
 // import CryptoNews from '../components/CryptoNews';
 
 // Import the new chart component
@@ -373,23 +337,7 @@ const chartMeta = {
   },
 }
 
-const staticMarketData = [
-  { name: 'Bitcoin', symbol: 'BTC', price: '$118,400.00', change: '+0.3%', icon: BtcIcon, sparkline: chartData.BTC.map(d => d.value) },
-  { name: 'Ethereum', symbol: 'ETH', price: '$3,762.84', change: '+2.0%', icon: EthIcon, sparkline: chartData.ETH.map(d => d.value) },
-  { name: 'XRP', symbol: 'XRP', price: '$3.50', change: '+2.4%', icon: XrpIcon, sparkline: [3.20, 3.35, 3.60, 3.45, 3.50] },
-  { name: 'Tether', symbol: 'USDT', price: '$1.00', change: '-0.0%', icon: UsdtIcon, sparkline: [1.002, 0.999, 1.001, 0.998, 1.000] },
-  { name: 'BNB', symbol: 'BNB', price: '$701.38', change: '+2.6%', icon: BnbIcon, sparkline: [650, 675, 720, 690, 701] },
-  { name: 'Solana', symbol: 'SOL', price: '$186.36', change: '+4.7%', icon: SolIcon, sparkline: chartData.SOL.map(d => d.value) },
-  { name: 'USDC', symbol: 'USDC', price: '$1.00', change: '-0.0%', icon: UsdcIcon, sparkline: [1.003, 0.997, 1.002, 0.999, 1.000] },
-  { name: 'Dogecoin', symbol: 'DOGE', price: '$0.37', change: '+7.2%', icon: DogeIcon, sparkline: [0.30, 0.34, 0.39, 0.35, 0.37] },
-  { name: 'Cardano', symbol: 'ADA', price: '$0.45', change: '-0.5%', icon: AdaIcon, sparkline: [0.48, 0.44, 0.47, 0.43, 0.45] },
-  { name: 'TRON', symbol: 'TRX', price: '$0.28', change: '+1.8%', icon: TrxIcon, sparkline: [0.26, 0.29, 0.27, 0.30, 0.28] },
-  { name: 'Avalanche', symbol: 'AVAX', price: '$42.15', change: '+3.4%', icon: AvaxIcon, sparkline: [38.5, 43.2, 40.8, 44.3, 42.15] },
-  { name: 'Chainlink', symbol: 'LINK', price: '$25.67', change: '+5.2%', icon: LinkIcon, sparkline: [24.2, 24.8, 25.1, 25.9, 25.67] },
-  { name: 'Bitcoin Cash', symbol: 'BCH', price: '$512.34', change: '-2.1%', icon: BchIcon, sparkline: [525, 520, 515, 510, 512] },
-  { name: 'Wrapped Bitcoin', symbol: 'WBTC', price: '$118,350.00', change: '+0.2%', icon: WbtcIcon, sparkline: [118100, 118200, 118300, 118400, 118350] },
-  { name: 'Stellar', symbol: 'XLM', price: '$0.48', change: '+6.3%', icon: XlmIcon, sparkline: [0.44, 0.45, 0.46, 0.49, 0.48] }
-];
+// 移除静态数据 - 完全依赖API
 
 // 专业金融Dashboard统计卡片
 const PremiumStatCard = ({ title, value, icon, color, trend, subtitle }) => {
@@ -1271,7 +1219,8 @@ function Dashboard() {
     ethDominance: '0%',
     dailyVolume: '0'
   });
-  const [loading, setLoading] = useState(true);
+  const [initialLoading, setInitialLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState(null);
   const [lastUpdated, setLastUpdated] = useState(null);
   // 仅保留去抖与单次加载指示，避免重复闪烁
@@ -1295,9 +1244,17 @@ function Dashboard() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        color: theme.palette.text.secondary,
+        filter: 'grayscale(100%) contrast(0.8)',
         '& > *': {
           width: '28px !important',
           height: '28px !important',
+          color: 'inherit !important',
+          fill: 'currentColor !important'
+        },
+        '& svg': {
+          color: 'inherit !important',
+          fill: 'currentColor !important'
         }
       }}
     >
@@ -1307,57 +1264,21 @@ function Dashboard() {
 
   // 图标映射：使用已有的React组件图标 + 合理的回退策略
   const iconMap = useMemo(() => ({
-    BTC: <IconWrapper><BtcIcon /></IconWrapper>,
-    ETH: <IconWrapper><EthIcon /></IconWrapper>,
-    BNB: <IconWrapper><BnbIcon /></IconWrapper>,
-    SOL: <IconWrapper><SolIcon /></IconWrapper>,
-    XRP: <IconWrapper><XrpIcon /></IconWrapper>,
-    USDT: <IconWrapper><UsdtIcon /></IconWrapper>,
-    USDC: <IconWrapper><UsdcIcon /></IconWrapper>,
-    ADA: <IconWrapper><AdaIcon /></IconWrapper>,
-    DOGE: <IconWrapper><DogeIcon /></IconWrapper>,
-    TRX: <IconWrapper><TrxIcon /></IconWrapper>,
-    AVAX: <IconWrapper><AvaxIcon /></IconWrapper>,
-    LINK: <IconWrapper><LinkIcon /></IconWrapper>,
-    BCH: <IconWrapper><BchIcon /></IconWrapper>,
-    WBTC: <IconWrapper><WbtcIcon /></IconWrapper>,
-    XLM: <IconWrapper><XlmIcon /></IconWrapper>,
-    VET: <IconWrapper><VetIcon /></IconWrapper>,
-    ZIL: <IconWrapper><ZilIcon /></IconWrapper>,
-    THETA: <IconWrapper><ThetaIcon /></IconWrapper>,
-    MATIC: <IconWrapper><MaticIcon /></IconWrapper>,
-    ATOM: <IconWrapper><AtomIcon /></IconWrapper>,
-    ALGO: <IconWrapper><AlgoIcon /></IconWrapper>,
-    LTC: <IconWrapper><LtcIcon /></IconWrapper>,
-    UNI: <IconWrapper><UniIcon /></IconWrapper>,
-    AAVE: <IconWrapper><AaveIcon /></IconWrapper>,
-    ETC: <IconWrapper><EtcIcon /></IconWrapper>,
-    DOT: <IconWrapper><DotIcon /></IconWrapper>,
-    // 新增的官方图标
-    FIL: <IconWrapper><FilIcon /></IconWrapper>,
-    SAND: <IconWrapper><SandIcon /></IconWrapper>,
-    MANA: <IconWrapper><ManaIcon /></IconWrapper>,
-    ICP: <IconWrapper><IcpIcon /></IconWrapper>,
-    GRT: <IconWrapper><GrtIcon /></IconWrapper>,
-    XMR: <IconWrapper><XmrIcon /></IconWrapper>,
-    NEO: <IconWrapper><NeoIcon /></IconWrapper>,
-    DASH: <IconWrapper><DashIcon /></IconWrapper>,
-    EOS: <IconWrapper><EosIcon /></IconWrapper>,
-    // 来自@web3icons/react的确认存在的官方图标
-    ARB: <IconWrapper><TokenARB size={28} variant="branded" /></IconWrapper>,
-    OP: <IconWrapper><TokenOP size={28} variant="branded" /></IconWrapper>,
-    APT: <IconWrapper><TokenAPT size={28} variant="branded" /></IconWrapper>,
-    SUI: <IconWrapper><TokenSUI size={28} variant="branded" /></IconWrapper>,
-    // 特殊映射：wrapped BTC使用BTC图标
-    CBTC: <IconWrapper><BtcIcon /></IconWrapper>, // Coinbase Wrapped BTC -> BTC
-    // Wrapped ETH代币使用ETH图标
-    WBETH: <IconWrapper><EthIcon /></IconWrapper>,
-    WEETH: <IconWrapper><EthIcon /></IconWrapper>,
-    WSTETH: <IconWrapper><EthIcon /></IconWrapper>,
-    STETH: <IconWrapper><EthIcon /></IconWrapper>,
-    WETH: <IconWrapper><EthIcon /></IconWrapper>,
-    // 本地图标
-    HYPE: <IconWrapper><HypeIcon /></IconWrapper>
+    // 统一使用简单的文字占位符，彻底避免颜色问题
+    BTC: <IconWrapper><Box sx={{fontSize: '12px', fontWeight: 800, color: 'inherit'}}>₿</Box></IconWrapper>,
+    ETH: <IconWrapper><Box sx={{fontSize: '12px', fontWeight: 800, color: 'inherit'}}>Ξ</Box></IconWrapper>,
+    BNB: <IconWrapper><Box sx={{fontSize: '10px', fontWeight: 800, color: 'inherit'}}>BNB</Box></IconWrapper>,
+    SOL: <IconWrapper><Box sx={{fontSize: '10px', fontWeight: 800, color: 'inherit'}}>SOL</Box></IconWrapper>,
+    XRP: <IconWrapper><Box sx={{fontSize: '10px', fontWeight: 800, color: 'inherit'}}>XRP</Box></IconWrapper>,
+    USDT: <IconWrapper><Box sx={{fontSize: '9px', fontWeight: 800, color: 'inherit'}}>USDT</Box></IconWrapper>,
+    USDC: <IconWrapper><Box sx={{fontSize: '9px', fontWeight: 800, color: 'inherit'}}>USDC</Box></IconWrapper>,
+    ADA: <IconWrapper><Box sx={{fontSize: '10px', fontWeight: 800, color: 'inherit'}}>ADA</Box></IconWrapper>,
+    DOGE: <IconWrapper><Box sx={{fontSize: '9px', fontWeight: 800, color: 'inherit'}}>DOGE</Box></IconWrapper>,
+    TRX: <IconWrapper><Box sx={{fontSize: '10px', fontWeight: 800, color: 'inherit'}}>TRX</Box></IconWrapper>,
+    AVAX: <IconWrapper><Box sx={{fontSize: '9px', fontWeight: 800, color: 'inherit'}}>AVAX</Box></IconWrapper>,
+    LINK: <IconWrapper><Box sx={{fontSize: '9px', fontWeight: 800, color: 'inherit'}}>LINK</Box></IconWrapper>,
+    // 其他币种用简单的圆形+字母
+    DEFAULT: (symbol) => <IconWrapper><Box sx={{fontSize: '8px', fontWeight: 800, color: 'inherit', textAlign: 'center'}}>{symbol.slice(0,4)}</Box></IconWrapper>
   }), []);
 
   // 通用占位符图标组件（用于没有官方图标的币种）
@@ -1367,11 +1288,14 @@ function Dashboard() {
         width: 28,
         height: 28,
         borderRadius: '50%',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        background: theme.palette.mode === 'dark' 
+          ? alpha(theme.palette.background.paper, 0.8)
+          : alpha('#fff', 0.95),
+        border: `1px solid ${alpha(theme.palette.divider, 0.3)}`,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        color: 'white',
+        color: theme.palette.text.secondary,
         fontSize: '12px',
         fontWeight: 'bold',
         fontFamily: 'monospace'
@@ -1391,33 +1315,39 @@ function Dashboard() {
   // 智能图标获取：自动尝试多种图标源
   const getIcon = useCallback((symbol, imageUrl) => {
     const upperSymbol = (symbol || '').toUpperCase();
-
-    // 1. 优先使用手动映射的图标（已知的高质量图标）
+    
+    // 1. 优先使用手动映射的简单文字图标
     if (iconMap[upperSymbol]) {
       return iconMap[upperSymbol];
     }
-
-    // 2. 如果API提供了图片，优先使用远程图片
-    if (imageUrl) {
-      return (
-        <IconWrapper>
-          <Avatar src={imageUrl} alt={upperSymbol} sx={{ width: 28, height: 28 }} />
-        </IconWrapper>
-      );
-    }
-
-    // 3. 回退到@web3icons/react的动态组件（自动查找官方图标），再回退到占位
-    return (
-      <IconWrapper>
-        <TokenIcon
-          symbol={upperSymbol.toLowerCase()}
-          size={28}
-          variant="branded"
-          fallback={<PlaceholderIcon symbol={upperSymbol} />}
-        />
-      </IconWrapper>
-    );
+    
+    // 2. 默认使用文字占位符
+    return iconMap.DEFAULT(upperSymbol);
   }, [iconMap]);
+
+  // 渲染纯中性图标（完全移除任何库自带的彩色背景）
+  const renderNeutralIcon = (symbol) => (
+    <Box
+      sx={{
+        width: 28,
+        height: 28,
+        borderRadius: '50%',
+        background: theme.palette.mode === 'dark'
+          ? alpha(theme.palette.background.paper, 0.8)
+          : alpha('#fff', 0.95),
+        border: `1px solid ${alpha(theme.palette.divider, 0.3)}`,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: theme.palette.text.secondary,
+        fontSize: '10px',
+        fontWeight: 800,
+        fontFamily: 'monospace'
+      }}
+    >
+      {String(symbol || '?').slice(0, 4).toUpperCase()}
+    </Box>
+  );
 
   /**
    * 将后端标准化的币种数据转换为列表所需结构。
@@ -1428,20 +1358,32 @@ function Dashboard() {
    */
   const transformApiDataForDashboard = (apiData) => {
     if (!apiData || !Array.isArray(apiData)) return [];
+
+    const hourBucket = lastUpdated ? Math.floor(lastUpdated.getTime() / 3600000) : Math.floor(Date.now() / 3600000);
+    const makeSeededRandom = (seedPrefix) => (i) => {
+      let hash = 0;
+      const str = `${seedPrefix}-${i}`;
+      for (let j = 0; j < str.length; j++) {
+        hash = ((hash << 5) - hash) + str.charCodeAt(j);
+        hash |= 0;
+      }
+      const x = Math.sin(hash) * 10000;
+      return x - Math.floor(x);
+    };
     
     return apiData.map(coin => {
       const basePrice = Number(coin.price) || 1;
       const changePercent = Number(coin.change) || 0; // 来自 CoinGecko 的 24h 变化百分比
+      const rand = makeSeededRandom(`${coin.symbol}-${hourBucket}`);
 
-      // 生成 24h sparkline：围绕当前价，按变化幅度生成平滑曲线
+      // 生成 24h sparkline：围绕当前价，按变化幅度生成平滑曲线（种子随机，稳定同一小时内的噪声）
       const points = 24;
-      // 放大可视波动：提高最小振幅，并扩大正弦与趋势幅度
       const amplitude = Math.max(Math.abs(changePercent) / 100, 0.02);
       const sparklineData = Array.from({ length: points }, (_, i) => {
         const t = i / (points - 1);
         const wave = Math.sin(Math.PI * 2 * t) * amplitude * basePrice * 1.2;
         const trend = (changePercent / 100) * basePrice * 1.5 * (t - 0.5);
-        const noise = (Math.random() - 0.5) * amplitude * basePrice * 0.35;
+        const noise = (rand(i) - 0.5) * amplitude * basePrice * 0.35;
         const price = Math.max(0, basePrice + wave + trend + noise);
         return Number(price.toFixed(6));
       });
@@ -1452,6 +1394,7 @@ function Dashboard() {
         price: `$${basePrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 6 })}`,
         change: `${changePercent >= 0 ? '+' : ''}${changePercent.toFixed(1)}%`,
         icon: getIcon(coin.symbol, coin.image),
+        image: coin.image, // 添加官方图标URL
         sparkline: sparklineData,
         marketCap: Number(coin.marketCap) || 0,
         rank: Number(coin.rank) || Infinity,
@@ -1462,17 +1405,23 @@ function Dashboard() {
 
     // 获取市场数据（优化真实数据获取）
   const fetchMarketData = async (forceRefresh = false) => {
+    let doingInitial = initialLoading;
     try {
-      setLoading(true);
       setError(null);
       if (forceRefresh) {
-        import('../api/marketApi').then(module => module.cacheManager.clear());
+        try { cacheManager.clear(); } catch {}
+      }
+      if (doingInitial) {
+        setInitialLoading(true);
+      } else {
+        setIsRefreshing(true);
       }
 
       const response = await cachedMarketApi.getMarketData(50); // 拉多一点，方便排序与筛选
       if (response.success && response.data && response.data.length > 0) {
         const standardData = response.data.map(dataTransformers.transformCoinData);
-        // 确保包含重点币种，并用稳定排序：优先marketCap，其次rank，再次volume
+        
+        
         /**
          * 重要：稳定榜单顺序（解决"之前和现在不一样"的问题）
          * - 有些接口项可能缺少 marketCap，旧逻辑只按市值排会退化成"接口返回顺序"
@@ -1481,19 +1430,33 @@ function Dashboard() {
          */
         const all = transformApiDataForDashboard(standardData);
         const bySymbol = new Map(all.map(c => [c.symbol, c]));
-        const ensureSymbols = ['BTC', 'ETH', 'USDT', 'USDC'];
+        const ensureSymbols = ['BTC', 'ETH', 'USDT', 'USDC']; // 确保这4个一定在榜单
         const ensured = [...all];
         ensureSymbols.forEach(sym => {
           const found = bySymbol.get(sym);
-          if (found && !ensured.find(c => c.symbol === sym)) ensured.push(found);
+          if (!ensured.find(c => c.symbol === sym) && found) {
+            ensured.push(found);
+          }
         });
 
+        const safeCap = (v) => {
+          const n = Number(v);
+          return Number.isFinite(n) && n > 0 ? n : -1; // 缺失/无效的市值被视为最低
+        };
+        // 严格按市值排序：BTC > ETH > 其他，确保数值有效性
         const sorted = ensured.sort((a, b) => {
-          const capDiff = (b.marketCap || 0) - (a.marketCap || 0);
-          if (capDiff !== 0) return capDiff;
-          const rankDiff = (a.rank || Infinity) - (b.rank || Infinity);
-          if (rankDiff !== 0) return rankDiff;
-          return (b.volume || 0) - (a.volume || 0);
+          const aVal = safeCap(a.marketCap);
+          const bVal = safeCap(b.marketCap);
+          
+          // 优先级：有效市值 > 无效市值
+          if (aVal > 0 && bVal <= 0) return -1;
+          if (bVal > 0 && aVal <= 0) return 1;
+          
+          // 都有效：按市值降序
+          if (aVal > 0 && bVal > 0) return bVal - aVal;
+          
+          // 都无效：按rank升序
+          return (a.rank || Infinity) - (b.rank || Infinity);
         });
 
         const dashboardData = sorted.slice(0, 40);
@@ -1502,15 +1465,22 @@ function Dashboard() {
         const summary = dataTransformers.transformMarketSummary(response.data);
         setMarketSummary(summary);
       } else {
-        setMarketData(staticMarketData);
+        // API返回但无数据
+        setError('市场数据暂时不可用，请稍后重试');
+        setMarketData([]);
       }
 
       setLastUpdated(new Date());
     } catch (err) {
-      setError('Failed to load market data');
-      setMarketData(staticMarketData);
+      console.error('Market data fetch error:', err);
+      setError(`无法获取市场数据: ${err.message || '网络连接失败'}`);
+      setMarketData([]);
     } finally {
-      setLoading(false);
+      if (doingInitial) {
+        setInitialLoading(false);
+      } else {
+        setIsRefreshing(false);
+      }
     }
   };
 
@@ -1588,10 +1558,26 @@ function Dashboard() {
 
   // 优化移动视图卡片
   const MarketCardView = () => {
-    const displayData = marketData.length > 0 ? marketData : staticMarketData;
+    if (marketData.length === 0) {
     return (
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-        {displayData.map((coin) => (
+        <Box sx={{ textAlign: 'center', py: 8 }}>
+          <Typography variant="h6" color="text.secondary" gutterBottom>
+            暂无市场数据
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+            请检查网络连接或稍后重试
+          </Typography>
+          <Button variant="contained" onClick={() => fetchMarketData(true)}>
+            重新加载
+          </Button>
+        </Box>
+      );
+    }
+
+    return (
+      <Grid container spacing={3}>
+        {marketData.map((coin, index) => (
+          <Grid item xs={12} sm={6} md={4} lg={3} key={coin.symbol}>
         <GlassmorphicPaper key={coin.symbol} sx={{ p: 3, mb: 1 }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -1602,17 +1588,36 @@ function Dashboard() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundColor: theme.palette.mode === 'dark' ? alpha(theme.palette.background.paper, 0.4) : alpha(theme.palette.background.paper, 0.8),
-                boxShadow: `0 4px 12px ${alpha(theme.palette.common.black, theme.palette.mode === 'dark' ? 0.3 : 0.1)}`,
+                background: theme.palette.mode === 'dark'
+                  ? alpha(theme.palette.background.paper, 0.8)
+                  : alpha('#fff', 0.95),
+                border: `1px solid ${alpha(theme.palette.divider, 0.3)}`,
                 padding: 1,
                 mr: 2,
-                color: coin.change.startsWith('+') && coin.change !== '+0.0%' ? theme.palette.success.main : coin.change.startsWith('-') ? theme.palette.error.main : theme.palette.grey[500],
+                color: theme.palette.text.secondary,
                 '& svg': {
-                  color: 'currentColor',
-                  fill: 'currentColor'
+                  color: 'inherit !important',
+                  fill: 'currentColor !important'
                 }
-              }}>
-                {coin.icon}
+              }}
+              className="asset-icon">
+                {coin.image ? (
+                  <img 
+                    src={coin.image} 
+                    alt={coin.symbol}
+                    style={{ 
+                      width: '24px', 
+                      height: '24px',
+                      borderRadius: '50%',
+                      objectFit: 'cover',
+                      filter: 'grayscale(0) !important'
+                    }}
+                  />
+                ) : (
+                  <Box sx={{ fontSize: '10px', fontWeight: 800, fontFamily: 'monospace' }}>
+                    {String(coin.symbol || '?').slice(0, 4).toUpperCase()}
+                  </Box>
+                )}
               </Box>
               <Box>
                 <Typography variant="body1" sx={{ fontWeight: 600 }}>{coin.name}</Typography>
@@ -1671,8 +1676,9 @@ function Dashboard() {
             </Box>
           </Box>
         </GlassmorphicPaper>
+          </Grid>
       ))}
-    </Box>
+      </Grid>
     );
   };
 
@@ -1683,9 +1689,7 @@ function Dashboard() {
     const isNegative = coin.change.startsWith('-');
     const isNeutral = coin.change === '+0.0%';
 
-    const trendColor = isPositive ? theme.palette.success.main :
-                      isNegative ? theme.palette.error.main :
-                      theme.palette.grey[500];
+    const neutralColor = theme.palette.text.secondary; // 使用中性颜色替代trendColor
 
     return (
       <Fade in timeout={800 + index * 100}>
@@ -1696,22 +1700,15 @@ function Dashboard() {
               ? 'linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%)'
               : 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.8) 100%)',
             backdropFilter: 'blur(20px)',
-            border: `1px solid ${alpha(trendColor, 0.2)}`,
+            border: `1px solid ${alpha(theme.palette.divider, 0.3)}`,
             borderRadius: '16px',
             p: 3,
             transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
             overflow: 'hidden',
             '&:hover': {
               transform: 'translateY(-4px) scale(1.02)',
-              border: `1px solid ${alpha(trendColor, 0.4)}`,
-              boxShadow: `0 20px 40px ${alpha(trendColor, 0.2)}, 0 0 0 1px ${alpha(trendColor, 0.1)}`,
-              '& .trend-indicator': {
-                transform: 'scale(1.1)',
-                boxShadow: `0 0 20px ${alpha(trendColor, 0.6)}`
-              },
-              '& .price-text': {
-                transform: 'scale(1.05)'
-              }
+              border: `1px solid ${alpha(theme.palette.divider, 0.5)}`,
+              boxShadow: `0 20px 40px ${alpha(theme.palette.divider, 0.2)}`
             }
           }}
         >
@@ -1723,7 +1720,7 @@ function Dashboard() {
               right: -50,
               width: 100,
               height: 100,
-              background: `radial-gradient(circle, ${alpha(trendColor, 0.1)} 0%, transparent 70%)`,
+              background: `radial-gradient(circle, ${alpha(neutralColor, 0.1)} 0%, transparent 70%)`,
               borderRadius: '50%',
               animation: `${pulse} 4s ease-in-out infinite`
             }}
@@ -1741,29 +1738,37 @@ function Dashboard() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   background: theme.palette.mode === 'dark'
-                    ? 'rgba(255, 255, 255, 0.1)'
-                    : 'rgba(0, 0, 0, 0.05)',
-                  border: `1px solid ${alpha(trendColor, 0.3)}`,
+                    ? alpha(theme.palette.background.paper, 0.8)
+                    : alpha('#fff', 0.95),
+                  border: `1px solid ${alpha(theme.palette.divider, 0.3)}`,
                   mr: 2,
                   position: 'relative',
+                  color: theme.palette.text.secondary,
                   '& svg': {
-                    // Keep original icon colors - don't override with trendColor
-                    filter: 'none'
-                  },
-                  '&::before': {
-                    content: '""',
-                    position: 'absolute',
-                    inset: -2,
-                    borderRadius: '18px',
-                    background: `linear-gradient(135deg, ${trendColor}, transparent)`,
-                    mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                    maskComposite: 'xor',
-                    WebkitMaskComposite: 'xor',
-                    padding: '2px'
+                    color: 'inherit !important',
+                    fill: 'currentColor !important',
+                    filter: 'grayscale(100%) contrast(0.8) !important'
                   }
                 }}
+                className="asset-icon"
               >
-                {coin.icon}
+                {coin.image ? (
+                  <img 
+                    src={coin.image} 
+                    alt={coin.symbol}
+                    style={{ 
+                      width: '32px', 
+                      height: '32px',
+                      borderRadius: '50%',
+                      objectFit: 'cover',
+                      filter: 'grayscale(0) !important'
+                    }}
+                  />
+                ) : (
+                  <Box sx={{ fontSize: '12px', fontWeight: 800, fontFamily: 'monospace' }}>
+                    {String(coin.symbol || '?').slice(0, 4).toUpperCase()}
+                  </Box>
+                )}
               </Box>
 
               <Box>
@@ -1797,8 +1802,8 @@ function Dashboard() {
                 width: 12,
                 height: 12,
                 borderRadius: '50%',
-                background: `radial-gradient(circle, ${trendColor}, ${alpha(trendColor, 0.7)})`,
-                boxShadow: `0 0 12px ${alpha(trendColor, 0.5)}`,
+                background: `radial-gradient(circle, ${neutralColor}, ${alpha(neutralColor, 0.7)})`,
+                boxShadow: `0 0 12px ${alpha(neutralColor, 0.5)}`,
                 animation: `${pulse} 2s ease-in-out infinite`,
                 transition: 'all 0.3s ease'
               }}
@@ -1816,7 +1821,7 @@ function Dashboard() {
                 fontSize: '1.8rem',
                 mb: 1,
                 transition: 'transform 0.3s ease',
-                background: `linear-gradient(135deg, ${theme.palette.text.primary}, ${trendColor})`,
+                background: `linear-gradient(135deg, ${theme.palette.text.primary}, ${neutralColor})`,
                 backgroundClip: 'text',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent'
@@ -1832,20 +1837,15 @@ function Dashboard() {
                 px: 2,
                 py: 1,
                 borderRadius: '12px',
-                background: `linear-gradient(135deg, ${alpha(trendColor, 0.1)}, ${alpha(trendColor, 0.05)})`,
-                border: `1px solid ${alpha(trendColor, 0.2)}`
+                background: `linear-gradient(135deg, ${alpha(neutralColor, 0.1)}, ${alpha(neutralColor, 0.05)})`,
+                border: `1px solid ${alpha(neutralColor, 0.2)}`
               }}
             >
-              {isPositive ? (
-                <TrendingUpIcon sx={{ fontSize: '1rem', color: trendColor, mr: 0.5 }} />
-              ) : isNegative ? (
-                <TrendingDownIcon sx={{ fontSize: '1rem', color: trendColor, mr: 0.5 }} />
-              ) : null}
               <Typography
                 variant="body1"
                 sx={{
                   fontWeight: 700,
-                  color: trendColor,
+                  color: neutralColor,
                   fontSize: '0.9rem'
                 }}
               >
@@ -1858,7 +1858,7 @@ function Dashboard() {
           <Box sx={{ height: 80, mb: 2 }}>
             <PremiumSparkLine
               data={coin.sparkline}
-              strokeColor={trendColor}
+              strokeColor={neutralColor}
               trend={isPositive ? 'up' : isNegative ? 'down' : 'neutral'}
             />
           </Box>
@@ -1871,7 +1871,7 @@ function Dashboard() {
               left: 0,
               right: 0,
               height: 3,
-              background: `linear-gradient(90deg, transparent, ${trendColor}, transparent)`,
+              background: `linear-gradient(90deg, transparent, ${neutralColor}, transparent)`,
               opacity: 0.6
             }}
           />
@@ -1882,7 +1882,23 @@ function Dashboard() {
 
   // 高级表格视图
   const PremiumMarketTableView = () => {
-    const displayData = marketData.length > 0 ? marketData : staticMarketData;
+    if (marketData.length === 0) {
+      return (
+        <Box sx={{ textAlign: 'center', py: 8 }}>
+          <Typography variant="h6" color="text.secondary" gutterBottom>
+            暂无市场数据
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+            请检查网络连接或稍后重试
+          </Typography>
+          <Button variant="contained" onClick={() => fetchMarketData(true)}>
+            重新加载
+          </Button>
+        </Box>
+      );
+    }
+
+    const displayData = marketData;
     return (
       <Box sx={{ overflow: 'hidden' }}>
         {/* 表格头部 */}
@@ -1893,11 +1909,14 @@ function Dashboard() {
             gap: 2,
             p: 2,
             background: theme.palette.mode === 'dark'
-              ? 'linear-gradient(135deg, rgba(30, 41, 59, 0.5), rgba(15, 23, 42, 0.3))'
-              : 'linear-gradient(135deg, rgba(248, 250, 252, 0.8), rgba(241, 245, 249, 0.6))',
-            borderRadius: '12px 12px 0 0',
-            border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
-            borderBottom: 'none'
+              ? 'linear-gradient(135deg, rgba(30, 41, 59, 0.55), rgba(15, 23, 42, 0.35))'
+              : 'linear-gradient(135deg, rgba(248, 250, 252, 0.9), rgba(241, 245, 249, 0.7))',
+            borderRadius: '16px 16px 0 0',
+            border: `1px solid ${alpha(theme.palette.divider, 0.18)}`,
+            backdropFilter: 'blur(12px)',
+            boxShadow: theme.palette.mode === 'dark'
+              ? `0 6px 24px ${alpha('#000', 0.35)}`
+              : `0 6px 24px ${alpha('#000', 0.12)}`
           }}
         >
           <Typography variant="subtitle2" sx={{ fontWeight: 700, color: theme.palette.text.secondary, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
@@ -1919,9 +1938,8 @@ function Dashboard() {
           {displayData.map((coin, index) => {
             const isPositive = coin.change.startsWith('+') && coin.change !== '+0.0%';
             const isNegative = coin.change.startsWith('-');
-            const trendColor = isPositive ? theme.palette.success.main :
-                              isNegative ? theme.palette.error.main :
-                              theme.palette.grey[500];
+            const isNeutral = coin.change === '+0.0%';
+            const neutralColor = theme.palette.text.secondary; // 使用中性颜色
 
             return (
               <Slide direction="up" in timeout={600 + index * 100} key={coin.symbol}>
@@ -1930,26 +1948,24 @@ function Dashboard() {
                     display: 'grid',
                     gridTemplateColumns: '2fr 1fr 1fr 1.5fr',
                     gap: 2,
-                    p: 2,
+                    p: 2.5,
                     background: theme.palette.mode === 'dark'
-                      ? 'linear-gradient(135deg, rgba(30, 41, 59, 0.3), rgba(15, 23, 42, 0.2))'
-                      : 'linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(248, 250, 252, 0.6))',
-                    backdropFilter: 'blur(10px)',
-                    border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
-                    borderTop: index === 0 ? `1px solid ${alpha(theme.palette.divider, 0.1)}` : 'none',
-                    borderRadius: index === displayData.length - 1 ? '0 0 12px 12px' : '0',
-                    transition: 'all 0.3s ease',
+                      ? 'linear-gradient(135deg, rgba(30, 41, 59, 0.35), rgba(15, 23, 42, 0.22))'
+                      : 'linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 250, 252, 0.7))',
+                    backdropFilter: 'blur(12px)',
+                    border: `1px solid ${alpha(theme.palette.divider, 0.12)}`,
+                    borderTop: index === 0 ? `1px solid ${alpha(theme.palette.divider, 0.12)}` : 'none',
+                    borderRadius: index === displayData.length - 1 ? '0 0 16px 16px' : '0',
+                    transition: 'all 0.35s ease',
                     position: 'relative',
                     overflow: 'hidden',
                     '&:hover': {
                       background: theme.palette.mode === 'dark'
-                        ? `linear-gradient(135deg, ${alpha(trendColor, 0.1)}, ${alpha(trendColor, 0.05)})`
-                        : `linear-gradient(135deg, ${alpha(trendColor, 0.05)}, ${alpha(trendColor, 0.02)})`,
-                      border: `1px solid ${alpha(trendColor, 0.3)}`,
-                      transform: 'translateX(4px)',
-                      '&::before': {
-                        opacity: 1
-                      }
+                        ? 'linear-gradient(135deg, rgba(30, 41, 59, 0.45), rgba(15, 23, 42, 0.32))'
+                        : 'linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.8))',
+                      border: `1px solid ${alpha(theme.palette.divider, 0.25)}`,
+                      transform: 'translateX(6px) scale(1.01)',
+                      boxShadow: `0 14px 36px ${alpha(theme.palette.divider, 0.18)}`
                     },
                     '&::before': {
                       content: '""',
@@ -1958,9 +1974,20 @@ function Dashboard() {
                       top: 0,
                       bottom: 0,
                       width: 4,
-                      background: `linear-gradient(180deg, ${trendColor}, ${alpha(trendColor, 0.5)})`,
+                      background: `linear-gradient(180deg, ${neutralColor}, ${alpha(neutralColor, 0.5)})`,
                       opacity: 0,
                       transition: 'opacity 0.3s ease'
+                    },
+                    '&::after': {
+                      content: '""',
+                      position: 'absolute',
+                      right: -40,
+                      top: -40,
+                      width: 120,
+                      height: 120,
+                      borderRadius: '50%',
+                      background: `radial-gradient(circle, ${alpha(neutralColor, 0.14)}, transparent 60%)`,
+                      pointerEvents: 'none'
                     }
                   }}
                 >
@@ -1974,23 +2001,52 @@ function Dashboard() {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        background: `linear-gradient(135deg, ${alpha(trendColor, 0.1)}, ${alpha(trendColor, 0.05)})`,
-                        border: `2px solid ${alpha(trendColor, 0.2)}`,
+                        background: theme.palette.mode === 'dark' 
+                          ? alpha(theme.palette.background.paper, 0.8)
+                          : alpha('#fff', 0.95),
+                        border: `1px solid ${alpha(theme.palette.divider, 0.3)}`,
                         mr: 2,
-                        color: trendColor,
+                        position: 'relative',
+                        color: theme.palette.text.secondary,
                         '& svg': {
-                          color: trendColor,
-                          fill: 'currentColor'
+                          color: 'inherit !important', 
+                          fill: 'currentColor !important',
+                          filter: 'none !important'
                         }
                       }}
+                      className="asset-icon"
                     >
-                      {coin.icon}
+                                              {coin.image ? (
+                          <img 
+                            src={coin.image} 
+                            alt={coin.symbol}
+                            style={{ 
+                              width: '28px', 
+                              height: '28px',
+                              borderRadius: '50%',
+                              objectFit: 'cover',
+                              filter: 'grayscale(0) !important'
+                            }}
+                          />
+                        ) : (
+                          <Box sx={{ fontSize: '11px', fontWeight: 800, fontFamily: 'monospace' }}>
+                            {String(coin.symbol || '?').slice(0, 4).toUpperCase()}
+                          </Box>
+                        )}
                     </Box>
                     <Box>
-                      <Typography variant="body1" sx={{ fontWeight: 700, mb: 0.5 }}>
+                      <Typography variant="body1" sx={{ fontWeight: 800, mb: 0.25 }}>
                         {coin.name}
                       </Typography>
-                      <Typography variant="body2" sx={{ color: theme.palette.text.secondary, fontWeight: 500 }}>
+                      <Typography variant="caption" sx={{
+                        color: theme.palette.text.secondary,
+                        fontWeight: 700,
+                        px: 1,
+                        py: 0.25,
+                        borderRadius: 1,
+                        backgroundColor: alpha(theme.palette.divider, 0.08),
+                        border: `1px solid ${alpha(theme.palette.divider, 0.18)}`
+                      }}>
                         {coin.symbol}
                       </Typography>
                     </Box>
@@ -2002,8 +2058,9 @@ function Dashboard() {
                       variant="h6"
                       sx={{
                         fontFamily: 'monospace',
-                        fontWeight: 700,
-                        fontSize: '1.1rem'
+                        fontWeight: 800,
+                        fontSize: '1.15rem',
+                        color: theme.palette.text.primary
                       }}
                     >
                       {coin.price}
@@ -2018,23 +2075,12 @@ function Dashboard() {
                         alignItems: 'center',
                         px: 1.5,
                         py: 0.8,
-                        borderRadius: '10px',
-                        background: `linear-gradient(135deg, ${alpha(trendColor, 0.15)}, ${alpha(trendColor, 0.08)})`,
-                        border: `1px solid ${alpha(trendColor, 0.25)}`
+                        borderRadius: '999px',
+                        background: alpha(theme.palette.divider, 0.1),
+                        border: `1px solid ${alpha(theme.palette.divider, 0.2)}`
                       }}
                     >
-                      {isPositive ? (
-                        <TrendingUpIcon sx={{ fontSize: '1rem', color: trendColor, mr: 0.5 }} />
-                      ) : isNegative ? (
-                        <TrendingDownIcon sx={{ fontSize: '1rem', color: trendColor, mr: 0.5 }} />
-                      ) : null}
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          fontWeight: 700,
-                          color: trendColor
-                        }}
-                      >
+                      <Typography variant="body2" sx={{ fontWeight: 700, color: isPositive ? theme.palette.success.main : isNegative ? theme.palette.error.main : theme.palette.text.secondary }}>
                         {coin.change}
                       </Typography>
                     </Box>
@@ -2042,10 +2088,10 @@ function Dashboard() {
 
                   {/* 24h Chart */}
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-                    <Box sx={{ width: 120, height: 50 }}>
+                    <Box sx={{ width: 140, height: 54, p: 0.5, borderRadius: 1.5, background: theme.palette.mode === 'dark' ? alpha('#fff', 0.03) : alpha('#000', 0.03), border: `1px solid ${alpha(theme.palette.divider, 0.12)}` }}>
                       <PremiumSparkLine
                         data={coin.sparkline}
-                        strokeColor={trendColor}
+                        strokeColor={isPositive ? theme.palette.success.main : isNegative ? theme.palette.error.main : theme.palette.text.secondary}
                         trend={isPositive ? 'up' : isNegative ? 'down' : 'neutral'}
                       />
                     </Box>
@@ -2061,10 +2107,27 @@ function Dashboard() {
 
   // 高级卡片视图
   const PremiumMarketCardView = () => {
-    const displayData = marketData.length > 0 ? marketData : staticMarketData;
+    // 移除静态数据回退 - 完全依赖API
+    if (marketData.length === 0) {
+      return (
+        <Box sx={{ textAlign: 'center', py: 4 }}>
+          <Typography variant="h6" color="text.secondary" gutterBottom>
+            暂无市场数据
+          </Typography>
+          <Button 
+            variant="outlined" 
+            onClick={() => fetchMarketData(true)}
+            disabled={isLoading}
+          >
+            重新加载
+          </Button>
+        </Box>
+      );
+    }
+
     return (
       <Grid container spacing={3}>
-        {displayData.map((coin, index) => (
+        {marketData.map((coin, index) => (
           <Grid item xs={12} sm={6} lg={4} key={coin.symbol}>
             <PremiumMarketCard coin={coin} index={index} />
           </Grid>
@@ -2074,7 +2137,7 @@ function Dashboard() {
   };
 
   // 显示加载状态
-  if (loading) {
+  if (initialLoading) {
     return (
       <LoadingScreen 
         title="正在加载市场数据"
@@ -2140,6 +2203,16 @@ function Dashboard() {
           @keyframes spin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
+          }
+          /* 确保图标容器背景中性，但保留官方图标颜色 */
+          .asset-icon {
+            background: transparent !important;
+          }
+          .asset-icon img {
+            /* 保留官方图标的原始颜色，强制圆形 */
+            filter: none !important;
+            border-radius: 50% !important;
+            object-fit: cover !important;
           }
         `}</style>
 
@@ -2220,7 +2293,7 @@ function Dashboard() {
               <Stack direction="row" spacing={2}>
                 <IconButton
                   onClick={() => fetchMarketData(true)}
-                  disabled={loading}
+                  disabled={isRefreshing || initialLoading}
                   sx={{
                     background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))',
                     backdropFilter: 'blur(20px)',
@@ -2234,7 +2307,7 @@ function Dashboard() {
                   }}
                   title="强制刷新数据（清除缓存）"
                 >
-                  <Refresh sx={{ animation: loading ? 'spin 1s linear infinite' : 'none' }} />
+                  <Refresh sx={{ animation: isRefreshing ? 'spin 1s linear infinite' : 'none' }} />
                 </IconButton>
                 <IconButton
                   sx={{
@@ -2594,9 +2667,9 @@ function Dashboard() {
                   }
                 }}
               >
-                <Button onClick={() => setSelectedCoin('BTC')} variant={selectedCoin === 'BTC' ? 'contained' : 'text'} className={selectedCoin === 'BTC' ? 'Mui-selected' : ''} disableElevation startIcon={<BtcIcon width={18} height={18} />}>BTC</Button>
-                <Button onClick={() => setSelectedCoin('ETH')} variant={selectedCoin === 'ETH' ? 'contained' : 'text'} className={selectedCoin === 'ETH' ? 'Mui-selected' : ''} disableElevation startIcon={<EthIcon width={18} height={18} />}>ETH</Button>
-                <Button onClick={() => setSelectedCoin('SOL')} variant={selectedCoin === 'SOL' ? 'contained' : 'text'} className={selectedCoin === 'SOL' ? 'Mui-selected' : ''} disableElevation startIcon={<SolIcon width={18} height={18} />}>SOL</Button>
+                <Button onClick={() => setSelectedCoin('BTC')} variant={selectedCoin === 'BTC' ? 'contained' : 'text'} className={selectedCoin === 'BTC' ? 'Mui-selected' : ''} disableElevation startIcon={<Box sx={{ width: 18, height: 18, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: 800 }}>₿</Box>}>BTC</Button>
+                <Button onClick={() => setSelectedCoin('ETH')} variant={selectedCoin === 'ETH' ? 'contained' : 'text'} className={selectedCoin === 'ETH' ? 'Mui-selected' : ''} disableElevation startIcon={<Box sx={{ width: 18, height: 18, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: 800 }}>Ξ</Box>}>ETH</Button>
+                <Button onClick={() => setSelectedCoin('SOL')} variant={selectedCoin === 'SOL' ? 'contained' : 'text'} className={selectedCoin === 'SOL' ? 'Mui-selected' : ''} disableElevation startIcon={<Box sx={{ width: 18, height: 18, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '8px', fontWeight: 800 }}>SOL</Box>}>SOL</Button>
                 </ButtonGroup>
               
               <Box sx={{ flex: 1 }} />
