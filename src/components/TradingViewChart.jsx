@@ -12,7 +12,7 @@ export const TradingViewChart = ({ data, colors }) => {
     const [chartError, setChartError] = useState(false);
     const [loading, setLoading] = useState(true);
     const [fadeIn, setFadeIn] = useState(false);
-
+    
     const {
         backgroundColor = 'transparent',
         textColor = theme.palette.text.primary,
@@ -67,7 +67,7 @@ export const TradingViewChart = ({ data, colors }) => {
                 priceLineStyle: LineStyle.Dashed,
                 lastValueVisible: true,
             });
-
+            
             chartRef.current = chart;
             seriesRef.current = areaSeries;
 

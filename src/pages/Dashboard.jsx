@@ -110,8 +110,9 @@ import GrtIcon from 'cryptocurrency-icons/svg/color/grt.svg?react';
 import XmrIcon from 'cryptocurrency-icons/svg/color/xmr.svg?react';
 import NeoIcon from 'cryptocurrency-icons/svg/color/neo.svg?react';
 import DashIcon from 'cryptocurrency-icons/svg/color/dash.svg?react';
-// 从@web3icons/react导入更多官方图标
-import { TokenARB, TokenOP, TokenAPT, TokenSUI } from '@web3icons/react';
+import EosIcon from 'cryptocurrency-icons/svg/color/eos.svg?react';
+// 从@web3icons/react导入动态组件和常用图标
+import { TokenIcon, TokenARB, TokenOP, TokenAPT, TokenSUI } from '@web3icons/react';
 // 本地图标
 import HypeIcon from '../assets/icons/HypeIcon.jsx';
 
@@ -1341,11 +1342,14 @@ function Dashboard() {
     XMR: <IconWrapper><XmrIcon /></IconWrapper>,
     NEO: <IconWrapper><NeoIcon /></IconWrapper>,
     DASH: <IconWrapper><DashIcon /></IconWrapper>,
-    // 来自@web3icons/react的官方图标
+    EOS: <IconWrapper><EosIcon /></IconWrapper>,
+    // 来自@web3icons/react的确认存在的官方图标
     ARB: <IconWrapper><TokenARB size={28} variant="branded" /></IconWrapper>,
     OP: <IconWrapper><TokenOP size={28} variant="branded" /></IconWrapper>,
     APT: <IconWrapper><TokenAPT size={28} variant="branded" /></IconWrapper>,
     SUI: <IconWrapper><TokenSUI size={28} variant="branded" /></IconWrapper>,
+    // 特殊映射：wrapped BTC使用BTC图标
+    CBTC: <IconWrapper><BtcIcon /></IconWrapper>, // Coinbase Wrapped BTC -> BTC
     // Wrapped ETH代币使用ETH图标
     WBETH: <IconWrapper><EthIcon /></IconWrapper>,
     WEETH: <IconWrapper><EthIcon /></IconWrapper>,
@@ -1377,23 +1381,41 @@ function Dashboard() {
     </Box>
   );
 
-  // 获取图标：优先使用React组件，然后尝试官方SVG，最后回退到BTC
-  const getIcon = useCallback((symbol) => {
+  // 智能图标获取：自动尝试多种图标源
+  const getIcon = useCallback((symbol, imageUrl) => {
     const upperSymbol = (symbol || '').toUpperCase();
-    
-    // 优先使用已有的React组件图标
+
+    // 1. 优先使用手动映射的图标（已知的高质量图标）
     if (iconMap[upperSymbol]) {
       return iconMap[upperSymbol];
     }
-    
-    // 对于没有官方图标的币种，显示通用占位符
-    return <PlaceholderIcon symbol={upperSymbol} />;
+
+    // 2. 如果API提供了图片，优先使用远程图片
+    if (imageUrl) {
+      return (
+        <IconWrapper>
+          <Avatar src={imageUrl} alt={upperSymbol} sx={{ width: 28, height: 28 }} />
+        </IconWrapper>
+      );
+    }
+
+    // 3. 回退到@web3icons/react的动态组件（自动查找官方图标），再回退到占位
+    return (
+      <IconWrapper>
+        <TokenIcon
+          symbol={upperSymbol.toLowerCase()}
+          size={28}
+          variant="branded"
+          fallback={<PlaceholderIcon symbol={upperSymbol} />}
+        />
+      </IconWrapper>
+    );
   }, [iconMap]);
 
   // 转换API数据为Dashboard组件期望的格式（同时生成 24h sparkline 并返回 marketCap 供排序）
   const transformApiDataForDashboard = (apiData) => {
     if (!apiData || !Array.isArray(apiData)) return [];
-
+    
     return apiData.map(coin => {
       const basePrice = Number(coin.price) || 1;
       const changePercent = Number(coin.change) || 0; // 来自 CoinGecko 的 24h 变化百分比
@@ -1416,14 +1438,16 @@ function Dashboard() {
         symbol: (coin.symbol || 'UNKNOWN').toUpperCase(),
         price: `$${basePrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 6 })}`,
         change: `${changePercent >= 0 ? '+' : ''}${changePercent.toFixed(1)}%`,
-        icon: getIcon(coin.symbol),
+        icon: getIcon(coin.symbol, coin.image),
         sparkline: sparklineData,
-        marketCap: Number(coin.marketCap) || 0
+        marketCap: Number(coin.marketCap) || 0,
+        rank: Number(coin.rank) || Infinity,
+        volume: Number(coin.volume) || 0,
       };
     });
   };
 
-  // 获取市场数据（优化真实数据获取）
+    // 获取市场数据（优化真实数据获取）
   const fetchMarketData = async (forceRefresh = false) => {
     try {
       setLoading(true);
@@ -1435,10 +1459,25 @@ function Dashboard() {
       const response = await cachedMarketApi.getMarketData(50); // 拉多一点，方便排序与筛选
       if (response.success && response.data && response.data.length > 0) {
         const standardData = response.data.map(dataTransformers.transformCoinData);
-        // 确保包含重点币种（如 SOL），并按市值排序取前 N
-        const dashboardData = transformApiDataForDashboard(standardData)
-          .sort((a, b) => b.marketCap - a.marketCap)
-          .slice(0, 40); // 增加到40个币种，覆盖ARB和OP
+        // 确保包含重点币种，并用稳定排序：优先marketCap，其次rank，再次volume
+        const all = transformApiDataForDashboard(standardData);
+        const bySymbol = new Map(all.map(c => [c.symbol, c]));
+        const ensureSymbols = ['BTC', 'ETH', 'USDT', 'USDC'];
+        const ensured = [...all];
+        ensureSymbols.forEach(sym => {
+          const found = bySymbol.get(sym);
+          if (found && !ensured.find(c => c.symbol === sym)) ensured.push(found);
+        });
+
+        const sorted = ensured.sort((a, b) => {
+          const capDiff = (b.marketCap || 0) - (a.marketCap || 0);
+          if (capDiff !== 0) return capDiff;
+          const rankDiff = (a.rank || Infinity) - (b.rank || Infinity);
+          if (rankDiff !== 0) return rankDiff;
+          return (b.volume || 0) - (a.volume || 0);
+        });
+
+        const dashboardData = sorted.slice(0, 40);
         setMarketData(dashboardData);
 
         const summary = dataTransformers.transformMarketSummary(response.data);
@@ -1479,14 +1518,14 @@ function Dashboard() {
   // 获取K线图数据（仅在用户主动切换时获取）
   useEffect(() => {
     let isMounted = true;
-
+    
     const fetchOhlcData = async () => {
       if (!isMounted) return;
-
+      
       const currentId = ++requestIdRef.current;
       const startAt = Date.now();
       setOhlcLoading(true);
-
+        
       try {
         // 币种ID映射
         const coinIdMap = { BTC: 'bitcoin', ETH: 'ethereum', SOL: 'solana' };
@@ -1514,7 +1553,7 @@ function Dashboard() {
 
     if (fetchTimeoutRef.current) clearTimeout(fetchTimeoutRef.current);
     fetchTimeoutRef.current = setTimeout(fetchOhlcData, 150);
-
+    
     return () => {
       isMounted = false;
       if (fetchTimeoutRef.current) clearTimeout(fetchTimeoutRef.current);
@@ -2539,10 +2578,10 @@ function Dashboard() {
                 <Button onClick={() => setSelectedCoin('BTC')} variant={selectedCoin === 'BTC' ? 'contained' : 'text'} className={selectedCoin === 'BTC' ? 'Mui-selected' : ''} disableElevation startIcon={<BtcIcon width={18} height={18} />}>BTC</Button>
                 <Button onClick={() => setSelectedCoin('ETH')} variant={selectedCoin === 'ETH' ? 'contained' : 'text'} className={selectedCoin === 'ETH' ? 'Mui-selected' : ''} disableElevation startIcon={<EthIcon width={18} height={18} />}>ETH</Button>
                 <Button onClick={() => setSelectedCoin('SOL')} variant={selectedCoin === 'SOL' ? 'contained' : 'text'} className={selectedCoin === 'SOL' ? 'Mui-selected' : ''} disableElevation startIcon={<SolIcon width={18} height={18} />}>SOL</Button>
-              </ButtonGroup>
-
+                </ButtonGroup>
+              
               <Box sx={{ flex: 1 }} />
-
+              
               <ButtonGroup 
                 variant="outlined" 
                 size="small" 

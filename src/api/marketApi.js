@@ -203,7 +203,8 @@ export const dataTransformers = {
       marketCap: coinData.market_cap,
       volume: coinData.total_volume,
       rank: coinData.market_cap_rank,
-      lastUpdated: coinData.last_updated
+      lastUpdated: coinData.last_updated,
+      image: coinData.image // expose image URL for icon rendering
     };
   },
 
