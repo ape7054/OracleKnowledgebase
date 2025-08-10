@@ -15,9 +15,6 @@ import (
 	"market-pulse/backend/internal/models"
 	"market-pulse/backend/internal/services"
 
-	"math"
-	"math/rand"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -59,7 +56,7 @@ func GetAllMarketData(c *gin.Context) {
 	c.JSON(http.StatusOK, results)
 }
 
-// GetMarketData fetches market data from external APIs with mock fallback
+// GetMarketData fetches market data from external APIs
 func GetMarketData(c *gin.Context) {
 	limit := c.DefaultQuery("limit", "20")
 
@@ -88,16 +85,13 @@ func GetMarketData(c *gin.Context) {
 		log.Printf("❌ 第 %d 次尝试失败: %v", retry+1, err)
 	}
 
-	// 所有重试都失败，使用Mock数据
-	log.Printf("❌ 网络环境限制，无法连接外部API，使用Mock数据")
-	mockData := generateRealtimeMarketData(limit)
-	c.JSON(http.StatusOK, gin.H{
-		"success":       true,
-		"data":          mockData,
-		"source":        "mock_data",
-		"message":       "由于网络环境限制，当前使用高质量模拟数据",
-		"note":          "模拟数据包含真实的价格波动，可用于开发和测试",
-		"network_issue": true,
+	// 所有重试都失败，直接返回错误
+	log.Printf("❌ 网络环境限制，无法连接外部API")
+	c.JSON(http.StatusServiceUnavailable, gin.H{
+		"success": false,
+		"error":   "无法连接到外部市场数据API",
+		"message": "所有外部数据源都无法访问，请检查网络连接或稍后重试",
+		"details": err.Error(),
 	})
 }
 
@@ -426,11 +420,11 @@ func GetOhlcData(c *gin.Context) {
 
 	data, err := services.GetCoinOhlcData(coinId, vsCurrency, days)
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(http.StatusServiceUnavailable, gin.H{
 			"success": false,
 			"data":    nil,
 			"error":   err.Error(),
-			"message": "使用Mock数据替代",
+			"message": "无法获取OHLC数据，外部API连接失败",
 		})
 		return
 	}
@@ -446,126 +440,4 @@ func RegisterHealthCheck(router *gin.RouterGroup) {
 	router.GET("/health", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"status": "UP"})
 	})
-}
-
-// generateRealtimeMarketData 生成实时感的市场数据作为fallback
-func generateRealtimeMarketData(limit string) []map[string]interface{} {
-	limitInt, err := strconv.Atoi(limit)
-	if err != nil {
-		limitInt = 20
-	}
-
-	log.Printf("🚀 生成实时市场数据 (limit: %d)", limitInt)
-
-	// 主要加密货币的基础数据
-	cryptos := []map[string]interface{}{
-		{"id": "bitcoin", "symbol": "btc", "name": "Bitcoin", "basePrice": 45000.0},
-		{"id": "ethereum", "symbol": "eth", "name": "Ethereum", "basePrice": 3200.0},
-		{"id": "binancecoin", "symbol": "bnb", "name": "BNB", "basePrice": 310.0},
-		{"id": "cardano", "symbol": "ada", "name": "Cardano", "basePrice": 0.45},
-		{"id": "solana", "symbol": "sol", "name": "Solana", "basePrice": 98.0},
-		{"id": "ripple", "symbol": "xrp", "name": "XRP", "basePrice": 0.58},
-		{"id": "polkadot", "symbol": "dot", "name": "Polkadot", "basePrice": 7.2},
-		{"id": "dogecoin", "symbol": "doge", "name": "Dogecoin", "basePrice": 0.08},
-		{"id": "avalanche-2", "symbol": "avax", "name": "Avalanche", "basePrice": 35.0},
-		{"id": "chainlink", "symbol": "link", "name": "Chainlink", "basePrice": 14.5},
-		{"id": "polygon", "symbol": "matic", "name": "Polygon", "basePrice": 0.92},
-		{"id": "litecoin", "symbol": "ltc", "name": "Litecoin", "basePrice": 72.0},
-		{"id": "uniswap", "symbol": "uni", "name": "Uniswap", "basePrice": 6.8},
-		{"id": "bitcoin-cash", "symbol": "bch", "name": "Bitcoin Cash", "basePrice": 250.0},
-		{"id": "stellar", "symbol": "xlm", "name": "Stellar", "basePrice": 0.12},
-		{"id": "filecoin", "symbol": "fil", "name": "Filecoin", "basePrice": 5.4},
-		{"id": "tron", "symbol": "trx", "name": "TRON", "basePrice": 0.105},
-		{"id": "ethereum-classic", "symbol": "etc", "name": "Ethereum Classic", "basePrice": 21.0},
-		{"id": "cosmos", "symbol": "atom", "name": "Cosmos", "basePrice": 10.2},
-		{"id": "algorand", "symbol": "algo", "name": "Algorand", "basePrice": 0.18},
-		{"id": "vechain", "symbol": "vet", "name": "VeChain", "basePrice": 0.032},
-		{"id": "internet-computer", "symbol": "icp", "name": "Internet Computer", "basePrice": 4.8},
-		{"id": "theta-token", "symbol": "theta", "name": "Theta Network", "basePrice": 1.2},
-		{"id": "eos", "symbol": "eos", "name": "EOS", "basePrice": 0.95},
-		{"id": "aave", "symbol": "aave", "name": "Aave", "basePrice": 95.0},
-		{"id": "tezos", "symbol": "xtz", "name": "Tezos", "basePrice": 0.88},
-		{"id": "monero", "symbol": "xmr", "name": "Monero", "basePrice": 158.0},
-		{"id": "neo", "symbol": "neo", "name": "Neo", "basePrice": 12.5},
-		{"id": "pancakeswap-token", "symbol": "cake", "name": "PancakeSwap", "basePrice": 2.1},
-		{"id": "iota", "symbol": "miota", "name": "IOTA", "basePrice": 0.23},
-		{"id": "the-sandbox", "symbol": "sand", "name": "The Sandbox", "basePrice": 0.45},
-		{"id": "decentraland", "symbol": "mana", "name": "Decentraland", "basePrice": 0.38},
-		{"id": "shiba-inu", "symbol": "shib", "name": "Shiba Inu", "basePrice": 0.0000095},
-		{"id": "axie-infinity", "symbol": "axs", "name": "Axie Infinity", "basePrice": 6.2},
-		{"id": "maker", "symbol": "mkr", "name": "Maker", "basePrice": 1580.0},
-		{"id": "compound", "symbol": "comp", "name": "Compound", "basePrice": 54.0},
-		{"id": "yearn-finance", "symbol": "yfi", "name": "yearn.finance", "basePrice": 7200.0},
-		{"id": "sushiswap", "symbol": "sushi", "name": "SushiSwap", "basePrice": 1.1},
-		{"id": "1inch", "symbol": "1inch", "name": "1inch Network", "basePrice": 0.42},
-		{"id": "curve-dao-token", "symbol": "crv", "name": "Curve DAO Token", "basePrice": 0.38},
-	}
-
-	if limitInt > len(cryptos) {
-		limitInt = len(cryptos)
-	}
-
-	var result []map[string]interface{}
-	now := time.Now()
-
-	for i := 0; i < limitInt; i++ {
-		crypto := cryptos[i]
-		basePrice := crypto["basePrice"].(float64)
-
-		// 生成真实感的价格波动 (-8% 到 +12%)
-		priceVariation := (rand.Float64()*0.20 - 0.08) // -8% to +12%
-		currentPrice := basePrice * (1 + priceVariation)
-
-		// 生成24小时价格变化
-		priceChange24h := (rand.Float64()*0.15 - 0.075) // -7.5% to +7.5%
-		priceChangePercent24h := priceChange24h * 100
-
-		// 生成市值
-		marketCap := currentPrice * float64(21000000-i*500000) // 递减供应量
-
-		// 生成24小时交易量
-		volume24h := marketCap * (0.05 + rand.Float64()*0.15) // 5%-20% of market cap
-
-		// 生成sparkline数据 (简化版本)
-		sparkline := make([]float64, 24)
-		for j := 0; j < 24; j++ {
-			sparkline[j] = currentPrice * (0.95 + rand.Float64()*0.10)
-		}
-
-		item := map[string]interface{}{
-			"id":                               crypto["id"],
-			"symbol":                           crypto["symbol"],
-			"name":                             crypto["name"],
-			"image":                            fmt.Sprintf("https://assets.coingecko.com/coins/images/%d/large/%s.png", i+1, crypto["symbol"]),
-			"current_price":                    math.Round(currentPrice*100) / 100,
-			"market_cap":                       math.Round(marketCap),
-			"market_cap_rank":                  i + 1,
-			"fully_diluted_valuation":          math.Round(marketCap * 1.1),
-			"total_volume":                     math.Round(volume24h),
-			"high_24h":                         math.Round(currentPrice*1.08*100) / 100,
-			"low_24h":                          math.Round(currentPrice*0.94*100) / 100,
-			"price_change_24h":                 math.Round(currentPrice*priceChange24h*100) / 100,
-			"price_change_percentage_24h":      math.Round(priceChangePercent24h*100) / 100,
-			"market_cap_change_24h":            math.Round(marketCap * priceChange24h),
-			"market_cap_change_percentage_24h": math.Round(priceChangePercent24h*100) / 100,
-			"circulating_supply":               float64(21000000 - i*500000),
-			"total_supply":                     float64(21000000),
-			"max_supply":                       float64(21000000),
-			"ath":                              math.Round(currentPrice*2.5*100) / 100,
-			"ath_change_percentage":            -45.5 - rand.Float64()*30,
-			"ath_date":                         "2021-11-10T14:24:11.849Z",
-			"atl":                              math.Round(currentPrice*0.15*100) / 100,
-			"atl_change_percentage":            450.8 + rand.Float64()*200,
-			"atl_date":                         "2020-03-13T02:24:11.849Z",
-			"roi":                              nil,
-			"last_updated":                     now.Format(time.RFC3339),
-			"sparkline_in_7d": map[string]interface{}{
-				"price": sparkline,
-			},
-		}
-
-		result = append(result, item)
-	}
-
-	return result
 }

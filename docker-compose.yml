@@ -45,14 +45,17 @@ services:
 
   # 后端服务
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    image: market-pulse_backend:latest
+    image: market-pulse-backend:latest
     container_name: market-pulse-backend
     restart: unless-stopped
-    env_file:
-      - ./backend/.env.docker
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USER=${DB_USER:-market_pulse_user}
+      - DB_PASSWORD=${DB_PASSWORD:-wBYXZkiLTExiEAHF}
+      - DB_NAME=${DB_NAME:-market_pulse_db}
+      - SERVER_PORT=8080
+      - GIN_MODE=release
     depends_on:
       - db
     ports:
@@ -72,8 +75,8 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
     networks:
       - market-pulse-network
-    depends_on:
-      - backend
+    # depends_on:
+    #   - backend
 
 volumes:
   mysql-data:

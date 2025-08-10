@@ -250,68 +250,7 @@ const CustomTooltip = ({ active, payload, label, theme }) => {
 };
 
 // 生成更真实的加密货币价格数据，包含更大的波动
-const generateRealisticPriceData = (basePrice, volatility = 0.15) => {
-  const data = [];
-  let currentPrice = basePrice;
-
-  for (let i = 0; i < 24; i++) {
-    // 模拟真实的价格波动
-    const randomChange = (Math.random() - 0.5) * 2 * volatility;
-    const trendFactor = Math.sin(i * 0.3) * 0.05; // 添加趋势因子
-    const marketSentiment = Math.sin(i * 0.1) * 0.03; // 市场情绪波动
-
-    currentPrice = currentPrice * (1 + randomChange + trendFactor + marketSentiment);
-
-    data.push({
-      name: `${String(i).padStart(2, '0')}:00`,
-      value: Math.round(currentPrice * 100) / 100,
-      volume: Math.random() * 1000000 + 500000, // 添加交易量数据
-      timestamp: Date.now() - (24 - i) * 3600000
-    });
-  }
-
-  return data;
-};
-
-const chartData = {
-  BTC: generateRealisticPriceData(95000, 0.08), // BTC波动相对较小但绝对值大
-  ETH: generateRealisticPriceData(3400, 0.12), // ETH波动中等
-  SOL: generateRealisticPriceData(180, 0.18), // SOL波动较大
-};
-
-// 生成模拟K线数据的函数（简化版，用于面积图）
-const generateMockOhlcData = (basePrice, days = 30) => {
-  const data = [];
-  let currentPrice = basePrice;
-  const now = new Date();
-
-  for (let i = days - 1; i >= 0; i--) {
-    const date = new Date(now);
-    date.setDate(date.getDate() - i);
-    
-    // 生成随机的价格变动
-    const volatility = 0.03; // 3%的波动
-    const change = (Math.random() - 0.5) * 2 * volatility;
-    const newPrice = currentPrice * (1 + change);
-    
-    data.push({
-      time: Math.floor(date.getTime() / 1000), // Unix时间戳（秒）
-      close: newPrice, // 收盘价（用于面积图）
-      value: newPrice, // 也添加value字段作为备用
-    });
-    
-    currentPrice = newPrice;
-  }
-  
-  return data;
-};
-
-// 为每个币种生成模拟K线数据
-const mockOhlcData = {
-  BTC: generateMockOhlcData(95000),
-  ETH: generateMockOhlcData(3400),
-  SOL: generateMockOhlcData(180),
-};
+// 模拟数据已删除 - 完全依赖API数据
 
 const chartMeta = {
   BTC: {
@@ -1526,12 +1465,13 @@ function Dashboard() {
 
         const data = response.success && response.data
           ? dataTransformers.transformOhlcData(response.data)
-          : (mockOhlcData[selectedCoin] || mockOhlcData.BTC);
+          : [];
 
         setOhlcData(data);
       } catch (err) {
         if (!isMounted || currentId !== requestIdRef.current) return;
-        setOhlcData(mockOhlcData[selectedCoin] || mockOhlcData.BTC);
+        console.error('OHLC数据获取失败:', err);
+        setOhlcData([]);
       } finally {
         if (!isMounted || currentId !== requestIdRef.current) return;
         const elapsed = Date.now() - startAt;
@@ -1882,6 +1822,23 @@ function Dashboard() {
 
   // 高级表格视图
   const PremiumMarketTableView = () => {
+    // 显示错误状态
+    if (error) {
+      return (
+        <Box sx={{ textAlign: 'center', py: 8 }}>
+          <Typography variant="h6" color="error" gutterBottom>
+            API连接失败
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+            {error}
+          </Typography>
+          <Button variant="contained" onClick={() => fetchMarketData(true)}>
+            重新连接
+          </Button>
+        </Box>
+      );
+    }
+
     if (marketData.length === 0) {
       return (
         <Box sx={{ textAlign: 'center', py: 8 }}>
@@ -2107,6 +2064,27 @@ function Dashboard() {
 
   // 高级卡片视图
   const PremiumMarketCardView = () => {
+    // 显示错误状态
+    if (error) {
+      return (
+        <Box sx={{ textAlign: 'center', py: 4 }}>
+          <Typography variant="h6" color="error" gutterBottom>
+            API连接失败
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+            {error}
+          </Typography>
+          <Button 
+            variant="contained" 
+            onClick={() => fetchMarketData(true)}
+            disabled={isLoading}
+          >
+            重新连接
+          </Button>
+        </Box>
+      );
+    }
+
     // 移除静态数据回退 - 完全依赖API
     if (marketData.length === 0) {
       return (

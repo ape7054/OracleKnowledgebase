@@ -1,44 +1,23 @@
-# 多阶段构建：构建阶段
-FROM golang:1.22-alpine AS builder
+# 使用本地可用的nginx:1.25-alpine镜像作为基础
+FROM nginx:1.25-alpine
 
-# 安装git和ca-certificates (Alpine)
-RUN apk --no-cache add git ca-certificates tzdata
-
-# 设置工作目录
+# 创建应用目录
 WORKDIR /app
 
-# 复制go mod文件
-COPY go.mod go.sum ./
+# 从本地复制预构建的二进制文件
+COPY market-pulse-backend ./market-pulse-backend
 
-# 下载依赖
-RUN go mod download
-
-# 复制源代码
-COPY . .
-
-# 构建应用
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o market-pulse-backend ./cmd/market-pulse-backend
-
-# 运行阶段
-FROM alpine:3.18
-
-# 安装必要的依赖
-RUN apk --no-cache add ca-certificates tzdata
-
-# 设置工作目录
-WORKDIR /app
-
-# 从构建阶段复制二进制文件
-COPY --from=builder /app/market-pulse-backend .
-
-# 复制可能需要的配置文件
-COPY --from=builder /app/.env* ./
+# 复制配置文件
+COPY .env* ./
 
 # 设置执行权限
 RUN chmod +x market-pulse-backend
 
+# 调试：列出文件
+RUN ls -la ./
+
 # 暴露端口
 EXPOSE 8080
 
-# 运行应用
-CMD ["./market-pulse-backend"] 
+# 运行应用 (使用完整路径)
+CMD ["/app/market-pulse-backend"] 

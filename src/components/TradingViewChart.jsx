@@ -51,8 +51,18 @@ export const TradingViewChart = ({ data, colors }) => {
                 priceScale: { borderColor: alpha(textColor, 0.2), textColor: textColor, autoScale: true, scaleMargins: { top: 0.1, bottom: 0.1 } },
                 timeScale: { borderColor: alpha(textColor, 0.2), textColor: textColor, timeVisible: true, secondsVisible: false },
                 watermark: { visible: false },
-                handleScroll: { mouseWheel: true, pressedMouseMove: true, horzTouchDrag: true, vertTouchDrag: true },
-                handleScale: { axisPressedMouseMove: { time: true, price: true }, axisDoubleClickReset: true, mouseWheel: true, pinch: true },
+                handleScroll: { 
+                    mouseWheel: false, 
+                    pressedMouseMove: false, 
+                    horzTouchDrag: false, 
+                    vertTouchDrag: false 
+                },
+                handleScale: { 
+                    axisPressedMouseMove: { time: false, price: false }, 
+                    axisDoubleClickReset: false, 
+                    mouseWheel: false, 
+                    pinch: false 
+                },
             });
 
             const areaSeries = chart.addAreaSeries({
@@ -110,7 +120,17 @@ export const TradingViewChart = ({ data, colors }) => {
 
     // 数据变化时，仅更新序列数据（避免重建造成闪烁）
     useEffect(() => {
-        if (!seriesRef.current || !Array.isArray(data)) return;
+        if (!seriesRef.current) return;
+
+        // 处理空数据或无效数据的情况
+        if (!Array.isArray(data) || data.length === 0) {
+            setCurrentPrice(0);
+            setPriceChange({ value: 0, percentage: 0 });
+            if (seriesRef.current) {
+                seriesRef.current.setData([]);
+            }
+            return;
+        }
 
         try {
             const firstPrice = data[0]?.close ?? data[0]?.value ?? 0;
@@ -167,6 +187,42 @@ export const TradingViewChart = ({ data, colors }) => {
             <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1, position: 'absolute', backdropFilter: 'blur(2px)' }} open={loading}>
                 <CircularProgress color="inherit" size={28} thickness={4} />
             </Backdrop>
+
+            {/* 数据为空时的错误提示 */}
+            {!loading && (!data || data.length === 0) && (
+                <Box sx={{ 
+                    position: 'absolute', 
+                    top: '50%', 
+                    left: '50%', 
+                    transform: 'translate(-50%, -50%)', 
+                    textAlign: 'center',
+                    zIndex: 2
+                }}>
+                    <Typography variant="h6" sx={{ 
+                        color: theme.palette.error.main, 
+                        mb: 1,
+                        fontWeight: 600 
+                    }}>
+                        API连接失败
+                    </Typography>
+                    <Typography variant="body2" sx={{ 
+                        color: alpha(theme.palette.text.secondary, 0.8),
+                        mb: 2
+                    }}>
+                        无法获取实时价格数据
+                    </Typography>
+                    <Chip 
+                        label="请检查网络连接" 
+                        size="small"
+                        color="error"
+                        variant="outlined"
+                        sx={{ 
+                            backdropFilter: 'blur(10px)',
+                            backgroundColor: alpha(theme.palette.error.main, 0.1)
+                        }}
+                    />
+                </Box>
+            )}
 
             <Box sx={{ position: 'absolute', top: 16, left: 16, zIndex: 2, display: 'flex', flexDirection: 'column', gap: 1 }}>
                 <Typography variant="h4" sx={{ fontWeight: 700, color: theme.palette.text.primary, textShadow: `0 2px 8px ${alpha(theme.palette.background.default, 0.8)}`, fontSize: { xs: '1.5rem', sm: '2rem' }, transition: 'color .2s ease' }}>
