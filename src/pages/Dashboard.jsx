@@ -486,6 +486,19 @@ const PremiumSparkLine = ({ data, strokeColor, trend = 'neutral' }) => {
 
   const areaId = `spark-area-${(resolvedColor || '').replace('#', '')}-${trend}`;
 
+  // 计算 Y 轴域：当波动很小时，自动放大可视范围；当波动较大时只加少量边距
+  const values = chartData.map(p => p.y);
+  const minVal = Math.min(...values);
+  const maxVal = Math.max(...values);
+  const midVal = (minVal + maxVal) / 2 || 0;
+  const rawRange = Math.max(maxVal - minVal, 0);
+  // 以中位值 0.05% 作为最小可视跨度，避免“纯直线”
+  const minSpan = Math.max(Math.abs(midVal) * 0.0005, 1e-6);
+  const range = Math.max(rawRange, minSpan);
+  const pad = Math.max(range * 0.15, 1e-8);
+  const domainMin = minVal - pad;
+  const domainMax = maxVal + pad;
+
   // 只绘制最后一个点的圆点
   const renderLastDot = (props) => {
     const { cx, cy, index } = props;
@@ -502,25 +515,30 @@ const PremiumSparkLine = ({ data, strokeColor, trend = 'neutral' }) => {
         width: '100%',
         height: '100%', // 高度交由父容器控制
         overflow: 'hidden',
-        borderRadius: 1.5,
-        background: 'transparent',
-        border: `1px solid ${alpha(resolvedColor, 0.15)}`,
+        borderRadius: 999,
+        background: `linear-gradient(180deg, ${alpha(resolvedColor, 0.12)} 0%, ${alpha(resolvedColor, 0.04)} 100%)`,
+        border: `1px solid ${alpha(resolvedColor, 0.22)}`,
+        boxShadow: theme.palette.mode === 'dark'
+          ? `inset 0 0 0 1px ${alpha('#000', 0.3)}, 0 2px 8px ${alpha(resolvedColor, 0.2)}`
+          : `inset 0 0 0 1px ${alpha('#000', 0.06)}, 0 2px 10px ${alpha(resolvedColor, 0.25)}`,
       }}
     >
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={chartData} margin={{ top: 6, right: 6, bottom: 6, left: 6 }}>
           <defs>
             <linearGradient id={areaId} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={alpha(resolvedColor, 0.22)} />
-              <stop offset="100%" stopColor={alpha(resolvedColor, 0.02)} />
+              <stop offset="0%" stopColor={alpha(resolvedColor, 0.28)} />
+              <stop offset="100%" stopColor={alpha(resolvedColor, 0.04)} />
             </linearGradient>
           </defs>
+
+          <YAxis type="number" hide domain={[domainMin, domainMax]} />
 
           <Area
             type="monotone"
             dataKey="y"
             stroke={resolvedColor}
-            strokeWidth={1.75}
+            strokeWidth={2}
             fill={`url(#${areaId})`}
             isAnimationActive={false}
             dot={false}
@@ -1918,7 +1936,7 @@ function Dashboard() {
 
                   {/* 24h Chart */}
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-                    <Box sx={{ width: 140, height: 54, p: 0.5, borderRadius: 1.5, background: theme.palette.mode === 'dark' ? alpha('#fff', 0.03) : alpha('#000', 0.03), border: `1px solid ${alpha(theme.palette.divider, 0.12)}` }}>
+                    <Box sx={{ width: 140, height: 54 }}>
                       <PremiumSparkLine
                         data={coin.sparkline}
                         strokeColor={isPositive ? theme.palette.success.main : isNegative ? theme.palette.error.main : theme.palette.text.secondary}
