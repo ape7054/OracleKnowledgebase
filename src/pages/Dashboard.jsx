@@ -1425,7 +1425,8 @@ function Dashboard() {
       const response = await cachedMarketApi.getMarketData(50); // 拉多一点，方便排序与筛选
       if (response.success && response.data && response.data.length > 0) {
         const standardData = response.data.map(dataTransformers.transformCoinData);
-        
+        // 调试：查看官方图标字段是否存在
+        try { console.log('images sample', standardData.slice(0, 12).map(c => ({ symbol: c.symbol, image: c.image }))); } catch {}
         
         /**
          * 重要：稳定榜单顺序（解决"之前和现在不一样"的问题）
@@ -1478,19 +1479,8 @@ function Dashboard() {
       setLastUpdated(new Date());
     } catch (err) {
       console.error('Market data fetch error:', err);
-      // 使用模拟数据作为回退
-      const mockData = [
-        { symbol: 'BTC', name: 'Bitcoin', price: '$118,584.15', change: '+1.7%', marketCap: 2340000000000, rank: 1, volume: 45000000000, icon: getIcon('BTC'), sparkline: Array.from({length: 24}, (_, i) => 118000 + Math.sin(i/4) * 2000 + Math.random() * 1000) },
-        { symbol: 'ETH', name: 'Ethereum', price: '$4,244.97', change: '+0.1%', marketCap: 510000000000, rank: 2, volume: 23000000000, icon: getIcon('ETH'), sparkline: Array.from({length: 24}, (_, i) => 4200 + Math.sin(i/4) * 100 + Math.random() * 50) },
-        { symbol: 'BNB', name: 'BNB', price: '$803.56', change: '-0.8%', marketCap: 117000000000, rank: 3, volume: 2100000000, icon: getIcon('BNB'), sparkline: Array.from({length: 24}, (_, i) => 800 + Math.sin(i/4) * 20 + Math.random() * 10) },
-        { symbol: 'SOL', name: 'Solana', price: '$182.80', change: '+0.3%', marketCap: 85000000000, rank: 4, volume: 3400000000, icon: getIcon('SOL'), sparkline: Array.from({length: 24}, (_, i) => 180 + Math.sin(i/4) * 8 + Math.random() * 4) },
-        { symbol: 'XRP', name: 'XRP', price: '$3.21', change: '-2.4%', marketCap: 183000000000, rank: 5, volume: 4200000000, icon: getIcon('XRP'), sparkline: Array.from({length: 24}, (_, i) => 3.2 + Math.sin(i/4) * 0.1 + Math.random() * 0.05) },
-        { symbol: 'USDC', name: 'USD Coin', price: '$0.9998', change: '+0.0%', marketCap: 42000000000, rank: 6, volume: 8900000000, icon: getIcon('USDC'), sparkline: Array.from({length: 24}, () => 1.0) },
-        { symbol: 'USDT', name: 'Tether', price: '$0.999982', change: '-0.0%', marketCap: 140000000000, rank: 7, volume: 89000000000, icon: getIcon('USDT'), sparkline: Array.from({length: 24}, () => 1.0) }
-      ];
-      
-      setError(`API连接失败，显示演示数据: ${err.message || '网络连接失败'}`);
-      setMarketData(mockData);
+      setError(`API连接失败：${err.message || '网络连接失败'}`);
+      setMarketData([]);
     } finally {
       if (doingInitial) {
         setInitialLoading(false);
@@ -1618,23 +1608,7 @@ function Dashboard() {
                 }
               }}
               className="asset-icon">
-                {coin.image ? (
-                  <img 
-                    src={coin.image} 
-                    alt={coin.symbol}
-                    style={{ 
-                      width: '24px', 
-                      height: '24px',
-                      borderRadius: '50%',
-                      objectFit: 'cover',
-                      filter: 'grayscale(0) !important'
-                    }}
-                  />
-                ) : (
-                  <Box sx={{ fontSize: '10px', fontWeight: 800, fontFamily: 'monospace' }}>
-                    {String(coin.symbol || '?').slice(0, 4).toUpperCase()}
-                  </Box>
-                )}
+                {getIcon(coin.symbol, coin.image)}
               </Box>
               <Box>
                 <Typography variant="body1" sx={{ fontWeight: 600 }}>{coin.name}</Typography>
@@ -1769,23 +1743,7 @@ function Dashboard() {
                 }}
                 className="asset-icon"
               >
-                {coin.image ? (
-                  <img 
-                    src={coin.image} 
-                    alt={coin.symbol}
-                    style={{ 
-                      width: '32px', 
-                      height: '32px',
-                      borderRadius: '50%',
-                      objectFit: 'cover',
-                      filter: 'grayscale(0) !important'
-                    }}
-                  />
-                ) : (
-                  <Box sx={{ fontSize: '12px', fontWeight: 800, fontFamily: 'monospace' }}>
-                    {String(coin.symbol || '?').slice(0, 4).toUpperCase()}
-                  </Box>
-                )}
+                {getIcon(coin.symbol, coin.image)}
               </Box>
 
               <Box>
@@ -2050,23 +2008,7 @@ function Dashboard() {
                       }}
                       className="asset-icon"
                     >
-                                              {coin.image ? (
-                          <img 
-                            src={coin.image} 
-                            alt={coin.symbol}
-                            style={{ 
-                              width: '28px', 
-                              height: '28px',
-                              borderRadius: '50%',
-                              objectFit: 'cover',
-                              filter: 'grayscale(0) !important'
-                            }}
-                          />
-                        ) : (
-                          <Box sx={{ fontSize: '11px', fontWeight: 800, fontFamily: 'monospace' }}>
-                            {String(coin.symbol || '?').slice(0, 4).toUpperCase()}
-                          </Box>
-                        )}
+                        {getIcon(coin.symbol, coin.image)}
                     </Box>
                     <Box>
                       <Typography variant="body1" sx={{ fontWeight: 800, mb: 0.25 }}>
