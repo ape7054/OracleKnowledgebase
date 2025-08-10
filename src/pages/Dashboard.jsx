@@ -89,6 +89,40 @@ import { TradingViewChart } from '../components/TradingViewChart';
 import LoadingScreen from '../components/LoadingScreen';
 import { Assessment } from '@mui/icons-material';
 
+// 创建一个图片图标组件 - 移到外部避免重新创建
+const CoinImageIcon = ({ imageUrl, symbol, fallbackIcon }) => {
+  const [hasError, setHasError] = useState(false);
+  
+  if (hasError || !imageUrl) {
+    return fallbackIcon;
+  }
+  
+  return (
+    <Box
+      sx={{
+        width: 28,
+        height: 28,
+        borderRadius: '50%',
+        overflow: 'hidden',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <img
+        src={imageUrl}
+        alt={symbol}
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+        }}
+        onError={() => setHasError(true)}
+      />
+    </Box>
+  );
+};
+
 // 动画定义
 const glow = keyframes`
   0%, 100% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.3); }
@@ -1251,18 +1285,50 @@ function Dashboard() {
    * 3) @web3icons/react 动态图标；如果仍找不到，再回退到占位符
    * 这样可以尽量补齐缺失图标（你截图里的 BGB、SUSDE 等会走 2/3）。
    */
-  // 智能图标获取：自动尝试多种图标源
+
+
+  // 静态图标URL映射（CoinGecko官方图标）
+  const staticIconUrls = useMemo(() => ({
+    BTC: 'https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png',
+    ETH: 'https://coin-images.coingecko.com/coins/images/279/large/ethereum.png',
+    BNB: 'https://coin-images.coingecko.com/coins/images/825/large/bnb-icon2_2x.png',
+    SOL: 'https://coin-images.coingecko.com/coins/images/4128/large/solana.png',
+    XRP: 'https://coin-images.coingecko.com/coins/images/44/large/xrp-symbol-white-128.png',
+    USDT: 'https://coin-images.coingecko.com/coins/images/325/large/Tether.png',
+    USDC: 'https://coin-images.coingecko.com/coins/images/6319/large/USD_Coin_icon.png',
+    ADA: 'https://coin-images.coingecko.com/coins/images/975/large/cardano.png',
+    DOGE: 'https://coin-images.coingecko.com/coins/images/5/large/dogecoin.png',
+    TRX: 'https://coin-images.coingecko.com/coins/images/1094/large/tron-logo.png',
+    AVAX: 'https://coin-images.coingecko.com/coins/images/12559/large/Avalanche_Circle_RedWhite_Trans.png',
+    LINK: 'https://coin-images.coingecko.com/coins/images/877/large/chainlink-new-logo.png',
+    MATIC: 'https://coin-images.coingecko.com/coins/images/4713/large/matic-token-icon.png',
+    DOT: 'https://coin-images.coingecko.com/coins/images/12171/large/polkadot.png',
+    LTC: 'https://coin-images.coingecko.com/coins/images/2/large/litecoin.png',
+    ICP: 'https://coin-images.coingecko.com/coins/images/14495/large/Internet_Computer_logo.png',
+    UNI: 'https://coin-images.coingecko.com/coins/images/12504/large/uniswap-uni.png'
+  }), []);
+
+  // 智能图标获取：优先使用静态映射，然后API，最后回退
   const getIcon = useCallback((symbol, imageUrl) => {
     const upperSymbol = (symbol || '').toUpperCase();
     
-    // 1. 优先使用手动映射的简单文字图标
-    if (iconMap[upperSymbol]) {
-      return iconMap[upperSymbol];
+    // 获取回退图标
+    const fallbackIcon = iconMap[upperSymbol] || iconMap.DEFAULT(upperSymbol);
+    
+    // 1. 优先使用静态映射的官方图标
+    const staticUrl = staticIconUrls[upperSymbol];
+    if (staticUrl) {
+      return <CoinImageIcon imageUrl={staticUrl} symbol={symbol} fallbackIcon={fallbackIcon} />;
     }
     
-    // 2. 默认使用文字占位符
-    return iconMap.DEFAULT(upperSymbol);
-  }, [iconMap]);
+    // 2. 使用 API 返回的官方图标 URL（如果有）
+    if (imageUrl) {
+      return <CoinImageIcon imageUrl={imageUrl} symbol={symbol} fallbackIcon={fallbackIcon} />;
+    }
+    
+    // 3. 使用手动映射的简单文字图标或默认占位符
+    return fallbackIcon;
+  }, [iconMap, staticIconUrls]);
 
   // 渲染纯中性图标（完全移除任何库自带的彩色背景）
   const renderNeutralIcon = (symbol) => (
@@ -1412,8 +1478,19 @@ function Dashboard() {
       setLastUpdated(new Date());
     } catch (err) {
       console.error('Market data fetch error:', err);
-      setError(`无法获取市场数据: ${err.message || '网络连接失败'}`);
-      setMarketData([]);
+      // 使用模拟数据作为回退
+      const mockData = [
+        { symbol: 'BTC', name: 'Bitcoin', price: '$118,584.15', change: '+1.7%', marketCap: 2340000000000, rank: 1, volume: 45000000000, icon: getIcon('BTC'), sparkline: Array.from({length: 24}, (_, i) => 118000 + Math.sin(i/4) * 2000 + Math.random() * 1000) },
+        { symbol: 'ETH', name: 'Ethereum', price: '$4,244.97', change: '+0.1%', marketCap: 510000000000, rank: 2, volume: 23000000000, icon: getIcon('ETH'), sparkline: Array.from({length: 24}, (_, i) => 4200 + Math.sin(i/4) * 100 + Math.random() * 50) },
+        { symbol: 'BNB', name: 'BNB', price: '$803.56', change: '-0.8%', marketCap: 117000000000, rank: 3, volume: 2100000000, icon: getIcon('BNB'), sparkline: Array.from({length: 24}, (_, i) => 800 + Math.sin(i/4) * 20 + Math.random() * 10) },
+        { symbol: 'SOL', name: 'Solana', price: '$182.80', change: '+0.3%', marketCap: 85000000000, rank: 4, volume: 3400000000, icon: getIcon('SOL'), sparkline: Array.from({length: 24}, (_, i) => 180 + Math.sin(i/4) * 8 + Math.random() * 4) },
+        { symbol: 'XRP', name: 'XRP', price: '$3.21', change: '-2.4%', marketCap: 183000000000, rank: 5, volume: 4200000000, icon: getIcon('XRP'), sparkline: Array.from({length: 24}, (_, i) => 3.2 + Math.sin(i/4) * 0.1 + Math.random() * 0.05) },
+        { symbol: 'USDC', name: 'USD Coin', price: '$0.9998', change: '+0.0%', marketCap: 42000000000, rank: 6, volume: 8900000000, icon: getIcon('USDC'), sparkline: Array.from({length: 24}, () => 1.0) },
+        { symbol: 'USDT', name: 'Tether', price: '$0.999982', change: '-0.0%', marketCap: 140000000000, rank: 7, volume: 89000000000, icon: getIcon('USDT'), sparkline: Array.from({length: 24}, () => 1.0) }
+      ];
+      
+      setError(`API连接失败，显示演示数据: ${err.message || '网络连接失败'}`);
+      setMarketData(mockData);
     } finally {
       if (doingInitial) {
         setInitialLoading(false);
@@ -2556,7 +2633,7 @@ function Dashboard() {
                 mr: 2,
               }}
             >
-              <SignalCellularAltIcon sx={{ 
+              <BarChartOutlinedIcon sx={{ 
                 color: theme.palette.primary.main,
                 fontSize: '1.2rem',
               }} />

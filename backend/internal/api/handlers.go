@@ -118,7 +118,8 @@ func fetchRealMarketData(limit string) ([]map[string]interface{}, error) {
 
 // fetchFromCoinGecko 从CoinGecko API获取数据
 func fetchFromCoinGecko(limit string) ([]map[string]interface{}, error) {
-	url := fmt.Sprintf("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=%s&page=1&sparkline=false&price_change_percentage=24h", limit)
+	// 简化URL，移除可能干扰的参数，确保获取基本的image字段
+	url := fmt.Sprintf("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=%s&page=1&sparkline=false", limit)
 
 	client := createHTTPClient()
 
@@ -128,8 +129,10 @@ func fetchFromCoinGecko(limit string) ([]map[string]interface{}, error) {
 		return nil, fmt.Errorf("创建请求失败: %v", err)
 	}
 
-	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
+	req.Header.Set("User-Agent", "market-pulse/1.0")
 	req.Header.Set("Accept", "application/json")
+	req.Header.Set("Accept-Encoding", "gzip, deflate")
+	req.Header.Set("Connection", "keep-alive")
 
 	log.Printf("🔄 尝试CoinGecko API")
 	resp, err := client.Do(req)
@@ -154,6 +157,16 @@ func fetchFromCoinGecko(limit string) ([]map[string]interface{}, error) {
 	var data []map[string]interface{}
 	if err := json.Unmarshal(body, &data); err != nil {
 		return nil, fmt.Errorf("解析JSON失败: %v", err)
+	}
+
+	// 调试信息：检查第一个币种的原始数据
+	if len(data) > 0 {
+		log.Printf("🔍 CoinGecko API 原始数据 (第一个币种): %+v", data[0])
+		if imageUrl, exists := data[0]["image"]; exists {
+			log.Printf("📸 找到图片字段: %s", imageUrl)
+		} else {
+			log.Printf("❌ 图片字段不存在于原始数据中")
+		}
 	}
 
 	return data, nil
