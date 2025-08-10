@@ -5,11 +5,6 @@ import {
   Typography,
   Paper,
   useTheme,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
   Chip,
   useMediaQuery,
   Divider,
@@ -75,10 +70,6 @@ import {
 } from '@mui/icons-material';
 
 // Removed colored cryptocurrency icon imports; neutral icons are rendered in-code
-// 从@web3icons/react导入动态组件和常用图标
-import { TokenIcon, TokenARB, TokenOP, TokenAPT, TokenSUI } from '@web3icons/react';
-// 本地图标
-import HypeIcon from '../assets/icons/HypeIcon.jsx';
 
 // Import API services
 import { cachedMarketApi, dataTransformers, cacheManager } from '../api/marketApi';
@@ -92,8 +83,10 @@ import { Assessment } from '@mui/icons-material';
 // 创建一个图片图标组件 - 移到外部避免重新创建
 const CoinImageIcon = ({ imageUrl, symbol, fallbackIcon }) => {
   const [hasError, setHasError] = useState(false);
+  const [src, setSrc] = useState(imageUrl);
+  const triedAltHostRef = useRef(false);
   
-  if (hasError || !imageUrl) {
+  if (hasError || !src) {
     return fallbackIcon;
   }
   
@@ -110,14 +103,26 @@ const CoinImageIcon = ({ imageUrl, symbol, fallbackIcon }) => {
       }}
     >
       <img
-        src={imageUrl}
+        src={src}
         alt={symbol}
+        referrerPolicy="no-referrer"
+        crossOrigin="anonymous"
+        loading="lazy"
         style={{
           width: '100%',
           height: '100%',
           objectFit: 'cover',
         }}
-        onError={() => setHasError(true)}
+        onError={() => {
+          // 尝试将 CoinGecko 资源域名从 assets.coingecko.com 切换到 coin-images.coingecko.com
+          if (!triedAltHostRef.current && typeof src === 'string' && src.includes('assets.coingecko.com')) {
+            triedAltHostRef.current = true;
+            const alt = src.replace('assets.coingecko.com', 'coin-images.coingecko.com');
+            setSrc(alt);
+            return;
+          }
+          setHasError(true);
+        }}
       />
     </Box>
   );
@@ -632,26 +637,7 @@ const PremiumSparkLine = ({ data, strokeColor, trend = 'up' }) => {
   );
 };
 
-// 增强市场表格样式
-const StyledTableContainer = styled(Box)(({ theme }) => ({
-  width: '100%',
-  overflowX: 'auto',
-  '& .MuiTableCell-root': {
-    borderBottom: `1px solid ${alpha(theme.palette.divider, 0.5)}`,
-    padding: '16px 8px',
-  },
-  '& .MuiTableRow-root:hover': {
-    backgroundColor: alpha(theme.palette.action.hover, 0.1),
-    transition: 'background-color 0.3s ease',
-  },
-  '& .MuiTableHead-root .MuiTableCell-root': {
-    color: theme.palette.text.secondary,
-    fontSize: '0.75rem',
-    textTransform: 'uppercase',
-    letterSpacing: '0.05em',
-    fontWeight: 600,
-  },
-}));
+// 增强市场表格样式（未使用，已移除）
 
 // 升级后的市场情绪仪表组件
 const SentimentGauge = ({ value, size = 180 }) => {
@@ -1288,47 +1274,23 @@ function Dashboard() {
 
 
   // 静态图标URL映射（CoinGecko官方图标）
-  const staticIconUrls = useMemo(() => ({
-    BTC: 'https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png',
-    ETH: 'https://coin-images.coingecko.com/coins/images/279/large/ethereum.png',
-    BNB: 'https://coin-images.coingecko.com/coins/images/825/large/bnb-icon2_2x.png',
-    SOL: 'https://coin-images.coingecko.com/coins/images/4128/large/solana.png',
-    XRP: 'https://coin-images.coingecko.com/coins/images/44/large/xrp-symbol-white-128.png',
-    USDT: 'https://coin-images.coingecko.com/coins/images/325/large/Tether.png',
-    USDC: 'https://coin-images.coingecko.com/coins/images/6319/large/USD_Coin_icon.png',
-    ADA: 'https://coin-images.coingecko.com/coins/images/975/large/cardano.png',
-    DOGE: 'https://coin-images.coingecko.com/coins/images/5/large/dogecoin.png',
-    TRX: 'https://coin-images.coingecko.com/coins/images/1094/large/tron-logo.png',
-    AVAX: 'https://coin-images.coingecko.com/coins/images/12559/large/Avalanche_Circle_RedWhite_Trans.png',
-    LINK: 'https://coin-images.coingecko.com/coins/images/877/large/chainlink-new-logo.png',
-    MATIC: 'https://coin-images.coingecko.com/coins/images/4713/large/matic-token-icon.png',
-    DOT: 'https://coin-images.coingecko.com/coins/images/12171/large/polkadot.png',
-    LTC: 'https://coin-images.coingecko.com/coins/images/2/large/litecoin.png',
-    ICP: 'https://coin-images.coingecko.com/coins/images/14495/large/Internet_Computer_logo.png',
-    UNI: 'https://coin-images.coingecko.com/coins/images/12504/large/uniswap-uni.png'
-  }), []);
+  /* staticIconUrls removed */
 
-  // 智能图标获取：优先使用静态映射，然后API，最后回退
+  // 智能图标获取：优先使用 API 图标，否则回退占位
   const getIcon = useCallback((symbol, imageUrl) => {
     const upperSymbol = (symbol || '').toUpperCase();
     
     // 获取回退图标
     const fallbackIcon = iconMap[upperSymbol] || iconMap.DEFAULT(upperSymbol);
     
-    // 1. 优先使用静态映射的官方图标
-    const staticUrl = staticIconUrls[upperSymbol];
-    if (staticUrl) {
-      return <CoinImageIcon imageUrl={staticUrl} symbol={symbol} fallbackIcon={fallbackIcon} />;
-    }
-    
-    // 2. 使用 API 返回的官方图标 URL（如果有）
+    // 使用 API 返回的官方图标 URL（如果有）
     if (imageUrl) {
       return <CoinImageIcon imageUrl={imageUrl} symbol={symbol} fallbackIcon={fallbackIcon} />;
     }
     
     // 3. 使用手动映射的简单文字图标或默认占位符
     return fallbackIcon;
-  }, [iconMap, staticIconUrls]);
+  }, [iconMap]);
 
   // 渲染纯中性图标（完全移除任何库自带的彩色背景）
   const renderNeutralIcon = (symbol) => (
@@ -1425,9 +1387,6 @@ function Dashboard() {
       const response = await cachedMarketApi.getMarketData(50); // 拉多一点，方便排序与筛选
       if (response.success && response.data && response.data.length > 0) {
         const standardData = response.data.map(dataTransformers.transformCoinData);
-        // 调试：查看官方图标字段是否存在
-        try { console.log('images sample', standardData.slice(0, 12).map(c => ({ symbol: c.symbol, image: c.image }))); } catch {}
-        
         /**
          * 重要：稳定榜单顺序（解决"之前和现在不一样"的问题）
          * - 有些接口项可能缺少 marketCap，旧逻辑只按市值排会退化成"接口返回顺序"
@@ -2664,9 +2623,9 @@ function Dashboard() {
                   }
                 }}
               >
-                <Button onClick={() => setSelectedCoin('BTC')} variant={selectedCoin === 'BTC' ? 'contained' : 'text'} className={selectedCoin === 'BTC' ? 'Mui-selected' : ''} disableElevation startIcon={<Box sx={{ width: 18, height: 18, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><img src={staticIconUrls.BTC} alt="BTC" style={{ width: '18px', height: '18px', borderRadius: '50%', objectFit: 'cover' }} /></Box>}>BTC</Button>
-                <Button onClick={() => setSelectedCoin('ETH')} variant={selectedCoin === 'ETH' ? 'contained' : 'text'} className={selectedCoin === 'ETH' ? 'Mui-selected' : ''} disableElevation startIcon={<Box sx={{ width: 18, height: 18, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><img src={staticIconUrls.ETH} alt="ETH" style={{ width: '18px', height: '18px', borderRadius: '50%', objectFit: 'cover' }} /></Box>}>ETH</Button>
-                <Button onClick={() => setSelectedCoin('SOL')} variant={selectedCoin === 'SOL' ? 'contained' : 'text'} className={selectedCoin === 'SOL' ? 'Mui-selected' : ''} disableElevation startIcon={<Box sx={{ width: 18, height: 18, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><img src={staticIconUrls.SOL} alt="SOL" style={{ width: '18px', height: '18px', borderRadius: '50%', objectFit: 'cover' }} /></Box>}>SOL</Button>
+                <Button onClick={() => setSelectedCoin('BTC')} variant={selectedCoin === 'BTC' ? 'contained' : 'text'} className={selectedCoin === 'BTC' ? 'Mui-selected' : ''} disableElevation startIcon={<Box sx={{ width: 18, height: 18, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{getIcon('BTC')}</Box>}>BTC</Button>
+                <Button onClick={() => setSelectedCoin('ETH')} variant={selectedCoin === 'ETH' ? 'contained' : 'text'} className={selectedCoin === 'ETH' ? 'Mui-selected' : ''} disableElevation startIcon={<Box sx={{ width: 18, height: 18, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{getIcon('ETH')}</Box>}>ETH</Button>
+                <Button onClick={() => setSelectedCoin('SOL')} variant={selectedCoin === 'SOL' ? 'contained' : 'text'} className={selectedCoin === 'SOL' ? 'Mui-selected' : ''} disableElevation startIcon={<Box sx={{ width: 18, height: 18, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{getIcon('SOL')}</Box>}>SOL</Button>
                 </ButtonGroup>
               
               <Box sx={{ flex: 1 }} />
