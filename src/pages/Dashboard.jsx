@@ -465,174 +465,79 @@ const PremiumStatCard = ({ title, value, icon, color, trend, subtitle }) => {
 };
   
 // 高级SparkLine组件
-const PremiumSparkLine = ({ data, strokeColor, trend = 'up' }) => {
+const PremiumSparkLine = ({ data, strokeColor, trend = 'neutral' }) => {
   const theme = useTheme();
-  
-  // 防御性编程：如果data不是数组，则返回null，防止崩溃
-  if (!Array.isArray(data)) {
-    return null; 
+
+  // 防御：无效数据直接不渲染
+  if (!Array.isArray(data) || data.length === 0) {
+    return null;
   }
 
-  const chartData = data.map((price, index) => ({
-    x: index,
-    y: price,
-    index: index
-  }));
-  const minValue = Math.min(...data);
-  const maxValue = Math.max(...data);
-  const range = maxValue - minValue;
+  // 规范化数据
+  const chartData = data.map((value, index) => ({ x: index, y: Number(value) }));
 
-  // 动态颜色基于趋势 - 增强颜色饱和度和亮度
-  const colors = {
-    up: {
-      primary: '#00ff88',      // 更亮的绿色
-      secondary: '#00cc66',    // 更鲜艳的绿色
-      glow: 'rgba(0, 255, 136, 0.6)',    // 增强发光效果
-      area: 'rgba(0, 255, 136, 0.2)'     // 增强区域填充
-    },
-    down: {
-      primary: '#ff4757',      // 更亮的红色
-      secondary: '#ff3742',    // 更鲜艳的红色
-      glow: 'rgba(255, 71, 87, 0.6)',    // 增强发光效果
-      area: 'rgba(255, 71, 87, 0.2)'     // 增强区域填充
-    },
-    neutral: {
-      primary: '#a4b0be',      // 更亮的灰色
-      secondary: '#8395a7',    // 更有对比度的灰色
-      glow: 'rgba(164, 176, 190, 0.6)',  // 增强发光效果
-      area: 'rgba(164, 176, 190, 0.2)'   // 增强区域填充
-    }
+  // 配色：优先使用传入的 strokeColor，其次根据趋势给默认色
+  const defaultColors = {
+    up: '#16C784',
+    down: '#EA3943',
+    neutral: theme.palette.text.secondary,
+  };
+  const resolvedColor = strokeColor || defaultColors[trend] || defaultColors.neutral;
+
+  const areaId = `spark-area-${(resolvedColor || '').replace('#', '')}-${trend}`;
+
+  // 只绘制最后一个点的圆点
+  const renderLastDot = (props) => {
+    const { cx, cy, index } = props;
+    if (index !== chartData.length - 1) return null;
+    return (
+      <circle cx={cx} cy={cy} r={3} fill={resolvedColor} stroke={theme.palette.mode === 'dark' ? '#0B1220' : '#FFFFFF'} strokeWidth={1.25} />
+    );
   };
 
-  const colorScheme = colors[trend] || colors.neutral;
-  const gradientId = `premium-spark-${strokeColor.replace('#', '')}-${trend}`;
-  const areaGradientId = `premium-area-${strokeColor.replace('#', '')}-${trend}`;
-
   return (
-    <Box sx={{
-      position: 'relative',
-      width: '100%',
-      height: 60,
-      overflow: 'hidden',
-      borderRadius: '8px',
-      background: theme.palette.mode === 'dark'
-        ? 'linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(30, 41, 59, 0.6))'
-        : 'linear-gradient(135deg, rgba(248, 250, 252, 0.8), rgba(241, 245, 249, 0.6))',
-      border: `1px solid ${alpha(colorScheme.primary, 0.2)}`,
-      '&:hover': {
-        border: `1px solid ${alpha(colorScheme.primary, 0.4)}`,
-        boxShadow: `0 4px 20px ${colorScheme.glow}`,
-        '& .spark-line': {
-          filter: `drop-shadow(0 0 8px ${colorScheme.glow})`,
-        }
-      }
-    }}>
-      {/* 背景网格 */}
-      <Box sx={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        opacity: 0.1,
-        background: `linear-gradient(90deg, transparent 0%, ${colorScheme.primary} 50%, transparent 100%)`,
-        backgroundSize: '20px 100%',
-        animation: `${float} 3s ease-in-out infinite`
-      }} />
-
+    <Box
+      sx={{
+        position: 'relative',
+        width: '100%',
+        height: '100%', // 高度交由父容器控制
+        overflow: 'hidden',
+        borderRadius: 1.5,
+        background: 'transparent',
+        border: `1px solid ${alpha(resolvedColor, 0.15)}`,
+      }}
+    >
       <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={chartData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
+        <AreaChart data={chartData} margin={{ top: 6, right: 6, bottom: 6, left: 6 }}>
           <defs>
-            {/* 主线渐变 */}
-            <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stopColor={alpha(colorScheme.primary, 0.3)} />
-              <stop offset="50%" stopColor={colorScheme.primary} />
-              <stop offset="100%" stopColor={colorScheme.secondary} />
+            <linearGradient id={areaId} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={alpha(resolvedColor, 0.22)} />
+              <stop offset="100%" stopColor={alpha(resolvedColor, 0.02)} />
             </linearGradient>
-
-            {/* 区域填充渐变 */}
-            <linearGradient id={areaGradientId} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={alpha(colorScheme.primary, 0.3)} />
-              <stop offset="100%" stopColor={alpha(colorScheme.primary, 0.05)} />
-            </linearGradient>
-
-            {/* 发光效果 - 增强 */}
-            <filter id={`glow-${gradientId}`} x="-30%" y="-30%" width="160%" height="160%">
-              <feGaussianBlur stdDeviation="5" result="blur" />
-              <feComposite in="SourceGraphic" in2="blur" operator="over" />
-            </filter>
-
-            {/* 动态光点 */}
-            <filter id={`sparkle-${gradientId}`}>
-              <feGaussianBlur stdDeviation="2" result="blur" />
-              <feColorMatrix values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0" />
-            </filter>
           </defs>
 
-          {/* 区域填充 */}
           <Area
             type="monotone"
             dataKey="y"
-            stroke="none"
-            fill={`url(#${areaGradientId})`}
-            fillOpacity={0.6}
-            animationDuration={2000}
-          />
-
-          {/* 主线条 */}
-          <Line
-            type="monotone"
-            dataKey="y"
-            stroke={`url(#${gradientId})`}
-            strokeWidth={4}
+            stroke={resolvedColor}
+            strokeWidth={1.75}
+            fill={`url(#${areaId})`}
+            isAnimationActive={false}
             dot={false}
-            className="spark-line"
-            style={{
-              filter: `url(#glow-${gradientId})`,
-            }}
-            animationDuration={2000}
-            animationBegin={200}
+            activeDot={false}
           />
 
-          {/* 高亮点 */}
+          {/* 使用透明线只为绘制最后一个圆点 */}
           <Line
             type="monotone"
             dataKey="y"
-            stroke={colorScheme.primary}
-            strokeWidth={1}
-            dot={{
-              fill: colorScheme.primary,
-              strokeWidth: 0,
-              r: 0,
-              className: 'spark-dot'
-            }}
-            activeDot={{
-              r: 4,
-              fill: colorScheme.primary,
-              stroke: '#fff',
-              strokeWidth: 2,
-              style: {
-                filter: `drop-shadow(0 0 6px ${colorScheme.glow})`,
-              }
-            }}
-            animationDuration={2000}
-            animationBegin={400}
+            stroke="transparent"
+            dot={renderLastDot}
+            isAnimationActive={false}
+            activeDot={false}
           />
         </AreaChart>
       </ResponsiveContainer>
-
-      {/* 趋势指示器 */}
-      <Box sx={{
-        position: 'absolute',
-        top: 4,
-        right: 4,
-        width: 8,
-        height: 8,
-        borderRadius: '50%',
-        background: `radial-gradient(circle, ${colorScheme.primary}, ${colorScheme.secondary})`,
-        boxShadow: `0 0 8px ${colorScheme.glow}`,
-        animation: `${pulse} 2s ease-in-out infinite`
-      }} />
     </Box>
   );
 };
@@ -1929,17 +1834,7 @@ function Dashboard() {
                       opacity: 0,
                       transition: 'opacity 0.3s ease'
                     },
-                    '&::after': {
-                      content: '""',
-                      position: 'absolute',
-                      right: -40,
-                      top: -40,
-                      width: 120,
-                      height: 120,
-                      borderRadius: '50%',
-                      background: `radial-gradient(circle, ${alpha(neutralColor, 0.14)}, transparent 60%)`,
-                      pointerEvents: 'none'
-                    }
+                    
                   }}
                 >
                   {/* Asset */}
