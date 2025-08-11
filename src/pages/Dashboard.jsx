@@ -1328,14 +1328,18 @@ function Dashboard() {
     // 获取市场数据（优化真实数据获取）
   const fetchMarketData = async (forceRefresh = false) => {
     let doingInitial = initialLoading;
+    // 尝试获取市场数据，处理错误
     try {
-      setError(null);
+      setError(null); // 清除之前的错误信息
       if (forceRefresh) {
+        // 如果强制刷新，则清空缓存
         try { cacheManager.clear(); } catch {}
       }
       if (doingInitial) {
+        // 首次加载，设置初始加载状态
         setInitialLoading(true);
       } else {
+        // 非首次加载，设置刷新状态
         setIsRefreshing(true);
       }
 
@@ -1348,32 +1352,42 @@ function Dashboard() {
          * - 这里先统一结构，再强制保证关键币种存在（BTC/ETH/USDT/USDC）
          * - 排序优先级：marketCap 降序 -> rank 升序 -> volume 降序
          */
+        // 规范化币种ID，优先使用id（无空格），否则用name或symbol，全部转为小写并替换为slug格式
+        // 对部分常见币种符号做特殊ID修正（如bnb->binancecoin, xrp->ripple）
         const normalizeId = (id, name, symbol) => {
+          // 规范化ID：优先用id（无空格），否则用name/id/symbol，全部转小写
           const source = (id && !/\s/.test(id) ? id : (name || id || symbol || '')).toString().trim().toLowerCase();
           const slug = source
-            .replace(/\s+/g, '-')
-            .replace(/[^a-z0-9-]/g, '-')
-            .replace(/-+/g, '-');
-          // 少数常见符号到ID的修正
-          const overrides = { bnb: 'binancecoin', xrp: 'ripple' };
+            .replace(/\s+/g, '-') // 空格替换为-
+            .replace(/[^a-z0-9-]/g, '-') // 非字母数字和-替换为-
+            .replace(/-+/g, '-'); // 多个-合并为一个
+          const overrides = { bnb: 'binancecoin', xrp: 'ripple' }; // 特殊符号修正
           return overrides[slug] || slug;
         };
+        // 获取前40个币种的标准化ID，并确保包含'tether'
         const topIds = Array.from(new Set(
           standardData
             .slice(0, 40)
             .map(c => normalizeId(c.id, c.name, c.symbol))
             .filter(Boolean)
         ).add('tether'));
+
+        // 用于存储每个币种的sparkline和image信息
         let sparkMetaById = new Map();
+
         try {
+          // 如果topIds不为空，则批量获取这些币种的详细信息（包括sparkline和image）
           if (topIds.length > 0) {
             const sparkRes = await marketApi.getMultipleCoins(topIds);
+            // 如果接口返回成功且数据为数组，则将数据转换为Map结构，便于后续查找
             if (sparkRes?.success && Array.isArray(sparkRes.data)) {
               sparkMetaById = new Map(
                 sparkRes.data.map(item => [
                   item.id,
                   {
+                    // 若有7天价格数据则使用，否则为空数组
                     sparkline: Array.isArray(item?.sparkline_in_7d?.price) ? item.sparkline_in_7d.price : [],
+                    // 若有图片URL则使用，否则为空字符串
                     image: typeof item?.image === 'string' ? item.image : ''
                   }
                 ])
