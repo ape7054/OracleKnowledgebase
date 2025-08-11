@@ -72,7 +72,7 @@ import {
 // Removed colored cryptocurrency icon imports; neutral icons are rendered in-code
 
 // Import API services
-import { cachedMarketApi, dataTransformers, cacheManager } from '../api/marketApi';
+import { cachedMarketApi, dataTransformers, cacheManager, marketApi } from '../api/marketApi';
 // import CryptoNews from '../components/CryptoNews';
 
 // Import the new chart component
@@ -83,8 +83,17 @@ import { Assessment } from '@mui/icons-material';
 // 创建一个图片图标组件 - 移到外部避免重新创建
 const CoinImageIcon = ({ imageUrl, symbol, fallbackIcon }) => {
   const [hasError, setHasError] = useState(false);
-  const [src, setSrc] = useState(imageUrl);
+  const initialSrc = useMemo(() => {
+    const url = imageUrl || '';
+    if (typeof url === 'string' && (url.includes('assets.coingecko.com') || url.includes('coin-images.coingecko.com'))) {
+      const noScheme = url.replace(/^https?:\/\//, '');
+      return `https://images.weserv.nl/?url=${encodeURIComponent(noScheme)}`;
+    }
+    return url;
+  }, [imageUrl]);
+  const [src, setSrc] = useState(initialSrc);
   const triedAltHostRef = useRef(false);
+  const triedProxyRef = useRef(false);
   
   if (hasError || !src) {
     return fallbackIcon;
@@ -106,7 +115,6 @@ const CoinImageIcon = ({ imageUrl, symbol, fallbackIcon }) => {
         src={src}
         alt={symbol}
         referrerPolicy="no-referrer"
-        crossOrigin="anonymous"
         loading="lazy"
         style={{
           width: '100%',
@@ -119,6 +127,14 @@ const CoinImageIcon = ({ imageUrl, symbol, fallbackIcon }) => {
             triedAltHostRef.current = true;
             const alt = src.replace('assets.coingecko.com', 'coin-images.coingecko.com');
             setSrc(alt);
+            return;
+          }
+          // 二级回退：使用公开图片代理（降低跨域/地区屏蔽导致的失败）
+          if (!triedProxyRef.current && typeof src === 'string') {
+            triedProxyRef.current = true;
+            const noScheme = src.replace(/^https?:\/\//, '');
+            const proxy = `https://images.weserv.nl/?url=${encodeURIComponent(noScheme)}`;
+            setSrc(proxy);
             return;
           }
           setHasError(true);
@@ -492,7 +508,7 @@ const PremiumSparkLine = ({ data, strokeColor, trend = 'neutral' }) => {
   const maxVal = Math.max(...values);
   const midVal = (minVal + maxVal) / 2 || 0;
   const rawRange = Math.max(maxVal - minVal, 0);
-  // 以中位值 0.05% 作为最小可视跨度，避免“纯直线”
+  // 以中位值 0.05% 作为最小可视跨度，避免"纯直线"
   const minSpan = Math.max(Math.abs(midVal) * 0.0005, 1e-6);
   const range = Math.max(rawRange, minSpan);
   const pad = Math.max(range * 0.15, 1e-8);
@@ -1246,7 +1262,7 @@ function Dashboard() {
    * - sparkline：用正弦波 + 少量噪声模拟 24h 走势（仅用于小图展示），不影响真实价格
    * 这些字段随后用于稳定排序与展示。
    */
-  const transformApiDataForDashboard = (apiData) => {
+  const transformApiDataForDashboard = (apiData, sparkMetaByIdMap) => {
     if (!apiData || !Array.isArray(apiData)) return [];
 
     const hourBucket = lastUpdated ? Math.floor(lastUpdated.getTime() / 3600000) : Math.floor(Date.now() / 3600000);
@@ -1261,34 +1277,50 @@ function Dashboard() {
       return x - Math.floor(x);
     };
     
+    const stableSet = new Set(['USDT','USDC','DAI','BUSD','TUSD','FDUSD','PYUSD','USDD','SUSD','SUSDE','USDE']);
+    const isStable = (sym) => stableSet.has(String(sym || '').toUpperCase());
+    
     return apiData.map(coin => {
       const basePrice = Number(coin.price) || 1;
       const changePercent = Number(coin.change) || 0; // 来自 CoinGecko 的 24h 变化百分比
       const rand = makeSeededRandom(`${coin.symbol}-${hourBucket}`);
 
-      // 生成 24h sparkline：围绕当前价，按变化幅度生成平滑曲线（种子随机，稳定同一小时内的噪声）
-      const points = 24;
-      const amplitude = Math.max(Math.abs(changePercent) / 100, 0.02);
-      const sparklineData = Array.from({ length: points }, (_, i) => {
-        const t = i / (points - 1);
-        const wave = Math.sin(Math.PI * 2 * t) * amplitude * basePrice * 1.2;
-        const trend = (changePercent / 100) * basePrice * 1.5 * (t - 0.5);
-        const noise = (rand(i) - 0.5) * amplitude * basePrice * 0.35;
-        const price = Math.max(0, basePrice + wave + trend + noise);
-        return Number(price.toFixed(6));
-      });
+      // 优先使用真实 sparkline（后端透传 CoinGecko: sparkline_in_7d.price），否则回退模拟
+      let sparklineData = [];
+      const meta = sparkMetaByIdMap?.get?.(coin.id);
+      if (meta && Array.isArray(meta.sparkline) && meta.sparkline.length > 0) {
+        sparklineData = meta.sparkline.map(n => Number(n) || 0);
+      } else {
+        const points = 24;
+        const amplitude = Math.max(Math.abs(changePercent) / 100, 0.02);
+        sparklineData = Array.from({ length: points }, (_, i) => {
+          const t = i / (points - 1);
+          const wave = Math.sin(Math.PI * 2 * t) * amplitude * basePrice * 1.2;
+          const trend = (changePercent / 100) * basePrice * 1.5 * (t - 0.5);
+          const noise = (rand(i) - 0.5) * amplitude * basePrice * 0.35;
+          const price = Math.max(0, basePrice + wave + trend + noise);
+          return Number(price.toFixed(6));
+        });
+      }
+      // 稳定币：强制使用平直曲线
+      if (isStable(coin.symbol) && sparklineData.length > 0) {
+        const flat = new Array(sparklineData.length).fill(basePrice);
+        sparklineData = flat;
+      }
+      const imageUrl = coin.image || meta?.image || '';
 
       return {
         name: coin.name || 'Unknown',
         symbol: (coin.symbol || 'UNKNOWN').toUpperCase(),
         price: `$${basePrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 6 })}`,
         change: `${changePercent >= 0 ? '+' : ''}${changePercent.toFixed(1)}%`,
-        icon: getIcon(coin.symbol, coin.image),
-        image: coin.image, // 添加官方图标URL
+        icon: getIcon(coin.symbol, imageUrl),
+        image: imageUrl, // 添加官方图标URL
         sparkline: sparklineData,
         marketCap: Number(coin.marketCap) || 0,
         rank: Number(coin.rank) || Infinity,
         volume: Number(coin.volume) || 0,
+        id: coin.id,
       };
     });
   };
@@ -1316,10 +1348,51 @@ function Dashboard() {
          * - 这里先统一结构，再强制保证关键币种存在（BTC/ETH/USDT/USDC）
          * - 排序优先级：marketCap 降序 -> rank 升序 -> volume 降序
          */
-        const all = transformApiDataForDashboard(standardData);
-        const bySymbol = new Map(all.map(c => [c.symbol, c]));
+        const normalizeId = (id, name, symbol) => {
+          const source = (id && !/\s/.test(id) ? id : (name || id || symbol || '')).toString().trim().toLowerCase();
+          const slug = source
+            .replace(/\s+/g, '-')
+            .replace(/[^a-z0-9-]/g, '-')
+            .replace(/-+/g, '-');
+          // 少数常见符号到ID的修正
+          const overrides = { bnb: 'binancecoin', xrp: 'ripple' };
+          return overrides[slug] || slug;
+        };
+        const topIds = Array.from(new Set(
+          standardData
+            .slice(0, 40)
+            .map(c => normalizeId(c.id, c.name, c.symbol))
+            .filter(Boolean)
+        ).add('tether'));
+        let sparkMetaById = new Map();
+        try {
+          if (topIds.length > 0) {
+            const sparkRes = await marketApi.getMultipleCoins(topIds);
+            if (sparkRes?.success && Array.isArray(sparkRes.data)) {
+              sparkMetaById = new Map(
+                sparkRes.data.map(item => [
+                  item.id,
+                  {
+                    sparkline: Array.isArray(item?.sparkline_in_7d?.price) ? item.sparkline_in_7d.price : [],
+                    image: typeof item?.image === 'string' ? item.image : ''
+                  }
+                ])
+              );
+            }
+          }
+        } catch (e) {
+          console.warn('获取真实 sparkline 失败，将使用回退模拟数据:', e);
+        }
+        /**
+          * 重要：稳定榜单顺序（解决"之前和现在不一样"的问题）
+          * - 有些接口项可能缺少 marketCap，旧逻辑只按市值排会退化成"接口返回顺序"
+          * - 这里先统一结构，再强制保证关键币种存在（BTC/ETH/USDT/USDC）
+          * - 排序优先级：marketCap 降序 -> rank 升序 -> volume 降序
+          */
+        const dashboardAll = transformApiDataForDashboard(standardData, sparkMetaById);
+        const bySymbol = new Map(dashboardAll.map(c => [c.symbol, c]));
         const ensureSymbols = ['BTC', 'ETH', 'USDT', 'USDC']; // 确保这4个一定在榜单
-        const ensured = [...all];
+        const ensured = [...dashboardAll];
         ensureSymbols.forEach(sym => {
           const found = bySymbol.get(sym);
           if (!ensured.find(c => c.symbol === sym) && found) {

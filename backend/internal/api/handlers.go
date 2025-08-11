@@ -7,6 +7,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	"market-pulse/backend/internal/database"
@@ -150,7 +151,10 @@ func GetCoinsData(c *gin.Context) {
 	}
 
 	// 调用真实的CoinGecko API
-	url := fmt.Sprintf("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=%s&sparkline=%s&price_change_percentage=24h", ids, sparkline)
+	// 对 ids 进行规范化，避免因客户端传入的加号/空格导致上游 503
+	normalized := strings.ReplaceAll(ids, "+", " ")
+	escaped := strings.ReplaceAll(normalized, " ", "%20")
+	url := fmt.Sprintf("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=%s&sparkline=%s&price_change_percentage=24h", escaped, sparkline)
 
 	client := createHTTPClient()
 
