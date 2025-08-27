@@ -8,8 +8,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
-	"market-pulse/backend/internal/models"
-	"market-pulse/backend/internal/websocket"
+	"learning-stack/backend/internal/models"
+	"learning-stack/backend/internal/websocket"
 )
 
 type TradeHandler struct {

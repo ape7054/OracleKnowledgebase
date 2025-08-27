@@ -12,7 +12,7 @@
 ```bash
 # 1. 克隆项目
 git clone https://github.com/ape7054/trading-dashboard.git
-cd market-pulse
+cd learning-stack
 
 # 2. 构建前端资源
 npm install
@@ -23,7 +23,7 @@ cd backend
 $env:GOOS = "linux"
 $env:GOARCH = "amd64" 
 $env:CGO_ENABLED = "0"
-go build -o market-pulse-backend ./cmd/market-pulse-backend
+go build -o learning-stack-backend ./cmd/learning-stack-backend
 cd ..
 
 # 4. 启动完整Docker环境
@@ -62,12 +62,12 @@ curl "http://localhost:8080/api/market/data?limit=2"
 **解决方案**:
 ```bash
 cd backend
-del market-pulse-backend
+del learning-stack-backend
 $env:GOOS = "linux"
 $env:GOARCH = "amd64"
 $env:CGO_ENABLED = "0"
-go build -o market-pulse-backend ./cmd/market-pulse-backend
-docker build -t market-pulse-backend . --no-cache
+go build -o learning-stack-backend ./cmd/learning-stack-backend
+docker build -t learning-stack-backend . --no-cache
 cd ..
 docker-compose restart backend
 ```
@@ -99,7 +99,7 @@ docker-compose up -d
 ```bash
 # 确保使用Docker启动后端
 docker-compose restart backend
-docker logs market-pulse-backend --tail 20
+docker logs learning-stack-backend --tail 20
 
 # 检查API可访问性
 curl http://localhost:8080/api/health

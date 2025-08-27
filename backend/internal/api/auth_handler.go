@@ -8,7 +8,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 
-	"market-pulse/backend/internal/models"
+	"learning-stack/backend/internal/models"
 
 	"github.com/golang-jwt/jwt/v5"
 )

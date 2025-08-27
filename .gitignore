@@ -41,5 +41,5 @@ dist-ssr
 lerna-debug.log*
 
 # Backend build output
-backend/market-pulse-backend
-backend/market-pulse-backend.exe
+backend/learning-stack-backend
+backend/learning-stack-backend.exe

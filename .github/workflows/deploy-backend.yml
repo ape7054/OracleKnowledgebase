@@ -10,7 +10,7 @@ on:
 
 env:
   # Set the image name, using your GitHub username for the namespace
-  IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/market-pulse-backend
+  IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/learning-stack-backend
 
 jobs:
   build-and-push:
@@ -53,7 +53,7 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           source: "docker-compose.yml"
-          target: "/www/wwwroot/market-pulse" # Assumes this is your project directory on the server
+          target: "/www/wwwroot/learning-stack" # Assumes this is your project directory on the server
 
       - name: Deploy and Restart Service
         uses: appleboy/ssh-action@master
@@ -63,7 +63,7 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
             # Navigate to the project directory on your server
-            cd /www/wwwroot/market-pulse
+            cd /www/wwwroot/learning-stack
 
             # Pull the latest code
             git pull origin master

@@ -2,7 +2,7 @@ services:
   # 数据库服务
   db:
     image: mysql:8.0
-    container_name: market-pulse-db
+    container_name: learning-stack-db
     restart: unless-stopped
     environment:
       MYSQL_DATABASE: ${DB_NAME:-market_pulse_db}
@@ -14,7 +14,7 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
     networks:
-      - market-pulse-network
+      - learning-stack-network
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
@@ -24,7 +24,7 @@ services:
   # phpMyAdmin - MySQL Web管理界面
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:5.2
-    container_name: market-pulse-phpmyadmin
+    container_name: learning-stack-phpmyadmin
     restart: unless-stopped
     environment:
       PMA_HOST: db
@@ -41,12 +41,12 @@ services:
     depends_on:
       - db
     networks:
-      - market-pulse-network
+      - learning-stack-network
 
   # 后端服务
   backend:
-    image: market-pulse-backend:latest
-    container_name: market-pulse-backend
+    image: learning-stack-backend:latest
+    container_name: learning-stack-backend
     restart: unless-stopped
     environment:
       - DB_HOST=db
@@ -61,12 +61,12 @@ services:
     ports:
       - "8080:8080"
     networks:
-      - market-pulse-network
+      - learning-stack-network
 
   # Nginx 服务
   nginx:
     image: nginx:1.25-alpine
-    container_name: market-pulse-nginx
+    container_name: learning-stack-nginx
     restart: unless-stopped
     ports:
       - "9088:80"
@@ -74,7 +74,7 @@ services:
       - ./dist:/usr/share/nginx/html
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
     networks:
-      - market-pulse-network
+      - learning-stack-network
     # depends_on:
     #   - backend
 
@@ -83,5 +83,5 @@ volumes:
     driver: local 
 
 networks:
-  market-pulse-network:
+  learning-stack-network:
     driver: bridge 

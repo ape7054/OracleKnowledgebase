@@ -9,7 +9,7 @@ import (
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 
-	"market-pulse/backend/internal/models"
+	"learning-stack/backend/internal/models"
 )
 
 var DB *gorm.DB

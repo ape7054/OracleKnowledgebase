@@ -10,9 +10,9 @@ import (
 	"strings"
 	"time"
 
-	"market-pulse/backend/internal/database"
-	"market-pulse/backend/internal/models"
-	"market-pulse/backend/internal/services"
+	"learning-stack/backend/internal/database"
+	"learning-stack/backend/internal/models"
+	"learning-stack/backend/internal/services"
 
 	"github.com/gin-gonic/gin"
 )
