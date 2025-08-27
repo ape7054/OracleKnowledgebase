@@ -1,4 +1,6 @@
-# MarketPulse - 快速启动指南
+# LearningStack - 个人学习博客平台
+
+一个现代化的全栈学习博客，记录技术成长之路，提供文章发布、学习记录、项目展示等功能。
 
 ## 🚀 快速启动
 
@@ -11,7 +13,7 @@
 
 ```bash
 # 1. 克隆项目
-git clone https://github.com/ape7054/trading-dashboard.git
+git clone https://github.com/[your-username]/learning-stack.git
 cd learning-stack
 
 # 2. 构建前端资源
@@ -37,7 +39,7 @@ docker-compose ps
 
 | 服务 | 访问地址 | 说明 |
 |------|----------|------|
-| 🚀 **前端应用** | `http://localhost:9088` | 完整应用界面 |
+| 🚀 **博客前端** | `http://localhost:9088` | 完整博客界面 |
 | 🔧 **前端开发** | `http://localhost:5175` | 开发模式 (需要 `npm run dev`) |
 | 🔧 **后端API** | `http://localhost:8080/api` | RESTful API服务 |
 | 🗄️ **数据库管理** | `http://localhost:8081` | phpMyAdmin界面 |
@@ -49,9 +51,9 @@ docker-compose ps
 curl http://localhost:8080/api/health
 # 期望返回: {"status":"UP"}
 
-# 测试市场数据API  
-curl "http://localhost:8080/api/market/data?limit=2"
-# 期望返回: 真实的加密货币市场数据
+# 测试博客API (示例)
+curl "http://localhost:8080/api/articles?limit=5"
+# 期望返回: 博客文章列表数据
 ```
 
 ## 🆘 故障排除
@@ -91,9 +93,9 @@ docker-compose up -d
 ```
 
 ### ❌ 问题3：API连接失败 (Windows网络限制)
-**症状**: 前端显示 "API连接失败" 或模拟数据
+**症状**: 前端显示 "API连接失败" 或无法加载数据
 
-**原因**: Windows环境网络限制，必须使用Docker才能访问外部API
+**原因**: Windows环境网络限制，需要确保Docker容器正常运行
 
 **解决方案**:
 ```bash
@@ -151,7 +153,17 @@ docker-compose up -d
 
 ## 💡 重要提示
 
-- **Windows用户必须使用Docker**: 直接运行Go程序无法访问外部API
+- **Windows用户建议使用Docker**: 确保跨平台兼容性和一致的开发环境
 - **数据库连接**: 后端启动可能比数据库慢，如连接失败请重启后端服务
 - **端口映射**: 确保8080、9088、3307、8081端口未被占用
 - **静态资源**: 生产环境使用9088端口，开发模式使用5175端口
+
+## 🎯 项目特点
+
+**LearningStack** 是一个现代化的个人学习博客平台，提供：
+- 📝 **技术文章管理**: Markdown编辑器、分类标签
+- 📊 **学习记录追踪**: 学习进度统计、技能树展示  
+- 🔐 **用户认证系统**: JWT安全认证
+- 🐳 **容器化部署**: Docker一键部署
+- 📱 **响应式设计**: 适配各种设备
+- ⚡ **现代技术栈**: React + Go + MySQL
