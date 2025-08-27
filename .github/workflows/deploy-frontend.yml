@@ -1,4 +1,4 @@
-name: Deploy Frontend
+name: Deploy Learning Stack Frontend
 
 on:
   push:
@@ -13,7 +13,7 @@ on:
       - 'Dockerfile'
       - '.github/workflows/deploy-frontend.yml'
       - 'docker-compose.yml'
-              - 'Oracle/**'
+      - 'Oracle/**'
       - 'docs/**'
       - 'README.md'
 
@@ -21,10 +21,10 @@ on:
 
 jobs:
   deploy:
-    name: Deploy to Server
+    name: Deploy Blog Frontend to Server
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy Frontend
+      - name: Deploy Learning Stack Frontend
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_HOST }}
@@ -46,4 +46,4 @@ jobs:
             # Restart nginx to serve the new files
             systemctl reload nginx
 
-            echo "Frontend deployment completed successfully!"
+            echo "Learning Stack frontend deployment completed successfully!"
