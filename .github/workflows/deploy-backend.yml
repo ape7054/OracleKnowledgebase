@@ -31,6 +31,16 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.22'
+
+      - name: Build Go application
+        run: |
+          cd backend
+          go build -o learning-stack-backend ./cmd/learning-stack-backend
+
       - name: Build and push Learning Stack backend image
         uses: docker/build-push-action@v4
         with:
