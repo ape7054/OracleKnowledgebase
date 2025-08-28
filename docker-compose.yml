@@ -45,6 +45,9 @@ services:
 
   # 后端服务
   backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     image: learning-stack-backend:latest
     container_name: learning-stack-backend
     restart: unless-stopped
