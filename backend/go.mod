@@ -1,4 +1,4 @@
-module market-pulse/backend
+module learning-stack/backend
 
 go 1.22
 
