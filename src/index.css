@@ -93,3 +93,163 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+/* Markdown编辑器极客风格样式 */
+.w-md-editor {
+  background-color: #0c1421 !important;
+  border: 1px solid #333 !important;
+}
+
+.w-md-editor-text-textarea,
+.w-md-editor-text {
+  background-color: #0c1421 !important;
+  color: #e0e0e0 !important;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace !important;
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+}
+
+.w-md-editor-text-textarea:focus {
+  border: 1px solid #00ffff !important;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.2) !important;
+}
+
+/* 工具栏样式 */
+.w-md-editor-toolbar {
+  background-color: rgba(0, 0, 0, 0.4) !important;
+  border-bottom: 1px solid #333 !important;
+  padding: 8px !important;
+}
+
+.w-md-editor-toolbar-child > button {
+  color: #a0a0a0 !important;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  border-radius: 6px !important;
+  margin: 0 2px !important;
+  transition: all 0.3s ease !important;
+}
+
+.w-md-editor-toolbar-child > button:hover {
+  color: #00ffff !important;
+  background: rgba(0, 255, 255, 0.1) !important;
+  border: 1px solid #00ffff40 !important;
+  box-shadow: 0 0 8px rgba(0, 255, 255, 0.2) !important;
+}
+
+/* 预览区域样式 */
+.w-md-editor-preview {
+  background-color: #0c1421 !important;
+  color: #e0e0e0 !important;
+  padding: 20px !important;
+}
+
+.w-md-editor-preview h1,
+.w-md-editor-preview h2,
+.w-md-editor-preview h3,
+.w-md-editor-preview h4,
+.w-md-editor-preview h5,
+.w-md-editor-preview h6 {
+  color: #00ffff !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+.w-md-editor-preview h1::before { content: '# '; color: #ff00ff; }
+.w-md-editor-preview h2::before { content: '## '; color: #ff00ff; }
+.w-md-editor-preview h3::before { content: '### '; color: #ff00ff; }
+
+.w-md-editor-preview code {
+  background: rgba(0, 255, 255, 0.1) !important;
+  color: #00ffff !important;
+  padding: 2px 6px !important;
+  border-radius: 4px !important;
+  border: 1px solid #00ffff40 !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+.w-md-editor-preview pre {
+  background: rgba(0, 0, 0, 0.5) !important;
+  border: 1px solid #333 !important;
+  border-left: 3px solid #00ffff !important;
+  border-radius: 8px !important;
+  padding: 16px !important;
+  overflow-x: auto !important;
+}
+
+.w-md-editor-preview pre code {
+  background: transparent !important;
+  border: none !important;
+  color: #e0e0e0 !important;
+}
+
+.w-md-editor-preview blockquote {
+  border-left: 3px solid #ff00ff !important;
+  background: rgba(255, 0, 255, 0.05) !important;
+  margin: 16px 0 !important;
+  padding: 12px 16px !important;
+  border-radius: 0 8px 8px 0 !important;
+}
+
+.w-md-editor-preview ul,
+.w-md-editor-preview ol {
+  color: #a0a0a0 !important;
+}
+
+.w-md-editor-preview li::marker {
+  color: #00ffff !important;
+}
+
+.w-md-editor-preview a {
+  color: #ff00ff !important;
+  text-decoration: none !important;
+  border-bottom: 1px dotted #ff00ff !important;
+}
+
+.w-md-editor-preview a:hover {
+  color: #00ffff !important;
+  border-bottom-color: #00ffff !important;
+  text-shadow: 0 0 8px rgba(0, 255, 255, 0.5) !important;
+}
+
+/* 表格样式 */
+.w-md-editor-preview table {
+  border: 1px solid #333 !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+}
+
+.w-md-editor-preview th {
+  background: rgba(0, 255, 255, 0.1) !important;
+  color: #00ffff !important;
+  border-bottom: 1px solid #00ffff40 !important;
+  font-family: monospace !important;
+}
+
+.w-md-editor-preview td {
+  border-bottom: 1px solid #333 !important;
+  color: #a0a0a0 !important;
+}
+
+/* 滚动条样式 */
+.w-md-editor-text-textarea::-webkit-scrollbar,
+.w-md-editor-preview::-webkit-scrollbar {
+  width: 8px;
+}
+
+.w-md-editor-text-textarea::-webkit-scrollbar-track,
+.w-md-editor-preview::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+
+.w-md-editor-text-textarea::-webkit-scrollbar-thumb,
+.w-md-editor-preview::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #00ffff, #ff00ff);
+  border-radius: 4px;
+}
+
+.w-md-editor-text-textarea::-webkit-scrollbar-thumb:hover,
+.w-md-editor-preview::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #00ffff, #ff00ff);
+  box-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
+}

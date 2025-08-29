@@ -76,7 +76,7 @@ const Home = () => {
               <Button
                 variant="contained"
             startIcon={<Article />}
-            onClick={() => navigate('/news')}
+            onClick={() => navigate('/articles')}
             sx={{ borderRadius: '8px' }}
           >
             阅读文章
@@ -216,7 +216,7 @@ const Home = () => {
             <Button 
               variant="contained" 
               size="large"
-              onClick={() => navigate('/news')}
+              onClick={() => navigate('/articles')}
               sx={{ 
                 borderRadius: '50px',
                 px: 4,
@@ -345,7 +345,7 @@ const Home = () => {
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
             <Button 
               variant="outlined" 
-              onClick={() => navigate('/news')}
+              onClick={() => navigate('/articles')}
               sx={{ 
                 borderColor: '#00ffff',
                 color: '#00ffff',

@@ -12,10 +12,11 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import Account from './pages/Account';
-import News from './pages/News';
+import Articles from './pages/Articles';
 import Trade from './pages/Trade';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import News from './pages/News';
 import { styled } from '@mui/system';
 import { Toaster } from 'react-hot-toast';
 
@@ -348,7 +349,8 @@ function AppContent() {
         {[
           { text: '> Home', icon: <HomeIcon />, path: '/' },
           { text: '> Stats', icon: <Terminal />, path: '/dashboard' },
-          { text: '> Articles', icon: <NewsIcon />, path: '/news' },
+          { text: '> News', icon: <TrendingUp />, path: '/news' },
+          { text: '> Articles', icon: <NewsIcon />, path: '/articles' },
           { text: '> Editor', icon: <EditorIcon />, path: '/trade' },
           { text: '> Profile', icon: <Code />, path: '/account' },
         ].map((item) => (
@@ -510,7 +512,7 @@ function AppContent() {
           {/* It looks at the current URL (the "floor" you requested) and renders the correct component. */}
           {/* For example, if the URL is '/account', it will render the <Account /> component below. */}
           <Routes>
-                                                    <Route path="/" element={<Home />} />
+            <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route
@@ -522,6 +524,7 @@ function AppContent() {
               }
             />
             <Route path="/news" element={<News />} />
+            <Route path="/articles" element={<Articles />} />
             <Route path="/trade" element={<Trade />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
