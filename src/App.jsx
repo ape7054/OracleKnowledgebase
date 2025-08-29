@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Routes, Route, NavLink, Navigate, BrowserRouter as Router } from 'react-router-dom';
 import { Box, CssBaseline, AppBar, Toolbar, Typography, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, IconButton, useTheme, useMediaQuery, Avatar, Menu, MenuItem, Divider, Chip } from '@mui/material';
-import { Dashboard as DashboardIcon, SwapHoriz as TradeIcon, AccountCircle as AccountIcon, Menu as MenuIcon, TrendingUp, Home as HomeIcon, Article as NewsIcon, Logout, Settings, Person } from '@mui/icons-material';
+import { Dashboard as DashboardIcon, SwapHoriz as TradeIcon, AccountCircle as AccountIcon, Menu as MenuIcon, TrendingUp, Home as HomeIcon, Article as NewsIcon, Edit as EditorIcon, Terminal, Code, Logout, Settings, Person } from '@mui/icons-material';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
@@ -36,40 +36,62 @@ const StyledListItemButton = styled(ListItemButton)(({ theme }) => ({
   padding: '12px 16px',
   margin: '4px 8px',
   borderRadius: '8px',
-  transition: 'all 0.2s ease-in-out',
-  color: theme.palette.text.primary,
+  transition: 'all 0.3s ease-in-out',
+  color: '#a0a0a0',
+  fontFamily: 'monospace',
+  fontWeight: 500,
+  border: '1px solid transparent',
+  position: 'relative',
+  zIndex: 1,
   // Style for when the mouse hovers over the button
   '&:hover': {
-    backgroundColor: theme.palette.mode === 'dark' 
-      ? 'rgba(255, 255, 255, 0.08)' 
-      : 'rgba(0, 0, 0, 0.04)',
+    backgroundColor: 'rgba(0, 255, 255, 0.05)',
+    border: '1px solid #00ffff40',
+    boxShadow: '0 0 15px rgba(0, 255, 255, 0.2)',
+    color: '#00ffff',
+    '& .MuiListItemIcon-root': {
+      color: '#00ffff',
+    },
+    '& .MuiListItemText-primary': {
+      color: '#00ffff',
+    },
   },
   // Style for when the link is active (the current page)
   '&.active': {
-    backgroundColor: theme.palette.mode === 'dark'
-      ? 'rgba(0, 171, 85, 0.16)'
-      : 'rgba(0, 171, 85, 0.08)',
-    color: theme.palette.primary.main,
+    backgroundColor: 'rgba(0, 255, 255, 0.1)',
+    border: '1px solid #00ffff',
+    color: '#00ffff',
+    boxShadow: '0 0 20px rgba(0, 255, 255, 0.3), inset 0 0 20px rgba(0, 255, 255, 0.1)',
     // Change the icon color when the link is active
     '& .MuiListItemIcon-root': {
-      color: theme.palette.primary.main,
+      color: '#00ffff',
     },
     // Ensure active text color is correct
     '& .MuiListItemText-primary': {
-      color: theme.palette.primary.main,
+      color: '#00ffff',
+      fontWeight: 600,
     },
+    // 添加激活状态的左边框效果
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      left: -8,
+      top: 0,
+      bottom: 0,
+      width: 3,
+      background: 'linear-gradient(to bottom, #00ffff, #ff00ff)',
+      borderRadius: '0 2px 2px 0',
+    }
   },
   // Ensure the text color is correct for both themes
   '& .MuiListItemText-primary': {
-    color: theme.palette.mode === 'dark'
-      ? theme.palette.text.primary
-      : theme.palette.text.primary,
+    color: '#a0a0a0',
+    fontFamily: 'monospace',
+    fontWeight: 500,
   },
   // Style for the icons in the list
   '& .MuiListItemIcon-root': {
-    color: theme.palette.mode === 'dark' 
-      ? theme.palette.text.secondary
-      : theme.palette.text.primary,
+    color: '#a0a0a0',
     minWidth: 40,
   },
 }));
@@ -78,57 +100,53 @@ const StyledListItemButton = styled(ListItemButton)(({ theme }) => ({
 // It has different background colors and effects for light and dark modes.
 const StyledDrawer = styled(Drawer)(({ theme }) => ({
   '& .MuiDrawer-paper': {
-    backgroundColor: theme.palette.mode === 'dark'
-      ? 'rgba(22, 28, 36, 0.95)'
-      : 'rgba(255, 255, 255, 0.95)',
-    // Apply a gradient background for a more modern look
-    backgroundImage: theme.palette.mode === 'dark'
-      ? 'linear-gradient(to bottom, rgba(26, 32, 48, 0.95), rgba(8, 11, 25, 0.95))'
-      : 'linear-gradient(to bottom, rgba(255, 255, 255, 0.95), rgba(240, 244, 248, 0.95))',
-    // Apply a blur effect to the background
+    backgroundColor: '#0c1421',
+    backgroundImage: 'linear-gradient(to bottom, #0c1421 0%, #1a1a2e 100%)',
     backdropFilter: 'blur(20px)',
-    borderRight: `1px solid ${theme.palette.divider}`,
-    boxShadow: theme.palette.mode === 'dark'
-      ? '2px 0 20px 0 rgba(0, 0, 0, 0.4)'
-      : '2px 0 20px 0 rgba(145, 158, 171, 0.2)',
-    // Ensure text color is correct for both themes
-    color: theme.palette.text.primary,
+    borderRight: '1px solid #00ffff40',
+    boxShadow: '2px 0 20px 0 rgba(0, 255, 255, 0.1)',
+    color: '#e0e0e0',
+    fontFamily: 'monospace',
+    // 科技感网格背景
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%2300ffff' fill-opacity='0.03'%3E%3Cpath d='M0 0h20v20H0zM20 20h20v20H20z'/%3E%3C/g%3E%3C/svg%3E")`,
+      opacity: 0.3,
+      zIndex: 0,
+    }
   },
 }));
 
 // Create a styled AppBar (the top navigation bar on mobile) with a glassmorphic effect.
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' 
-    ? 'rgba(22, 28, 36, 0.95)' 
-    : 'rgba(255, 255, 255, 0.95)',
-  backgroundImage: theme.palette.mode === 'dark'
-    ? 'linear-gradient(to right, rgba(26, 32, 48, 0.95), rgba(8, 11, 25, 0.95))'
-    : 'linear-gradient(to right, rgba(255, 255, 255, 0.95), rgba(240, 244, 248, 0.95))',
+  backgroundColor: '#0c1421',
+  backgroundImage: 'linear-gradient(to right, #0c1421 0%, #1a1a2e 100%)',
   backdropFilter: 'blur(20px)',
-  boxShadow: theme.palette.mode === 'dark'
-    ? '0 8px 16px 0 rgba(0, 0, 0, 0.4)'
-    : '0 8px 16px 0 rgba(145, 158, 171, 0.2)',
-  borderBottom: `1px solid ${theme.palette.divider}`,
+  boxShadow: '0 8px 16px 0 rgba(0, 255, 255, 0.1)',
+  borderBottom: '1px solid #00ffff40',
 }));
 
 // Create a styled component for the brand logo in the sidebar and app bar.
 const BrandLogo = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  gap: '8px',
+  gap: '12px',
+  padding: '16px',
   // Styles for the icon container of the logo
   '& .logo-icon': {
-    background: theme.palette.mode === 'dark'
-      ? 'linear-gradient(135deg, #5C6BC0 0%, #3F51B5 50%, #303F9F 100%)'
-      : 'linear-gradient(135deg, #42A5F5 0%, #2196F3 50%, #1976D2 100%)',
+    background: 'linear-gradient(135deg, #00ffff 0%, #ff00ff 100%)',
     borderRadius: '8px',
-    padding: '6px',
+    padding: '8px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    boxShadow: theme.palette.mode === 'dark'
-      ? '0 2px 8px rgba(0,0,0,0.5)'
-      : '0 2px 8px rgba(33,150,243,0.3)',
+    boxShadow: '0 0 20px rgba(0, 255, 255, 0.4)',
+    border: '1px solid #00ffff40',
   }
 }));
 
@@ -295,29 +313,28 @@ function AppContent() {
       }}>
         <BrandLogo>
           <Box className="logo-icon">
-            <TrendingUp sx={{ color: '#fff', fontSize: '1.2rem' }} />
+              <Terminal sx={{ color: '#fff', fontSize: '1.2rem' }} />
           </Box>
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Typography variant="h6" noWrap sx={{ 
               fontWeight: 700, 
-              // Apply a gradient to the text for a modern look
-              background: theme.palette.mode === 'dark'
-                ? 'linear-gradient(to right, #9C96FF, #76C4FF)'
-                : 'linear-gradient(to right, #3366FF, #00CCFF)',
+              background: 'linear-gradient(to right, #00ffff, #ff00ff)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               letterSpacing: '0.5px',
-              lineHeight: 1.2
+              lineHeight: 1.2,
+              fontFamily: 'monospace'
             }}>
-              MarketPulse
+              ./learning_stack
             </Typography>
             <Typography variant="caption" sx={{ 
               fontSize: '0.65rem', 
               opacity: 0.8, 
               letterSpacing: '0.05rem',
-              color: theme.palette.text.secondary
+              color: '#a0a0a0',
+              fontFamily: 'monospace'
             }}>
-              MARKET INTELLIGENCE PLATFORM
+              $ DEV_MODE = ON
             </Typography>
           </Box>
         </BrandLogo>
@@ -329,11 +346,11 @@ function AppContent() {
       {/* Container for the navigation list items. */}
       <Box sx={{ p: 1, mt: 1 }}>
         {[
-          { text: 'Home', icon: <HomeIcon />, path: '/' },
-          { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
-          { text: 'News', icon: <NewsIcon />, path: '/news' },
-          { text: 'Trade', icon: <TradeIcon />, path: '/trade' },
-          { text: 'Account', icon: <AccountIcon />, path: '/account' },
+          { text: '> Home', icon: <HomeIcon />, path: '/' },
+          { text: '> Stats', icon: <Terminal />, path: '/dashboard' },
+          { text: '> Articles', icon: <NewsIcon />, path: '/news' },
+          { text: '> Editor', icon: <EditorIcon />, path: '/trade' },
+          { text: '> Profile', icon: <Code />, path: '/account' },
         ].map((item) => (
           // Each item is a "button" on our "Elevator Panel".
           // It's a <StyledNavLink> which is a styled version of React Router's NavLink.
@@ -402,33 +419,33 @@ function AppContent() {
               onClick={handleDrawerToggle}
               sx={{ mr: 2, color: 'text.primary', '&:focus': { outline: 'none' } }}
             >
-              <MenuIcon />
+              <MenuIcon sx={{ color: '#00ffff' }} />
             </IconButton>
             {/* Show the brand logo in the mobile app bar. */}
             <BrandLogo>
               <Box className="logo-icon">
-                <TrendingUp sx={{ color: '#fff', fontSize: '1.2rem' }} />
+                <Terminal sx={{ color: '#fff', fontSize: '1.2rem' }} />
               </Box>
               <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                 <Typography variant="h6" noWrap sx={{ 
                   fontWeight: 700, 
-                  background: theme.palette.mode === 'dark'
-                    ? 'linear-gradient(to right, #9C96FF, #76C4FF)'
-                    : 'linear-gradient(to right, #3366FF, #00CCFF)', 
+                  background: 'linear-gradient(to right, #00ffff, #ff00ff)', 
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                   letterSpacing: '0.5px',
-                  lineHeight: 1.2
+                  lineHeight: 1.2,
+                  fontFamily: 'monospace'
                 }}>
-                  MarketPulse
+                  ./learning_stack
                 </Typography>
                 <Typography variant="caption" sx={{ 
                   fontSize: '0.6rem', 
                   opacity: 0.8, 
                   letterSpacing: '0.05rem',
-                  color: theme.palette.text.secondary
+                  color: '#a0a0a0',
+                  fontFamily: 'monospace'
                 }}>
-                  MARKET INTELLIGENCE PLATFORM
+                  $ DEV_MODE = ON
                 </Typography>
               </Box>
             </BrandLogo>

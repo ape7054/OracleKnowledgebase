@@ -128,7 +128,7 @@ function Register() {
                 mb: 1,
               }}
             >
-              Join MarketPulse
+              Join LearningStack
             </Typography>
             <Typography 
               variant="h6" 

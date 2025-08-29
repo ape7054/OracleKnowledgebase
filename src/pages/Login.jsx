@@ -125,7 +125,7 @@ function Login() {
                 fontWeight: 300,
               }}
             >
-              Sign in to your MarketPulse account
+              Sign in to your LearningStack account
         </Typography>
           </Box>
 
