@@ -1,148 +1,52 @@
-import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
+import { useState, useMemo } from 'react';
 import {
   Box,
   Grid,
   Typography,
-  Paper,
   useTheme,
   Chip,
   useMediaQuery,
   Divider,
-  Button,
   ButtonGroup,
-  Card,
-  CardContent,
-  Avatar,
-  Stack,
-  IconButton,
-  Fade,
-  Slide,
+  Button,
   Container,
-  Skeleton,
-  LinearProgress
+  LinearProgress,
+  IconButton,
+  Stack,
+  Fade
 } from '@mui/material';
 import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  CartesianGrid,
-  LineChart,
-  Line,
-  RadialBarChart,
-  RadialBar,
-  ComposedChart,
-  Bar
-} from 'recharts';
+  AccountBalanceWalletOutlined as AccountBalanceWalletOutlinedIcon,
+  TrendingUp as TrendingUpIcon,
+  ShowChartOutlined as ShowChartOutlinedIcon,
+  BarChartOutlined as BarChartOutlinedIcon,
+  Insights as InsightsIcon,
+  Verified,
+  Speed,
+  Refresh,
+  Settings,
+  Assessment
+} from '@mui/icons-material';
 import { styled, alpha, keyframes } from '@mui/system';
 
-import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
-import TrendingUpIcon from '@mui/icons-material/TrendingUp';
-import ShowChartOutlinedIcon from '@mui/icons-material/ShowChartOutlined';
-import BarChartOutlinedIcon from '@mui/icons-material/BarChartOutlined';
-import SignalCellularAltIcon from '@mui/icons-material/SignalCellularAlt';
-import InsightsIcon from '@mui/icons-material/Insights';
-import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
-import SentimentNeutralIcon from '@mui/icons-material/SentimentNeutral';
-import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfied';
-import TimelineIcon from '@mui/icons-material/Timeline';
-import TrendingDownIcon from '@mui/icons-material/TrendingDown';
+// Import refactored components
 import {
-  AutoGraph,
-  CandlestickChart,
-  Analytics,
-  Speed,
-  Security,
-  Bolt,
-  Rocket,
-  Star,
-  Verified,
-  PlayArrow,
-  Refresh,
-  MoreVert,
-  Fullscreen,
-  FilterList,
-  Search,
-  Notifications,
-  Settings
-} from '@mui/icons-material';
+  PremiumCard,
+  GlassmorphicPaper,
+  SentimentGauge,
+  SocialMentions,
+  TrendIndicator,
+  MarketTableView,
+  MarketCardView,
+  CoinIcon
+} from '../components/dashboard';
 
-// Removed colored cryptocurrency icon imports; neutral icons are rendered in-code
+// Import custom hooks
+import { useMarketData, useOhlcData } from '../hooks';
 
-// Import API services
-import { cachedMarketApi, dataTransformers, cacheManager, marketApi } from '../api/marketApi';
-// import CryptoNews from '../components/CryptoNews';
-
-// Import the new chart component
+// Import existing components
 import { TradingViewChart } from '../components/TradingViewChart';
 import LoadingScreen from '../components/LoadingScreen';
-import { Assessment } from '@mui/icons-material';
-
-// 创建一个图片图标组件 - 移到外部避免重新创建
-const CoinImageIcon = ({ imageUrl, symbol, fallbackIcon }) => {
-  const [hasError, setHasError] = useState(false);
-  const initialSrc = useMemo(() => {
-    const url = imageUrl || '';
-    if (typeof url === 'string' && (url.includes('assets.coingecko.com') || url.includes('coin-images.coingecko.com'))) {
-      const noScheme = url.replace(/^https?:\/\//, '');
-      return `https://images.weserv.nl/?url=${encodeURIComponent(noScheme)}`;
-    }
-    return url;
-  }, [imageUrl]);
-  const [src, setSrc] = useState(initialSrc);
-  const triedAltHostRef = useRef(false);
-  const triedProxyRef = useRef(false);
-  
-  if (hasError || !src) {
-    return fallbackIcon;
-  }
-  
-  return (
-    <Box
-      sx={{
-        width: 28,
-        height: 28,
-        borderRadius: '50%',
-        overflow: 'hidden',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <img
-        src={src}
-        alt={symbol}
-        referrerPolicy="no-referrer"
-        loading="lazy"
-        style={{
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-        }}
-        onError={() => {
-          // 尝试将 CoinGecko 资源域名从 assets.coingecko.com 切换到 coin-images.coingecko.com
-          if (!triedAltHostRef.current && typeof src === 'string' && src.includes('assets.coingecko.com')) {
-            triedAltHostRef.current = true;
-            const alt = src.replace('assets.coingecko.com', 'coin-images.coingecko.com');
-            setSrc(alt);
-            return;
-          }
-          // 二级回退：使用公开图片代理（降低跨域/地区屏蔽导致的失败）
-          if (!triedProxyRef.current && typeof src === 'string') {
-            triedProxyRef.current = true;
-            const noScheme = src.replace(/^https?:\/\//, '');
-            const proxy = `https://images.weserv.nl/?url=${encodeURIComponent(noScheme)}`;
-            setSrc(proxy);
-            return;
-          }
-          setHasError(true);
-        }}
-      />
-    </Box>
-  );
-};
 
 // 动画定义
 const glow = keyframes`
@@ -160,1937 +64,59 @@ const pulse = keyframes`
   50% { opacity: 0.7; }
 `;
 
-// 高级卡片组件
-const PremiumCard = styled(Paper)(({ theme, variant = 'default' }) => ({
-  padding: '32px',
-  borderRadius: '24px',
-  height: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  position: 'relative',
-  overflow: 'hidden',
-  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-  cursor: 'pointer',
-
-  // 基础样式
-  ...(theme.palette.mode === 'dark'
-    ? {
-        background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.8) 100%)',
-        backdropFilter: 'blur(20px)',
-        border: '1px solid rgba(148, 163, 184, 0.1)',
-        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.4)',
-      }
-    : {
-        background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.9) 100%)',
-        backdropFilter: 'blur(20px)',
-        border: '1px solid rgba(226, 232, 240, 0.8)',
-        boxShadow: '0 20px 60px rgba(148, 163, 184, 0.15)',
-      }),
-
-  // 变体样式
-  ...(variant === 'premium' && {
-    background: theme.palette.mode === 'dark'
-      ? 'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 50%, rgba(240, 147, 251, 0.1) 100%)'
-      : 'linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 50%, rgba(240, 147, 251, 0.05) 100%)',
-    border: '1px solid rgba(102, 126, 234, 0.2)',
-  }),
-
-  ...(variant === 'highlight' && {
-    background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%)',
-    border: '1px solid rgba(16, 185, 129, 0.3)',
-  }),
-
-  // 悬停效果
-  '&:hover': {
-    transform: 'translateY(-8px) scale(1.02)',
-    ...(theme.palette.mode === 'dark'
-      ? {
-          boxShadow: '0 32px 80px rgba(0, 0, 0, 0.6)',
-          border: '1px solid rgba(148, 163, 184, 0.3)',
-        }
-      : {
-          boxShadow: '0 32px 80px rgba(148, 163, 184, 0.25)',
-          border: '1px solid rgba(102, 126, 234, 0.3)',
-        }),
-  },
-
-  // 内部光效
-  '&::before': {
-    content: '""',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: '1px',
-    background: 'linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.8), transparent)',
-    opacity: 0,
-    transition: 'opacity 0.4s ease',
-  },
-
-  '&:hover::before': {
-    opacity: 1,
-  },
-}));
-
-// 保留原有的GlassmorphicPaper组件以兼容现有代码
-const GlassmorphicPaper = styled(Paper)(({ theme }) => ({
-  padding: '24px',
-  borderRadius: '16px',
-  height: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  transition: 'all 0.3s ease',
-
-  ...(theme.palette.mode === 'dark'
-    ? {
-        backgroundColor: 'rgba(22, 27, 34, 0.75)',
-        backdropFilter: 'blur(20px)',
-        border: '1px solid rgba(255, 255, 255, 0.08)',
-        boxShadow: '0 10px 40px 0 rgba(0, 0, 0, 0.35)',
-      }
-    : {
-        backgroundColor: 'rgba(255, 255, 255, 0.85)',
-        backdropFilter: 'blur(20px)',
-        border: `1px solid ${theme.palette.divider}`,
-        boxShadow: '0 8px 32px rgba(145, 158, 171, 0.24)',
-      }),
-
-  color: theme.palette.text.primary,
-
-  '&:hover': {
-      transform: 'translateY(-4px)',
-      ...(theme.palette.mode === 'dark' && {
-          backgroundColor: 'rgba(22, 27, 34, 0.85)',
-          boxShadow: '0 12px 48px 0 rgba(0, 0, 0, 0.45)',
-      }),
-  },
-}));
-
-const CustomTooltip = ({ active, payload, label, theme }) => {
-    if (active && payload && payload.length) {
-        return (
-            <Paper sx={{
-                padding: '12px',
-                borderRadius: '12px',
-                ...(theme.palette.mode === 'dark'
-                    ? {
-                        backgroundColor: 'rgba(33, 43, 54, 0.9)',
-                        backdropFilter: 'blur(20px)',
-                        border: '1px solid rgba(255, 255, 255, 0.12)',
-                        boxShadow: '0 8px 16px rgba(0,0,0,0.4)',
-                    } : {
-                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                        backdropFilter: 'blur(20px)',
-                        border: `1px solid ${theme.palette.divider}`,
-                        boxShadow: theme.shadows[4],
-                    }
-                )
-            }}>
-                <Typography variant="subtitle2" sx={{ mb: 1, color: theme.palette.text.secondary }}>{`Time: ${label}`}</Typography>
-                {payload.map((pld) => (
-                    <Box key={pld.dataKey} sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
-                        <Box sx={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: pld.stroke, mr: 1.5 }} />
-                        <Typography variant="body2" sx={{ color: theme.palette.text.primary, fontWeight: 600, minWidth: 40 }}>
-                            {`${pld.dataKey}: `}
-                        </Typography>
-                        <Typography variant="body2" sx={{ color: theme.palette.text.primary, fontFamily: 'monospace', ml: 0.5 }}>
-                            {`$${pld.value.toLocaleString()}`}
-                        </Typography>
-                    </Box>
-                ))}
-            </Paper>
-        );
-    }
-    return null;
-};
-
-// 生成更真实的加密货币价格数据，包含更大的波动
-// 模拟数据已删除 - 完全依赖API数据
-
-const chartMeta = {
-  BTC: {
-    stroke: '#f7931a',
-    id: 'colorBtc',
-    gradient: ['#f7931a', '#ff6b35'],
-    name: 'Bitcoin',
-    symbol: '₿'
-  },
-  ETH: {
-    stroke: '#627eea',
-    id: 'colorEth',
-    gradient: ['#627eea', '#9c88ff'],
-    name: 'Ethereum',
-    symbol: 'Ξ'
-  },
-  SOL: {
-    stroke: '#14f195',
-    id: 'colorSol',
-    gradient: ['#14f195', '#00d4aa'],
-    name: 'Solana',
-    symbol: '◎'
-  },
-}
-
-// 移除静态数据 - 完全依赖API
-
-// 专业金融Dashboard统计卡片
-const PremiumStatCard = ({ title, value, icon, color, trend, subtitle }) => {
-  const theme = useTheme();
-
-  return (
-    <Card sx={{
-      position: 'relative',
-      height: '160px',
-      minHeight: '160px',
-      borderRadius: '12px',
-      background: theme.palette.mode === 'dark'
-        ? 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)'
-        : 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
-      border: theme.palette.mode === 'dark'
-        ? '1px solid rgba(148, 163, 184, 0.1)'
-        : '1px solid rgba(226, 232, 240, 0.8)',
-      boxShadow: theme.palette.mode === 'dark'
-        ? '0 1px 3px rgba(0, 0, 0, 0.3)'
-        : '0 1px 3px rgba(0, 0, 0, 0.1)',
-      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-      cursor: 'pointer',
-      overflow: 'hidden',
-      display: 'flex',
-      flexDirection: 'column',
-      '&:hover': {
-        transform: 'translateY(-4px)',
-        boxShadow: theme.palette.mode === 'dark'
-          ? '0 10px 25px rgba(0, 0, 0, 0.4)'
-          : '0 10px 25px rgba(0, 0, 0, 0.15)',
-        border: theme.palette.mode === 'dark'
-          ? '1px solid rgba(148, 163, 184, 0.2)'
-          : '1px solid rgba(226, 232, 240, 1)',
-      }
-    }}>
-      {/* 顶部装饰条 */}
-      <Box sx={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        height: '3px',
-        background: `linear-gradient(90deg, ${color} 0%, ${alpha(color, 0.6)} 100%)`
-      }} />
-
-      <CardContent sx={{
-        p: 2,
-        height: 'calc(100% - 3px)', // 减去顶部装饰条的高度
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        flex: 1,
-        '&:last-child': { pb: 2 }
-      }}>
-        {/* 头部区域 */}
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.5 }}>
-          {/* 图标 */}
-          <Box
-            sx={{
-              width: 40,
-              height: 40,
-              borderRadius: '10px',
-              background: `linear-gradient(135deg, ${color} 0%, ${alpha(color, 0.8)} 100%)`,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              boxShadow: `0 3px 8px ${alpha(color, 0.3)}`,
-              '& svg': {
-                color: '#fff',
-                fontSize: '1.3rem'
-              }
-            }}
-          >
-            {icon}
-          </Box>
-
-          {/* 趋势标签 */}
-          {trend && (
-            <Chip
-              label={trend}
-              size="small"
-              sx={{
-                height: '22px',
-                fontSize: '0.7rem',
-                fontWeight: 600,
-                background: trend.startsWith('+')
-                  ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
-                  : 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
-                color: '#fff',
-                border: 'none',
-                '& .MuiChip-label': {
-                  px: 1
-                }
-              }}
-            />
-          )}
-        </Box>
-
-        {/* 标题 */}
-        <Typography
-          variant="body2"
-          sx={{
-            color: theme.palette.text.secondary,
-            fontSize: '0.75rem',
-            fontWeight: 500,
-            textTransform: 'uppercase',
-            letterSpacing: '0.3px',
-            mb: 0.5,
-            lineHeight: 1.2
-          }}
-        >
-          {title}
-        </Typography>
-
-        {/* 主要数值 */}
-        <Typography
-          variant="h4"
-          sx={{
-            fontWeight: 700,
-            fontSize: { xs: '1.5rem', md: '1.75rem' },
-            lineHeight: 1.1,
-            color: theme.palette.text.primary,
-            mb: subtitle ? 0.25 : 0
-          }}
-        >
-          {value}
-        </Typography>
-
-        {/* 副标题 */}
-        {subtitle && (
-          <Typography
-            variant="caption"
-            sx={{
-              color: theme.palette.text.secondary,
-              fontSize: '0.7rem',
-              fontWeight: 400,
-              opacity: 0.8,
-              lineHeight: 1.2
-            }}
-          >
-            {subtitle}
-          </Typography>
-        )}
-      </CardContent>
-    </Card>
-  );
-};
-  
-// 高级SparkLine组件
-const PremiumSparkLine = ({ data, strokeColor, trend = 'neutral' }) => {
-  const theme = useTheme();
-
-  // 防御：无效数据直接不渲染
-  if (!Array.isArray(data) || data.length === 0) {
-    return null;
-  }
-
-  // 规范化数据
-  const chartData = data.map((value, index) => ({ x: index, y: Number(value) }));
-
-  // 配色：优先使用传入的 strokeColor，其次根据趋势给默认色
-  const defaultColors = {
-    up: '#16C784',
-    down: '#EA3943',
-    neutral: theme.palette.text.secondary,
-  };
-  const resolvedColor = strokeColor || defaultColors[trend] || defaultColors.neutral;
-
-  const areaId = `spark-area-${(resolvedColor || '').replace('#', '')}-${trend}`;
-
-  // 计算 Y 轴域：当波动很小时，自动放大可视范围；当波动较大时只加少量边距
-  const values = chartData.map(p => p.y);
-  const minVal = Math.min(...values);
-  const maxVal = Math.max(...values);
-  const midVal = (minVal + maxVal) / 2 || 0;
-  const rawRange = Math.max(maxVal - minVal, 0);
-  // 以中位值 0.05% 作为最小可视跨度，避免"纯直线"
-  const minSpan = Math.max(Math.abs(midVal) * 0.0005, 1e-6);
-  const range = Math.max(rawRange, minSpan);
-  const pad = Math.max(range * 0.15, 1e-8);
-  const domainMin = minVal - pad;
-  const domainMax = maxVal + pad;
-
-  // 只绘制最后一个点的圆点
-  const renderLastDot = (props) => {
-    const { cx, cy, index } = props;
-    if (index !== chartData.length - 1) return null;
-    return (
-      <circle cx={cx} cy={cy} r={3} fill={resolvedColor} stroke={theme.palette.mode === 'dark' ? '#0B1220' : '#FFFFFF'} strokeWidth={1.25} />
-    );
-  };
-
-  return (
-    <Box
-      sx={{
-        position: 'relative',
-        width: '100%',
-        height: '100%', // 高度交由父容器控制
-        overflow: 'hidden',
-        borderRadius: 999,
-        background: `linear-gradient(180deg, ${alpha(resolvedColor, 0.12)} 0%, ${alpha(resolvedColor, 0.04)} 100%)`,
-        border: `1px solid ${alpha(resolvedColor, 0.22)}`,
-        boxShadow: theme.palette.mode === 'dark'
-          ? `inset 0 0 0 1px ${alpha('#000', 0.3)}, 0 2px 8px ${alpha(resolvedColor, 0.2)}`
-          : `inset 0 0 0 1px ${alpha('#000', 0.06)}, 0 2px 10px ${alpha(resolvedColor, 0.25)}`,
-      }}
-    >
-      <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={chartData} margin={{ top: 6, right: 6, bottom: 6, left: 6 }}>
-          <defs>
-            <linearGradient id={areaId} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={alpha(resolvedColor, 0.28)} />
-              <stop offset="100%" stopColor={alpha(resolvedColor, 0.04)} />
-            </linearGradient>
-          </defs>
-
-          <YAxis type="number" hide domain={[domainMin, domainMax]} />
-
-          <Area
-            type="monotone"
-            dataKey="y"
-            stroke={resolvedColor}
-            strokeWidth={2}
-            fill={`url(#${areaId})`}
-            isAnimationActive={false}
-            dot={false}
-            activeDot={false}
-          />
-
-          {/* 使用透明线只为绘制最后一个圆点 */}
-          <Line
-            type="monotone"
-            dataKey="y"
-            stroke="transparent"
-            dot={renderLastDot}
-            isAnimationActive={false}
-            activeDot={false}
-          />
-        </AreaChart>
-      </ResponsiveContainer>
-    </Box>
-  );
-};
-
-// 增强市场表格样式（未使用，已移除）
-
-// 升级后的市场情绪仪表组件
-const SentimentGauge = ({ value, size = 180 }) => {
-  const theme = useTheme();
-  const data = [{ value: 100, fill: 'url(#sentimentGradient)' }];
-  const startAngle = 180;
-  const endAngle = 0;
-  
-  // 获取情绪描述和颜色
-  const getSentimentInfo = (value) => {
-    if (value <= 20) return { 
-      text: 'Extreme Fear', 
-      color: theme.palette.error.main, 
-      gradient: `linear-gradient(135deg, ${theme.palette.error.main}, ${theme.palette.error.dark})`,
-      icon: <SentimentVeryDissatisfiedIcon sx={{ fontSize: '1.75rem', color: theme.palette.error.main }} /> 
-    };
-    if (value <= 40) return { 
-      text: 'Fear', 
-      color: theme.palette.error.light, 
-      gradient: `linear-gradient(135deg, ${theme.palette.error.light}, ${theme.palette.error.main})`,
-      icon: <SentimentVeryDissatisfiedIcon sx={{ fontSize: '1.75rem', color: theme.palette.error.light }} /> 
-    };
-    if (value <= 60) return { 
-      text: 'Neutral', 
-      color: theme.palette.warning.main, 
-      gradient: `linear-gradient(135deg, ${theme.palette.warning.light}, ${theme.palette.warning.dark})`,
-      icon: <SentimentNeutralIcon sx={{ fontSize: '1.75rem', color: theme.palette.warning.main }} /> 
-    };
-    if (value <= 80) return { 
-      text: 'Greed', 
-      color: theme.palette.success.light, 
-      gradient: `linear-gradient(135deg, ${theme.palette.success.light}, ${theme.palette.success.main})`,
-      icon: <SentimentVerySatisfiedIcon sx={{ fontSize: '1.75rem', color: theme.palette.success.light }} /> 
-    };
-    return { 
-      text: 'Extreme Greed', 
-      color: theme.palette.success.main, 
-      gradient: `linear-gradient(135deg, ${theme.palette.success.main}, ${theme.palette.success.dark})`,
-      icon: <SentimentVerySatisfiedIcon sx={{ fontSize: '1.75rem', color: theme.palette.success.main }} /> 
-    };
-  };
-  
-  const sentimentInfo = getSentimentInfo(value);
-  const angle = startAngle - (value / 100) * (startAngle - endAngle);
-
-  // 生成细小刻度线数据
-  const generateTicks = () => {
-    const ticks = [];
-    for (let i = 0; i <= 100; i += 5) {
-      const tickAngle = startAngle - (i / 100) * (startAngle - endAngle);
-      const isMainTick = i % 25 === 0;
-      const tickLength = isMainTick ? 10 : 5;
-      const tickWidth = isMainTick ? 2 : 1;
-      const tickOpacity = isMainTick ? 0.8 : 0.4;
-      const x1 = 50 - Math.cos(tickAngle * Math.PI / 180) * (size/2 - (isMainTick ? 22 : 22));
-      const y1 = 100 - Math.sin(tickAngle * Math.PI / 180) * (size/2 - (isMainTick ? 22 : 22));
-      const x2 = 50 - Math.cos(tickAngle * Math.PI / 180) * (size/2 - (isMainTick ? 22 : 22) + tickLength);
-      const y2 = 100 - Math.sin(tickAngle * Math.PI / 180) * (size/2 - (isMainTick ? 22 : 22) + tickLength);
-      
-      ticks.push({ x1: `${x1}%`, y1: `${y1}%`, x2: `${x2}%`, y2: `${y2}%`, width: tickWidth, opacity: tickOpacity });
-    }
-    return ticks;
-  };
-
-  return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      {/* 仪表盘容器 */}
-      <Box sx={{ 
-        position: 'relative', 
-        width: size, 
-        height: size/1.8, 
-        mb: 1 
-      }}>
-        {/* 渐变背景层 */}
-        <Box sx={{
-          position: 'absolute',
-          width: '100%',
-          height: '100%',
-          borderRadius: '50% 50% 0 0',
-          overflow: 'hidden',
-          background: theme.palette.mode === 'dark' 
-            ? 'linear-gradient(135deg, rgba(22, 28, 36, 0.8), rgba(10, 14, 25, 0.8))'
-            : 'linear-gradient(135deg, rgba(255, 255, 255, 0.6), rgba(240, 245, 250, 0.6))',
-          boxShadow: theme.palette.mode === 'dark'
-            ? 'inset 0 -10px 20px -10px rgba(255, 255, 255, 0.1), 0 8px 16px rgba(0, 0, 0, 0.3)'
-            : 'inset 0 -10px 20px -10px rgba(145, 158, 171, 0.2), 0 8px 16px rgba(145, 158, 171, 0.12)',
-          '&::before': {
-            content: '""',
-            position: 'absolute',
-            width: 'calc(100% - 10px)',
-            height: 'calc(100% - 5px)',
-            top: '5px',
-            left: '5px',
-            borderRadius: '50% 50% 0 0',
-            background: theme.palette.mode === 'dark' 
-              ? 'linear-gradient(180deg, rgba(30, 40, 50, 0.7), rgba(20, 25, 40, 0.7))'
-              : 'linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(250, 252, 255, 0.9))',
-            backdropFilter: 'blur(8px)',
-          }
-        }} />
-        
-        {/* 仪表盘图表 */}
-        <ResponsiveContainer width="100%" height="100%">
-          <RadialBarChart 
-            cx="50%" 
-            cy="100%" 
-            innerRadius={size/2 - 20} 
-            outerRadius={size/2}
-            startAngle={startAngle} 
-            endAngle={endAngle}
-            barSize={12}
-            data={data}
-          >
-            <defs>
-              <linearGradient id="sentimentGradient" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor={theme.palette.error.main} />
-                <stop offset="25%" stopColor={theme.palette.error.main} />
-                <stop offset="50%" stopColor={theme.palette.warning.main} />
-                <stop offset="75%" stopColor={theme.palette.success.light} />
-                <stop offset="100%" stopColor={theme.palette.success.main} />
-              </linearGradient>
-              <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-                <feGaussianBlur stdDeviation="3" result="blur" />
-                <feComposite in="SourceGraphic" in2="blur" operator="over" />
-              </filter>
-              <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-                <feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="rgba(0,0,0,0.3)" />
-              </filter>
-              <linearGradient id="needleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor={alpha(sentimentInfo.color, 0.8)} />
-                <stop offset="100%" stopColor={alpha(sentimentInfo.color, 1)} />
-              </linearGradient>
-            </defs>
-            
-            {/* 背景轨道 - 半透明效果 */}
-            <RadialBar 
-              dataKey="value"
-              cornerRadius={6}
-              fill="rgba(255,255,255,0.08)"
-              background={{ 
-                fill: theme.palette.mode === 'dark' ? 
-                  'rgba(255,255,255,0.06)' : 
-                  'rgba(0,0,0,0.03)'
-              }}
-            />
-            
-            {/* 彩色渐变轨道 */}
-            <RadialBar 
-              dataKey="value"
-              cornerRadius={6}
-              fill="url(#sentimentGradient)"
-              style={{ filter: 'url(#glow)' }}
-            />
-            
-            {/* 刻度线 */}
-            {generateTicks().map((tick, i) => (
-              <line 
-                key={`tick-${i}`}
-                x1={tick.x1} 
-                y1={tick.y1} 
-                x2={tick.x2} 
-                y2={tick.y2} 
-                stroke={theme.palette.mode === 'dark' ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.4)"}
-                strokeWidth={tick.width}
-                strokeOpacity={tick.opacity}
-              />
-            ))}
-            
-            {/* 主刻度线标记 - 只显示线条，不显示数字 */}
-            {[25, 50, 75].map((position, i) => {
-              const posAngle = startAngle - (position / 100) * (startAngle - endAngle);
-              return (
-                <g key={`mark-${position}`}>
-                  <line 
-                    x1={`${50 - Math.cos(posAngle * Math.PI / 180) * (size/2 - 18)}%`} 
-                    y1={`${100 - Math.sin(posAngle * Math.PI / 180) * (size/2 - 18)}%`} 
-                    x2={`${50 - Math.cos(posAngle * Math.PI / 180) * (size/2 - 10)}%`} 
-                    y2={`${100 - Math.sin(posAngle * Math.PI / 180) * (size/2 - 10)}%`} 
-                    stroke={theme.palette.mode === 'dark' ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.5)"}
-                    strokeWidth={3}
-                    strokeOpacity={0.7}
-                    strokeLinecap="round"
-                  />
-                </g>
-              );
-            })}
-            
-            {/* 指针 - 高级渐变设计 */}
-            <g filter="url(#shadow)">
-              {/* 指针底座 */}
-              <circle 
-                cx="50%" 
-                cy="100%" 
-                r={8} 
-                fill={theme.palette.mode === 'dark' ? '#2a2f3a' : '#e0e4e9'}
-                stroke={sentimentInfo.color}
-                strokeWidth={2}
-              />
-              <circle 
-                cx="50%" 
-                cy="100%" 
-                r={4}
-                fill="url(#needleGradient)"
-              />
-              
-              {/* 指针 */}
-              <path
-                d={`
-                  M ${50 - 3} 100 
-                  L ${50 - Math.cos(angle * Math.PI / 180) * 48} ${100 - Math.sin(angle * Math.PI / 180) * 48} 
-                  L ${50 + 3} 100
-                  Z
-                `}
-                fill="url(#needleGradient)"
-                style={{ transformOrigin: '50% 100%', transformBox: 'fill-box' }}
-              />
-              
-              {/* 指针顶端圆点 */}
-              <circle 
-                cx={50 - Math.cos(angle * Math.PI / 180) * 48} 
-                cy={100 - Math.sin(angle * Math.PI / 180) * 48} 
-                r={3}
-                fill="url(#needleGradient)"
-              />
-            </g>
-          </RadialBarChart>
-        </ResponsiveContainer>
-      </Box>
-      
-      {/* 情绪指标值和状态 */}
-      <Box 
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          mt: 3,
-          background: alpha(sentimentInfo.color, theme.palette.mode === 'dark' ? 0.15 : 0.08),
-          px: 4,
-          py: 1.5,
-          borderRadius: 2,
-          backdropFilter: 'blur(4px)',
-          boxShadow: `0 4px 12px ${alpha(sentimentInfo.color, 0.15)}`
-        }}
-      >
-        <Typography 
-          variant="h3" 
-          sx={{ 
-            fontWeight: 700, 
-            mb: 0.5,
-            background: sentimentInfo.gradient,
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            filter: 'drop-shadow(0 2px 2px rgba(0,0,0,0.15))'
-          }}
-        >
-          {value}
-        </Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          {sentimentInfo.icon}
-          <Typography 
-            variant="button" 
-            sx={{ 
-              fontSize: '1rem', 
-              color: sentimentInfo.color, 
-              fontWeight: 600,
-              letterSpacing: '0.03em'
-            }}
-          >
-            {sentimentInfo.text}
-          </Typography>
-        </Box>
-      </Box>
-    </Box>
-  );
-};
-
-// 价格趋势方向指标
-const TrendIndicator = ({ direction, strength }) => {
-  const theme = useTheme();
-  const getColor = () => {
-    if (direction === 'up') {
-      return theme.palette.success.main;
-    } else if (direction === 'down') {
-      return theme.palette.error.main;
-    }
-    return theme.palette.text.secondary;
-  };
-  
-  const getIcon = () => {
-    if (direction === 'up') {
-      return <TrendingUpIcon sx={{ fontSize: '1.2rem' }} />;
-    } else if (direction === 'down') {
-      return <TrendingDownIcon sx={{ fontSize: '1.2rem' }} />;
-    }
-    return <TimelineIcon sx={{ fontSize: '1.2rem' }} />;
-  };
-
-  return (
-    <Chip 
-      icon={getIcon()}
-      label={`${direction === 'neutral' ? 'Neutral' : direction === 'up' ? 'Bullish' : 'Bearish'} ${strength}`}
-      sx={{
-        backgroundColor: alpha(getColor(), 0.1),
-        color: getColor(),
-        fontWeight: 600,
-        '& .MuiChip-icon': {
-          color: getColor()
-        }
-      }}
-    />
-  );
-};
-
-// 社交媒体提及度组件 - 全新设计
-const SocialMentions = () => {
-  const theme = useTheme();
-  
-  // 社交媒体数据
-  const data = [
-    { 
-      name: 'Twitter', 
-      value: 65, 
-      color: '#1DA1F2',
-      trend: 'up',  
-      change: '+12%',
-      sentiment: 'Positive'
-    },
-    { 
-      name: 'Reddit', 
-      value: 25, 
-      color: '#FF4500',
-      trend: 'down',
-      change: '-5%',
-      sentiment: 'Mixed'
-    },
-    { 
-      name: 'Telegram', 
-      value: 10, 
-      color: '#0088cc',
-      trend: 'stable',
-      change: '+0.5%',
-      sentiment: 'Neutral'
-    },
-  ];
-  
-  // 获取趋势图标和颜色
-  const getTrendIcon = (trend) => {
-    if (trend === 'up') {
-      return <TrendingUpIcon sx={{ fontSize: '0.9rem', color: theme.palette.success.main }} />;
-    }
-    if (trend === 'down') {
-      return <TrendingDownIcon sx={{ fontSize: '0.9rem', color: theme.palette.error.main }} />;
-    }
-    return <TimelineIcon sx={{ fontSize: '0.9rem', color: theme.palette.warning.main }} />;
-  };
-  
-  // 获取情绪标签颜色
-  const getSentimentColor = (sentiment) => {
-    if (sentiment === 'Positive') return theme.palette.success.main;
-    if (sentiment === 'Negative') return theme.palette.error.main;
-    if (sentiment === 'Mixed') return theme.palette.warning.main;
-    return theme.palette.info.main;
-  };
-  
-  // 总提及量
-  const totalMentions = 45873;
-  
-  return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      {/* 总数和趋势摘要 */}
-      <Box sx={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center', 
-        mb: 2.5 
-      }}>
-        <Box>
-          <Typography variant="body2" color="text.secondary">Total Mentions (24h)</Typography>
-          <Typography variant="h5" sx={{ fontWeight: 700, mt: 0.5 }}>
-            {totalMentions.toLocaleString()}
-          </Typography>
-        </Box>
-        <Box sx={{ 
-          px: 2, 
-          py: 0.75, 
-          borderRadius: 1.5, 
-          background: alpha(theme.palette.success.main, 0.12),
-          display: 'flex',
-          alignItems: 'center'
-        }}>
-          <TrendingUpIcon sx={{ color: theme.palette.success.main, mr: 0.5, fontSize: '1rem' }} />
-          <Typography variant="body2" sx={{ fontWeight: 600, color: theme.palette.success.main }}>
-            +8.3% vs yesterday
-          </Typography>
-        </Box>
-      </Box>
-      
-      {/* 平台明细 */}
-      <Box sx={{ flexGrow: 1 }}>
-        {data.map((platform) => (
-          <Box key={platform.name} sx={{ mb: 2.5 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Box 
-                  sx={{ 
-                    width: 28, 
-                    height: 28, 
-                    borderRadius: '50%', 
-                    backgroundColor: alpha(platform.color, 0.15),
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    mr: 1.5
-                  }}
-                >
-                  <Box 
-                    sx={{ 
-                      width: 16, 
-                      height: 16, 
-                      borderRadius: '50%', 
-                      backgroundColor: platform.color
-                    }}
-                  />
-                </Box>
-                <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                  {platform.name}
-                </Typography>
-              </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Box sx={{ 
-                  display: 'flex', 
-                  alignItems: 'center',
-                  px: 1, 
-                  height: 24, 
-                  borderRadius: 1,
-                  backgroundColor: alpha(getSentimentColor(platform.sentiment), 0.12),
-                  mr: 2
-                }}>
-                  <Typography 
-                    variant="caption" 
-                    sx={{ 
-                      fontSize: '0.7rem',
-                      fontWeight: 600,
-                      color: getSentimentColor(platform.sentiment)
-                    }}
-                  >
-                    {platform.sentiment}
-                  </Typography>
-                </Box>
-                <Typography 
-                  variant="body2" 
-                  sx={{ 
-                    fontWeight: 700, 
-                    minWidth: 32, 
-                    textAlign: 'right'
-                  }}
-                >
-                  {platform.value}%
-                </Typography>
-              </Box>
-            </Box>
-            
-            {/* 进度条 */}
-            <Box sx={{ position: 'relative', height: 8, borderRadius: 4, overflow: 'hidden', bgcolor: alpha(platform.color, 0.15) }}>
-              <Box 
-                sx={{ 
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  height: '100%',
-                  width: `${platform.value}%`,
-                  background: `linear-gradient(90deg, ${alpha(platform.color, 0.7)}, ${platform.color})`,
-                  boxShadow: `0 0 8px ${alpha(platform.color, 0.5)}`,
-                  borderRadius: 4
-                }}
-              />
-            </Box>
-            
-            {/* 变化率 */}
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', mt: 0.5 }}>
-              {getTrendIcon(platform.trend)}
-              <Typography 
-                variant="caption" 
-                sx={{ 
-                  ml: 0.5,
-                  color: platform.trend === 'up' 
-                    ? theme.palette.success.main 
-                    : platform.trend === 'down' 
-                      ? theme.palette.error.main 
-                      : theme.palette.warning.main 
-                }}
-              >
-                {platform.change} this week
-              </Typography>
-            </Box>
-          </Box>
-        ))}
-      </Box>
-      
-      {/* 热度词 */}
-      <Box sx={{ mt: 1 }}>
-        <Typography variant="caption" sx={{ color: theme.palette.text.secondary, display: 'block', mb: 1 }}>
-          Trending Topics
-        </Typography>
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75 }}>
-          {['ETF Approval', 'Bitcoin', 'Regulation', 'Price Action', 'Mining'].map((topic) => (
-            <Chip
-              key={topic}
-              label={topic}
-              size="small"
-              variant="outlined"
-              sx={{ 
-                height: 22, 
-                fontSize: '0.7rem',
-                background: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)',
-                borderColor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.15)'
-              }}
-            />
-          ))}
-        </Box>
-      </Box>
-    </Box>
-  );
-};
-
 function Dashboard() {
   const theme = useTheme();
   const [selectedCoin, setSelectedCoin] = useState('BTC');
-  const [timeframe, setTimeframe] = useState('7d'); // 默认7天
+  const [timeframe, setTimeframe] = useState('7d');
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  // 新增状态管理
-  const [marketData, setMarketData] = useState([]);
-  const [ohlcData, setOhlcData] = useState([]); // K线图数据
-  const [marketSummary, setMarketSummary] = useState({
-    totalMarketCap: '0',
-    btcDominance: '0%',
-    ethDominance: '0%',
-    dailyVolume: '0'
-  });
-  const [initialLoading, setInitialLoading] = useState(true);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const [error, setError] = useState(null);
-  const [lastUpdated, setLastUpdated] = useState(null);
-  // 仅保留去抖与单次加载指示，避免重复闪烁
-  const fetchTimeoutRef = useRef(null);
-  const requestIdRef = useRef(0);
-  const [ohlcLoading, setOhlcLoading] = useState(false);
+  // 使用自定义hooks
+  const {
+    marketData,
+    marketSummary,
+    initialLoading,
+    isRefreshing,
+    error,
+    lastUpdated,
+    fetchMarketData
+  } = useMarketData();
 
-  // 币种主题色（必须在任何条件 return 之前定义，避免 hooks 次序不一致）
+  const { ohlcData, ohlcLoading } = useOhlcData(selectedCoin, timeframe);
+
+  // 币种主题色
   const coinAccent = useMemo(() => ({
     BTC: '#f7931a',
     ETH: '#627eea',
     SOL: '#14f195'
   }[selectedCoin] || theme.palette.primary.main), [selectedCoin, theme.palette.primary.main]);
 
-  // 统一的图标容器组件，确保所有图标尺寸一致
-  const IconWrapper = ({ children }) => (
-    <Box
-      sx={{
-        width: 28,
-        height: 28,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: theme.palette.text.secondary,
-        filter: 'grayscale(100%) contrast(0.8)',
-        '& > *': {
-          width: '28px !important',
-          height: '28px !important',
-          color: 'inherit !important',
-          fill: 'currentColor !important'
-        },
-        '& svg': {
-          color: 'inherit !important',
-          fill: 'currentColor !important'
-        }
-      }}
-    >
-      {children}
-    </Box>
-  );
-
-  // 图标映射：使用已有的React组件图标 + 合理的回退策略
-  const iconMap = useMemo(() => ({
-    // 统一使用简单的文字占位符，彻底避免颜色问题
-    BTC: <IconWrapper><Box sx={{fontSize: '12px', fontWeight: 800, color: 'inherit'}}>₿</Box></IconWrapper>,
-    ETH: <IconWrapper><Box sx={{fontSize: '12px', fontWeight: 800, color: 'inherit'}}>Ξ</Box></IconWrapper>,
-    BNB: <IconWrapper><Box sx={{fontSize: '10px', fontWeight: 800, color: 'inherit'}}>BNB</Box></IconWrapper>,
-    SOL: <IconWrapper><Box sx={{fontSize: '10px', fontWeight: 800, color: 'inherit'}}>SOL</Box></IconWrapper>,
-    XRP: <IconWrapper><Box sx={{fontSize: '10px', fontWeight: 800, color: 'inherit'}}>XRP</Box></IconWrapper>,
-    USDT: <IconWrapper><Box sx={{fontSize: '9px', fontWeight: 800, color: 'inherit'}}>USDT</Box></IconWrapper>,
-    USDC: <IconWrapper><Box sx={{fontSize: '9px', fontWeight: 800, color: 'inherit'}}>USDC</Box></IconWrapper>,
-    ADA: <IconWrapper><Box sx={{fontSize: '10px', fontWeight: 800, color: 'inherit'}}>ADA</Box></IconWrapper>,
-    DOGE: <IconWrapper><Box sx={{fontSize: '9px', fontWeight: 800, color: 'inherit'}}>DOGE</Box></IconWrapper>,
-    TRX: <IconWrapper><Box sx={{fontSize: '10px', fontWeight: 800, color: 'inherit'}}>TRX</Box></IconWrapper>,
-    AVAX: <IconWrapper><Box sx={{fontSize: '9px', fontWeight: 800, color: 'inherit'}}>AVAX</Box></IconWrapper>,
-    LINK: <IconWrapper><Box sx={{fontSize: '9px', fontWeight: 800, color: 'inherit'}}>LINK</Box></IconWrapper>,
-    // 其他币种用简单的圆形+字母
-    DEFAULT: (symbol) => <IconWrapper><Box sx={{fontSize: '8px', fontWeight: 800, color: 'inherit', textAlign: 'center'}}>{symbol.slice(0,4)}</Box></IconWrapper>
-  }), []);
-
-  // 通用占位符图标组件（用于没有官方图标的币种）
-  const PlaceholderIcon = ({ symbol }) => (
-    <Box
-      sx={{
-        width: 28,
-        height: 28,
-        borderRadius: '50%',
-        background: theme.palette.mode === 'dark' 
-          ? alpha(theme.palette.background.paper, 0.8)
-          : alpha('#fff', 0.95),
-        border: `1px solid ${alpha(theme.palette.divider, 0.3)}`,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: theme.palette.text.secondary,
-        fontSize: '12px',
-        fontWeight: 'bold',
-        fontFamily: 'monospace'
-      }}
-    >
-      {symbol ? symbol.slice(0, 2).toUpperCase() : '?'}
-    </Box>
-  );
-
-  /**
-   * 获取币种图标的优先级规则（从高到低）：
-   * 1) 本地手动映射的矢量图标（最清晰）
-   * 2) API 返回的 image URL（CoinGecko 提供的官方 logo）
-   * 3) @web3icons/react 动态图标；如果仍找不到，再回退到占位符
-   * 这样可以尽量补齐缺失图标（你截图里的 BGB、SUSDE 等会走 2/3）。
-   */
-
-
-  // 静态图标URL映射（CoinGecko官方图标）
-  /* staticIconUrls removed */
-
-  // 智能图标获取：优先使用 API 图标，否则回退占位
-  const getIcon = useCallback((symbol, imageUrl) => {
-    const upperSymbol = (symbol || '').toUpperCase();
-    
-    // 获取回退图标
-    const fallbackIcon = iconMap[upperSymbol] || iconMap.DEFAULT(upperSymbol);
-    
-    // 使用 API 返回的官方图标 URL（如果有）
-    if (imageUrl) {
-      return <CoinImageIcon imageUrl={imageUrl} symbol={symbol} fallbackIcon={fallbackIcon} />;
-    }
-    
-    // 3. 使用手动映射的简单文字图标或默认占位符
-    return fallbackIcon;
-  }, [iconMap]);
-
-  // 渲染纯中性图标（完全移除任何库自带的彩色背景）
-  const renderNeutralIcon = (symbol) => (
-    <Box
-      sx={{
-        width: 28,
-        height: 28,
-        borderRadius: '50%',
-        background: theme.palette.mode === 'dark'
-          ? alpha(theme.palette.background.paper, 0.8)
-          : alpha('#fff', 0.95),
-        border: `1px solid ${alpha(theme.palette.divider, 0.3)}`,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: theme.palette.text.secondary,
-        fontSize: '10px',
-        fontWeight: 800,
-        fontFamily: 'monospace'
-      }}
-    >
-      {String(symbol || '?').slice(0, 4).toUpperCase()}
-    </Box>
-  );
-
-  /**
-   * 将后端标准化的币种数据转换为列表所需结构。
-   * - 输入：dataTransformers.transformCoinData 的结果（含 price/change/marketCap/rank/volume/image）
-   * - 输出：{ name, symbol, price(字符串), change(字符串), icon(ReactNode), sparkline(数组), marketCap, rank, volume }
-   * - sparkline：用正弦波 + 少量噪声模拟 24h 走势（仅用于小图展示），不影响真实价格
-   * 这些字段随后用于稳定排序与展示。
-   */
-  const transformApiDataForDashboard = (apiData, sparkMetaByIdMap) => {
-    if (!apiData || !Array.isArray(apiData)) return [];
-
-    const hourBucket = lastUpdated ? Math.floor(lastUpdated.getTime() / 3600000) : Math.floor(Date.now() / 3600000);
-    const makeSeededRandom = (seedPrefix) => (i) => {
-      let hash = 0;
-      const str = `${seedPrefix}-${i}`;
-      for (let j = 0; j < str.length; j++) {
-        hash = ((hash << 5) - hash) + str.charCodeAt(j);
-        hash |= 0;
-      }
-      const x = Math.sin(hash) * 10000;
-      return x - Math.floor(x);
-    };
-    
-    const stableSet = new Set(['USDT','USDC','DAI','BUSD','TUSD','FDUSD','PYUSD','USDD','SUSD','SUSDE','USDE']);
-    const isStable = (sym) => stableSet.has(String(sym || '').toUpperCase());
-    
-    return apiData.map(coin => {
-      const basePrice = Number(coin.price) || 1;
-      const changePercent = Number(coin.change) || 0; // 来自 CoinGecko 的 24h 变化百分比
-      const rand = makeSeededRandom(`${coin.symbol}-${hourBucket}`);
-
-      // 优先使用真实 sparkline（后端透传 CoinGecko: sparkline_in_7d.price），否则回退模拟
-      let sparklineData = [];
-      const meta = sparkMetaByIdMap?.get?.(coin.id);
-      if (meta && Array.isArray(meta.sparkline) && meta.sparkline.length > 0) {
-        sparklineData = meta.sparkline.map(n => Number(n) || 0);
-      } else {
-        const points = 24;
-        const amplitude = Math.max(Math.abs(changePercent) / 100, 0.02);
-        sparklineData = Array.from({ length: points }, (_, i) => {
-          const t = i / (points - 1);
-          const wave = Math.sin(Math.PI * 2 * t) * amplitude * basePrice * 1.2;
-          const trend = (changePercent / 100) * basePrice * 1.5 * (t - 0.5);
-          const noise = (rand(i) - 0.5) * amplitude * basePrice * 0.35;
-          const price = Math.max(0, basePrice + wave + trend + noise);
-          return Number(price.toFixed(6));
-        });
-      }
-      // 稳定币：强制使用平直曲线
-      if (isStable(coin.symbol) && sparklineData.length > 0) {
-        const flat = new Array(sparklineData.length).fill(basePrice);
-        sparklineData = flat;
-      }
-      const imageUrl = coin.image || meta?.image || '';
-
-      return {
-        name: coin.name || 'Unknown',
-        symbol: (coin.symbol || 'UNKNOWN').toUpperCase(),
-        price: `$${basePrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 6 })}`,
-        change: `${changePercent >= 0 ? '+' : ''}${changePercent.toFixed(1)}%`,
-        icon: getIcon(coin.symbol, imageUrl),
-        image: imageUrl, // 添加官方图标URL
-        sparkline: sparklineData,
-        marketCap: Number(coin.marketCap) || 0,
-        rank: Number(coin.rank) || Infinity,
-        volume: Number(coin.volume) || 0,
-        id: coin.id,
-      };
-    });
-  };
-
-    // 获取市场数据（优化真实数据获取）
-  const fetchMarketData = async (forceRefresh = false) => {
-    let doingInitial = initialLoading;
-    // 尝试获取市场数据，处理错误
-    try {
-      setError(null); // 清除之前的错误信息
-      if (forceRefresh) {
-        // 如果强制刷新，则清空缓存
-        try { cacheManager.clear(); } catch {}
-      }
-      if (doingInitial) {
-        // 首次加载，设置初始加载状态
-        setInitialLoading(true);
-      } else {
-        // 非首次加载，设置刷新状态
-        setIsRefreshing(true);
-      }
-
-      const response = await cachedMarketApi.getMarketData(50); // 拉多一点，方便排序与筛选
-      if (response.success && response.data && response.data.length > 0) {
-        const standardData = response.data.map(dataTransformers.transformCoinData);
-        /**
-         * 重要：稳定榜单顺序（解决"之前和现在不一样"的问题）
-         * - 有些接口项可能缺少 marketCap，旧逻辑只按市值排会退化成"接口返回顺序"
-         * - 这里先统一结构，再强制保证关键币种存在（BTC/ETH/USDT/USDC）
-         * - 排序优先级：marketCap 降序 -> rank 升序 -> volume 降序
-         */
-        // 规范化币种ID，优先使用id（无空格），否则用name或symbol，全部转为小写并替换为slug格式
-        // 对部分常见币种符号做特殊ID修正（如bnb->binancecoin, xrp->ripple）
-        const normalizeId = (id, name, symbol) => {
-          // 规范化ID：优先用id（无空格），否则用name/id/symbol，全部转小写
-          const source = (id && !/\s/.test(id) ? id : (name || id || symbol || '')).toString().trim().toLowerCase();
-          const slug = source
-            .replace(/\s+/g, '-') // 空格替换为-
-            .replace(/[^a-z0-9-]/g, '-') // 非字母数字和-替换为-
-            .replace(/-+/g, '-'); // 多个-合并为一个
-          const overrides = { bnb: 'binancecoin', xrp: 'ripple' }; // 特殊符号修正
-          return overrides[slug] || slug;
-        };
-        // 获取前40个币种的标准化ID，并确保包含'tether'
-        const topIds = Array.from(new Set(
-          standardData
-            .slice(0, 40)
-            .map(c => normalizeId(c.id, c.name, c.symbol))
-            .filter(Boolean)
-        ).add('tether'));
-
-        // 用于存储每个币种的sparkline和image信息
-        let sparkMetaById = new Map();
-
-        try {
-          // 如果topIds不为空，则批量获取这些币种的详细信息（包括sparkline和image）
-          if (topIds.length > 0) {
-            const sparkRes = await marketApi.getMultipleCoins(topIds);
-            // 如果接口返回成功且数据为数组，则将数据转换为Map结构，便于后续查找
-            if (sparkRes?.success && Array.isArray(sparkRes.data)) {
-              sparkMetaById = new Map(
-                sparkRes.data.map(item => [
-                  item.id,
-                  {
-                    // 若有7天价格数据则使用，否则为空数组
-                    sparkline: Array.isArray(item?.sparkline_in_7d?.price) ? item.sparkline_in_7d.price : [],
-                    // 若有图片URL则使用，否则为空字符串
-                    image: typeof item?.image === 'string' ? item.image : ''
-                  }
-                ])
-              );
-            }
-          }
-        } catch (e) {
-          console.warn('获取真实 sparkline 失败，将使用回退模拟数据:', e);
-        }
-        /**
-          * 重要：稳定榜单顺序（解决"之前和现在不一样"的问题）
-          * - 有些接口项可能缺少 marketCap，旧逻辑只按市值排会退化成"接口返回顺序"
-          * - 这里先统一结构，再强制保证关键币种存在（BTC/ETH/USDT/USDC）
-          * - 排序优先级：marketCap 降序 -> rank 升序 -> volume 降序
-          */
-        const dashboardAll = transformApiDataForDashboard(standardData, sparkMetaById);
-        const bySymbol = new Map(dashboardAll.map(c => [c.symbol, c]));
-        const ensureSymbols = ['BTC', 'ETH', 'USDT', 'USDC']; // 确保这4个一定在榜单
-        const ensured = [...dashboardAll];
-        ensureSymbols.forEach(sym => {
-          const found = bySymbol.get(sym);
-          if (!ensured.find(c => c.symbol === sym) && found) {
-            ensured.push(found);
-          }
-        });
-
-        const safeCap = (v) => {
-          const n = Number(v);
-          return Number.isFinite(n) && n > 0 ? n : -1; // 缺失/无效的市值被视为最低
-        };
-        // 严格按市值排序：BTC > ETH > 其他，确保数值有效性
-        const sorted = ensured.sort((a, b) => {
-          const aVal = safeCap(a.marketCap);
-          const bVal = safeCap(b.marketCap);
-          
-          // 优先级：有效市值 > 无效市值
-          if (aVal > 0 && bVal <= 0) return -1;
-          if (bVal > 0 && aVal <= 0) return 1;
-          
-          // 都有效：按市值降序
-          if (aVal > 0 && bVal > 0) return bVal - aVal;
-          
-          // 都无效：按rank升序
-          return (a.rank || Infinity) - (b.rank || Infinity);
-        });
-
-        const dashboardData = sorted.slice(0, 40);
-        setMarketData(dashboardData);
-
-        const summary = dataTransformers.transformMarketSummary(response.data);
-        setMarketSummary(summary);
-      } else {
-        // API返回但无数据
-        setError('市场数据暂时不可用，请稍后重试');
-        setMarketData([]);
-      }
-
-      setLastUpdated(new Date());
-    } catch (err) {
-      console.error('Market data fetch error:', err);
-      setError(`API连接失败：${err.message || '网络连接失败'}`);
-      setMarketData([]);
-    } finally {
-      if (doingInitial) {
-        setInitialLoading(false);
-      } else {
-        setIsRefreshing(false);
-      }
-    }
-  };
-
-  // useEffect hook - 在组件挂载时获取数据（只执行一次）
-  useEffect(() => {
-    let isMounted = true; // 防止组件卸载后setState
-    
-    const loadInitialData = async () => {
-      if (isMounted) {
-        console.log('Dashboard初次加载，获取市场数据...');
-        await fetchMarketData();
-      }
-    };
-
-    loadInitialData();
-
-    return () => {
-      isMounted = false; // 组件卸载时设置标志
-    };
-  }, []); // 确保依赖数组为空，只在组件首次挂载时执行
-
-
-
-  // 获取K线图数据（仅在用户主动切换时获取）
-  useEffect(() => {
-    let isMounted = true;
-    
-    const fetchOhlcData = async () => {
-      if (!isMounted) return;
-      
-      const currentId = ++requestIdRef.current;
-      const startAt = Date.now();
-      setOhlcLoading(true);
-        
-      try {
-        // 币种ID映射
-        const coinIdMap = { BTC: 'bitcoin', ETH: 'ethereum', SOL: 'solana' };
-        const coinId = coinIdMap[selectedCoin.toUpperCase()] || 'bitcoin';
-        const days = timeframe.replace('d', '');
-
-        const response = await cachedMarketApi.getOhlcData(coinId, 'usd', days);
-        if (!isMounted || currentId !== requestIdRef.current) return; // 忽略旧响应
-
-        const data = response.success && response.data
-          ? dataTransformers.transformOhlcData(response.data)
-          : [];
-
-        setOhlcData(data);
-      } catch (err) {
-        if (!isMounted || currentId !== requestIdRef.current) return;
-        console.error('OHLC数据获取失败:', err);
-        setOhlcData([]);
-      } finally {
-        if (!isMounted || currentId !== requestIdRef.current) return;
-        const elapsed = Date.now() - startAt;
-        const remain = Math.max(0, 300 - elapsed); // 至少显示300ms，避免闪烁
-        setTimeout(() => isMounted && setOhlcLoading(false), remain);
-      }
-    };
-
-    if (fetchTimeoutRef.current) clearTimeout(fetchTimeoutRef.current);
-    fetchTimeoutRef.current = setTimeout(fetchOhlcData, 150);
-    
-    return () => {
-      isMounted = false;
-      if (fetchTimeoutRef.current) clearTimeout(fetchTimeoutRef.current);
-    };
-  }, [selectedCoin, timeframe]);
-
+  // 统计数据配置
   const stats = [
-    { title: "Total Market Cap", value: marketSummary.totalMarketCap, icon: <AccountBalanceWalletOutlinedIcon sx={{ color: theme.palette.primary.main }} />, color: theme.palette.primary.main },
-    { title: "24h Volume", value: marketSummary.dailyVolume, icon: <TrendingUpIcon sx={{ color: theme.palette.success.main }} />, color: theme.palette.success.main },
-    { title: "BTC Dominance", value: marketSummary.btcDominance, icon: <ShowChartOutlinedIcon sx={{ color: theme.palette.info.main }} />, color: theme.palette.info.main },
-    { title: "ETH Dominance", value: marketSummary.ethDominance, icon: <BarChartOutlinedIcon sx={{ color: theme.palette.warning.main }} />, color: theme.palette.warning.main },
+    { 
+      title: "Total Market Cap", 
+      value: marketSummary.totalMarketCap, 
+      icon: <AccountBalanceWalletOutlinedIcon sx={{ color: theme.palette.primary.main }} />, 
+      color: theme.palette.primary.main 
+    },
+    { 
+      title: "24h Volume", 
+      value: marketSummary.dailyVolume, 
+      icon: <TrendingUpIcon sx={{ color: theme.palette.success.main }} />, 
+      color: theme.palette.success.main 
+    },
+    { 
+      title: "BTC Dominance", 
+      value: marketSummary.btcDominance, 
+      icon: <ShowChartOutlinedIcon sx={{ color: theme.palette.info.main }} />, 
+      color: theme.palette.info.main 
+    },
+    { 
+      title: "ETH Dominance", 
+      value: marketSummary.ethDominance, 
+      icon: <BarChartOutlinedIcon sx={{ color: theme.palette.warning.main }} />, 
+      color: theme.palette.warning.main 
+    },
   ];
-
-  // 优化移动视图卡片
-  const MarketCardView = () => {
-    if (marketData.length === 0) {
-    return (
-        <Box sx={{ textAlign: 'center', py: 8 }}>
-          <Typography variant="h6" color="text.secondary" gutterBottom>
-            暂无市场数据
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-            请检查网络连接或稍后重试
-          </Typography>
-          <Button variant="contained" onClick={() => fetchMarketData(true)}>
-            重新加载
-          </Button>
-        </Box>
-      );
-    }
-
-    return (
-      <Grid container spacing={3}>
-        {marketData.map((coin, index) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={coin.symbol}>
-        <GlassmorphicPaper key={coin.symbol} sx={{ p: 3, mb: 1 }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box sx={{
-                width: 40,
-                height: 40,
-                borderRadius: '12px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                background: theme.palette.mode === 'dark'
-                  ? alpha(theme.palette.background.paper, 0.8)
-                  : alpha('#fff', 0.95),
-                border: `1px solid ${alpha(theme.palette.divider, 0.3)}`,
-                padding: 1,
-                mr: 2,
-                color: theme.palette.text.secondary,
-                '& svg': {
-                  color: 'inherit !important',
-                  fill: 'currentColor !important'
-                }
-              }}
-              className="asset-icon">
-                {getIcon(coin.symbol, coin.image)}
-              </Box>
-              <Box>
-                <Typography variant="body1" sx={{ fontWeight: 600 }}>{coin.name}</Typography>
-                <Typography variant="body2" color="text.secondary">{coin.symbol}</Typography>
-              </Box>
-            </Box>
-            <Typography variant="body1" sx={{ 
-              fontFamily: 'monospace', 
-              fontWeight: 600,
-              color: coin.change.startsWith('+') ? 'success.main' : 
-                    coin.change === '+0.0%' ? 'text.secondary' : 'error.main'
-            }}>
-              {coin.price}
-            </Typography>
-          </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Box sx={{ 
-              display: 'inline-flex', 
-              alignItems: 'center',
-              px: 1.5,
-              py: 0.5,
-              borderRadius: 1.5,
-              backgroundColor: coin.change.startsWith('+') && coin.change !== '+0.0%' 
-                ? alpha(theme.palette.success.main, 0.1) 
-                : coin.change === '+0.0%' 
-                  ? alpha(theme.palette.grey[500], 0.1)
-                  : alpha(theme.palette.error.main, 0.1)
-            }}>
-              {coin.change.startsWith('+') && coin.change !== '+0.0%' ? (
-                <TrendingUpIcon sx={{ fontSize: '0.875rem', color: theme.palette.success.main, mr: 0.5 }} />
-              ) : coin.change === '+0.0%' ? null : (
-                <TrendingDownIcon sx={{ fontSize: '0.875rem', color: theme.palette.error.main, mr: 0.5 }} />
-              )}
-              <Typography 
-                variant="body2" 
-                sx={{ 
-                  fontWeight: 600, 
-                  color: coin.change.startsWith('+') && coin.change !== '+0.0%' 
-                    ? theme.palette.success.main 
-                    : coin.change === '+0.0%' 
-                      ? theme.palette.grey[500] 
-                      : theme.palette.error.main 
-                }}
-              >
-              {coin.change}
-            </Typography>
-            </Box>
-            <Box sx={{ width: '60%', height: 50 }}>
-              <PremiumSparkLine
-                data={coin.sparkline}
-                strokeColor={coin.change.startsWith('+') ? theme.palette.success.main :
-                             coin.change === '+0.0%' ? theme.palette.grey[500] : theme.palette.error.main}
-                trend={coin.change.startsWith('+') && coin.change !== '+0.0%' ? 'up' :
-                       coin.change.startsWith('-') ? 'down' : 'neutral'}
-              />
-            </Box>
-          </Box>
-        </GlassmorphicPaper>
-          </Grid>
-      ))}
-      </Grid>
-    );
-  };
-
-  // 高级市场概览卡片组件
-  const PremiumMarketCard = ({ coin, index }) => {
-    const theme = useTheme();
-    const isPositive = coin.change.startsWith('+') && coin.change !== '+0.0%';
-    const isNegative = coin.change.startsWith('-');
-    const isNeutral = coin.change === '+0.0%';
-
-    const neutralColor = theme.palette.text.secondary; // 使用中性颜色替代trendColor
-
-    return (
-      <Fade in timeout={800 + index * 100}>
-        <Box
-          sx={{
-            position: 'relative',
-            background: theme.palette.mode === 'dark'
-              ? 'linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%)'
-              : 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.8) 100%)',
-            backdropFilter: 'blur(20px)',
-            border: `1px solid ${alpha(theme.palette.divider, 0.3)}`,
-            borderRadius: '16px',
-            p: 3,
-            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-            overflow: 'hidden',
-            '&:hover': {
-              transform: 'translateY(-4px) scale(1.02)',
-              border: `1px solid ${alpha(theme.palette.divider, 0.5)}`,
-              boxShadow: `0 20px 40px ${alpha(theme.palette.divider, 0.2)}`
-            }
-          }}
-        >
-          {/* 背景装饰 */}
-          <Box
-            sx={{
-              position: 'absolute',
-              top: -50,
-              right: -50,
-              width: 100,
-              height: 100,
-              background: `radial-gradient(circle, ${alpha(neutralColor, 0.1)} 0%, transparent 70%)`,
-              borderRadius: '50%',
-              animation: `${pulse} 4s ease-in-out infinite`
-            }}
-          />
-
-          {/* 头部区域 */}
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box
-                sx={{
-                  width: 48,
-                  height: 48,
-                  borderRadius: '16px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  background: theme.palette.mode === 'dark'
-                    ? alpha(theme.palette.background.paper, 0.8)
-                    : alpha('#fff', 0.95),
-                  border: `1px solid ${alpha(theme.palette.divider, 0.3)}`,
-                  mr: 2,
-                  position: 'relative',
-                  color: theme.palette.text.secondary,
-                  '& svg': {
-                    color: 'inherit !important',
-                    fill: 'currentColor !important',
-                    filter: 'grayscale(100%) contrast(0.8) !important'
-                  }
-                }}
-                className="asset-icon"
-              >
-                {getIcon(coin.symbol, coin.image)}
-              </Box>
-
-              <Box>
-                <Typography
-                  variant="h6"
-                  sx={{
-                    fontWeight: 700,
-                    fontSize: '1.1rem',
-                    mb: 0.5
-                  }}
-                >
-                  {coin.name}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    color: theme.palette.text.secondary,
-                    fontWeight: 500,
-                    fontSize: '0.85rem'
-                  }}
-                >
-                  {coin.symbol}
-                </Typography>
-              </Box>
-            </Box>
-
-            {/* 趋势指示器 */}
-            <Box
-              className="trend-indicator"
-              sx={{
-                width: 12,
-                height: 12,
-                borderRadius: '50%',
-                background: `radial-gradient(circle, ${neutralColor}, ${alpha(neutralColor, 0.7)})`,
-                boxShadow: `0 0 12px ${alpha(neutralColor, 0.5)}`,
-                animation: `${pulse} 2s ease-in-out infinite`,
-                transition: 'all 0.3s ease'
-              }}
-            />
-          </Box>
-
-          {/* 价格区域 */}
-          <Box sx={{ mb: 3 }}>
-            <Typography
-              variant="h4"
-              className="price-text"
-              sx={{
-                fontFamily: 'monospace',
-                fontWeight: 800,
-                fontSize: '1.8rem',
-                mb: 1,
-                transition: 'transform 0.3s ease',
-                background: `linear-gradient(135deg, ${theme.palette.text.primary}, ${neutralColor})`,
-                backgroundClip: 'text',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent'
-              }}
-            >
-              {coin.price}
-            </Typography>
-
-            <Box
-              sx={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                px: 2,
-                py: 1,
-                borderRadius: '12px',
-                background: `linear-gradient(135deg, ${alpha(neutralColor, 0.1)}, ${alpha(neutralColor, 0.05)})`,
-                border: `1px solid ${alpha(neutralColor, 0.2)}`
-              }}
-            >
-              <Typography
-                variant="body1"
-                sx={{
-                  fontWeight: 700,
-                  color: neutralColor,
-                  fontSize: '0.9rem'
-                }}
-              >
-                {coin.change}
-              </Typography>
-            </Box>
-          </Box>
-
-          {/* 图表区域 */}
-          <Box sx={{ height: 80, mb: 2 }}>
-            <PremiumSparkLine
-              data={coin.sparkline}
-              strokeColor={neutralColor}
-              trend={isPositive ? 'up' : isNegative ? 'down' : 'neutral'}
-            />
-          </Box>
-
-          {/* 底部装饰线 */}
-          <Box
-            sx={{
-              position: 'absolute',
-              bottom: 0,
-              left: 0,
-              right: 0,
-              height: 3,
-              background: `linear-gradient(90deg, transparent, ${neutralColor}, transparent)`,
-              opacity: 0.6
-            }}
-          />
-        </Box>
-      </Fade>
-    );
-  };
-
-  // 高级表格视图
-  const PremiumMarketTableView = () => {
-    // 显示错误状态
-    if (error) {
-      return (
-        <Box sx={{ textAlign: 'center', py: 8 }}>
-          <Typography variant="h6" color="error" gutterBottom>
-            API连接失败
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-            {error}
-          </Typography>
-          <Button variant="contained" onClick={() => fetchMarketData(true)}>
-            重新连接
-          </Button>
-        </Box>
-      );
-    }
-
-    if (marketData.length === 0) {
-      return (
-        <Box sx={{ textAlign: 'center', py: 8 }}>
-          <Typography variant="h6" color="text.secondary" gutterBottom>
-            暂无市场数据
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-            请检查网络连接或稍后重试
-          </Typography>
-          <Button variant="contained" onClick={() => fetchMarketData(true)}>
-            重新加载
-          </Button>
-        </Box>
-      );
-    }
-
-    const displayData = marketData;
-    return (
-      <Box sx={{ overflow: 'hidden' }}>
-        {/* 表格头部 */}
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: '2fr 1fr 1fr 1.5fr',
-            gap: 2,
-            p: 2,
-            background: theme.palette.mode === 'dark'
-              ? 'linear-gradient(135deg, rgba(30, 41, 59, 0.55), rgba(15, 23, 42, 0.35))'
-              : 'linear-gradient(135deg, rgba(248, 250, 252, 0.9), rgba(241, 245, 249, 0.7))',
-            borderRadius: '16px 16px 0 0',
-            border: `1px solid ${alpha(theme.palette.divider, 0.18)}`,
-            backdropFilter: 'blur(12px)',
-            boxShadow: theme.palette.mode === 'dark'
-              ? `0 6px 24px ${alpha('#000', 0.35)}`
-              : `0 6px 24px ${alpha('#000', 0.12)}`
-          }}
-        >
-          <Typography variant="subtitle2" sx={{ fontWeight: 700, color: theme.palette.text.secondary, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-            Asset
-          </Typography>
-          <Typography variant="subtitle2" sx={{ fontWeight: 700, color: theme.palette.text.secondary, textTransform: 'uppercase', letterSpacing: '0.1em', textAlign: 'right' }}>
-            Price
-          </Typography>
-          <Typography variant="subtitle2" sx={{ fontWeight: 700, color: theme.palette.text.secondary, textTransform: 'uppercase', letterSpacing: '0.1em', textAlign: 'right' }}>
-            24h Change
-          </Typography>
-          <Typography variant="subtitle2" sx={{ fontWeight: 700, color: theme.palette.text.secondary, textTransform: 'uppercase', letterSpacing: '0.1em', textAlign: 'right' }}>
-            24h Chart
-          </Typography>
-        </Box>
-
-        {/* 表格内容 */}
-        <Box>
-          {displayData.map((coin, index) => {
-            const isPositive = coin.change.startsWith('+') && coin.change !== '+0.0%';
-            const isNegative = coin.change.startsWith('-');
-            const isNeutral = coin.change === '+0.0%';
-            const neutralColor = theme.palette.text.secondary; // 使用中性颜色
-
-            return (
-              <Slide direction="up" in timeout={600 + index * 100} key={coin.symbol}>
-                <Box
-                  sx={{
-                    display: 'grid',
-                    gridTemplateColumns: '2fr 1fr 1fr 1.5fr',
-                    gap: 2,
-                    p: 2.5,
-                    background: theme.palette.mode === 'dark'
-                      ? 'linear-gradient(135deg, rgba(30, 41, 59, 0.35), rgba(15, 23, 42, 0.22))'
-                      : 'linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 250, 252, 0.7))',
-                    backdropFilter: 'blur(12px)',
-                    border: `1px solid ${alpha(theme.palette.divider, 0.12)}`,
-                    borderTop: index === 0 ? `1px solid ${alpha(theme.palette.divider, 0.12)}` : 'none',
-                    borderRadius: index === displayData.length - 1 ? '0 0 16px 16px' : '0',
-                    transition: 'all 0.35s ease',
-                    position: 'relative',
-                    overflow: 'hidden',
-                    '&:hover': {
-                      background: theme.palette.mode === 'dark'
-                        ? 'linear-gradient(135deg, rgba(30, 41, 59, 0.45), rgba(15, 23, 42, 0.32))'
-                        : 'linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.8))',
-                      border: `1px solid ${alpha(theme.palette.divider, 0.25)}`,
-                      transform: 'translateX(6px) scale(1.01)',
-                      boxShadow: `0 14px 36px ${alpha(theme.palette.divider, 0.18)}`
-                    },
-                    '&::before': {
-                      content: '""',
-                      position: 'absolute',
-                      left: 0,
-                      top: 0,
-                      bottom: 0,
-                      width: 4,
-                      background: `linear-gradient(180deg, ${neutralColor}, ${alpha(neutralColor, 0.5)})`,
-                      opacity: 0,
-                      transition: 'opacity 0.3s ease'
-                    },
-                    
-                  }}
-                >
-                  {/* Asset */}
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Box
-                      sx={{
-                        width: 44,
-                        height: 44,
-                        borderRadius: '14px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        background: theme.palette.mode === 'dark' 
-                          ? alpha(theme.palette.background.paper, 0.8)
-                          : alpha('#fff', 0.95),
-                        border: `1px solid ${alpha(theme.palette.divider, 0.3)}`,
-                        mr: 2,
-                        position: 'relative',
-                        color: theme.palette.text.secondary,
-                        '& svg': {
-                          color: 'inherit !important', 
-                          fill: 'currentColor !important',
-                          filter: 'none !important'
-                        }
-                      }}
-                      className="asset-icon"
-                    >
-                        {getIcon(coin.symbol, coin.image)}
-                    </Box>
-                    <Box>
-                      <Typography variant="body1" sx={{ fontWeight: 800, mb: 0.25 }}>
-                        {coin.name}
-                      </Typography>
-                      <Typography variant="caption" sx={{
-                        color: theme.palette.text.secondary,
-                        fontWeight: 700,
-                        px: 1,
-                        py: 0.25,
-                        borderRadius: 1,
-                        backgroundColor: alpha(theme.palette.divider, 0.08),
-                        border: `1px solid ${alpha(theme.palette.divider, 0.18)}`
-                      }}>
-                        {coin.symbol}
-                      </Typography>
-                    </Box>
-                  </Box>
-
-                  {/* Price */}
-                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        fontFamily: 'monospace',
-                        fontWeight: 800,
-                        fontSize: '1.15rem',
-                        color: theme.palette.text.primary
-                      }}
-                    >
-                      {coin.price}
-                    </Typography>
-                  </Box>
-
-                  {/* 24h Change */}
-                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        px: 1.5,
-                        py: 0.8,
-                        borderRadius: '999px',
-                        background: alpha(theme.palette.divider, 0.1),
-                        border: `1px solid ${alpha(theme.palette.divider, 0.2)}`
-                      }}
-                    >
-                      <Typography variant="body2" sx={{ fontWeight: 700, color: isPositive ? theme.palette.success.main : isNegative ? theme.palette.error.main : theme.palette.text.secondary }}>
-                        {coin.change}
-                      </Typography>
-                    </Box>
-                  </Box>
-
-                  {/* 24h Chart */}
-                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-                    <Box sx={{ width: 140, height: 54 }}>
-                      <PremiumSparkLine
-                        data={coin.sparkline}
-                        strokeColor={isPositive ? theme.palette.success.main : isNegative ? theme.palette.error.main : theme.palette.text.secondary}
-                        trend={isPositive ? 'up' : isNegative ? 'down' : 'neutral'}
-                      />
-                    </Box>
-                  </Box>
-                </Box>
-              </Slide>
-            );
-          })}
-        </Box>
-      </Box>
-    );
-  };
-
-  // 高级卡片视图
-  const PremiumMarketCardView = () => {
-    // 显示错误状态
-    if (error) {
-      return (
-        <Box sx={{ textAlign: 'center', py: 4 }}>
-          <Typography variant="h6" color="error" gutterBottom>
-            API连接失败
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-            {error}
-          </Typography>
-          <Button 
-            variant="contained" 
-            onClick={() => fetchMarketData(true)}
-            disabled={isLoading}
-          >
-            重新连接
-          </Button>
-        </Box>
-      );
-    }
-
-    // 移除静态数据回退 - 完全依赖API
-    if (marketData.length === 0) {
-      return (
-        <Box sx={{ textAlign: 'center', py: 4 }}>
-          <Typography variant="h6" color="text.secondary" gutterBottom>
-            暂无市场数据
-          </Typography>
-          <Button 
-            variant="outlined" 
-            onClick={() => fetchMarketData(true)}
-            disabled={isLoading}
-          >
-            重新加载
-          </Button>
-        </Box>
-      );
-    }
-
-    return (
-      <Grid container spacing={3}>
-        {marketData.map((coin, index) => (
-          <Grid item xs={12} sm={6} lg={4} key={coin.symbol}>
-            <PremiumMarketCard coin={coin} index={index} />
-          </Grid>
-        ))}
-      </Grid>
-    );
-  };
 
   // 显示加载状态
   if (initialLoading) {
@@ -2104,7 +130,7 @@ function Dashboard() {
   }
 
   // 显示错误状态
-  if (error) {
+  if (error && marketData.length === 0) {
     return (
       <Box sx={{
         display: 'flex',
@@ -2119,7 +145,7 @@ function Dashboard() {
         </Typography>
         <Button
           variant="contained"
-          onClick={fetchMarketData}
+          onClick={() => fetchMarketData(true)}
           sx={{ mt: 2 }}
         >
           Retry
@@ -2160,12 +186,10 @@ function Dashboard() {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
           }
-          /* 确保图标容器背景中性，但保留官方图标颜色 */
           .asset-icon {
             background: transparent !important;
           }
           .asset-icon img {
-            /* 保留官方图标的原始颜色，强制圆形 */
             filter: none !important;
             border-radius: 50% !important;
             object-fit: cover !important;
@@ -2286,7 +310,7 @@ function Dashboard() {
         <Grid container spacing={4} sx={{ mb: 6 }}>
           {stats.map((stat, index) => (
             <Grid item xs={12} sm={6} lg={3} key={index}>
-              <PremiumStatCard
+              <PremiumCard
                 title={stat.title}
                 value={stat.value}
                 icon={stat.icon}
@@ -2361,27 +385,6 @@ function Dashboard() {
                   height: '24px',
                   fontWeight: 600,
                   fontSize: '0.7rem',
-                  '&::before': {
-                    content: '""',
-                    display: 'block',
-                    width: 6,
-                    height: 6,
-                    borderRadius: '50%',
-                    backgroundColor: theme.palette.success.main,
-                    marginRight: '4px',
-                    animation: 'pulse 1.5s infinite ease-in-out'
-                  },
-                  '@keyframes pulse': {
-                    '0%': {
-                      boxShadow: '0 0 0 0 rgba(76, 175, 80, 0.5)'
-                    },
-                    '70%': {
-                      boxShadow: '0 0 0 6px rgba(76, 175, 80, 0)'
-                    },
-                    '100%': {
-                      boxShadow: '0 0 0 0 rgba(76, 175, 80, 0)'
-                    }
-                  }
                 }}
               />
             </Box>
@@ -2450,7 +453,7 @@ function Dashboard() {
               <Grid item xs={6}>
                 <Typography variant="body2" color="text.secondary">Active Addresses</Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', mt: 0.5 }}>
-                  <TrendingDownIcon sx={{ color: theme.palette.error.main, mr: 0.5, fontSize: '1rem' }} />
+                    <TrendingUpIcon sx={{ color: theme.palette.success.main, mr: 0.5, fontSize: '1rem' }} />
                   <Typography variant="body1" sx={{ fontWeight: 600 }}>1.2M</Typography>
                 </Box>
               </Grid>
@@ -2498,17 +501,6 @@ function Dashboard() {
                 ${alpha(theme.palette.secondary.main, 0.6)}, 
                 ${alpha(theme.palette.primary.main, 0.2)}
               )`,
-            },
-            '&::after': {
-              content: '""',
-              position: 'absolute',
-              top: -20,
-              right: -20,
-              width: 60,
-              height: 60,
-              borderRadius: '50%',
-              background: `radial-gradient(circle, ${alpha(theme.palette.primary.main, 0.08)}, transparent)`,
-              pointerEvents: 'none',
             }
           }}>
             <Box
@@ -2565,30 +557,6 @@ function Dashboard() {
                 Real-time market analysis
           </Typography>
             </Box>
-            
-            {/* 装饰性元素 */}
-            <Box sx={{
-              display: 'flex',
-              gap: 0.5,
-              alignItems: 'center',
-            }}>
-              {[1, 2, 3].map((i) => (
-                <Box
-                  key={i}
-                  sx={{
-                    width: 3,
-                    height: 3 + i * 2,
-                    borderRadius: '50%',
-                    background: `linear-gradient(45deg, ${alpha(theme.palette.primary.main, 0.6)}, ${alpha(theme.palette.secondary.main, 0.4)})`,
-                    animation: `pulse 2s ease-in-out ${i * 0.2}s infinite`,
-                    '@keyframes pulse': {
-                      '0%, 100%': { opacity: 0.4, transform: 'scale(1)' },
-                      '50%': { opacity: 1, transform: 'scale(1.2)' },
-                    },
-                  }}
-                />
-              ))}
-            </Box>
           </Box>
         </Grid>
         
@@ -2623,9 +591,27 @@ function Dashboard() {
                   }
                 }}
               >
-                <Button onClick={() => setSelectedCoin('BTC')} variant={selectedCoin === 'BTC' ? 'contained' : 'text'} className={selectedCoin === 'BTC' ? 'Mui-selected' : ''} disableElevation startIcon={<Box sx={{ width: 18, height: 18, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{getIcon('BTC')}</Box>}>BTC</Button>
-                <Button onClick={() => setSelectedCoin('ETH')} variant={selectedCoin === 'ETH' ? 'contained' : 'text'} className={selectedCoin === 'ETH' ? 'Mui-selected' : ''} disableElevation startIcon={<Box sx={{ width: 18, height: 18, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{getIcon('ETH')}</Box>}>ETH</Button>
-                <Button onClick={() => setSelectedCoin('SOL')} variant={selectedCoin === 'SOL' ? 'contained' : 'text'} className={selectedCoin === 'SOL' ? 'Mui-selected' : ''} disableElevation startIcon={<Box sx={{ width: 18, height: 18, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{getIcon('SOL')}</Box>}>SOL</Button>
+                  <Button 
+                    onClick={() => setSelectedCoin('BTC')} 
+                    className={selectedCoin === 'BTC' ? 'Mui-selected' : ''} 
+                    startIcon={<Box sx={{ width: 18, height: 18 }}><CoinIcon symbol="BTC" /></Box>}
+                  >
+                    BTC
+                  </Button>
+                  <Button 
+                    onClick={() => setSelectedCoin('ETH')} 
+                    className={selectedCoin === 'ETH' ? 'Mui-selected' : ''} 
+                    startIcon={<Box sx={{ width: 18, height: 18 }}><CoinIcon symbol="ETH" /></Box>}
+                  >
+                    ETH
+                  </Button>
+                  <Button 
+                    onClick={() => setSelectedCoin('SOL')} 
+                    className={selectedCoin === 'SOL' ? 'Mui-selected' : ''} 
+                    startIcon={<Box sx={{ width: 18, height: 18 }}><CoinIcon symbol="SOL" /></Box>}
+                  >
+                    SOL
+                  </Button>
                 </ButtonGroup>
               
               <Box sx={{ flex: 1 }} />
@@ -2651,13 +637,6 @@ function Dashboard() {
                       ? alpha(theme.palette.background.paper, 0.6)
                       : alpha(theme.palette.background.paper, 0.8),
                     transition: 'all .2s ease',
-                    '&:active': { transform: 'translateY(1px)' }
-                  },
-                  '& .MuiButton-root:hover': {
-                    backgroundColor: alpha(coinAccent, 0.12),
-                    borderColor: coinAccent,
-                    boxShadow: `0 4px 10px ${alpha(coinAccent, 0.25)}`,
-                    transform: 'translateY(-1px)'
                   },
                   '& .MuiButton-root.Mui-selected': {
                     background: `linear-gradient(135deg, ${alpha(coinAccent, 0.9)}, ${alpha(coinAccent, 0.7)})`,
@@ -2670,34 +649,29 @@ function Dashboard() {
               >
                 <Button 
                   onClick={() => setTimeframe('1d')}
-                  variant={timeframe === '1d' ? 'contained' : 'outlined'}
                   className={timeframe === '1d' ? 'Mui-selected' : ''}
-                  disableElevation
                   disabled={ohlcLoading}
                 >
                   24H
                 </Button>
                 <Button 
                   onClick={() => setTimeframe('7d')}
-                  variant={timeframe === '7d' ? 'contained' : 'outlined'}
                   className={timeframe === '7d' ? 'Mui-selected' : ''}
-                  disableElevation
                   disabled={ohlcLoading}
                 >
                   7D
                 </Button>
                 <Button 
                   onClick={() => setTimeframe('30d')}
-                  variant={timeframe === '30d' ? 'contained' : 'outlined'}
                   className={timeframe === '30d' ? 'Mui-selected' : ''}
-                  disableElevation
                   disabled={ohlcLoading}
                 >
                   30D
                 </Button>
               </ButtonGroup>
             </Box>
-            {/* 图表区域：保持常驻 + 顶部细进度条 */}
+              
+              {/* 图表区域 */}
             <Box 
               height={isMobile ? 350 : 450}
               sx={{
@@ -2710,15 +684,27 @@ function Dashboard() {
               }}
             >
               {ohlcLoading && (
-                <LinearProgress sx={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, borderRadius: 0, zIndex: 2, '& .MuiLinearProgress-bar': { backgroundColor: coinAccent } }} />
-              )}
-              <TradingViewChart data={ohlcData} colors={{
+                  <LinearProgress sx={{ 
+                    position: 'absolute', 
+                    top: 0, 
+                    left: 0, 
+                    right: 0, 
+                    height: 3, 
+                    borderRadius: 0, 
+                    zIndex: 2, 
+                    '& .MuiLinearProgress-bar': { backgroundColor: coinAccent } 
+                  }} />
+                )}
+                <TradingViewChart 
+                  data={ohlcData} 
+                  colors={{
                 backgroundColor: 'transparent',
                 textColor: theme.palette.text.primary,
                 lineColor: coinAccent,
                 areaTopColor: alpha(coinAccent, 0.85),
                 areaBottomColor: alpha(coinAccent, 0.12),
-              }}/>
+                  }}
+                />
             </Box>
           </GlassmorphicPaper>
         </Grid>
@@ -2761,13 +747,23 @@ function Dashboard() {
         
         <Grid item xs={12}>
           <GlassmorphicPaper>
-            {isMobile ? <PremiumMarketCardView /> : <PremiumMarketTableView />}
+              {isMobile ? 
+                <MarketCardView 
+                  marketData={marketData}
+                  error={error}
+                  fetchMarketData={fetchMarketData}
+                  isRefreshing={isRefreshing}
+                /> : 
+                <MarketTableView 
+                  marketData={marketData}
+                  error={error}
+                  fetchMarketData={fetchMarketData}
+                  isRefreshing={isRefreshing}
+                  initialLoading={initialLoading}
+                />
+              }
           </GlassmorphicPaper>
         </Grid>
-
-
-
-
       </Grid>
       </Container>
     </Box>
