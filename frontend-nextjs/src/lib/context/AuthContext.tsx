@@ -51,6 +51,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         },
       });
 
+      // 检查响应是否为 JSON
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        console.log('后端服务不可用，跳过 token 验证');
+        setLoading(false);
+        return;
+      }
+
       if (response.ok) {
         const userData = await response.json();
         setUser(userData);
@@ -75,6 +83,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         body: JSON.stringify({ username, password }),
       });
 
+      // 检查响应是否为 JSON
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        // 演示模式：允许特定的测试账号登录
+        return handleDemoLogin(username, password);
+      }
+
       const data = await response.json();
 
       if (response.ok && data.success) {
@@ -88,7 +103,39 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     } catch (error) {
       console.error('Login error:', error);
-      toast.error('登录过程中发生错误');
+      // 如果网络错误，尝试演示登录
+      return handleDemoLogin(username, password);
+    }
+  };
+
+  // 演示模式登录处理
+  const handleDemoLogin = (username: string, password: string): boolean => {
+    const demoAccounts = [
+      { username: 'admin', password: 'password', id: 1, name: '管理员' },
+      { username: 'demo', password: 'demo123', id: 2, name: '演示用户' },
+      { username: 'test', password: 'test123', id: 3, name: '测试用户' },
+      { username: 'user', password: '123456', id: 4, name: '普通用户' },
+    ];
+
+    const account = demoAccounts.find(
+      acc => acc.username === username && acc.password === password
+    );
+
+    if (account) {
+      const mockUser = {
+        id: account.id,
+        username: account.username,
+        email: `${account.username}@demo.com`,
+      };
+      
+      const mockToken = `demo_token_${account.id}_${Date.now()}`;
+      
+      localStorage.setItem('token', mockToken);
+      setUser(mockUser);
+      toast.success(`演示模式登录成功！欢迎 ${account.name}`);
+      return true;
+    } else {
+      toast.error('演示模式：用户名或密码错误');
       return false;
     }
   };
@@ -103,6 +150,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         body: JSON.stringify({ username, password, email }),
       });
 
+      // 检查响应是否为 JSON
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('后端服务不可用，当前为演示模式');
+      }
+
       const data = await response.json();
 
       if (response.ok && data.success) {
@@ -114,7 +167,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     } catch (error) {
       console.error('Register error:', error);
-      toast.error('注册过程中发生错误');
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error('注册服务暂时不可用，当前为演示模式');
+      }
       return false;
     }
   };

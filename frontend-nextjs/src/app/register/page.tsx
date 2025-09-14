@@ -173,6 +173,21 @@ export default function RegisterPage() {
           <Typography variant="body2" color="text.secondary">
             创建您的 LearningStack 账户
           </Typography>
+          <Typography 
+            variant="caption" 
+            sx={{ 
+              mt: 1,
+              px: 2,
+              py: 0.5,
+              background: 'rgba(0, 255, 136, 0.1)',
+              border: '1px solid rgba(0, 255, 136, 0.3)',
+              borderRadius: 1,
+              color: '#00ff88',
+              fontSize: '0.75rem'
+            }}
+          >
+            演示模式 - 无需真实邮箱
+          </Typography>
         </Box>
 
         {error && (

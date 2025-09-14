@@ -155,6 +155,35 @@ export default function LoginPage() {
           </Typography>
         </Box>
 
+        {/* 演示账号提示 */}
+        <Box 
+          sx={{ 
+            mb: 3,
+            p: 2, 
+            background: 'rgba(0, 255, 136, 0.1)',
+            border: '1px solid rgba(0, 255, 136, 0.3)',
+            borderRadius: 2,
+          }}
+        >
+          <Typography variant="caption" sx={{ color: '#00ff88', fontWeight: 600, display: 'block', mb: 1 }}>
+            🎮 演示账号 (可直接使用)
+          </Typography>
+          <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, fontSize: '0.75rem' }}>
+            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+              • admin / password
+            </Typography>
+            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+              • demo / demo123
+            </Typography>
+            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+              • test / test123
+            </Typography>
+            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+              • user / 123456
+            </Typography>
+          </Box>
+        </Box>
+
         {error && (
           <Alert 
             severity="error" 
