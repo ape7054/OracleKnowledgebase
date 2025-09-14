@@ -1,0 +1,90 @@
+services:
+  # 数据库服务
+  db:
+    image: mysql:8.0
+    container_name: learning-stack-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_NAME:-market_pulse_db}
+      MYSQL_USER: ${DB_USER:-market_pulse_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-wBYXZkiLTExiEAHF}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpassword}
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - learning-stack-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # phpMyAdmin - MySQL Web管理界面
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:5.2
+    container_name: learning-stack-phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: ${DB_USER:-market_pulse_user}
+      PMA_PASSWORD: ${DB_PASSWORD:-wBYXZkiLTExiEAHF}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpassword}
+      # 允许连接到任意服务器
+      PMA_ARBITRARY: 1
+      # 设置上传限制
+      UPLOAD_LIMIT: 300M
+    ports:
+      - "8081:80"
+    depends_on:
+      - db
+    networks:
+      - learning-stack-network
+
+  # 后端服务
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: learning-stack-backend:latest
+    container_name: learning-stack-backend
+    restart: unless-stopped
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USER=${DB_USER:-market_pulse_user}
+      - DB_PASSWORD=${DB_PASSWORD:-wBYXZkiLTExiEAHF}
+      - DB_NAME=${DB_NAME:-market_pulse_db}
+      - SERVER_PORT=8080
+      - GIN_MODE=release
+    depends_on:
+      - db
+    ports:
+      - "8080:8080"
+    networks:
+      - learning-stack-network
+
+  # Nginx 服务
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: learning-stack-nginx
+    restart: unless-stopped
+    ports:
+      - "9088:80"
+    volumes:
+      - ./dist:/usr/share/nginx/html
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - learning-stack-network
+    # depends_on:
+    #   - backend
+
+volumes:
+  mysql-data:
+    driver: local 
+
+networks:
+  learning-stack-network:
+    driver: bridge 
