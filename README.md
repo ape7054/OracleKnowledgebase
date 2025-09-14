@@ -21,7 +21,7 @@
 
 ```
 learning-stack/
-├── learning-stack-nextjs/    # 🎯 Next.js 前端主项目
+├── frontend-nextjs/          # 🎯 Next.js 前端主项目
 │   ├── src/app/             # App Router 页面
 │   ├── src/components/      # React 组件
 │   ├── src/lib/            # 工具库和配置
@@ -38,7 +38,7 @@ learning-stack/
 
 ```
 learning-stack/
-├── learning-stack-nextjs/     # 🎯 Next.js 前端
+├── frontend-nextjs/          # 🎯 Next.js 前端
 ├── backend-go/               # 🔧 当前 Go 后端
 ├── backend-rust/             # 🦀 未来 Rust 高性能后端
 │   ├── src/                 # Rust 源码
@@ -79,7 +79,7 @@ learning-stack/
 
 ```bash
 # 进入前端项目目录
-cd learning-stack-nextjs
+cd frontend-nextjs
 
 # 安装依赖
 npm install
@@ -216,7 +216,7 @@ GET /api/articles?page=1&limit=10
 
 ```bash
 # 前端依赖
-cd learning-stack-nextjs
+cd frontend-nextjs
 npm install              # 安装依赖
 npm run build           # 构建生产版本
 npm run type-check      # TypeScript 类型检查
@@ -272,7 +272,7 @@ docker-compose logs db
 
 ### ❓ **前后端通信**
 
-确保 `learning-stack-nextjs/next.config.js` 中的 API 代理配置正确：
+确保 `frontend-nextjs/next.config.js` 中的 API 代理配置正确：
 
 ```javascript
 rewrites: async () => [

@@ -23,7 +23,7 @@ echo "React PID: $REACT_PID"
 
 # 启动Next.js版本
 echo "🔥 启动Next.js版本 (端口3000)..."
-cd learning-stack-nextjs
+cd frontend-nextjs
 npm run dev &
 NEXTJS_PID=$!
 echo "Next.js PID: $NEXTJS_PID"

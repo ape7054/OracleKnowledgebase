@@ -8,7 +8,7 @@
 
 ```
 learning-stack/
-├── learning-stack-nextjs/    # Next.js 前端
+├── frontend-nextjs/          # Next.js 前端
 ├── backend-go/              # Go API 服务
 ├── docker-compose.yml
 └── README.md
@@ -18,7 +18,7 @@ learning-stack/
 
 ```
 learning-stack/
-├── learning-stack-nextjs/    # Next.js 前端
+├── frontend-nextjs/          # Next.js 前端
 ├── backend-go/              # Go API 服务
 ├── backend-rust/            # Rust 高性能服务
 │   ├── src/
