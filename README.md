@@ -17,6 +17,8 @@
 
 ## 🏗️ 项目架构
 
+### 📁 **当前结构** (✅ 已完成)
+
 ```
 learning-stack/
 ├── learning-stack-nextjs/    # 🎯 Next.js 前端主项目
@@ -24,12 +26,42 @@ learning-stack/
 │   ├── src/components/      # React 组件
 │   ├── src/lib/            # 工具库和配置
 │   └── package.json        # 前端依赖
-├── backend/                 # 🔧 Go 后端服务
+├── backend-go/              # 🔧 Go 后端服务
 │   ├── cmd/                # 应用入口
 │   ├── internal/           # 业务逻辑
 │   └── go.mod             # Go 依赖
 ├── docker-compose.yml      # 🐳 Docker 编排
 └── README.md              # 📖 项目说明
+```
+
+### 🚀 **未来扩展规划** (🔄 计划中)
+
+```
+learning-stack/
+├── learning-stack-nextjs/     # 🎯 Next.js 前端
+├── backend-go/               # 🔧 当前 Go 后端
+├── backend-rust/             # 🦀 未来 Rust 高性能后端
+│   ├── src/                 # Rust 源码
+│   ├── Cargo.toml           # Rust 依赖
+│   └── Dockerfile           # Rust 容器
+├── blockchain/               # ⛓️ 区块链相关
+│   ├── solana/              # 📋 Solana 智能合约 (Rust)
+│   │   ├── programs/        # Anchor 程序
+│   │   ├── app/            # 前端集成
+│   │   └── Anchor.toml     # Anchor 配置
+│   ├── ethereum/            # 💎 以太坊合约 (Solidity)
+│   │   ├── contracts/      # Solidity 合约
+│   │   ├── scripts/        # 部署脚本
+│   │   └── hardhat.config.js
+│   └── sui/                 # 🌊 Sui 合约 (Move)
+│       ├── sources/        # Move 合约源码
+│       └── Move.toml       # Move 配置
+├── infrastructure/          # 🏗️ 基础设施
+│   ├── docker/             # Docker 配置
+│   ├── k8s/               # Kubernetes
+│   └── nginx/             # 反向代理
+├── docker-compose.yml      # 🐳 Docker 编排
+└── docs/                   # 📚 项目文档
 ```
 
 ## 🚀 快速启动
@@ -62,7 +94,7 @@ npm run dev
 
 ```bash
 # 进入后端目录
-cd backend
+cd backend-go
 
 # 启动 Go 服务器
 go run cmd/learning-stack-backend/main.go
@@ -191,7 +223,7 @@ npm run type-check      # TypeScript 类型检查
 npm run lint           # ESLint 代码检查
 
 # 后端依赖
-cd backend
+cd backend-go
 go mod tidy            # 整理依赖
 go mod download        # 下载依赖
 go test ./...          # 运行测试

@@ -46,7 +46,7 @@ services:
   # 后端服务
   backend:
     build:
-      context: ./backend
+      context: ./backend-go
       dockerfile: Dockerfile
     image: learning-stack-backend:latest
     container_name: learning-stack-backend
