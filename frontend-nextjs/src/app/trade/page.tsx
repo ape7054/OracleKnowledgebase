@@ -104,13 +104,17 @@ function TradingContent() {
     <Container maxWidth="xl" sx={{ py: 4 }}>
       {/* Header */}
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
-        <Box>
-          <Typography variant="h4" gutterBottom>
-            交易中心
-          </Typography>
-          <Typography variant="body1" color="text.secondary">
-            模拟加密货币交易 - 安全学习投资策略
-          </Typography>
+        <Box display="flex" alignItems="center" gap={2}>
+          {/* 在这里使用我们从 Figma 导出的图标 */}
+          <img src="/icons/custom-wallet.svg" alt="Wallet Icon" width="40" height="40" />
+          <Box>
+            <Typography variant="h4" gutterBottom>
+              交易中心
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              模拟加密货币交易 - 安全学习投资策略
+            </Typography>
+          </Box>
         </Box>
         
         <Stack direction="row" spacing={2}>

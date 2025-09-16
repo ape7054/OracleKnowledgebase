@@ -23,8 +23,8 @@ const darkTheme = createTheme({
       light: '#9933ff',
     },
     background: {
-      default: '#001111',
-      paper: '#002211',
+      default: '#1E1E1E',
+      paper: '#2a2a2a',
     },
     text: {
       primary: '#ffffff',
@@ -47,10 +47,10 @@ const darkTheme = createTheme({
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          backgroundColor: '#001111',
+          backgroundColor: '#1E1E1E',
           backgroundImage: `
-            radial-gradient(circle at 25% 25%, rgba(0, 255, 136, 0.1) 0%, transparent 50%),
-            radial-gradient(circle at 75% 75%, rgba(136, 0, 255, 0.1) 0%, transparent 50%)
+            radial-gradient(circle at 25% 25%, rgba(0, 255, 136, 0.05) 0%, transparent 50%),
+            radial-gradient(circle at 75% 75%, rgba(136, 0, 255, 0.05) 0%, transparent 50%)
           `,
           minHeight: '100vh',
         },
