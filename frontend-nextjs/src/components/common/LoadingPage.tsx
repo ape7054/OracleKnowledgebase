@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 
-// CSS椭圆容器的接口
+// 优雅椭圆组件接口
 interface EllipseProps {
   left: number;
   top: number;
@@ -9,15 +9,13 @@ interface EllipseProps {
   height: number;
   color: string;
   delay: number;
-  animationType?: 'squeeze' | 'wave';
+  index: number;
 }
 
-// CSS椭圆容器 - 支持Firefox JavaScript动画后备
-const CSSEllipse: React.FC<EllipseProps & { isFirefox: boolean }> = ({ 
-  left, top, width, height, color, delay, animationType = 'squeeze', isFirefox 
+// 优雅椭圆组件 - 脉冲呼吸效果
+const ElegantEllipse: React.FC<EllipseProps & { isFirefox: boolean }> = ({ 
+  left, top, width, height, color, delay, index, isFirefox 
 }) => {
-  const animationName = animationType === 'squeeze' ? 'ellipseSqueezeSimple' : 'ellipseWaveSimple';
-  
   return (
     <div
       className={isFirefox ? 'firefox-ellipse' : ''}
@@ -32,11 +30,14 @@ const CSSEllipse: React.FC<EllipseProps & { isFirefox: boolean }> = ({
         transformOrigin: 'center center',
         WebkitTransformOrigin: 'center center',
         MozTransformOrigin: 'center center',
+        // 添加美丽的阴影和发光效果
+        filter: `drop-shadow(0 0 ${width * 0.1}px ${color}40)`,
+        WebkitFilter: `drop-shadow(0 0 ${width * 0.1}px ${color}40)`,
         // 只在非Firefox中使用CSS动画
         ...(isFirefox ? {} : {
-          animation: `${animationName} 1.2s ease-in-out infinite`,
-          WebkitAnimation: `${animationName} 1.2s ease-in-out infinite`,
-          MozAnimation: `${animationName} 1.2s ease-in-out infinite`,
+          animation: `elegantPulse 2.5s ease-in-out infinite`,
+          WebkitAnimation: `elegantPulse 2.5s ease-in-out infinite`,
+          MozAnimation: `elegantPulse 2.5s ease-in-out infinite`,
           animationDelay: `${delay}s`,
           WebkitAnimationDelay: `${delay}s`,
           MozAnimationDelay: `${delay}s`,
@@ -90,36 +91,37 @@ export const LoadingPage: React.FC<LoadingPageProps> = ({
 
     const ellipses = document.querySelectorAll('.firefox-ellipse');
     
-    const animateEllipse = (element: Element, delay: number, type: 'squeeze' | 'wave') => {
+        const animateEllipse = (element: Element, delay: number) => {
       let startTime: number;
       
       const animate = (currentTime: number) => {
         if (!startTime) startTime = currentTime - delay * 1000;
         
         const elapsed = currentTime - startTime;
-        const duration = 1200; // 1.2s
+        const duration = 2500; // 2.5s
         const progress = ((elapsed % duration) / duration);
         
-        let scaleX;
-        if (type === 'squeeze') {
-          // 0% -> 50% -> 100%
-          if (progress <= 0.5) {
-            scaleX = 1 - (progress * 2) * 0.98; // 1 -> 0.02
-          } else {
-            scaleX = 0.02 + ((progress - 0.5) * 2) * 0.98; // 0.02 -> 1
-          }
+        // 优雅脉冲效果：缩放 + 上下移动 + 亮度变化
+        let scale, translateY, opacity, brightness;
+        if (progress <= 0.5) {
+          // 前半段：变大变亮向上
+          scale = 1 + (progress * 2) * 0.2; // 1 -> 1.2
+          translateY = -(progress * 2) * 8; // 0 -> -8px
+          opacity = 0.8 + (progress * 2) * 0.2; // 0.8 -> 1
+          brightness = 1 + (progress * 2) * 0.3; // 1 -> 1.3
         } else {
-          // wave: 0% -> 35% -> 70% -> 100%
-          if (progress <= 0.35) {
-            scaleX = 1 - (progress / 0.35) * 0.98;
-          } else if (progress <= 0.7) {
-            scaleX = 0.02 + ((progress - 0.35) / 0.35) * 0.98;
-          } else {
-            scaleX = 1;
-          }
+          // 后半段：变小变暗向下
+          const p = (progress - 0.5) * 2;
+          scale = 1.2 - p * 0.2; // 1.2 -> 1
+          translateY = -8 + p * 8; // -8px -> 0
+          opacity = 1 - p * 0.2; // 1 -> 0.8
+          brightness = 1.3 - p * 0.3; // 1.3 -> 1
         }
         
-        (element as HTMLElement).style.transform = `scaleX(${scaleX})`;
+                 (element as HTMLElement).style.transform = `scale(${scale}) translateY(${translateY}px)`;
+         (element as HTMLElement).style.opacity = `${opacity}`;
+         (element as HTMLElement).style.filter = `brightness(${brightness})`;
+         (element as HTMLElement).style.webkitFilter = `brightness(${brightness})`;
         requestAnimationFrame(animate);
       };
       
@@ -127,10 +129,13 @@ export const LoadingPage: React.FC<LoadingPageProps> = ({
     };
 
     ellipses.forEach((el, index) => {
-      const isLeftSide = index < 7;
-      const delay = isLeftSide ? index * 0.1 : (index - 7) * 0.1 + 0.7;
-      const type = isLeftSide ? 'squeeze' : 'wave';
-      animateEllipse(el, delay, type);
+      // 根据元素在数组中的位置确定延迟
+      const delay = index * 0.2;
+      
+      // Firefox设置中心变换原点
+      (el as HTMLElement).style.transformOrigin = 'center center';
+      
+      animateEllipse(el, delay);
     });
   }, [isFirefox]);
 
@@ -154,97 +159,87 @@ export const LoadingPage: React.FC<LoadingPageProps> = ({
     return baseDelay * multiplier;
   };
 
-  // Figma精确的椭圆配置 - 使用CSS绘制，包含尺寸和颜色
-  // Component 1 基础位置: left: 290px, top: 152px
-  const leftEllipses = [
-    { width: 104, height: 114, left: 290 + 116, top: 152 + 14, color: '#A32D2D', delay: getAnimationDelay(0) },
-    { width: 68, height: 114, left: 290 + 85, top: 152 + 14, color: '#FF1010', delay: getAnimationDelay(0.1) },
-    { width: 42, height: 114, left: 290 + 57, top: 152 + 14, color: '#FF4910', delay: getAnimationDelay(0.2) },
-    { width: 28, height: 114, left: 290 + 41, top: 152 + 14, color: '#FF8310', delay: getAnimationDelay(0.3) },
-    { width: 15, height: 114, left: 290 + 31, top: 152 + 14, color: '#FFBC10', delay: getAnimationDelay(0.4) },
-    { width: 6, height: 114, left: 290 + 23, top: 152 + 14, color: '#109BFF', delay: getAnimationDelay(0.5) },
-    { width: 1, height: 114, left: 290 + 19, top: 152 + 14, color: '#BEE4FF', delay: getAnimationDelay(0.6) },
-  ];
-
-  // Component 2 基础位置: left: 106px, top: 159px
-  const rightEllipses = [
-    { width: 104, height: 114, left: 106 + 3, top: 159 + 8, color: '#A32D2D', delay: getAnimationDelay(0.7) },
-    { width: 68, height: 114, left: 106 + 70, top: 159 + 8, color: '#FF1010', delay: getAnimationDelay(0.8) },
-    { width: 42, height: 114, left: 106 + 124, top: 159 + 8, color: '#FF4910', delay: getAnimationDelay(0.9) },
-    { width: 28, height: 114, left: 106 + 154, top: 159 + 8, color: '#FF8310', delay: getAnimationDelay(1.0) },
-    { width: 15, height: 114, left: 106 + 177, top: 159 + 8, color: '#FFBC10', delay: getAnimationDelay(1.1) },
-    { width: 6, height: 114, left: 106 + 194, top: 159 + 8, color: '#109BFF', delay: getAnimationDelay(1.2) },
-    { width: 1, height: 114, left: 106 + 203, top: 159 + 8, color: '#BEE4FF', delay: getAnimationDelay(1.3) },
+  // 优雅椭圆配置 - 从外到内的美丽排列
+  const elegantEllipses = [
+    // 左侧组 - 从大到小
+    { width: 104, height: 114, left: 290 + 116, top: 152 + 14, color: '#A32D2D', delay: getAnimationDelay(0), index: 0 },
+    { width: 68, height: 114, left: 290 + 85, top: 152 + 14, color: '#FF1010', delay: getAnimationDelay(0.2), index: 1 },
+    { width: 42, height: 114, left: 290 + 57, top: 152 + 14, color: '#FF4910', delay: getAnimationDelay(0.4), index: 2 },
+    { width: 28, height: 114, left: 290 + 41, top: 152 + 14, color: '#FF8310', delay: getAnimationDelay(0.6), index: 3 },
+    { width: 15, height: 114, left: 290 + 31, top: 152 + 14, color: '#FFBC10', delay: getAnimationDelay(0.8), index: 4 },
+    { width: 6, height: 114, left: 290 + 23, top: 152 + 14, color: '#109BFF', delay: getAnimationDelay(1.0), index: 5 },
+    { width: 1, height: 114, left: 290 + 19, top: 152 + 14, color: '#BEE4FF', delay: getAnimationDelay(1.2), index: 6 },
+    
+    // 右侧组 - 从中心向外
+    { width: 1, height: 114, left: 106 + 203, top: 159 + 8, color: '#BEE4FF', delay: getAnimationDelay(1.4), index: 7 },
+    { width: 6, height: 114, left: 106 + 194, top: 159 + 8, color: '#109BFF', delay: getAnimationDelay(1.6), index: 8 },
+    { width: 15, height: 114, left: 106 + 177, top: 159 + 8, color: '#FFBC10', delay: getAnimationDelay(1.8), index: 9 },
+    { width: 28, height: 114, left: 106 + 154, top: 159 + 8, color: '#FF8310', delay: getAnimationDelay(2.0), index: 10 },
+    { width: 42, height: 114, left: 106 + 124, top: 159 + 8, color: '#FF4910', delay: getAnimationDelay(2.2), index: 11 },
+    { width: 68, height: 114, left: 106 + 70, top: 159 + 8, color: '#FF1010', delay: getAnimationDelay(2.4), index: 12 },
+    { width: 104, height: 114, left: 106 + 3, top: 159 + 8, color: '#A32D2D', delay: getAnimationDelay(2.6), index: 13 },
   ];
 
   return (
     <>
       {/* 内联CSS关键帧 */}
       <style dangerouslySetInnerHTML={{
-        __html: `
-          @keyframes ellipseSqueezeSimple {
-            0%, 100% {
-              transform: scaleX(1);
-              -webkit-transform: scaleX(1);
-              -moz-transform: scaleX(1);
-            }
-            50% {
-              transform: scaleX(0.02);
-              -webkit-transform: scaleX(0.02);
-              -moz-transform: scaleX(0.02);
-            }
-          }
-          
-          @keyframes ellipseWaveSimple {
-            0%, 70%, 100% {
-              transform: scaleX(1);
-              -webkit-transform: scaleX(1);
-              -moz-transform: scaleX(1);
-            }
-            35% {
-              transform: scaleX(0.02);
-              -webkit-transform: scaleX(0.02);
-              -moz-transform: scaleX(0.02);
-            }
-          }
+                       __html: `
+                 @keyframes elegantPulse {
+                   0%, 100% {
+                     transform: scale(1) translateY(0px);
+                     -webkit-transform: scale(1) translateY(0px);
+                     -moz-transform: scale(1) translateY(0px);
+                     opacity: 0.8;
+                     filter: brightness(1);
+                   }
+                   50% {
+                     transform: scale(1.2) translateY(-8px);
+                     -webkit-transform: scale(1.2) translateY(-8px);
+                     -moz-transform: scale(1.2) translateY(-8px);
+                     opacity: 1;
+                     filter: brightness(1.3);
+                   }
+                 }
 
-          /* Firefox特殊处理 */
-          @-moz-keyframes ellipseSqueezeSimple {
-            0%, 100% {
-              -moz-transform: scaleX(1);
-            }
-            50% {
-              -moz-transform: scaleX(0.02);
-            }
-          }
-          
-          @-moz-keyframes ellipseWaveSimple {
-            0%, 70%, 100% {
-              -moz-transform: scaleX(1);
-            }
-            35% {
-              -moz-transform: scaleX(0.02);
-            }
-          }
+                           /* Firefox特殊处理 */
+                 @-moz-keyframes elegantPulse {
+                   0%, 100% {
+                     -moz-transform: scale(1) translateY(0px);
+                     opacity: 0.8;
+                     filter: brightness(1);
+                   }
+                   50% {
+                     -moz-transform: scale(1.2) translateY(-8px);
+                     opacity: 1;
+                     filter: brightness(1.3);
+                   }
+                 }
+                 
+                 @-moz-keyframes textGlow {
+                   0%, 100% {
+                     opacity: 0.7;
+                     text-shadow: 0 0 20px rgba(255,255,255,0.3);
+                   }
+                   50% {
+                     opacity: 1;
+                     text-shadow: 0 0 30px rgba(255,255,255,0.6);
+                   }
+                 }
 
-          /* Webkit特殊处理 */
-          @-webkit-keyframes ellipseSqueezeSimple {
-            0%, 100% {
-              -webkit-transform: scaleX(1);
-            }
-            50% {
-              -webkit-transform: scaleX(0.02);
-            }
-          }
-          
-          @-webkit-keyframes ellipseWaveSimple {
-            0%, 70%, 100% {
-              -webkit-transform: scaleX(1);
-            }
-            35% {
-              -webkit-transform: scaleX(0.02);
-            }
-          }
+                 /* Webkit特殊处理 */
+                 @-webkit-keyframes elegantPulse {
+                   0%, 100% {
+                     -webkit-transform: scale(1) translateY(0px);
+                     opacity: 0.8;
+                     -webkit-filter: brightness(1);
+                   }
+                   50% {
+                     -webkit-transform: scale(1.2) translateY(-8px);
+                     opacity: 1;
+                     -webkit-filter: brightness(1.3);
+                   }
+                 }
         `
       }} />
       
@@ -265,56 +260,47 @@ export const LoadingPage: React.FC<LoadingPageProps> = ({
           cursor: onClick ? 'pointer' : 'default'
         }}
       >
-        <div style={{
-          position: 'relative',
-          width: '669px',
-          height: '453px',
-          maxWidth: '90vw',
-          maxHeight: '80vh',
-          transform: 'scale(min(90vw/669px, 80vh/453px))',
-          transformOrigin: 'center center',
-        }}>
-          {/* 左侧椭圆组 - Component 1 */}
-          {leftEllipses.map((ellipse, index) => (
-            <CSSEllipse
-              key={`left-${index}`}
+                     <div 
+               className="loading-container"
+               style={{
+                 position: 'relative',
+                 width: '669px',
+                 height: '453px',
+                 maxWidth: '90vw',
+                 maxHeight: '80vh',
+                 transform: 'scale(min(90vw/669px, 80vh/453px))',
+                 transformOrigin: 'center center',
+               }}>
+          {/* 优雅椭圆组 - 从左到右的波浪脉冲 */}
+          {elegantEllipses.map((ellipse, index) => (
+            <ElegantEllipse
+              key={`elegant-${index}`}
               left={ellipse.left}
               top={ellipse.top}
               width={ellipse.width}
               height={ellipse.height}
               color={ellipse.color}
               delay={ellipse.delay}
-              animationType="squeeze"
+              index={ellipse.index}
               isFirefox={isFirefox}
             />
           ))}
 
-          {/* 右侧椭圆组 - Component 2 */}
-          {rightEllipses.map((ellipse, index) => (
-            <CSSEllipse
-              key={`right-${index}`}
-              left={ellipse.left}
-              top={ellipse.top}
-              width={ellipse.width}
-              height={ellipse.height}
-              color={ellipse.color}
-              delay={ellipse.delay}
-              animationType="wave"
-              isFirefox={isFirefox}
-            />
-          ))}
-
-          {/* Loading文字 - 固定大小文字 */}
+          {          /* 优雅Loading文字 */}
           <div style={{
             position: 'absolute',
-            left: '280px',
-            top: '304px',
-            color: 'white',
-            fontSize: '18px',
-            fontFamily: 'Inter, sans-serif',
-            fontWeight: 400,
+            left: '260px',
+            top: '320px',
+            color: '#ffffff',
+            fontSize: '20px',
+            fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+            fontWeight: 300,
+            letterSpacing: '3px',
             textAlign: 'center',
-            minWidth: '100px',
+            minWidth: '140px',
+            textShadow: '0 0 20px rgba(255,255,255,0.3)',
+            animation: 'textGlow 3s ease-in-out infinite',
+            WebkitAnimation: 'textGlow 3s ease-in-out infinite',
           }}>
             {loadingText}
           </div>
