@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Container,
   Box,
@@ -15,6 +15,7 @@ import {
   Divider,
   TextField,
   InputAdornment,
+  CircularProgress,
 } from '@mui/material';
 import {
   Article,
@@ -29,6 +30,7 @@ import {
   Edit,
 } from '@mui/icons-material';
 import { useRouter } from 'next/navigation';
+import LoadingPage from '@/components/common/LoadingPage';
 
 interface ArticleItem {
   id: string;
@@ -49,9 +51,20 @@ export default function ArticlesPage() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [loading, setLoading] = useState(true);
 
   // 模拟文章数据
-  const [articles] = useState<ArticleItem[]>([
+  const [articles, setArticles] = useState<ArticleItem[]>([]);
+
+  // 模拟页面加载
+  useEffect(() => {
+    const loadArticles = async () => {
+      setLoading(true);
+      
+      // 模拟网络延迟
+      await new Promise(resolve => setTimeout(resolve, 1200));
+      
+      const mockArticles: ArticleItem[] = [
     {
       id: '1',
       title: 'Next.js 14 应用路由器完全指南',
@@ -60,55 +73,43 @@ export default function ArticlesPage() {
       author: '前端开发者',
       publishedAt: new Date().toISOString(),
       readTime: 8,
-      views: 1250,
+          views: 1234,
       likes: 89,
-      tags: ['Next.js', 'React', '前端开发'],
-      category: '技术教程',
+          tags: ['Next.js', 'React', 'Web开发'],
+          category: '前端开发',
       featured: true
     },
     {
       id: '2',
-      title: 'TypeScript 高级类型系统实践',
-      excerpt: '掌握 TypeScript 的高级特性，包括条件类型、映射类型、模板字面量类型等。通过实际案例学习如何构建类型安全的应用程序。',
+          title: 'TypeScript 高级类型系统深度解析',
+          excerpt: '探索 TypeScript 的高级特性，包括条件类型、映射类型、模板字面量类型等。通过实际案例学习如何构建类型安全的应用程序。',
       content: '详细内容...',
-      author: '技术专家',
+          author: '全栈工程师',
       publishedAt: new Date(Date.now() - 86400000).toISOString(),
       readTime: 12,
-      views: 980,
+          views: 987,
       likes: 67,
       tags: ['TypeScript', '类型系统', '编程'],
-      category: '技术深度',
+          category: '编程语言',
       featured: false
     },
-    {
-      id: '3',
-      title: 'Web3 与区块链开发入门',
-      excerpt: '从零开始学习 Web3 开发，了解区块链基础概念、智能合约开发、以及如何构建去中心化应用（DApp）。',
-      content: '详细内容...',
-      author: '区块链工程师',
-      publishedAt: new Date(Date.now() - 172800000).toISOString(),
-      readTime: 15,
-      views: 750,
-      likes: 45,
-      tags: ['Web3', '区块链', 'DApp'],
-      category: '新兴技术',
-      featured: false
-    },
-    {
-      id: '4',
-      title: '现代CSS布局技术总结',
-      excerpt: 'CSS Grid、Flexbox、Container Queries 等现代布局技术的深入分析和实战应用。让您的页面布局更加灵活和响应式。',
-      content: '详细内容...',
-      author: 'UI开发专家',
-      publishedAt: new Date(Date.now() - 259200000).toISOString(),
-      readTime: 6,
-      views: 1100,
-      likes: 78,
-      tags: ['CSS', '布局', '响应式'],
-      category: '前端设计',
-      featured: false
-    }
-  ]);
+      ];
+      
+      setArticles(mockArticles);
+      setLoading(false);
+    };
+
+    loadArticles();
+  }, []);
+
+  // 使用新的LoadingPage组件
+  if (loading) {
+    return (
+      <LoadingPage 
+        variant="default"
+      />
+    );
+  }
 
   const categories = ['all', '技术教程', '技术深度', '新兴技术', '前端设计'];
 

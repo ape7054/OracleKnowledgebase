@@ -31,6 +31,15 @@ img, video {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+  /* 但始终允许Loading椭圆动画运行 */
+  .loading-ellipse,
+  .loading-ellipse.squeeze,
+  .loading-ellipse.wave {
+    animation-duration: 1.2s !important;
+    animation-iteration-count: infinite !important;
+    animation-play-state: running !important;
+    animation-timing-function: ease-in-out !important;
+  }
 }
 
 /* ===== 页面布局 ===== */
@@ -53,7 +62,7 @@ img, video {
       rgba(11, 11, 15, 0.25), 
       rgba(16, 24, 32, 0.20)
     ),
-    url('/assets/images/bg3.jpg');
+    url('/assets/images/bg4.jpg');
   background-size: cover;
   background-position: center center;
   background-attachment: scroll; /* 改为scroll提升性能 */
@@ -741,4 +750,66 @@ img, video {
   --text-gray: #898CA9;
   --success: #0DBB7C;
   --error: #FF8282;
+} 
+
+/* ===== LoadingPage 椭圆动画 ===== */
+@keyframes ellipse-squeeze {
+  0%, 100% {
+    transform: scaleX(1) scaleY(1) !important;
+  }
+  50% {
+    transform: scaleX(0.02) scaleY(1) !important;
+  }
+}
+
+@keyframes ellipse-wave {
+  0%, 70%, 100% {
+    transform: scaleX(1) scaleY(1) !important;
+  }
+  35% {
+    transform: scaleX(0.02) scaleY(1) !important;
+  }
+}
+
+/* 强制动画生效 - 覆盖reduced-motion */
+.loading-ellipse {
+  animation-duration: 1.2s !important;
+  animation-iteration-count: infinite !important;
+  animation-timing-function: ease-in-out !important;
+  animation-fill-mode: both !important;
+  transform-origin: center center !important;
+  will-change: transform !important;
+  backface-visibility: hidden !important;
+  transform: translateZ(0);
+  contain: paint !important;
+}
+
+.loading-ellipse.squeeze {
+  animation: ellipse-squeeze 1.2s ease-in-out infinite both !important;
+}
+
+.loading-ellipse.wave {
+  animation: ellipse-wave 1.2s ease-in-out infinite both !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-ellipse,
+  .loading-ellipse.squeeze,
+  .loading-ellipse.wave {
+    animation-play-state: running !important;
+    animation-iteration-count: infinite !important;
+    animation-duration: 1.2s !important;
+  }
+}
+
+/* 测试动画 */
+@keyframes test-squeeze {
+  0% { transform: scaleX(1) !important; }
+  50% { transform: scaleX(0.1) !important; }
+  100% { transform: scaleX(1) !important; }
+}
+
+.test-ellipse-anim {
+  animation: test-squeeze 1s infinite !important;
+  transform-origin: center !important;
 } 

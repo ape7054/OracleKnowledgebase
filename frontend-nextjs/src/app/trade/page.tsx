@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Container,
   Box,
@@ -17,6 +17,7 @@ import {
   Alert,
   IconButton,
   Divider,
+  CircularProgress,
 } from '@mui/material';
 import {
   TrendingUp,
@@ -34,6 +35,7 @@ import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import { useAuth } from '@/lib/context/AuthContext';
 import { useMarketData } from '@/lib/hooks/useMarketData';
 import { useOhlcData } from '@/lib/hooks/useOhlcData';
+import LoadingPage from '@/components/common/LoadingPage';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -68,6 +70,28 @@ function TradingContent() {
   const [amount, setAmount] = useState('');
   const [price, setPrice] = useState('');
   const [balance] = useState(50000); // 模拟账户余额
+  const [pageLoading, setPageLoading] = useState(true);
+
+  // 模拟页面初始化加载
+  useEffect(() => {
+    const initializePage = async () => {
+      setPageLoading(true);
+      // 模拟页面初始化延迟
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setPageLoading(false);
+    };
+
+    initializePage();
+  }, []);
+
+  // 使用新的LoadingPage组件
+  if (pageLoading) {
+    return (
+      <LoadingPage 
+        variant="fast"
+      />
+    );
+  }
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);

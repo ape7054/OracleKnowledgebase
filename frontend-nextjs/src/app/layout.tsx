@@ -1,19 +1,13 @@
-import type { Metadata } from "next";
+import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import ClientProviders from '@/components/providers/ClientProviders';
-import "../styles/learning-blog-components.css";
+import { ClientProviders } from '@/components/providers/ClientProviders';
+import '../styles/learning-blog-components.css';
 
-const inter = Inter({ 
-  subsets: ['latin'],
-  weight: ['400', '600', '700', '800', '900'],
-  display: 'swap',
-});
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: "Learning Stack - 技术学习博客",
-  description: "专注于前端开发、全栈技术的现代化博客平台，记录学习历程，分享技术心得",
-  keywords: "前端开发, React, Next.js, TypeScript, 全栈开发, 技术博客, 学习笔记",
-  authors: [{ name: 'Learning Stack' }],
+  title: 'LearningStack - 加密货币学习平台',
+  description: '探索技术的无限可能，学习加密货币交易',
 };
 
 export default function RootLayout({
@@ -22,13 +16,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="zh-CN" suppressHydrationWarning>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <meta name="color-scheme" content="dark" />
-      </head>
-      <body className={inter.className} style={{ margin: 0, padding: 0 }} suppressHydrationWarning>
+    <html lang="zh">
+      <body className={inter.className}>
         <ClientProviders>
           {children}
         </ClientProviders>
