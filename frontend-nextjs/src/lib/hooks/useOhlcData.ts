@@ -26,6 +26,13 @@ export const useOhlcData = (
   const [error, setError] = useState<string | null>(null);
 
   const fetchOhlcData = async () => {
+    // 优化：如果days为0，不发起请求
+    if (days === 0) {
+      setData([]);
+      setLoading(false);
+      return;
+    }
+    
     setLoading(true);
     setError(null);
     
@@ -40,7 +47,7 @@ export const useOhlcData = (
     } catch (err) {
       console.error('Error fetching OHLC data:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch OHLC data');
-      // 设置模拟数据作为后备
+      // 设置模拟数据作为后备，减少外部依赖
       setData(generateMockOhlcData(days));
     } finally {
       setLoading(false);

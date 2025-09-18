@@ -40,7 +40,7 @@ export const useMarketData = (limit: number = 50): UseMarketDataReturn => {
     } catch (err) {
       console.error('Error fetching market data:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch market data');
-      // 设置模拟数据作为后备
+      // 设置模拟数据作为后备，减少外部依赖
       setData(generateMockData(limit));
     } finally {
       setLoading(false);
@@ -50,8 +50,8 @@ export const useMarketData = (limit: number = 50): UseMarketDataReturn => {
   useEffect(() => {
     fetchMarketData();
     
-    // 设置定时刷新 (每30秒)
-    const interval = setInterval(fetchMarketData, 30000);
+    // 延长刷新间隔到2分钟，减少频繁请求
+    const interval = setInterval(fetchMarketData, 120000);
     
     return () => clearInterval(interval);
   }, [limit]);

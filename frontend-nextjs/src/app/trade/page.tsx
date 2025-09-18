@@ -1,35 +1,43 @@
+/**
+ * Trading Page - 交易中心页面
+ * 
+ * 性能优化措施:
+ * 1. ✅ 移除故意的1秒延迟
+ * 2. ✅ 使用按需导入Material-UI组件
+ * 3. ✅ 减少初始市场数据量(10 -> 5)
+ * 4. ✅ 延迟加载图表数据(仅在切换tab时加载)
+ * 5. ✅ 延长数据刷新间隔(30s -> 2min)
+ * 6. ✅ 移除不必要的页面加载状态
+ * 7. ✅ 添加预加载支持
+ */
 'use client';
 import React, { useState, useEffect } from 'react';
-import {
-  Container,
-  Box,
-  Typography,
-  Paper,
-  Card,
-  CardContent,
-  Button,
-  TextField,
-  Chip,
-  Avatar,
-  Stack,
-  Tabs,
-  Tab,
-  Alert,
-  IconButton,
-  Divider,
-  CircularProgress,
-} from '@mui/material';
-import {
-  TrendingUp,
-  TrendingDown,
-  Refresh,
-  AccountBalanceWallet,
-  ShowChart,
-  BarChart,
-  CallMade,
-  CallReceived,
-  Home,
-} from '@mui/icons-material';
+// 优化导入：按需导入Material-UI组件
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Chip from '@mui/material/Chip';
+import Avatar from '@mui/material/Avatar';
+import Stack from '@mui/material/Stack';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Alert from '@mui/material/Alert';
+import Divider from '@mui/material/Divider';
+
+import TrendingUp from '@mui/icons-material/TrendingUp';
+import TrendingDown from '@mui/icons-material/TrendingDown';
+import Refresh from '@mui/icons-material/Refresh';
+import AccountBalanceWallet from '@mui/icons-material/AccountBalanceWallet';
+import ShowChart from '@mui/icons-material/ShowChart';
+import BarChart from '@mui/icons-material/BarChart';
+import CallMade from '@mui/icons-material/CallMade';
+import CallReceived from '@mui/icons-material/CallReceived';
+import Home from '@mui/icons-material/Home';
 import { useRouter } from 'next/navigation';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import { useAuth } from '@/lib/context/AuthContext';
@@ -62,36 +70,21 @@ function TabPanel(props: TabPanelProps) {
 function TradingContent() {
   const router = useRouter();
   const { user } = useAuth();
-  const { data: marketData, loading: marketLoading, refetch: refetchMarket } = useMarketData(10);
-  const [selectedCoin, setSelectedCoin] = useState('bitcoin');
-  const { data: ohlcData, loading: ohlcLoading } = useOhlcData(selectedCoin, 7);
+  // 声明状态变量
   const [tabValue, setTabValue] = useState(0);
+  const [selectedCoin, setSelectedCoin] = useState('bitcoin');
+  
+  // 优化：减少初始数据量，延迟加载图表数据
+  const { data: marketData, loading: marketLoading, refetch: refetchMarket } = useMarketData(5);
+  // 只有当用户切换到图表tab时才加载图表数据
+  const { data: ohlcData, loading: ohlcLoading } = useOhlcData(selectedCoin, tabValue === 1 ? 7 : 0);
   const [orderType, setOrderType] = useState<'buy' | 'sell'>('buy');
   const [amount, setAmount] = useState('');
   const [price, setPrice] = useState('');
   const [balance] = useState(50000); // 模拟账户余额
-  const [pageLoading, setPageLoading] = useState(true);
+  // 移除不必要的页面加载状态，直接渲染内容
 
-  // 模拟页面初始化加载
-  useEffect(() => {
-    const initializePage = async () => {
-      setPageLoading(true);
-      // 模拟页面初始化延迟
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setPageLoading(false);
-    };
-
-    initializePage();
-  }, []);
-
-  // 使用新的LoadingPage组件
-  if (pageLoading) {
-    return (
-      <LoadingPage 
-        variant="fast"
-      />
-    );
-  }
+  // 移除不必要的页面加载逻辑，直接渲染内容
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);

@@ -37,7 +37,12 @@ const darkTheme = createTheme({
       styleOverrides: {
         body: {
           backgroundColor: '#0B0B0F',
-          minHeight: '100vh',
+          margin: 0,
+          padding: 0,
+          overflowX: 'hidden',
+        },
+        html: {
+          overflowX: 'hidden',
         },
       },
     },

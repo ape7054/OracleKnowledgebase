@@ -1,6 +1,11 @@
 /* 🎨 Learning Stack - 学习博客组件样式 */
 /* 基于UI设计稿优化的现代化博客样式系统 */
 
+/* 确保页面可以正常显示和滚动 - 让Material-UI CssBaseline处理body样式 */
+html {
+  overflow-x: hidden;
+}
+
 /* ===== 性能优化 ===== */
 /* 全局性能优化设置 */
 * {
@@ -47,6 +52,8 @@ img, video {
   position: relative;
   width: 100%;
   min-height: 100vh;
+  /* 确保页面可以完整显示所有内容 */
+  height: auto;
   /* 山景背景图应用到整个页面 - 降低遮罩显示背景 */
   background-image: 
     linear-gradient(
@@ -69,9 +76,8 @@ img, video {
   background-repeat: no-repeat;
   /* 简化滤镜效果减少GPU负担 */
   filter: contrast(1.1) brightness(0.9);
-  overflow-x: hidden;
-  /* 性能优化 */
-  contain: layout style paint;
+  /* 移除可能导致内容截断的contain属性 */
+  /* contain: layout style paint; */
   will-change: auto;
 }
 
@@ -262,7 +268,7 @@ img, video {
 /* ===== 主要组件块 ===== */
 .hero-section {
   position: relative;
-  padding: 100px 0 0px;   /* 完全去除底部padding */
+  padding: 100px 0 80px;   /* 增加底部padding确保内容间距 */
   text-align: center;
   z-index: 10;
   /* hero section现在继承父元素的背景，只添加额外的遮罩效果 */
@@ -272,7 +278,7 @@ img, video {
 
 .features-section {
   position: relative;
-  padding: 0px 0 100px;   /* 完全去除顶部padding */
+  padding: 80px 0 100px;   /* 增加顶部padding确保sections间距 */
   z-index: 10;
   /* 保持透明背景，让整个页面的山景背景显示 */
   background: transparent;

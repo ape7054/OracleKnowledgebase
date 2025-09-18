@@ -106,8 +106,8 @@ const LearningBlogLanding: React.FC = React.memo(() => {
           <nav className="menu">
             <Link href="/" className="menu-item">首页</Link>
             <a href="#features" className="menu-item">特色</a>
-            <Link href="/articles" className="menu-item">文章</Link>
-            <Link href="/trade" className="menu-item">项目</Link>
+            <Link href="/articles" className="menu-item" prefetch={true}>文章</Link>
+            <Link href="/trade" className="menu-item" prefetch={true}>项目</Link>
             <a href="#about" className="menu-item">关于</a>
           </nav>
           <div className="flex-center" style={styles.flexCenter}>
@@ -135,10 +135,10 @@ const LearningBlogLanding: React.FC = React.memo(() => {
               在这里，每一行代码都是成长的见证。
             </p>
             <div className="flex-center" style={styles.heroButtons}>
-              <Link href="/articles" className="btn-primary" style={styles.heroButton}>
+              <Link href="/articles" className="btn-primary" style={styles.heroButton} prefetch={true}>
                 开始阅读
               </Link>
-              <Link href="/trade" className="btn-secondary" style={styles.heroButton}>
+              <Link href="/trade" className="btn-secondary" style={styles.heroButton} prefetch={true}>
                 查看项目
               </Link>
             </div>
@@ -190,7 +190,7 @@ const LearningBlogLanding: React.FC = React.memo(() => {
               <p className="body-text" style={{ textAlign: 'center' }}>
                 深入浅出的技术文章，从基础概念到高级应用，助您掌握核心技能。
               </p>
-              <Link href="/articles" className="btn-primary" style={styles.cardButton}>
+              <Link href="/articles" className="btn-primary" style={styles.cardButton} prefetch={true}>
                 阅读文章
               </Link>
             </div>
@@ -205,7 +205,7 @@ const LearningBlogLanding: React.FC = React.memo(() => {
               <p className="body-text" style={{ textAlign: 'center' }}>
                 真实项目案例分析，完整的开发流程记录，理论与实践完美结合。
               </p>
-              <Link href="/trade" className="btn-primary" style={styles.cardButton}>
+              <Link href="/trade" className="btn-primary" style={styles.cardButton} prefetch={true}>
                 查看项目
               </Link>
             </div>
@@ -277,9 +277,9 @@ const LearningBlogLanding: React.FC = React.memo(() => {
           </div>
           
           <div className="text-center" style={{ marginTop: '40px' }}>
-            <Link href="/articles" className="btn-primary" style={styles.viewAllButton}>
-              查看所有文章
-            </Link>
+                          <Link href="/articles" className="btn-primary" style={styles.viewAllButton} prefetch={true}>
+                查看所有文章
+              </Link>
           </div>
         </div>
       </section>
@@ -391,8 +391,8 @@ const LearningBlogLanding: React.FC = React.memo(() => {
             <div>
               <h4 style={styles.techTitle}>快速导航</h4>
               <div style={styles.navList}>
-                <Link href="/articles" className="body-text-small" style={styles.navLink}>技术文章</Link>
-                <Link href="/trade" className="body-text-small" style={styles.navLink}>项目展示</Link>
+                <Link href="/articles" className="body-text-small" style={styles.navLink} prefetch={true}>技术文章</Link>
+                <Link href="/trade" className="body-text-small" style={styles.navLink} prefetch={true}>项目展示</Link>
                 <Link href="/dashboard" className="body-text-small" style={styles.navLink}>学习路径</Link>
                 <Link href="/account" className="body-text-small" style={styles.navLink}>关于我</Link>
               </div>

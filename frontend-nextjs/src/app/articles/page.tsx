@@ -1,34 +1,40 @@
+/**
+ * Articles Page - 技术文章页面
+ * 
+ * 性能优化措施:
+ * 1. ✅ 移除1.2秒故意延迟
+ * 2. ✅ 使用按需导入Material-UI组件
+ * 3. ✅ 添加loading.tsx使用LoadingPage组件
+ * 4. ✅ 添加预加载支持
+ * 5. ✅ 简化数据加载逻辑
+ */
 'use client';
 import React, { useState, useEffect } from 'react';
-import {
-  Container,
-  Box,
-  Typography,
-  Paper,
-  Card,
-  CardContent,
-  Button,
-  Chip,
-  Stack,
-  Avatar,
-  IconButton,
-  Divider,
-  TextField,
-  InputAdornment,
-  CircularProgress,
-} from '@mui/material';
-import {
-  Article,
-  Schedule,
-  Visibility,
-  ThumbUp,
-  Share,
-  Bookmark,
-  Search,
-  FilterList,
-  Home,
-  Edit,
-} from '@mui/icons-material';
+// 优化导入：按需导入Material-UI组件
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
+import Avatar from '@mui/material/Avatar';
+import IconButton from '@mui/material/IconButton';
+import Divider from '@mui/material/Divider';
+import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
+
+import Article from '@mui/icons-material/Article';
+import Schedule from '@mui/icons-material/Schedule';
+import Visibility from '@mui/icons-material/Visibility';
+import ThumbUp from '@mui/icons-material/ThumbUp';
+import Share from '@mui/icons-material/Share';
+import Bookmark from '@mui/icons-material/Bookmark';
+import Search from '@mui/icons-material/Search';
+import Home from '@mui/icons-material/Home';
+import Edit from '@mui/icons-material/Edit';
 import { useRouter } from 'next/navigation';
 import LoadingPage from '@/components/common/LoadingPage';
 
@@ -61,8 +67,7 @@ export default function ArticlesPage() {
     const loadArticles = async () => {
       setLoading(true);
       
-      // 模拟网络延迟
-      await new Promise(resolve => setTimeout(resolve, 1200));
+      // 移除故意延迟，提升用户体验
       
       const mockArticles: ArticleItem[] = [
     {
