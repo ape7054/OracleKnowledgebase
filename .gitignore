@@ -58,10 +58,6 @@ Thumbs.db
 # Docker
 docker-compose.override.yml
 
-# 播放器配置 (Playwright MCP)
-playwright-mcp-config.json
-.playwright-mcp/
-
 # Go 相关 (后端)
 *.exe
 *.exe~
