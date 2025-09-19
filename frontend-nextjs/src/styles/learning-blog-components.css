@@ -1,9 +1,16 @@
 /* 🎨 Learning Stack - 学习博客组件样式 */
 /* 基于UI设计稿优化的现代化博客样式系统 */
 
-/* 确保页面可以正常显示和滚动 - 让Material-UI CssBaseline处理body样式 */
-html {
+/* 确保页面可以正常显示和滚动 - 修复双滚动条问题 */
+html, body {
   overflow-x: hidden;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  overflow-y: auto;
 }
 
 /* ===== 性能优化 ===== */
@@ -52,8 +59,9 @@ img, video {
   position: relative;
   width: 100%;
   min-height: 100vh;
-  /* 确保页面可以完整显示所有内容 */
+  /* 确保页面可以完整显示所有内容，避免创建独立滚动上下文 */
   height: auto;
+  overflow: visible;
   /* 山景背景图应用到整个页面 - 降低遮罩显示背景 */
   background-image: 
     linear-gradient(
@@ -818,4 +826,81 @@ img, video {
 .test-ellipse-anim {
   animation: test-squeeze 1s infinite !important;
   transform-origin: center !important;
+}
+
+/* ===== Guide Cards - Motion Dev Style ===== */
+.guide-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 999px;
+  font-size: 12px;
+  letter-spacing: .3px;
+  opacity: .9;
+  background: rgba(255,255,255,0.04);
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  color: #FFFFFF;
+  text-transform: uppercase;
+}
+
+.guide-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.guide-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  text-decoration: none;
+  color: inherit;
+  transition: transform .2s ease, border-color .2s ease, background .2s ease;
+  will-change: transform;
+}
+
+.guide-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.06);
+}
+
+.guide-left { 
+  display: flex; 
+  align-items: center; 
+  gap: 10px; 
+}
+
+.guide-dot {
+  width: 10px; 
+  height: 10px; 
+  border-radius: 999px;
+  box-shadow: 0 0 12px rgba(24,200,255,.35);
+}
+
+.guide-title { 
+  font-size: 14px; 
+  font-weight: 600; 
+  opacity: .95;
+  font-family: 'Inter', sans-serif;
+  color: #FFFFFF;
+}
+
+.guide-arrow { 
+  opacity: .7; 
+  transition: transform .2s ease, opacity .2s ease;
+  font-size: 16px;
+  color: #FFFFFF;
+}
+
+.guide-card:hover .guide-arrow { 
+  transform: translateX(2px); 
+  opacity: .95; 
 } 

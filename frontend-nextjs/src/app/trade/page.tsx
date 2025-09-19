@@ -44,6 +44,7 @@ import { useAuth } from '@/lib/context/AuthContext';
 import { useMarketData } from '@/lib/hooks/useMarketData';
 import { useOhlcData } from '@/lib/hooks/useOhlcData';
 import LoadingPage from '@/components/common/LoadingPage';
+import Link from 'next/link';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -135,6 +136,35 @@ function TradingContent() {
         </Box>
         
         <Stack direction="row" spacing={2}>
+          <Link href="/login" passHref>
+            <Button
+              variant="outlined"
+              sx={{
+                borderColor: '#00ffff',
+                color: '#00ffff',
+                '&:hover': {
+                  borderColor: '#0099cc',
+                  backgroundColor: 'rgba(0, 255, 255, 0.1)',
+                },
+              }}
+            >
+              登录
+            </Button>
+          </Link>
+          <Link href="/register" passHref>
+            <Button
+              variant="contained"
+              sx={{
+                background: 'linear-gradient(45deg, #00ffff, #0099cc)',
+                color: 'white',
+                '&:hover': {
+                  background: 'linear-gradient(45deg, #0099cc, #00ffff)',
+                },
+              }}
+            >
+              注册
+            </Button>
+          </Link>
           <Button
             variant="outlined"
             startIcon={<Home />}

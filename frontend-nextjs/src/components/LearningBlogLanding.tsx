@@ -104,20 +104,12 @@ const LearningBlogLanding: React.FC = React.memo(() => {
             Learning <span className="gradient-text">Stack</span>
           </Link>
           <nav className="menu">
-            <Link href="/" className="menu-item">首页</Link>
-            <a href="#features" className="menu-item">特色</a>
+        
+            <a href="#features" className="menu-item">记录</a>
             <Link href="/articles" className="menu-item" prefetch={true}>文章</Link>
             <Link href="/trade" className="menu-item" prefetch={true}>项目</Link>
             <a href="#about" className="menu-item">关于</a>
           </nav>
-          <div className="flex-center" style={styles.flexCenter}>
-            <Link href="/login" className="btn-secondary" style={styles.authButton}>
-              登录
-            </Link>
-            <Link href="/register" className="btn-primary" style={styles.authButton}>
-              注册
-            </Link>
-          </div>
         </div>
       </header>
 
@@ -144,24 +136,66 @@ const LearningBlogLanding: React.FC = React.memo(() => {
             </div>
           </div>
           
-          {/* 邮箱订阅 */}
-          <div style={styles.emailSection}>
-            <h3 className="heading-tertiary" style={styles.emailTitle}>
-              订阅技术周刊
-            </h3>
-            <p className="body-text" style={styles.emailDesc}>
-              获取最新的技术文章和学习资源
-            </p>
-            <div className="flex-center" style={styles.emailForm}>
-              <input 
-                type="email" 
-                className="input-glass" 
-                placeholder="输入您的邮箱地址"
-                style={styles.emailInput}
-              />
-              <button className="btn-primary" style={styles.emailButton}>
-                订阅
-              </button>
+          {/* Quick start guides */}
+          <div style={{ marginTop: '48px' }}>
+            <div className="guide-badge">Quick start guides</div>
+            <div className="guide-grid" style={{ marginTop: '16px' }}>
+              <Link href="/articles?tag=react" className="guide-card" prefetch={true}>
+                <div className="guide-left">
+                  <span className="guide-dot" style={{ background: 'linear-gradient(135deg,#61dafb,#18C8FF)' }} />
+                  <span className="guide-title">React</span>
+                </div>
+                <span className="guide-arrow">→</span>
+              </Link>
+              <Link href="/articles?tag=nextjs" className="guide-card" prefetch={true}>
+                <div className="guide-left">
+                  <span className="guide-dot" style={{ background: 'linear-gradient(135deg,#000,#666)' }} />
+                  <span className="guide-title">Next.js</span>
+                </div>
+                <span className="guide-arrow">→</span>
+              </Link>
+              <Link href="/articles?tag=typescript" className="guide-card" prefetch={true}>
+                <div className="guide-left">
+                  <span className="guide-dot" style={{ background: 'linear-gradient(135deg,#3178C6,#66a6ff)' }} />
+                  <span className="guide-title">TypeScript</span>
+                </div>
+                <span className="guide-arrow">→</span>
+              </Link>
+            </div>
+          </div>
+
+          {/* Integration guides */}
+          <div style={{ marginTop: '28px' }}>
+            <div className="guide-badge">Integration guides</div>
+            <div className="guide-grid" style={{ marginTop: '16px' }}>
+              <Link href="/trade?integration=coingecko" className="guide-card" prefetch={true}>
+                <div className="guide-left">
+                  <span className="guide-dot" style={{ background: 'linear-gradient(135deg,#34d399,#10b981)' }} />
+                  <span className="guide-title">CoinGecko API</span>
+                </div>
+                <span className="guide-arrow">→</span>
+              </Link>
+              <Link href="/trade?integration=websocket" className="guide-card" prefetch={true}>
+                <div className="guide-left">
+                  <span className="guide-dot" style={{ background: 'linear-gradient(135deg,#18C8FF,#0077ff)' }} />
+                  <span className="guide-title">WebSocket 实时</span>
+                </div>
+                <span className="guide-arrow">→</span>
+              </Link>
+              <Link href="/articles?tag=docker" className="guide-card" prefetch={true}>
+                <div className="guide-left">
+                  <span className="guide-dot" style={{ background: 'linear-gradient(135deg,#0db7ed,#2aa4f4)' }} />
+                  <span className="guide-title">Docker 部署</span>
+                </div>
+                <span className="guide-arrow">→</span>
+              </Link>
+              <Link href="/articles?tag=nginx" className="guide-card" prefetch={true}>
+                <div className="guide-left">
+                  <span className="guide-dot" style={{ background: 'linear-gradient(135deg,#2b2c3b,#6b7280)' }} />
+                  <span className="guide-title">Nginx 反向代理</span>
+                </div>
+                <span className="guide-arrow">→</span>
+              </Link>
             </div>
           </div>
         </div>
