@@ -9,6 +9,13 @@ html, body {
   padding: 0;
 }
 
+html {
+  scroll-behavior: smooth;
+  /* 确保平滑滚动不被全局动画优化影响 */
+  animation: none !important;
+  transition: none !important;
+}
+
 body {
   overflow-y: auto;
 }

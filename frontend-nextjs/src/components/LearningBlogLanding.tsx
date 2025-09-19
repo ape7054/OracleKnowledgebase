@@ -52,6 +52,20 @@ const styles = {
 };
 
 const LearningBlogLanding: React.FC = React.memo(() => {
+  // 平滑滚动处理函数
+  const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+    e.preventDefault();
+    const targetElement = document.getElementById(targetId);
+    if (targetElement) {
+      targetElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+      // 更新URL但不触发页面跳转
+      window.history.pushState(null, '', `#${targetId}`);
+    }
+  };
+
   return (
     <div className="landing-page">
       {/* 背景装饰元素 */}
@@ -75,10 +89,10 @@ const LearningBlogLanding: React.FC = React.memo(() => {
           </Link>
           <nav className="menu">
         
-            <a href="#features" className="menu-item">记录</a>
+            <a href="#features" className="menu-item" onClick={(e) => handleSmoothScroll(e, 'features')}>记录</a>
             <Link href="/articles" className="menu-item" prefetch={true}>文章</Link>
             <Link href="/trade" className="menu-item" prefetch={true}>项目</Link>
-            <a href="#about" className="menu-item">关于</a>
+            <a href="#about" className="menu-item" onClick={(e) => handleSmoothScroll(e, 'about')}>关于</a>
           </nav>
         </div>
       </header>
@@ -98,10 +112,10 @@ const LearningBlogLanding: React.FC = React.memo(() => {
             </p>
             <div className="flex-center" style={styles.heroButtons}>
               <Link href="/articles" className="btn-primary" style={styles.heroButton} prefetch={true}>
-                开始阅读
+                阅读文章
               </Link>
               <Link href="/trade" className="btn-secondary" style={styles.heroButton} prefetch={true}>
-                查看项目
+                我的作品
               </Link>
             </div>
           </div>
