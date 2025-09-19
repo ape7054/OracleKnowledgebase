@@ -1,0 +1,80 @@
+# 依赖
+node_modules/
+/.pnp
+.pnp.js
+*/node_modules/
+
+# 测试
+/coverage
+coverage/
+
+# NextJS构建输出
+/.next/
+/out/
+*/.next/
+*/out/
+
+# 生产构建
+/build
+*/build
+
+# 环境变量文件
+.env*.local
+.env
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# 日志
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 操作系统
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# 临时文件
+*.tmp
+*.temp
+*.log
+
+# Docker
+docker-compose.override.yml
+
+# 播放器配置 (Playwright MCP)
+playwright-mcp-config.json
+.playwright-mcp/
+
+# Go 相关 (后端)
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+vendor/
+
+# 数据库
+*.db
+*.sqlite
+*.sqlite3
+
+# 备份文件
+*.bak
+*~ 

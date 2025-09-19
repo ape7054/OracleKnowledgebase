@@ -1,20 +1,20 @@
-import React, { useMemo } from 'react';
-import Image from 'next/image';
+/** @jsxImportSource react */
+import React from 'react';
 import Link from 'next/link';
+// 导入 Simple Icons
+import { 
+  SiReact, 
+  SiNextdotjs, 
+  SiTypescript, 
+  SiGo, 
+  SiDocker
+} from 'react-icons/si';
 
 // 提取样式常量以避免每次渲染时重新创建对象
 const styles = {
-  flexCenter: { gap: '12px' },
-  authButton: { width: 'auto', padding: '0 20px' },
   heroText: { textAlign: 'center' as const, fontSize: '18px', maxWidth: '600px', margin: '0 auto 40px' },
   heroButtons: { gap: '24px', flexWrap: 'wrap' as const },
   heroButton: { width: 'auto', padding: '0 32px' },
-  emailSection: { marginTop: '100px', textAlign: 'center' as const },
-  emailTitle: { fontSize: '24px', marginBottom: '16px' },
-  emailDesc: { marginBottom: '32px' },
-  emailForm: { gap: '16px', flexWrap: 'wrap' as const },
-  emailInput: { maxWidth: '400px' },
-  emailButton: { width: 'auto', padding: '0 24px' },
   sectionTitle: { marginBottom: '80px', marginTop: '100px' },
   sectionDesc: { fontSize: '18px', maxWidth: '600px', margin: '0 auto' },
   iconContainer: { 
@@ -51,41 +51,11 @@ const styles = {
   copyright: { opacity: 0.5 }
 };
 
-// 生成星星配置的函数，只在组件初始化时调用
-const generateStarsConfig = () => {
-  return Array.from({ length: 20 }, (_, i) => ({
-    id: i,
-    left: Math.random() * 100,
-    top: Math.random() * 100,
-    animationDelay: Math.random() * 3,
-    animationDuration: 2 + Math.random() * 3
-  }));
-};
-
 const LearningBlogLanding: React.FC = React.memo(() => {
-  // 使用useMemo缓存星星配置，避免每次渲染时重新生成
-  const starsConfig = useMemo(() => generateStarsConfig(), []);
-
   return (
     <div className="landing-page">
       {/* 背景装饰元素 */}
       <div className="background-decoration">
-        {/* 星空效果 */}
-        <div className="stars-container">
-          {starsConfig.map((star) => (
-            <div
-              key={star.id}
-              className="star"
-              style={{
-                left: `${star.left}%`,
-                top: `${star.top}%`,
-                animationDelay: `${star.animationDelay}s`,
-                animationDuration: `${star.animationDuration}s`
-              }}
-            />
-          ))}
-        </div>
-        
         {/* 网格线 */}
         <div className="grid-overlay" />
         
@@ -118,13 +88,13 @@ const LearningBlogLanding: React.FC = React.memo(() => {
         <div className="container">
           <div className="animate-fade-in-up">
             <h1 className="heading-primary">
-              探索技术的
+              记录，思考
               <br />
-              <span className="gradient-text">无限可能</span>
+              <span className="gradient-text">持续创造</span>
             </h1>
             <p className="body-text" style={styles.heroText}>
-              记录学习历程，分享技术心得，与志同道合的开发者一起成长。
-              在这里，每一行代码都是成长的见证。
+              无论是技术的深度、历史的回响，还是对AI未来的畅想，
+              这里是我记录学习、沉淀思考的地方。
             </p>
             <div className="flex-center" style={styles.heroButtons}>
               <Link href="/articles" className="btn-primary" style={styles.heroButton} prefetch={true}>
@@ -136,65 +106,27 @@ const LearningBlogLanding: React.FC = React.memo(() => {
             </div>
           </div>
           
-          {/* Quick start guides */}
+          {/* 技术栈展示 - Logo Cloud 风格 */}
           <div style={{ marginTop: '48px' }}>
-            <div className="guide-badge">Quick start guides</div>
-            <div className="guide-grid" style={{ marginTop: '16px' }}>
-              <Link href="/articles?tag=react" className="guide-card" prefetch={true}>
-                <div className="guide-left">
-                  <span className="guide-dot" style={{ background: 'linear-gradient(135deg,#61dafb,#18C8FF)' }} />
-                  <span className="guide-title">React</span>
-                </div>
-                <span className="guide-arrow">→</span>
+            <div className="logo-cloud-grid" style={{ marginTop: '32px' }}>
+              <Link href="/articles?tag=react" className="tech-logo-item-simple" prefetch={true}>
+                <SiReact className="tech-svg-simple" />
               </Link>
-              <Link href="/articles?tag=nextjs" className="guide-card" prefetch={true}>
-                <div className="guide-left">
-                  <span className="guide-dot" style={{ background: 'linear-gradient(135deg,#000,#666)' }} />
-                  <span className="guide-title">Next.js</span>
-                </div>
-                <span className="guide-arrow">→</span>
+              
+              <Link href="/articles?tag=nextjs" className="tech-logo-item-simple" prefetch={true}>
+                <SiNextdotjs className="tech-svg-simple" />
               </Link>
-              <Link href="/articles?tag=typescript" className="guide-card" prefetch={true}>
-                <div className="guide-left">
-                  <span className="guide-dot" style={{ background: 'linear-gradient(135deg,#3178C6,#66a6ff)' }} />
-                  <span className="guide-title">TypeScript</span>
-                </div>
-                <span className="guide-arrow">→</span>
+              
+              <Link href="/articles?tag=typescript" className="tech-logo-item-simple" prefetch={true}>
+                <SiTypescript className="tech-svg-simple" />
               </Link>
-            </div>
-          </div>
-
-          {/* Integration guides */}
-          <div style={{ marginTop: '28px' }}>
-            <div className="guide-badge">Integration guides</div>
-            <div className="guide-grid" style={{ marginTop: '16px' }}>
-              <Link href="/trade?integration=coingecko" className="guide-card" prefetch={true}>
-                <div className="guide-left">
-                  <span className="guide-dot" style={{ background: 'linear-gradient(135deg,#34d399,#10b981)' }} />
-                  <span className="guide-title">CoinGecko API</span>
-                </div>
-                <span className="guide-arrow">→</span>
+              
+              <Link href="/articles?tag=go" className="tech-logo-item-simple" prefetch={true}>
+                <SiGo className="tech-svg-simple" />
               </Link>
-              <Link href="/trade?integration=websocket" className="guide-card" prefetch={true}>
-                <div className="guide-left">
-                  <span className="guide-dot" style={{ background: 'linear-gradient(135deg,#18C8FF,#0077ff)' }} />
-                  <span className="guide-title">WebSocket 实时</span>
-                </div>
-                <span className="guide-arrow">→</span>
-              </Link>
-              <Link href="/articles?tag=docker" className="guide-card" prefetch={true}>
-                <div className="guide-left">
-                  <span className="guide-dot" style={{ background: 'linear-gradient(135deg,#0db7ed,#2aa4f4)' }} />
-                  <span className="guide-title">Docker 部署</span>
-                </div>
-                <span className="guide-arrow">→</span>
-              </Link>
-              <Link href="/articles?tag=nginx" className="guide-card" prefetch={true}>
-                <div className="guide-left">
-                  <span className="guide-dot" style={{ background: 'linear-gradient(135deg,#2b2c3b,#6b7280)' }} />
-                  <span className="guide-title">Nginx 反向代理</span>
-                </div>
-                <span className="guide-arrow">→</span>
+              
+              <Link href="/articles?tag=docker" className="tech-logo-item-simple" prefetch={true}>
+                <SiDocker className="tech-svg-simple" />
               </Link>
             </div>
           </div>
