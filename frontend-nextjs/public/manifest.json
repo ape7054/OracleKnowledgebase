@@ -1,0 +1,16 @@
+{
+  "name": "Learning Stack",
+  "short_name": "Learning Stack",
+  "description": "全栈学习和交易平台",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B0B0F",
+  "theme_color": "#18C8FF",
+  "icons": [
+    {
+      "src": "/icons/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+} 

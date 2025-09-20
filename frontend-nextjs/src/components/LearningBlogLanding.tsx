@@ -162,10 +162,10 @@ const LearningBlogLanding: React.FC = React.memo(() => {
         <div className="container">
           <div className="text-center" style={styles.sectionTitle}>
             <h2 className="heading-secondary">
-              我的 <span className="gradient-text">学习记录</span>
+              探索多个 <span className="gradient-text">维度</span>
             </h2>
             <p className="body-text" style={styles.sectionDesc}>
-              记录技术学习历程，分享知识探索过程中的心得体会
+              从代码实践到思想沉淀，从历史回望到未来展望
             </p>
           </div>
           
@@ -173,12 +173,12 @@ const LearningBlogLanding: React.FC = React.memo(() => {
             <div className="info-card animate-fade-in-up">
               <div className="glass-icon">
                 <div style={styles.iconContainer}>
-                  💻
+                  💭
                 </div>
               </div>
-              <h3 className="heading-tertiary">技术深度</h3>
+              <h3 className="heading-tertiary">深度思考</h3>
               <p className="body-text" style={{ textAlign: 'center' }}>
-                深入浅出的技术文章，从基础概念到高级应用，助您掌握核心技能。
+                技术原理、历史脉络、AI发展，每个话题都值得深入探讨。
               </p>
               <Link href="/articles" className="btn-primary" style={styles.cardButton} prefetch={true}>
                 阅读文章
@@ -191,27 +191,27 @@ const LearningBlogLanding: React.FC = React.memo(() => {
                   🚀
                 </div>
               </div>
-              <h3 className="heading-tertiary">项目实践</h3>
+              <h3 className="heading-tertiary">实践创造</h3>
               <p className="body-text" style={{ textAlign: 'center' }}>
-                真实项目案例分析，完整的开发流程记录，理论与实践完美结合。
+                从Web3钱包到DEX，从代码到产品，将想法变为现实。
               </p>
               <Link href="/trade" className="btn-primary" style={styles.cardButton} prefetch={true}>
-                查看项目
+                我的作品
               </Link>
             </div>
 
             <div className="info-card animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
               <div className="glass-icon">
                 <div style={styles.iconContainer}>
-                  🎯
+                  ⚡
                 </div>
               </div>
-              <h3 className="heading-tertiary">学习路径</h3>
+              <h3 className="heading-tertiary">实时洞察</h3>
               <p className="body-text" style={{ textAlign: 'center' }}>
-                系统化的学习路线，从零开始到技术专家，每一步都有明确的指导。
+                Web3世界瞬息万变，在这里获取最新动态和深度分析。
               </p>
               <Link href="/dashboard" className="btn-primary" style={styles.cardButton}>
-                开始学习
+                查看动态
               </Link>
             </div>
           </div>

@@ -125,11 +125,11 @@ img, video {
       rgba(11, 11, 15, 0.25), 
       rgba(16, 24, 32, 0.20)
     ),
-    url('/assets/images/bg4.jpg');
-  background-size: cover;
-  background-position: center center;
+    url('/images/backgrounds/bg4.jpg');
+  background-size: cover; /* 覆盖整个容器，保持比例，确保无空白 */
+  background-position: center top; /* 水平居中，垂直从顶部开始 */
   background-attachment: scroll; /* 改为scroll提升性能 */
-  background-repeat: no-repeat;
+  background-repeat: no-repeat; /* 不重复，使用cover确保完全覆盖 */
   /* 简化滤镜效果减少GPU负担 */
   filter: contrast(1.1) brightness(0.9);
   /* 移除可能导致内容截断的contain属性 */
@@ -303,12 +303,18 @@ img, video {
   width: 100%;
   height: auto;
   min-height: 300px;
-  background: rgba(11, 11, 15, 0.9);
+  background: linear-gradient(
+    to bottom,
+    rgba(11, 11, 15, 0.8) 0%,
+    rgba(11, 11, 15, 0.9) 50%,
+    rgba(11, 11, 15, 0.95) 100%
+  );
   -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
   padding: 60px 0;
   z-index: 10;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  /* 移除突兀的边框线 */
+  /* border-top: 1px solid rgba(255, 255, 255, 0.1); */
 }
 
 /* ===== 主要组件块 ===== */
@@ -324,42 +330,18 @@ img, video {
 
 .features-section {
   position: relative;
-  padding: 80px 0 100px;   /* 增加顶部padding确保sections间距 */
+  padding: 80px 0 64px;   /* 增加底部留白，避免卡片贴着footer */
   z-index: 10;
   /* 保持透明背景，让整个页面的山景背景显示 */
   background: transparent;
   margin-top: 0;
 }
 
-/* 为features-section添加向上延伸的光效确保无缝过渡 */
-.features-section::before {
-  content: '';
-  position: absolute;
-  top: -50px;  /* 向上延伸50px覆盖过渡区域 */
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: 
-    radial-gradient(circle at 50% 20%, rgba(24, 200, 255, 0.02) 0%, transparent 70%),
-    radial-gradient(circle at 30% 80%, rgba(47, 128, 117, 0.02) 0%, transparent 65%);
-  z-index: 1;
-  pointer-events: none;
-}
 
-/* 为hero section添加轻微的视觉点缀 - 延伸覆盖避免分割线 */
-.hero-section::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: -50px;  /* 向下延伸50px覆盖过渡区域 */
-  background: 
-    radial-gradient(circle at 25% 15%, rgba(24, 200, 255, 0.03) 0%, transparent 60%),
-    radial-gradient(circle at 75% 85%, rgba(47, 128, 117, 0.04) 0%, transparent 65%);
-  z-index: 1;
-  pointer-events: none;
-}
+
+
+
+
 
 .hero-section .container,
 .features-section .container {
@@ -682,6 +664,8 @@ img, video {
   flex-wrap: wrap;
 }
 
+
+
 .text-center {
   text-align: center;
 }
@@ -691,7 +675,8 @@ img, video {
   .landing-page {
     /* 移动端简化背景 */
     background-attachment: scroll;
-    background-position: center 20%;
+    background-position: center top; /* 水平居中，垂直从顶部开始 */
+    background-size: cover; /* 移动端也使用cover确保完全覆盖 */
     /* 移动端移除滤镜 */
     filter: none;
   }
