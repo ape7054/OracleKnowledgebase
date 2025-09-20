@@ -11,6 +11,9 @@ import {
   SiRust,
   SiSolana
 } from 'react-icons/si';
+// 导入粒子效果组件
+import { SparklesCore } from './ui/sparkles-core';
+import { SparklesPreview } from './ui/sparkles';
 
 // 提取样式常量以避免每次渲染时重新创建对象
 const styles = {
@@ -100,8 +103,21 @@ const LearningBlogLanding: React.FC = React.memo(() => {
       </header>
 
       {/* 主题区域 */}
-      <section className="hero-section" id="home">
-        <div className="container">
+      <section className="hero-section" id="home" style={{ position: 'relative', overflow: 'hidden' }}>
+        {/* 粒子背景效果 */}
+        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1 }}>
+          <SparklesCore
+            id="tsparticlesfullpage"
+            background="transparent"
+            minSize={1.2}
+            maxSize={3.0}
+            particleDensity={40}
+            className="w-full h-full"
+            particleColor="rgba(24, 200, 255, 0.9)"
+          />
+        </div>
+        
+        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
           <div className="animate-fade-in-up">
             <h1 className="heading-primary">
               记录，思考
@@ -123,7 +139,7 @@ const LearningBlogLanding: React.FC = React.memo(() => {
           </div>
           
           {/* 技术栈展示 - Logo Cloud 风格 */}
-          <div style={{ marginTop: '48px' }}>
+          <div style={{ marginTop: '48px', position: 'relative', zIndex: 2 }}>
             <div className="logo-cloud-grid" style={{ marginTop: '32px' }}>
               <Link href="/articles?tag=react" className="tech-logo-item-simple" prefetch={true}>
                 <SiReact className="tech-svg-simple" />
@@ -155,6 +171,11 @@ const LearningBlogLanding: React.FC = React.memo(() => {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* 产品展示区域 */}
+      <section className="features-section" style={{ padding: '0', margin: '0' }}>
+        <SparklesPreview />
       </section>
 
       {/* 特色功能区域 */}
