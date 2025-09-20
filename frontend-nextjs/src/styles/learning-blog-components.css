@@ -958,27 +958,27 @@ img, video {
 }
 
 .logo-cloud-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 24px 32px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 32px;
   max-width: 700px;
   margin: 0 auto;
-  align-items: center;
 }
 
 @media (min-width: 640px) {
   .logo-cloud-grid {
-    grid-template-columns: repeat(6, 1fr);
-    max-width: 900px;
-    gap: 32px 40px;
+    max-width: 800px;
+    gap: 40px;
   }
 }
 
 @media (min-width: 1024px) {
   .logo-cloud-grid {
-    grid-template-columns: repeat(5, 1fr);
-    max-width: none;
-    margin: 0;
+    max-width: 900px;
+    margin: 0 auto;
+    gap: 48px;
   }
 }
 
@@ -1046,8 +1046,7 @@ img, video {
 
 @media (max-width: 640px) {
   .logo-cloud-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px 20px;
+    gap: 24px;
     max-width: 400px;
   }
   
@@ -1203,6 +1202,14 @@ img, video {
   color: #0db7ed; /* Docker */
 }
 
+.tech-logo-item-simple:nth-child(6) .tech-svg-simple {
+  color: #CE422B; /* Rust */
+}
+
+.tech-logo-item-simple:nth-child(7) .tech-svg-simple {
+  color: #9945FF; /* Solana */
+}
+
 /* Hover 状态颜色增强 */
 .tech-logo-item-simple:nth-child(1):hover .tech-svg-simple {
   color: #88e5fc;
@@ -1223,4 +1230,12 @@ img, video {
 
 .tech-logo-item-simple:nth-child(5):hover .tech-svg-simple {
   color: #2aa4f4;
+}
+
+.tech-logo-item-simple:nth-child(6):hover .tech-svg-simple {
+  color: #ff6b3d; /* Rust hover */
+}
+
+.tech-logo-item-simple:nth-child(7):hover .tech-svg-simple {
+  color: #c77dff; /* Solana hover */
 } 

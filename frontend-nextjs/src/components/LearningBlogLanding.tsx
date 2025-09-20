@@ -7,7 +7,9 @@ import {
   SiNextdotjs, 
   SiTypescript, 
   SiGo, 
-  SiDocker
+  SiDocker,
+  SiRust,
+  SiSolana
 } from 'react-icons/si';
 
 // 提取样式常量以避免每次渲染时重新创建对象
@@ -141,6 +143,14 @@ const LearningBlogLanding: React.FC = React.memo(() => {
               
               <Link href="/articles?tag=docker" className="tech-logo-item-simple" prefetch={true}>
                 <SiDocker className="tech-svg-simple" />
+              </Link>
+              
+              <Link href="/articles?tag=rust" className="tech-logo-item-simple" prefetch={true}>
+                <SiRust className="tech-svg-simple" />
+              </Link>
+              
+              <Link href="/articles?tag=solana" className="tech-logo-item-simple" prefetch={true}>
+                <SiSolana className="tech-svg-simple" />
               </Link>
             </div>
           </div>
