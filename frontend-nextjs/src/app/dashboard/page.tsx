@@ -50,21 +50,6 @@ function DashboardContent() {
         <Stack direction="row" spacing={2}>
           <Button
             variant="outlined"
-            onClick={() => router.push('/trade')}
-            sx={{
-              borderColor: '#00ffff',
-              color: '#00ffff',
-              '&:hover': {
-                borderColor: '#0099cc',
-                backgroundColor: 'rgba(0, 255, 255, 0.1)',
-              },
-            }}
-          >
-            开始交易
-          </Button>
-          
-          <Button
-            variant="outlined"
             startIcon={<Logout />}
             onClick={logout}
             sx={{
@@ -152,20 +137,6 @@ function DashboardContent() {
         </Typography>
         
         <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
-          <Button
-            variant="contained"
-            size="large"
-            onClick={() => router.push('/trade')}
-            sx={{
-              background: 'linear-gradient(45deg, #00ffff, #0099cc)',
-              '&:hover': {
-                background: 'linear-gradient(45deg, #0099cc, #00ffff)',
-              },
-            }}
-          >
-            模拟交易
-          </Button>
-          
           <Button
             variant="outlined"
             size="large"

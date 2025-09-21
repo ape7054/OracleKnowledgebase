@@ -2,7 +2,7 @@
 const nextConfig = {
   // 优化性能配置
   experimental: {
-    optimizeCss: true,
+    // optimizeCss: true, // 暂时禁用，避免critters依赖问题
   },
   
   // 编译器优化

@@ -13,7 +13,6 @@ import {
 } from 'react-icons/si';
 // 导入粒子效果组件
 import { SparklesCore } from './ui/sparkles-core';
-import { SparklesPreview } from './ui/sparkles';
 
 // 提取样式常量以避免每次渲染时重新创建对象
 const styles = {
@@ -96,7 +95,6 @@ const LearningBlogLanding: React.FC = React.memo(() => {
         
             <a href="#features" className="menu-item" onClick={(e) => handleSmoothScroll(e, 'features')}>记录</a>
             <Link href="/articles" className="menu-item" prefetch={true}>文章</Link>
-            <Link href="/trade" className="menu-item" prefetch={true}>项目</Link>
             <a href="#about" className="menu-item" onClick={(e) => handleSmoothScroll(e, 'about')}>关于</a>
           </nav>
         </div>
@@ -129,12 +127,12 @@ const LearningBlogLanding: React.FC = React.memo(() => {
               这里是我记录学习、沉淀思考的地方。
             </p>
             <div className="flex-center" style={styles.heroButtons}>
-              <Link href="/articles" className="btn-primary" style={styles.heroButton} prefetch={true}>
-                阅读文章
+              <Link href="/learning" className="btn-primary" style={styles.heroButton} prefetch={true}>
+                学习
               </Link>
-              <Link href="/trade" className="btn-secondary" style={styles.heroButton} prefetch={true}>
-                我的作品
-              </Link>
+              <a href="#features" className="btn-secondary" style={styles.heroButton} onClick={(e) => handleSmoothScroll(e, 'features')}>
+                探索
+              </a>
             </div>
           </div>
           
@@ -173,10 +171,7 @@ const LearningBlogLanding: React.FC = React.memo(() => {
         </div>
       </section>
 
-      {/* 产品展示区域 */}
-      <section className="features-section" style={{ padding: '0', margin: '0' }}>
-        <SparklesPreview />
-      </section>
+
 
       {/* 特色功能区域 */}
       <section className="features-section" id="features">
@@ -214,10 +209,10 @@ const LearningBlogLanding: React.FC = React.memo(() => {
               </div>
               <h3 className="heading-tertiary">实践创造</h3>
               <p className="body-text" style={{ textAlign: 'center' }}>
-                从Web3钱包到DEX，从代码到产品，将想法变为现实。
+                记录学习历程，分享技术心得，持续成长与创造。
               </p>
-              <Link href="/trade" className="btn-primary" style={styles.cardButton} prefetch={true}>
-                我的作品
+              <Link href="/articles" className="btn-primary" style={styles.cardButton} prefetch={true}>
+                查看作品
               </Link>
             </div>
 
@@ -403,7 +398,6 @@ const LearningBlogLanding: React.FC = React.memo(() => {
               <h4 style={styles.techTitle}>快速导航</h4>
               <div style={styles.navList}>
                 <Link href="/articles" className="body-text-small" style={styles.navLink} prefetch={true}>技术文章</Link>
-                <Link href="/trade" className="body-text-small" style={styles.navLink} prefetch={true}>项目展示</Link>
                 <Link href="/dashboard" className="body-text-small" style={styles.navLink}>学习路径</Link>
                 <Link href="/account" className="body-text-small" style={styles.navLink}>关于我</Link>
               </div>

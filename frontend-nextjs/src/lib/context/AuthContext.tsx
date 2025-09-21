@@ -180,7 +180,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.removeItem('token');
     setUser(null);
     toast.success('已退出登录');
-    router.push('/login');
+    router.push('/');
   };
 
   const value = {
