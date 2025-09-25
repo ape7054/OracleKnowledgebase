@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+/* Tailwind CSS v4 主题配置 - 使用新的 @theme 指令 */
+@theme {
+  /* 自定义颜色 - 使用现代OKLCH颜色空间获得更生动的色彩 */
+  --color-background: oklch(0.15 0.02 240);  /* 深蓝灰色背景 */
+  --color-foreground: oklch(0.98 0.01 120);  /* 近白色前景 */
+  
+  /* 扩展调色板 - 保持项目原有的深色主题 */
+  --color-primary-50: oklch(0.96 0.02 240);   /* 很浅的蓝色 */
+  --color-primary-500: oklch(0.6 0.2 240);    /* 中等蓝色 */
+  --color-primary-600: oklch(0.55 0.22 240);  /* 较深蓝色 */
+  --color-primary-900: oklch(0.35 0.25 240);  /* 深蓝色 */
+  
+  /* 字体配置 */
+  --font-sans: ui-sans-serif, system-ui, sans-serif;
+  
+  /* 间距扩展 - 利用v4的新特性 */
+  --spacing-18: 4.5rem;
+  --spacing-72: 18rem;
+}
+
+/* 兼容性CSS变量（为了与现有代码兼容） */
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 15, 23, 42;
+  --background-end-rgb: 15, 23, 42;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-start-rgb));
+  margin: 0;
+  padding: 0;
+}
+
+/* 确保Tailwind样式优先 */
+* {
+  box-sizing: border-box;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+} 
