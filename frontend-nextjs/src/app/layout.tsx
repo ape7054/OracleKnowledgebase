@@ -7,8 +7,8 @@ import MouseMoveEffect from "@/components/mouse-move-effect"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Amane Soft - Cutting-Edge Software Solutions",
-  description: "Amane Soft delivers innovative, high-performance software solutions for businesses of the future.",
+  title: "Modern Landing Page - 现代化着陆页",
+  description: "Modern application built with Next.js 15 + React 19 + Tailwind CSS v4 + shadcn/ui | 基于最新技术栈构建的现代化应用",
 }
 
 export default function RootLayout({
@@ -17,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className="dark">
+    <html className="dark">
       <body className={`${inter.className} bg-background text-foreground antialiased`}>
         <MouseMoveEffect />
         {children}

@@ -1,0 +1,48 @@
+{
+  "navigation": {
+    "home": "Home",
+    "about": "About",
+    "contact": "Contact"
+  },
+  "hero": {
+    "badge": "Modern Landing Page",
+    "title": "Welcome to the Future",
+    "subtitle": "Modern application built with Next.js 15 + React 19 + Tailwind CSS v4 + shadcn/ui",
+    "cta": {
+      "primary": "Get Started",
+      "secondary": "Learn More"
+    }
+  },
+  "features": {
+    "title": "Powerful Features",
+    "subtitle": "Built for performance, security and scalability",
+    "performance": {
+      "title": "🚀 High Performance",
+      "description": "Lightning-fast experience with latest tech stack",
+      "details": "Millisecond-level hot reload and build speed with Next.js 15 and Turbopack"
+    },
+    "design": {
+      "title": "🎨 Modern Design",
+      "description": "Beautiful user interface and experience",
+      "details": "Using shadcn/ui component library and Tailwind CSS v4 latest design system"
+    },
+    "efficiency": {
+      "title": "⚡ Development Efficiency",
+      "description": "Enhanced development experience and productivity",
+      "details": "TypeScript + ESLint + complete development toolchain support"
+    }
+  },
+  "cta": {
+    "title": "Ready to Get Started?",
+    "subtitle": "Experience modern development and user experience now",
+    "primary": "Get Started Now",
+    "secondary": "View Docs"
+  },
+  "footer": {
+    "copyright": "© 2024 Modern Landing Page. Built with Next.js 15 + shadcn/ui"
+  },
+  "language": {
+    "chinese": "中文",
+    "english": "English"
+  }
+} 

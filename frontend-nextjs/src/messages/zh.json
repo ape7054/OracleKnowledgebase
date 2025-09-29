@@ -1,0 +1,48 @@
+{
+  "navigation": {
+    "home": "首页",
+    "about": "关于我们",
+    "contact": "联系我们"
+  },
+  "hero": {
+    "badge": "现代化着陆页",
+    "title": "欢迎来到未来",
+    "subtitle": "基于 Next.js 15 + React 19 + Tailwind CSS v4 + shadcn/ui 构建的现代化应用",
+    "cta": {
+      "primary": "开始体验",
+      "secondary": "了解更多"
+    }
+  },
+  "features": {
+    "title": "强大功能",
+    "subtitle": "为性能、安全性和扩展性而构建",
+    "performance": {
+      "title": "🚀 高性能",
+      "description": "基于最新技术栈的极速体验",
+      "details": "使用 Next.js 15 和 Turbopack 实现毫秒级的热重载和构建速度"
+    },
+    "design": {
+      "title": "🎨 现代设计",
+      "description": "精美的用户界面和体验",
+      "details": "采用 shadcn/ui 组件库和 Tailwind CSS v4 最新设计系统"
+    },
+    "efficiency": {
+      "title": "⚡ 开发效率",
+      "description": "提升开发体验和生产力",
+      "details": "TypeScript + ESLint + 完整的开发工具链支持"
+    }
+  },
+  "cta": {
+    "title": "准备开始了吗？",
+    "subtitle": "立即体验现代化的开发和用户体验",
+    "primary": "立即开始",
+    "secondary": "查看文档"
+  },
+  "footer": {
+    "copyright": "© 2024 现代化着陆页. 基于 Next.js 15 + shadcn/ui 构建"
+  },
+  "language": {
+    "chinese": "中文",
+    "english": "English"
+  }
+} 
