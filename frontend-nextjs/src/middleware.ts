@@ -5,7 +5,7 @@ export default createMiddleware({
   locales: ['en', 'zh'],
   
   // 默认语言
-  defaultLocale: 'zh',
+  defaultLocale: 'en',
   
   // 自动检测用户浏览器语言
   localeDetection: true

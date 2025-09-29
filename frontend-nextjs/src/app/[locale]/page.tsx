@@ -1,18 +1,22 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { getTranslations } from 'next-intl/server';
 
+interface HomeProps {
+  params: { locale: string }
+}
 
-
-export default async function Home() {
-
-  const t = await getTranslations();
+export default async function Home({ params }: HomeProps) {
+  const { locale } = params;
+  const t = await getTranslations({ locale });
   
   return (
     <div className="min-h-screen bg-background">
-      {/* 语言切换器 */}
-      <div className="absolute top-4 right-4 z-50">
+      {/* 语言切换器和主题切换器 */}
+      <div className="absolute top-4 right-4 z-50 flex items-center gap-2">
+        <ThemeToggle />
         <LanguageSwitcher />
       </div>
 

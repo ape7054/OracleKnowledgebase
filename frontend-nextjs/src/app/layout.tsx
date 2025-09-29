@@ -3,6 +3,7 @@ import { Inter } from "next/font/google"
 import type React from "react"
 import type { Metadata } from "next"
 import MouseMoveEffect from "@/components/mouse-move-effect"
+import { ThemeProvider } from "@/components/theme-provider"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -17,10 +18,17 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html className="dark">
+    <html suppressHydrationWarning>
       <body className={`${inter.className} bg-background text-foreground antialiased`}>
-        <MouseMoveEffect />
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <MouseMoveEffect />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   )
