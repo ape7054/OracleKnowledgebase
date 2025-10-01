@@ -1,48 +1,175 @@
 {
   "navigation": {
     "home": "首页",
-    "about": "关于我们",
-    "contact": "联系我们"
+    "articles": "文章",
+    "about": "关于",
+    "github": "GitHub",
+    "rss": "RSS订阅",
+    "resume": "简历",
+    "contact": "联系",
+    "getStarted": "开始探索"
   },
   "hero": {
-    "badge": "现代化着陆页",
-    "title": "欢迎来到未来",
-    "subtitle": "基于 Next.js 15 + React 19 + Tailwind CSS v4 + shadcn/ui 构建的现代化应用",
+    "badge": "可探索的知识系统",
+    "title": "代码、产品、Web3的思考熔炉",
+    "subtitle": "一个关于软件工程、产品构建、Web3底层逻辑和教育模式反思的知识库。在这里，我们用代码验证想法，用系统思维解构现实，用去中心化重构信任。",
+    "maintainedBy": "由一个不相信证书，只相信作品的人维护",
     "cta": {
-      "primary": "开始体验",
-      "secondary": "了解更多"
+      "primary": "🚀 开始探索",
+      "secondary": "RSS订阅",
+      "tertiary": "查看宣言"
     }
   },
-  "features": {
-    "title": "强大功能",
-    "subtitle": "为性能、安全性和扩展性而构建",
-    "performance": {
-      "title": "🚀 高性能",
-      "description": "基于最新技术栈的极速体验",
-      "details": "使用 Next.js 15 和 Turbopack 实现毫秒级的热重载和构建速度"
-    },
-    "design": {
-      "title": "🎨 现代设计",
-      "description": "精美的用户界面和体验",
-      "details": "采用 shadcn/ui 组件库和 Tailwind CSS v4 最新设计系统"
-    },
-    "efficiency": {
-      "title": "⚡ 开发效率",
-      "description": "提升开发体验和生产力",
-      "details": "TypeScript + ESLint + 完整的开发工具链支持"
+  "domains": {
+    "title": "探索我的数字大脑",
+    "subtitle": "在这里，价值由作品定义，而非证书",
+    "cards": {
+      "tech": {
+        "icon": "💻",
+        "title": "技术开发",
+        "description": "从Web1.0到Web3.0的架构演进，从Next.js到Solidity的工程实践。构建可靠、高效、去中心化的数字产品。",
+        "keywords": "Next.js, Solidity, Web架构, 性能优化, 智能合约",
+        "articleCount": "8+ 篇深度文章"
+      },
+      "web3": {
+        "icon": "⛓️",
+        "title": "Web3 & 区块链",
+        "description": "深入DAO治理机制、去中心化声誉系统、防作弊框架。探索Web3如何重塑信任、价值与协作。从入门到深度，从理念到实践。",
+        "keywords": "DAO, SBT, 防作弊系统, DeFi, NFT, 去中心化",
+        "articleCount": "12+ 篇系列文章"
+      },
+      "thinking": {
+        "icon": "🧠",
+        "title": "跨学科思考",
+        "description": "用系统论类比人体与社会，用第一性原理批判教育制度，用区块链思维重构人才评价。在看似无关的领域间建立深刻连接。",
+        "keywords": "系统思维, 教育批判, Ramanujan宣言, 去中心化教育",
+        "articleCount": "思想实验室"
+      },
+      "product": {
+        "icon": "📋",
+        "title": "产品与流程",
+        "description": "从PRD撰写到6-8周MVP落地的完整流程，从用户调研到灰度发布的每个环节。分享真实的0到1产品构建经验，拒绝纸上谈兵。",
+        "keywords": "PRD, 开发流程, MVP, 敏捷开发, 产品设计",
+        "articleCount": "实战手册"
+      },
+      "tools": {
+        "icon": "🛠️",
+        "title": "实用工具箱",
+        "description": "即插即用的Prompt模板、劳动维权操作包、问题解决报告。知识不仅是力量，更是武器。这些工具希望能在关键时刻帮助到你。",
+        "keywords": "劳动维权, Prompt工程, 问题解决, 学习清单",
+        "articleCount": "即取即用"
+      }
     }
   },
-  "cta": {
-    "title": "准备开始了吗？",
-    "subtitle": "立即体验现代化的开发和用户体验",
-    "primary": "立即开始",
-    "secondary": "查看文档"
+  "featured": {
+    "title": "近期思考与深度长文",
+    "subtitle": "从哪里开始读？这三篇文章代表了我的技术深度、思想锋芒和实用主义",
+    "articles": {
+      "manifesto": {
+        "title": "拉马努金的复仇：一份去中心化人才共和国宣言",
+        "description": "当天才因英语不及格被扼杀，当学生为无意义的学分奔波，当教育沦为驯化工具——是时候改变了。这不是改良，是革命。",
+        "tag": "思想",
+        "readTime": "12 分钟",
+        "icon": "🔥"
+      },
+      "web": {
+        "title": "Web架构演进史：从静态页面到去中心化应用",
+        "description": "一文读懂三十年变迁：从Apache到智能合约，从中心化数据库到IPFS。理解我们今天所处的技术坐标，预见明天的架构演进。",
+        "tag": "技术",
+        "readTime": "25 分钟",
+        "icon": "⚡"
+      },
+      "labor": {
+        "title": "劳动维权操作包：写给每个打工人的实用指南",
+        "description": "未签合同？拖欠工资？虚假招聘？从证据收集到仲裁流程，从催告函到操作模板。知识是武器，这份操作包希望能帮助需要的人。",
+        "tag": "实用",
+        "readTime": "8 分钟",
+        "icon": "⚖️"
+      }
+    },
+    "moreLink": "查看更多精选文章 →"
   },
-  "footer": {
-    "copyright": "© 2024 现代化着陆页. 基于 Next.js 15 + shadcn/ui 构建"
+  "manifesto": {
+    "title": "我的信条：终结信息剥削",
+    "subtitle": "Why I Build This",
+    "quote": "传统的教育和信息渠道正在失效。学历像货币一样贬值，我们被动接受过时的知识，被无意义的'学分'和'证书'捆绑。牛顿没必要浪费时间学文言文，拉马努金也不该为英语不及格苦恼。\n\n我相信，真正的学习是主动的、自由的、以创造价值为导向的。这个网站，就是我实践这一理念的阵地：记录所学、分享所思、构建工具，并与全球的知识信徒建立连接。\n\n在这里，你的价值由你的作品定义，而非一张纸。",
+    "principles": [
+      {
+        "title": "行动证明能力",
+        "description": "完成真实世界的任务，而非纸上谈兵"
+      },
+      {
+        "title": "贡献优于资历",
+        "description": "你做过什么，远比你毕业于哪里重要"
+      },
+      {
+        "title": "开放与透明",
+        "description": "知识应该自由流动，而非被围墙垄断"
+      },
+      {
+        "title": "持续进化",
+        "description": "学习是终身的，声誉是动态的"
+      }
+    ]
+  },
+  "stats": {
+    "title": "内容全景",
+    "items": [
+      {
+        "number": "30+",
+        "label": "深度文章",
+        "description": "覆盖技术、产品、Web3"
+      },
+      {
+        "number": "5",
+        "label": "知识域",
+        "description": "跨学科知识体系"
+      },
+      {
+        "number": "10+",
+        "label": "实用工具",
+        "description": "即插即用的模板"
+      },
+      {
+        "number": "∞",
+        "label": "持续更新",
+        "description": "知识永不停止生长"
+      }
+    ]
+  },
+  "finalCta": {
+    "title": "准备好进入这个知识迷宫了吗？",
+    "subtitle": "探索技术、系统与去中心化的交叉点。在这里，每一篇文章都是一次思想实验。",
+    "primary": "查看所有文章",
+    "secondary": "订阅更新",
+    "links": {
+      "github": "GitHub",
+      "resume": "简历",
+      "contact": "联系方式"
+    }
   },
   "language": {
     "chinese": "中文",
     "english": "English"
+  },
+  "articles": {
+    "title": "所有文章",
+    "subtitle": "{count} 篇文章 · 涵盖技术、产品、Web3 和跨学科思考",
+    "backToList": "返回文章列表"
+  },
+  "footer": {
+    "copyright": "© 2025 Oracle Knowledge Base. 在这里，价值由作品定义，而非证书。",
+    "builtWith": "使用 Next.js + Nextra 构建",
+    "license": "内容基于 CC BY-NC-SA 4.0 许可",
+    "social": {
+      "github": "GitHub",
+      "twitter": "Twitter",
+      "email": "Email"
+    }
+  },
+  "seo": {
+    "title": "Oracle - 代码、产品、Web3的思考熔炉",
+    "description": "一个关于软件工程、Web3、产品设计和教育反思的知识库。30+篇深度文章，从技术实践到思想实验，从入门指南到深度白皮书。",
+    "keywords": "Web3, DAO, 智能合约, Next.js, 产品设计, 去中心化, 教育, 系统思维"
   }
 } 

@@ -1,48 +1,175 @@
 {
   "navigation": {
     "home": "Home",
+    "articles": "Articles",
     "about": "About",
-    "contact": "Contact"
+    "github": "GitHub",
+    "rss": "RSS Feed",
+    "resume": "Resume",
+    "contact": "Contact",
+    "getStarted": "Start Exploring"
   },
   "hero": {
-    "badge": "Modern Landing Page",
-    "title": "Welcome to the Future",
-    "subtitle": "Modern application built with Next.js 15 + React 19 + Tailwind CSS v4 + shadcn/ui",
+    "badge": "An Explorable Knowledge System",
+    "title": "A Crucible of Thoughts on Code, Product & Web3",
+    "subtitle": "A knowledge base about software engineering, product development, Web3 fundamentals, and rethinking education. Here, we validate ideas with code, deconstruct reality with systems thinking, and rebuild trust with decentralization.",
+    "maintainedBy": "Maintained by someone who believes in work, not credentials",
     "cta": {
-      "primary": "Get Started",
-      "secondary": "Learn More"
+      "primary": "🚀 Start Exploring",
+      "secondary": "RSS Feed",
+      "tertiary": "Read Manifesto"
     }
   },
-  "features": {
-    "title": "Powerful Features",
-    "subtitle": "Built for performance, security and scalability",
-    "performance": {
-      "title": "🚀 High Performance",
-      "description": "Lightning-fast experience with latest tech stack",
-      "details": "Millisecond-level hot reload and build speed with Next.js 15 and Turbopack"
-    },
-    "design": {
-      "title": "🎨 Modern Design",
-      "description": "Beautiful user interface and experience",
-      "details": "Using shadcn/ui component library and Tailwind CSS v4 latest design system"
-    },
-    "efficiency": {
-      "title": "⚡ Development Efficiency",
-      "description": "Enhanced development experience and productivity",
-      "details": "TypeScript + ESLint + complete development toolchain support"
+  "domains": {
+    "title": "Explore My Digital Brain",
+    "subtitle": "Here, value is defined by work, not by credentials",
+    "cards": {
+      "tech": {
+        "icon": "💻",
+        "title": "Technical Development",
+        "description": "From Web1.0 to Web3.0 architecture evolution, from Next.js to Solidity engineering practices. Building reliable, efficient, and decentralized digital products.",
+        "keywords": "Next.js, Solidity, Web Architecture, Performance Optimization, Smart Contracts",
+        "articleCount": "8+ In-depth Articles"
+      },
+      "web3": {
+        "icon": "⛓️",
+        "title": "Web3 & Blockchain",
+        "description": "Deep dive into DAO governance mechanisms, decentralized reputation systems, and anti-cheating frameworks. Exploring how Web3 reshapes trust, value, and collaboration. From beginner to advanced, from theory to practice.",
+        "keywords": "DAO, SBT, Anti-cheating Systems, DeFi, NFT, Decentralization",
+        "articleCount": "12+ Series Articles"
+      },
+      "thinking": {
+        "icon": "🧠",
+        "title": "Interdisciplinary Thinking",
+        "description": "Using systems theory to compare human body and society, applying first principles to critique education systems, using blockchain thinking to reconstruct talent evaluation. Building profound connections between seemingly unrelated fields.",
+        "keywords": "Systems Thinking, Education Critique, Ramanujan Manifesto, Decentralized Education",
+        "articleCount": "Thought Laboratory"
+      },
+      "product": {
+        "icon": "📋",
+        "title": "Product & Process",
+        "description": "From PRD writing to 6-8 week MVP landing, complete processes from user research to gradual releases. Sharing real 0-to-1 product building experiences, rejecting armchair theorizing.",
+        "keywords": "PRD, Development Process, MVP, Agile Development, Product Design",
+        "articleCount": "Practical Handbook"
+      },
+      "tools": {
+        "icon": "🛠️",
+        "title": "Practical Toolbox",
+        "description": "Plug-and-play Prompt templates, labor rights action packs, and problem-solving reports. Knowledge is not just power, but also a weapon. These tools hope to help you in critical moments.",
+        "keywords": "Labor Rights, Prompt Engineering, Problem Solving, Learning Checklists",
+        "articleCount": "Ready to Use"
+      }
     }
   },
-  "cta": {
-    "title": "Ready to Get Started?",
-    "subtitle": "Experience modern development and user experience now",
-    "primary": "Get Started Now",
-    "secondary": "View Docs"
+  "featured": {
+    "title": "Recent Thoughts & In-Depth Articles",
+    "subtitle": "Where to start? These three articles represent my technical depth, intellectual edge, and pragmatism",
+    "articles": {
+      "manifesto": {
+        "title": "Ramanujan's Revenge: A Manifesto for a Decentralized Republic of Talent",
+        "description": "When genius is killed by failing English, when students chase meaningless credits, when education becomes domestication—it's time for change. Not reform, but revolution.",
+        "tag": "Philosophy",
+        "readTime": "12 min read",
+        "icon": "🔥"
+      },
+      "web": {
+        "title": "The Evolution of Web Architecture: From Static Pages to Decentralized Applications",
+        "description": "Understanding 30 years of evolution: from Apache to smart contracts, from centralized databases to IPFS. Know where we stand today, foresee tomorrow's architecture.",
+        "tag": "Technical",
+        "readTime": "25 min read",
+        "icon": "⚡"
+      },
+      "labor": {
+        "title": "Labor Rights Action Pack: A Practical Guide for Every Worker",
+        "description": "No contract? Unpaid wages? Fake job posting? From evidence collection to arbitration process, from demand letters to operation templates. Knowledge is a weapon, and this pack hopes to help those in need.",
+        "tag": "Practical",
+        "readTime": "8 min read",
+        "icon": "⚖️"
+      }
+    },
+    "moreLink": "View More Featured Articles →"
+  },
+  "manifesto": {
+    "title": "My Creed: End Information Exploitation",
+    "subtitle": "Why I Build This",
+    "quote": "Traditional education and information channels are failing. Degrees depreciate like currency. We passively receive outdated knowledge, bound by meaningless 'credits' and 'certificates'. Newton didn't need to waste time on classical Chinese, and Ramanujan shouldn't have suffered for failing English.\n\nI believe true learning is active, free, and value-creation oriented. This website is my platform to practice this philosophy: documenting what I learn, sharing what I think, building tools, and connecting with knowledge believers worldwide.\n\nHere, your value is defined by your work, not by a piece of paper.",
+    "principles": [
+      {
+        "title": "Proof of Work",
+        "description": "Complete real-world tasks, not just theorize"
+      },
+      {
+        "title": "Contribution Over Credentials",
+        "description": "What you've done matters more than where you graduated"
+      },
+      {
+        "title": "Openness & Transparency",
+        "description": "Knowledge should flow freely, not be monopolized by walls"
+      },
+      {
+        "title": "Continuous Evolution",
+        "description": "Learning is lifelong, reputation is dynamic"
+      }
+    ]
+  },
+  "stats": {
+    "title": "Content Overview",
+    "items": [
+      {
+        "number": "30+",
+        "label": "In-depth Articles",
+        "description": "Covering tech, product, Web3"
+      },
+      {
+        "number": "5",
+        "label": "Knowledge Domains",
+        "description": "Interdisciplinary system"
+      },
+      {
+        "number": "10+",
+        "label": "Practical Tools",
+        "description": "Plug-and-play templates"
+      },
+      {
+        "number": "∞",
+        "label": "Continuous Updates",
+        "description": "Knowledge never stops growing"
+      }
+    ]
+  },
+  "finalCta": {
+    "title": "Ready to Enter This Knowledge Labyrinth?",
+    "subtitle": "Explore the intersection of technology, systems, and decentralization. Here, every article is a thought experiment.",
+    "primary": "View All Articles",
+    "secondary": "Subscribe to Updates",
+    "links": {
+      "github": "GitHub",
+      "resume": "Resume",
+      "contact": "Contact"
+    }
   },
   "footer": {
-    "copyright": "© 2024 Modern Landing Page. Built with Next.js 15 + shadcn/ui"
+    "copyright": "© 2025 Oracle Knowledge Base. Here, value is defined by work, not by credentials.",
+    "builtWith": "Built with Next.js + Nextra",
+    "license": "Content licensed under CC BY-NC-SA 4.0",
+    "social": {
+      "github": "GitHub",
+      "twitter": "Twitter",
+      "email": "Email"
+    }
   },
   "language": {
-    "chinese": "中文",
+    "chinese": "Chinese",
     "english": "English"
+  },
+  "articles": {
+    "title": "All Articles",
+    "subtitle": "{count} articles · Covering tech, product, Web3 and interdisciplinary thinking",
+    "backToList": "Back to Articles"
+  },
+  "seo": {
+    "title": "Oracle - A Crucible of Thoughts on Code, Product & Web3",
+    "description": "A knowledge base on software engineering, Web3, product design, and education rethinking. 30+ in-depth articles, from technical practices to thought experiments, from beginner guides to deep whitepapers.",
+    "keywords": "Web3, DAO, Smart Contracts, Next.js, Product Design, Decentralization, Education, Systems Thinking"
   }
 } 
