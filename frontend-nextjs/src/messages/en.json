@@ -173,5 +173,102 @@
     "title": "Oracle - A Crucible of Thoughts on Code, Product & Web3",
     "description": "A knowledge base on software engineering, Web3, product design, and education rethinking. 30+ in-depth articles, from technical practices to thought experiments, from beginner guides to deep whitepapers.",
     "keywords": "Web3, DAO, Smart Contracts, Next.js, Product Design, Decentralization, Education, Systems Thinking"
+  },
+  "about": {
+    "title": "About Me",
+    "subtitle": "A full-stack developer & Web3 explorer who believes in work over credentials",
+    "intro": {
+      "title": "Introduction",
+      "description": "I'm a full-stack developer with a deep passion for blockchain technology and decentralized applications. From diving into Web3 after graduation to becoming a DeFi quantitative trading system developer, I've maintained curiosity and enthusiasm for new technologies. In the AI era, I believe technical boundaries are being broken, and true value lies in what we can create."
+    },
+    "journey": {
+      "title": "Career Journey",
+      "exploration": {
+        "period": "Post-Graduation",
+        "title": "Exploration Phase",
+        "description": "After graduation, I chose to deeply study blockchain, Web3, and cryptocurrency, learning Rust programming and practicing my understanding through crypto trading. Despite experiencing contract liquidation, this setback didn't shake my belief in blockchain technology.",
+        "skills": "Rust, Blockchain, Web3, Cryptocurrency"
+      },
+      "defi": {
+        "period": "2023-2024",
+        "title": "DeFi Quantitative System Development",
+        "description": "With solid Rust fundamentals and deep blockchain understanding, I successfully joined a technical team focused on DeFi quantitative trading, participating in multiple high-frequency trading system developments.",
+        "project1": {
+          "name": "Solana Arbitrage Bot",
+          "description": "Developed data monitoring service using Rust, listening to Solana blockchain pool data via gRPC protocol to provide real-time data support for arbitrage strategies.",
+          "tech": "Rust, gRPC, Solana"
+        },
+        "project2": {
+          "name": "Telegram Trading Bot",
+          "description": "Developed sniper trading bot for automated trading strategy execution.",
+          "tech": "TypeScript, Node.js, Telegram Bot API"
+        }
+      },
+      "transformation": {
+        "period": "Present",
+        "title": "Transformation in the AI Era",
+        "description": "Through high-frequency use of AI-assisted programming in daily development, I deeply feel that AI technology is redefining the software development industry. AI has broken traditional technical knowledge monopolies and lowered cross-domain learning barriers. After extensive technical exploration, I decided to focus on frontend development to build a solid foundation for full-stack development."
+      }
+    },
+    "purpose": {
+      "title": "Project Purpose",
+      "description": "The original intention of creating this knowledge base was to document my thinking and learning journey, building my own knowledge system. In the age of information explosion, I believe systematic knowledge organization and deep thinking are more valuable than fragmented information acquisition. This is both my digital brain and a platform for exchanging ideas with like-minded individuals."
+    },
+    "value": {
+      "title": "Value Proposition",
+      "points": [
+        {
+          "title": "Systematized Knowledge",
+          "description": "Not just fragmented information collection, but building complete knowledge systems and thinking frameworks"
+        },
+        {
+          "title": "Theory Meets Practice",
+          "description": "Every concept is validated through practice, every line of code carries thought"
+        },
+        {
+          "title": "Continuous Learning & Evolution",
+          "description": "Maintaining learning in the rapidly changing tech world, continuously iterating cognition"
+        },
+        {
+          "title": "Open Sharing",
+          "description": "Believing that knowledge value lies in flow and sharing, not monopoly and closure"
+        }
+      ]
+    },
+    "content": {
+      "title": "Content Directions",
+      "topics": "Technical Development, Web3 Blockchain, AI Artificial Intelligence, Product Design, Systems Thinking, Scientific Exploration, History & Philosophy, Education Rethinking"
+    },
+    "techStack": {
+      "title": "Tech Stack",
+      "frontend": {
+        "title": "Frontend Development",
+        "items": "React, Vue, Next.js, TypeScript, TailwindCSS, UniApp"
+      },
+      "backend": {
+        "title": "Backend Development",
+        "items": "Rust, Go, Node.js, TypeScript, gRPC"
+      },
+      "blockchain": {
+        "title": "Blockchain",
+        "items": "Solidity, Solana, BSC, Web3.js, Ethers.js"
+      },
+      "devops": {
+        "title": "DevOps",
+        "items": "Docker, CI/CD, Git, Linux"
+      },
+      "note": "💡 I believe in the AI era, breadth of tech stack is no longer a barrier. The key lies in learning ability, systems thinking, and actual creativity."
+    },
+    "contact": {
+      "title": "Contact",
+      "description": "If you're interested in my projects or want to discuss technology, products, or Web3 ideas, feel free to reach out:",
+      "email": "Send Email"
+    },
+    "cta": {
+      "title": "Ready to Explore?",
+      "description": "Check out all my articles or return to the homepage to learn more about this knowledge base.",
+      "articles": "Browse Articles",
+      "home": "Back to Home"
+    }
   }
 } 

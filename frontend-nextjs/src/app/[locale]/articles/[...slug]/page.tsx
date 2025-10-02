@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import { Badge } from '@/components/ui/badge'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
-import LanguageSwitcher from '@/components/LanguageSwitcher'
+import { SiteHeader } from '@/components/SiteHeader'
 import { getTranslations } from 'next-intl/server'
 import { ArticleLayout } from '@/components/ArticleLayout'
 import { TableOfContents } from '@/components/TableOfContents'
@@ -88,20 +88,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   return (
     <div className="min-h-screen bg-background">
       {/* 顶部导航条 */}
-      <div className="border-b border-border/40 bg-background/95 backdrop-blur sticky top-0 z-50">
-        <div className="container mx-auto px-6 md:px-8 max-w-7xl">
-          <div className="flex items-center justify-between h-16">
-            <Link 
-              href={`/${resolvedParams.locale}/articles`}
-              className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              {t('articles.backToList')}
-            </Link>
-            <LanguageSwitcher />
-          </div>
-        </div>
-      </div>
+      <SiteHeader />
 
       {/* 三栏布局 */}
       <ArticleLayout

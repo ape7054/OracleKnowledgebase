@@ -2,9 +2,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { SparklesCore } from "@/components/ui/sparkles"
-import LanguageSwitcher from '@/components/LanguageSwitcher';
-import { ThemeToggle } from '@/components/ThemeToggle';
-import { MainNavigation } from '@/components/MainNavigation';
+import { SiteHeader } from '@/components/SiteHeader';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 
@@ -19,30 +17,7 @@ export default async function Home({ params }: HomeProps) {
   return (
     <div className="min-h-screen bg-background">
       {/* 导航栏 */}
-      <nav className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container mx-auto px-6 md:px-8">
-          <div className="flex h-16 items-center justify-between">
-            {/* 左侧：Logo */}
-            <div className="flex items-center">
-              <div className="text-xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">CodexDAO</div>
-            </div>
-            
-            {/* 中间：导航菜单 */}
-            <div className="hidden md:flex">
-              <MainNavigation />
-            </div>
-            
-            {/* 右侧：语言切换器、主题切换器和开始按钮 */}
-            <div className="flex items-center gap-2">
-              <ThemeToggle />
-              <LanguageSwitcher />
-              <Button size="sm" className="ml-2">
-                {t('navigation.getStarted')}
-              </Button>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <SiteHeader showCTA={true} />
 
       {/* 第1部分：英雄区 (Hero Section) - "我是谁，这是什么？" */}
       <section className="relative overflow-hidden isolate min-h-[calc(100vh-4rem)] flex items-center">
