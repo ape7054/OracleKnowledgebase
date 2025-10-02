@@ -148,6 +148,10 @@
       "contact": "Contact"
     }
   },
+  "techStack": {
+    "title": "Tech Stack",
+    "subtitle": "Powerful tools for building modern applications"
+  },
   "footer": {
     "copyright": "© 2025 Oracle Knowledge Base. Here, value is defined by work, not by credentials.",
     "builtWith": "Built with Next.js + Nextra",
@@ -241,6 +245,7 @@
     },
     "techStack": {
       "title": "Tech Stack",
+      "subtitle": "Powerful tools for building modern applications",
       "frontend": {
         "title": "Frontend Development",
         "items": "React, Vue, Next.js, TypeScript, TailwindCSS, UniApp"

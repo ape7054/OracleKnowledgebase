@@ -159,6 +159,10 @@
     "prevArticle": "上一篇",
     "nextArticle": "下一篇"
   },
+  "techStack": {
+    "title": "技术栈",
+    "subtitle": "构建现代化应用的强大工具"
+  },
   "footer": {
     "copyright": "© 2025 Oracle Knowledge Base. 在这里，价值由作品定义，而非证书。",
     "builtWith": "使用 Next.js + Nextra 构建",

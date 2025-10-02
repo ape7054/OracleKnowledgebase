@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { SparklesCore } from "@/components/ui/sparkles"
 import { SiteHeader } from '@/components/SiteHeader';
+import { TechStackMarquee } from '@/components/TechStackMarquee';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 
@@ -20,7 +21,7 @@ export default async function Home({ params }: HomeProps) {
       <SiteHeader showCTA={true} />
 
       {/* 第1部分：英雄区 (Hero Section) - "我是谁，这是什么？" */}
-      <section className="relative overflow-hidden isolate min-h-[calc(100vh-4rem)] flex items-center">
+      <section className="relative overflow-hidden isolate min-h-screen flex flex-col">
         {/* Sparkles 背景效果 */}
         <div className="absolute inset-0 w-full h-full">
           <SparklesCore
@@ -37,33 +38,48 @@ export default async function Home({ params }: HomeProps) {
         {/* 渐变叠加层 */}
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background"></div>
         
-        {/* 内容 */}
-        <div className="container mx-auto px-6 md:px-8 max-w-6xl relative z-10">
-          <div className="mx-auto max-w-3xl text-center space-y-6">
-            <div className="inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium">
-              {t('hero.badge')}
+        {/* 主要内容区域 */}
+        <div className="flex-1 flex items-center pt-12 md:pt-16">
+          <div className="container mx-auto px-6 md:px-8 max-w-6xl relative z-10 w-full">
+            <div className="mx-auto max-w-3xl text-center space-y-6">
+              <div className="inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium">
+                {t('hero.badge')}
+              </div>
+              <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
+                {t('hero.title')}
+              </h1>
+              <p className="text-base md:text-lg text-muted-foreground">
+                {t('hero.subtitle')}
+              </p>
+              <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+                <Button size="lg">
+                  {t('hero.cta.primary')}
+                </Button>
+                <Button size="lg" variant="outline">
+                  {t('hero.cta.secondary')}
+                </Button>
+                <Button size="lg" variant="ghost">
+                  {t('hero.cta.tertiary')}
+                </Button>
+              </div>
+              <p className="text-sm text-muted-foreground pt-2">
+                {t('hero.maintainedBy')}
+              </p>
             </div>
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
-              {t('hero.title')}
-            </h1>
-            <p className="text-base md:text-lg text-muted-foreground">
-              {t('hero.subtitle')}
-            </p>
-            <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-              <Button size="lg">
-                {t('hero.cta.primary')}
-              </Button>
-              <Button size="lg" variant="outline">
-                {t('hero.cta.secondary')}
-              </Button>
-              <Button size="lg" variant="ghost">
-                {t('hero.cta.tertiary')}
-              </Button>
-            </div>
-            <p className="text-sm text-muted-foreground pt-2">
-              {t('hero.maintainedBy')}
+          </div>
+        </div>
+
+        {/* 技术栈跑马灯 - 在 Hero Section 底部 */}
+        <div className="relative z-10 pb-12 pt-16 md:pt-20">
+          <div className="text-center mb-10">
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-2">
+              {t('techStack.title')}
+            </h2>
+            <p className="text-sm md:text-base font-medium text-muted-foreground">
+              {t('techStack.subtitle')}
             </p>
           </div>
+          <TechStackMarquee />
         </div>
       </section>
 

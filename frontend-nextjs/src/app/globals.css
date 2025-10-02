@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:is(.dark *));
+
 :root {
   /* shadcn/ui 基础颜色变量 - 浅色主题 */
   --background: 0 0% 100%;
@@ -13,7 +15,7 @@
   --secondary: 210 40% 96%;
   --secondary-foreground: 222.2 84% 4.9%;
   --muted: 210 40% 96%;
-  --muted-foreground: 215.4 16.3% 46.9%;
+  --muted-foreground: 215.4 16.3% 36%;
   --accent: 210 40% 96%;
   --accent-foreground: 222.2 84% 4.9%;
   --destructive: 0 84.2% 60.2%;
@@ -47,9 +49,9 @@
   --ring: 212.7 26.8% 83.9%;
 }
 
-@media (prefers-color-scheme: dark) {
+/* 注释掉系统偏好自动切换深色模式，改为由用户通过主题切换按钮控制 */
+/* @media (prefers-color-scheme: dark) {
   :root {
-    /* 系统偏好暗色模式 */
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
     --card: 222.2 84% 4.9%;
@@ -70,7 +72,7 @@
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
   }
-}
+} */
 
 @theme {
   /* 映射 CSS 变量到 Tailwind CSS 颜色 */
@@ -93,7 +95,7 @@
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
-  
+
   /* 字体系统 */
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, 'Cascadia Code', monospace;
@@ -117,4 +119,34 @@ html {
 
 html.dark {
   color-scheme: dark;
+}
+
+@theme inline {
+  --animate-marquee: marquee var(--duration) infinite linear;
+  --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
+  @keyframes marquee {
+  from {
+    transform: translateX(0);
+    }
+  to {
+    transform: translateX(calc(-100% - var(--gap)));
+    }
+  }
+  @keyframes marquee-vertical {
+  from {
+    transform: translateY(0);
+    }
+  to {
+    transform: translateY(calc(-100% - var(--gap)));
+    }
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }

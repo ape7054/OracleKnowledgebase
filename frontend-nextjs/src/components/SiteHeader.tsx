@@ -18,9 +18,9 @@ export function SiteHeader({ showCTA = false }: SiteHeaderProps) {
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-6 md:px-8">
-        <div className="flex h-16 items-center justify-between">
+        <div className="relative flex h-16 items-center justify-between">
           {/* 左侧：Logo */}
-          <div className="flex items-center">
+          <div className="flex items-center z-10">
             <Link href={`/${locale}`}>
               <div className="text-xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent cursor-pointer hover:opacity-80 transition-opacity">
                 CodexDAO
@@ -28,13 +28,13 @@ export function SiteHeader({ showCTA = false }: SiteHeaderProps) {
             </Link>
           </div>
           
-          {/* 中间：导航菜单（桌面端） */}
-          <div className="hidden md:flex">
+          {/* 中间：导航菜单（桌面端）- 绝对定位居中 */}
+          <div className="absolute left-1/2 -translate-x-1/2 hidden md:flex">
             <MainNavigation />
           </div>
           
           {/* 右侧：主题切换器、语言切换器和可选的 CTA 按钮 */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 z-10">
             <ThemeToggle />
             <LanguageSwitcher />
             {showCTA && (
