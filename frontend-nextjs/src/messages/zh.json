@@ -155,7 +155,9 @@
   "articles": {
     "title": "所有文章",
     "subtitle": "{count} 篇文章 · 涵盖技术、产品、Web3 和跨学科思考",
-    "backToList": "返回文章列表"
+    "backToList": "返回文章列表",
+    "prevArticle": "上一篇",
+    "nextArticle": "下一篇"
   },
   "footer": {
     "copyright": "© 2025 Oracle Knowledge Base. 在这里，价值由作品定义，而非证书。",

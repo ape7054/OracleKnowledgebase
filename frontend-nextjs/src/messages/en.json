@@ -165,7 +165,9 @@
   "articles": {
     "title": "All Articles",
     "subtitle": "{count} articles · Covering tech, product, Web3 and interdisciplinary thinking",
-    "backToList": "Back to Articles"
+    "backToList": "Back to Articles",
+    "prevArticle": "Previous",
+    "nextArticle": "Next"
   },
   "seo": {
     "title": "Oracle - A Crucible of Thoughts on Code, Product & Web3",

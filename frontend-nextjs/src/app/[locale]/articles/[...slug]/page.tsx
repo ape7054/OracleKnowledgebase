@@ -8,6 +8,7 @@ import { getTranslations } from 'next-intl/server'
 import { ArticleLayout } from '@/components/ArticleLayout'
 import { TableOfContents } from '@/components/TableOfContents'
 import { ArticleSidebar } from '@/components/ArticleSidebar'
+import { ArticleNavigation } from '@/components/ArticleNavigation'
 
 interface ArticlePageProps {
   params: Promise<{
@@ -44,6 +45,15 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   if (!article || !article.published) {
     notFound()
   }
+
+  // 获取上一篇和下一篇文章（同一语言）
+  const sortedArticles = articles
+    .filter((a) => a.published && a.locale === resolvedParams.locale)
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  
+  const currentIndex = sortedArticles.findIndex((a) => a.slugAsParams === article.slugAsParams)
+  const prevArticle = currentIndex > 0 ? sortedArticles[currentIndex - 1] : undefined
+  const nextArticle = currentIndex < sortedArticles.length - 1 ? sortedArticles[currentIndex + 1] : undefined
 
   // 构建侧边栏元数据
   const metadata = {
@@ -160,8 +170,25 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           dangerouslySetInnerHTML={{ __html: article.body }}
         />
 
+        {/* 上一篇/下一篇导航 */}
+        <ArticleNavigation
+          prev={prevArticle ? {
+            slug: prevArticle.slugAsParams,
+            title: prevArticle.title,
+            description: prevArticle.description,
+          } : undefined}
+          next={nextArticle ? {
+            slug: nextArticle.slugAsParams,
+            title: nextArticle.title,
+            description: nextArticle.description,
+          } : undefined}
+          locale={resolvedParams.locale}
+          prevLabel={t('articles.prevArticle')}
+          nextLabel={t('articles.nextArticle')}
+        />
+
         {/* 文章底部 */}
-        <footer className="mt-16 pt-8 border-t border-border/40">
+        <footer className="mt-8 pt-8 border-t border-border/40">
           <div className="flex items-center justify-between">
             <Link 
               href={`/${resolvedParams.locale}/articles`}

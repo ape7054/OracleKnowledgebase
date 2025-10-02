@@ -13,12 +13,14 @@ interface TableOfContentsProps {
   items?: TocItem[];
 }
 
-// 将文本转换为 URL 友好的 slug
+// 将文本转换为 URL 友好的 slug（支持中文）
 function slugify(text: string): string {
   return text
-    .toLowerCase()
     .trim()
-    .replace(/[\s\W-]+/g, '-')
+    .toLowerCase()
+    // 保留中文、英文、数字，其他字符替换为连字符
+    .replace(/[^\u4e00-\u9fa5a-z0-9]+/gi, '-')
+    // 移除首尾的连字符
     .replace(/^-+|-+$/g, '');
 }
 
@@ -34,18 +36,34 @@ export function TableOfContents({ items: providedItems }: TableOfContentsProps) 
 
       const headings = article.querySelectorAll('h2, h3');
       const tocItems: TocItem[] = [];
+      const usedIds = new Set<string>(); // 跟踪已使用的 id
 
-      headings.forEach((heading) => {
+      headings.forEach((heading, index) => {
         const level = parseInt(heading.tagName[1]);
         const title = heading.textContent?.trim() || '';
         let id = heading.id;
 
         // 如果标题没有 id，自动生成一个
         if (!id) {
-          id = slugify(title);
+          let baseId = slugify(title);
+          
+          // 如果 slugify 后为空，使用索引
+          if (!baseId) {
+            baseId = `heading-${index}`;
+          }
+          
+          // 确保 id 唯一
+          id = baseId;
+          let counter = 1;
+          while (usedIds.has(id)) {
+            id = `${baseId}-${counter}`;
+            counter++;
+          }
+          
           heading.id = id;
         }
 
+        usedIds.add(id);
         tocItems.push({ id, title, level });
       });
 
