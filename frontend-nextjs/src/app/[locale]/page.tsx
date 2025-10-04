@@ -52,15 +52,16 @@ export default async function Home({ params }: HomeProps) {
                 {t('hero.subtitle')}
               </p>
               <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-                <Button size="lg">
-                  {t('hero.cta.primary')}
-                </Button>
-                <Button size="lg" variant="outline">
-                  {t('hero.cta.secondary')}
-                </Button>
-                <Button size="lg" variant="ghost">
-                  {t('hero.cta.tertiary')}
-                </Button>
+                <Link href={`/${locale}/articles`}>
+                  <Button size="lg">
+                    {t('hero.cta.primary')}
+                  </Button>
+                </Link>
+                <a href="#site-origin">
+                  <Button size="lg" variant="ghost">
+                    {t('hero.cta.tertiary')}
+                  </Button>
+                </a>
               </div>
               <p className="text-sm text-muted-foreground pt-2">
                 {t('hero.maintainedBy')}
@@ -83,7 +84,7 @@ export default async function Home({ params }: HomeProps) {
         </div>
       </section>
 
-      {/* 第2部分：知识域 (Knowledge Domains) - "这里有什么？" */}
+      {/* 第2部分：知识体系架构 (Knowledge Architecture) - "这里有什么？" */}
       <section className="py-16 md:py-24 bg-muted/30">
         <div className="container mx-auto px-6 md:px-8 max-w-6xl">
           <div className="text-center mb-16 space-y-4">
@@ -225,7 +226,7 @@ export default async function Home({ params }: HomeProps) {
         </div>
       </section>
 
-      {/* 第3部分：精选内容 (Featured Content) - "从哪里开始读？" */}
+      {/* 第3部分：核心内容 (Core Content) - "从哪里开始读？" */}
       <section className="py-16 md:py-24">
         <div className="container mx-auto px-6 md:px-8 max-w-6xl">
           <div className="text-center mb-16 space-y-4">
@@ -312,38 +313,38 @@ export default async function Home({ params }: HomeProps) {
         </div>
       </section>
 
-      {/* 第4部分：个人宣言 (Manifesto) - "我为什么做这个？" */}
-      <section className="py-16 md:py-24 bg-muted/30">
+      {/* 第4部分：建站初衷 (Site Origin) - "我为什么做这个？" */}
+      <section id="site-origin" className="py-16 md:py-24 bg-muted/30 scroll-mt-20">
         <div className="container mx-auto px-6 md:px-8 max-w-5xl">
           <div className="space-y-12">
             <div className="text-center space-y-4">
               <h2 className="text-3xl md:text-5xl font-bold tracking-tight">
-                {t('manifesto.title')}
+                {t('siteOrigin.title')}
               </h2>
               <p className="text-muted-foreground text-sm uppercase tracking-wider">
-                {t('manifesto.subtitle')}
+                {t('siteOrigin.subtitle')}
               </p>
             </div>
             
             <blockquote className="text-base md:text-lg text-muted-foreground leading-relaxed border-l-4 border-primary pl-6 text-left max-w-3xl mx-auto whitespace-pre-line">
-              {t('manifesto.quote')}
+              {t('siteOrigin.quote')}
             </blockquote>
             
-            {/* 四大原则 */}
+            {/* 四个目标 */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pt-8">
               {[0, 1, 2, 3].map((index) => (
                 <div key={index} className="text-center space-y-2">
                   <div className="text-4xl mb-3">
-                    {index === 0 && '💪'}
-                    {index === 1 && '🎯'}
-                    {index === 2 && '🌐'}
-                    {index === 3 && '🚀'}
+                    {index === 0 && '📝'}
+                    {index === 1 && '🧠'}
+                    {index === 2 && '🔗'}
+                    {index === 3 && '📚'}
                   </div>
                   <h3 className="font-semibold">
-                    {t(`manifesto.principles.${index}.title`)}
+                    {t(`siteOrigin.principles.${index}.title`)}
                   </h3>
                   <p className="text-sm text-muted-foreground">
-                    {t(`manifesto.principles.${index}.description`)}
+                    {t(`siteOrigin.principles.${index}.description`)}
                   </p>
                 </div>
               ))}
@@ -352,7 +353,7 @@ export default async function Home({ params }: HomeProps) {
         </div>
       </section>
 
-      {/* 第5部分：最终行动号召 (Final CTA) - "下一步做什么？" */}
+      {/* 第5部分：学习交流 (Learn Together) - "下一步做什么？" */}
       <section className="relative py-16 md:py-24 overflow-hidden">
         {/* Sparkles 背景效果 - 更柔和的版本 */}
         <div className="absolute inset-0 w-full h-full">
@@ -429,9 +430,6 @@ export default async function Home({ params }: HomeProps) {
                 </Link>
                 <Link href={`/${locale}/about`} className="hover:text-primary transition-colors">
                   {t('navigation.about')}
-                </Link>
-                <Link href={`/${locale}/rss`} className="hover:text-primary transition-colors">
-                  {t('navigation.rss')}
                 </Link>
               </div>
             </div>

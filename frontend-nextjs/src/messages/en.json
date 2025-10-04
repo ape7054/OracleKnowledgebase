@@ -2,27 +2,26 @@
   "navigation": {
     "home": "Home",
     "articles": "Articles",
+    "tools": "Tools",
     "about": "About",
     "github": "GitHub",
-    "rss": "RSS Feed",
     "resume": "Resume",
     "contact": "Contact",
     "getStarted": "Start Exploring"
   },
   "hero": {
-    "badge": "An Explorable Knowledge System",
-    "title": "A Crucible of Thoughts on Code, Product & Web3",
-    "subtitle": "A knowledge base about software engineering, product development, Web3 fundamentals, and rethinking education. Here, we validate ideas with code, deconstruct reality with systems thinking, and rebuild trust with decentralization.",
-    "maintainedBy": "Maintained by someone who believes in work, not credentials",
+    "badge": "Systematic Knowledge Management",
+    "title": "Building Personal Knowledge Systems, Documenting Cognitive Evolution",
+    "subtitle": "Systematically documenting thoughts, building personal knowledge systems, and refining theories. Here, every article is a crystallization of thinking, every theory is deeply contemplated.",
+    "maintainedBy": "A lifelong learner's knowledge laboratory, continuously evolving with cognition",
     "cta": {
       "primary": "🚀 Start Exploring",
-      "secondary": "RSS Feed",
-      "tertiary": "Read Manifesto"
+      "tertiary": "Read Origin Story"
     }
   },
   "domains": {
-    "title": "Explore My Digital Brain",
-    "subtitle": "Here, value is defined by work, not by credentials",
+    "title": "Knowledge Architecture",
+    "subtitle": "Cross-domain integration, systematic learning, building complete cognitive networks",
     "cards": {
       "tech": {
         "icon": "💻",
@@ -62,8 +61,8 @@
     }
   },
   "featured": {
-    "title": "Recent Thoughts & In-Depth Articles",
-    "subtitle": "Where to start? These three articles represent my technical depth, intellectual edge, and pragmatism",
+    "title": "Core Content",
+    "subtitle": "Representative articles showcasing depth of thinking and breadth of knowledge",
     "articles": {
       "manifesto": {
         "title": "Ramanujan's Revenge: A Manifesto for a Decentralized Republic of Talent",
@@ -89,26 +88,26 @@
     },
     "moreLink": "View More Featured Articles →"
   },
-  "manifesto": {
-    "title": "My Creed: End Information Exploitation",
-    "subtitle": "Why I Build This",
-    "quote": "Traditional education and information channels are failing. Degrees depreciate like currency. We passively receive outdated knowledge, bound by meaningless 'credits' and 'certificates'. Newton didn't need to waste time on classical Chinese, and Ramanujan shouldn't have suffered for failing English.\n\nI believe true learning is active, free, and value-creation oriented. This website is my platform to practice this philosophy: documenting what I learn, sharing what I think, building tools, and connecting with knowledge believers worldwide.\n\nHere, your value is defined by your work, not by a piece of paper.",
+  "siteOrigin": {
+    "title": "Why This Site",
+    "subtitle": "Knowledge Management · Cognitive Enhancement · Theory Building",
+    "quote": "This knowledge base was born from the pursuit of systematic learning.\n\nIn an era of fragmented information, I choose to systematically organize what I learn, think, and realize. This is not just personal learning notes, but an experimental ground for cognitive enhancement—the process of weaving scattered knowledge into a theoretical network.\n\nHere, every article is a crystallization of thinking, every theory is validated through practice. This is my digital brain and a platform for exchanging ideas with like-minded individuals.",
     "principles": [
       {
-        "title": "Proof of Work",
-        "description": "Complete real-world tasks, not just theorize"
+        "title": "Systematic Documentation",
+        "description": "Organizing fragmented knowledge systematically, building complete cognitive frameworks"
       },
       {
-        "title": "Contribution Over Credentials",
-        "description": "What you've done matters more than where you graduated"
+        "title": "Cognitive Enhancement",
+        "description": "Through deep thinking and practical validation, continuously iterating cognitive models"
       },
       {
-        "title": "Openness & Transparency",
-        "description": "Knowledge should flow freely, not be monopolized by walls"
+        "title": "Knowledge Networking",
+        "description": "Building connections across different fields, forming a three-dimensional knowledge network"
       },
       {
-        "title": "Continuous Evolution",
-        "description": "Learning is lifelong, reputation is dynamic"
+        "title": "Theory Building",
+        "description": "Extracting theory from practice, using theory to guide practice"
       }
     ]
   },
@@ -138,14 +137,14 @@
     ]
   },
   "finalCta": {
-    "title": "Ready to Enter This Knowledge Labyrinth?",
-    "subtitle": "Explore the intersection of technology, systems, and decentralization. Here, every article is a thought experiment.",
-    "primary": "View All Articles",
-    "secondary": "Subscribe to Updates",
+    "title": "Learn Together, Grow Together",
+    "subtitle": "The value of knowledge lies in sharing and exchange. Welcome to browse the knowledge base, offer suggestions, or discuss your ideas with me.",
+    "primary": "Browse Knowledge Base",
+    "secondary": "About This Site",
     "links": {
-      "github": "GitHub",
-      "resume": "Resume",
-      "contact": "Contact"
+      "github": "GitHub Repository",
+      "resume": "Article List",
+      "contact": "Feedback"
     }
   },
   "techStack": {
@@ -274,6 +273,109 @@
       "description": "Check out all my articles or return to the homepage to learn more about this knowledge base.",
       "articles": "Browse Articles",
       "home": "Back to Home"
+    }
+  },
+  "tools": {
+    "title": "Tools Directory",
+    "subtitle": "Curated collection of development, tech, AI, and Web3 tools & resources",
+    "searchPlaceholder": "Search tools or tags...",
+    "allCategories": "All Categories",
+    "totalTools": "{count} tools in total",
+    "noResults": "No tools found",
+    "visitWebsite": "Visit Website",
+    "viewDetails": "View Details",
+    "sort": {
+      "label": "Sort By",
+      "name": "Name",
+      "category": "Category",
+      "default": "Default"
+    },
+    "dialog": {
+      "title": "Tool Details",
+      "close": "Close",
+      "officialSite": "Visit Official Site",
+      "category": "Category",
+      "tags": "Tags"
+    },
+    "categories": {
+      "development": "Development",
+      "ai": "AI Tools",
+      "web3": "Web3 & DeFi",
+      "blockchain": "Blockchain",
+      "design": "Design",
+      "learning": "Learning",
+      "productivity": "Productivity"
+    },
+    "items": {
+      "github": {
+        "description": "World's largest code hosting platform for version control and collaboration"
+      },
+      "stackoverflow": {
+        "description": "Programming Q&A community for solving coding problems"
+      },
+      "vercel": {
+        "description": "Official Next.js deployment platform with blazing-fast hosting"
+      },
+      "npm": {
+        "description": "Node.js package manager with millions of JavaScript libraries"
+      },
+      "chatgpt": {
+        "description": "Powerful AI assistant by OpenAI for coding, writing, and more"
+      },
+      "claude": {
+        "description": "Anthropic's AI assistant excelling at long-form content and deep conversations"
+      },
+      "midjourney": {
+        "description": "Top-tier AI image generation tool creating stunning visual artwork"
+      },
+      "huggingface": {
+        "description": "Open-source AI model hub with pre-trained models and datasets"
+      },
+      "etherscan": {
+        "description": "Ethereum blockchain explorer for transactions, contracts, and addresses"
+      },
+      "uniswap": {
+        "description": "Decentralized exchange for trading crypto without intermediaries"
+      },
+      "metamask": {
+        "description": "Most popular Web3 wallet connecting you to decentralized applications"
+      },
+      "opensea": {
+        "description": "World's largest NFT marketplace for buying and selling digital collectibles"
+      },
+      "solana": {
+        "description": "High-performance blockchain platform with fast and low-cost transactions"
+      },
+      "binance": {
+        "description": "Leading global cryptocurrency exchange with highest trading volume"
+      },
+      "coinmarketcap": {
+        "description": "Crypto market data platform tracking real-time prices and market caps"
+      },
+      "figma": {
+        "description": "Browser-based UI/UX design tool with real-time collaboration"
+      },
+      "dribbble": {
+        "description": "Designer showcase platform for finding design inspiration"
+      },
+      "behance": {
+        "description": "Adobe's creative work showcase platform with global designers"
+      },
+      "mdn": {
+        "description": "Mozilla's Web development documentation, the frontend developer's bible"
+      },
+      "freecodecamp": {
+        "description": "Free coding learning platform teaching full-stack development through projects"
+      },
+      "leetcode": {
+        "description": "Algorithm practice platform for improving coding and interview skills"
+      },
+      "notion": {
+        "description": "All-in-one workspace integrating docs, databases, and task management"
+      },
+      "linear": {
+        "description": "Modern project management tool designed for software development teams"
+      }
     }
   }
 } 

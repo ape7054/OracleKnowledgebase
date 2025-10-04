@@ -1,11 +1,6 @@
 'use client';
 
 import { ReactNode } from 'react';
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from '@/components/ui/resizable';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 
@@ -33,82 +28,55 @@ export function ArticleLayout({
     <div className="container mx-auto px-4 py-8">
       {/* 桌面端：三栏布局 */}
       <div className="hidden lg:block">
-        <ResizablePanelGroup direction="horizontal" className="min-h-screen">
-          {/* 左侧：目录 */}
+        <div className="flex gap-4">
+          {/* 左侧：目录 - 固定定位 */}
           {showToc && tableOfContents && (
-            <>
-              <ResizablePanel
-                defaultSize={20}
-                minSize={15}
-                maxSize={25}
-                className="pr-4"
-              >
-                <div className="sticky top-20">
-                  <ScrollArea className="h-[calc(100vh-8rem)]">
-                    {tableOfContents}
-                  </ScrollArea>
-                </div>
-              </ResizablePanel>
-              <ResizableHandle className="w-px bg-border" />
-            </>
+            <div className="w-64 flex-shrink-0">
+              <div className="sticky top-20">
+                <ScrollArea className="h-[calc(100vh-6rem)]">
+                  {tableOfContents}
+                </ScrollArea>
+              </div>
+            </div>
           )}
 
           {/* 中间：主内容 */}
-          <ResizablePanel
-            defaultSize={showToc && showSidebar ? 55 : showToc || showSidebar ? 75 : 100}
-            minSize={40}
-          >
-            <article className="prose prose-gray dark:prose-invert max-w-none px-8">
+          <div className="flex-1 min-w-0 px-8">
+            <article>
               {children}
             </article>
-          </ResizablePanel>
+          </div>
 
-          {/* 右侧：边栏 */}
+          {/* 右侧：边栏 - 固定定位 */}
           {showSidebar && sidebar && (
-            <>
-              <ResizableHandle className="w-px bg-border" />
-              <ResizablePanel
-                defaultSize={25}
-                minSize={20}
-                maxSize={30}
-                className="pl-4"
-              >
-                <div className="sticky top-20">
-                  <ScrollArea className="h-[calc(100vh-8rem)]">
-                    {sidebar}
-                  </ScrollArea>
-                </div>
-              </ResizablePanel>
-            </>
+            <div className="w-80 flex-shrink-0">
+              <div className="sticky top-20">
+                <ScrollArea className="h-[calc(100vh-6rem)]">
+                  {sidebar}
+                </ScrollArea>
+              </div>
+            </div>
           )}
-        </ResizablePanelGroup>
+        </div>
       </div>
 
       {/* 平板端：两栏布局（主内容 + 可选目录） */}
       <div className="hidden md:block lg:hidden">
-        <ResizablePanelGroup direction="horizontal">
+        <div className="flex gap-4">
           {/* 左侧：目录 */}
           {showToc && tableOfContents && (
-            <>
-              <ResizablePanel
-                defaultSize={25}
-                minSize={20}
-                maxSize={35}
-                className="pr-4"
-              >
-                <div className="sticky top-20">
-                  <ScrollArea className="h-[calc(100vh-8rem)]">
-                    {tableOfContents}
-                  </ScrollArea>
-                </div>
-              </ResizablePanel>
-              <ResizableHandle className="w-px bg-border" />
-            </>
+            <div className="w-56 flex-shrink-0">
+              <div className="sticky top-20">
+                <ScrollArea className="h-[calc(100vh-6rem)]">
+                  {tableOfContents}
+                </ScrollArea>
+              </div>
+            </div>
           )}
 
           {/* 主内容 */}
-          <ResizablePanel defaultSize={75} minSize={60}>
-            <article className="prose prose-gray dark:prose-invert max-w-none px-6">
+          <div className="flex-1 min-w-0 px-6">
+            <article>
               {children}
             </article>
             {/* 右侧边栏内容移到文章底部 */}
@@ -117,8 +85,8 @@ export function ArticleLayout({
                 {sidebar}
               </div>
             )}
-          </ResizablePanel>
-        </ResizablePanelGroup>
+          </div>
+        </div>
       </div>
 
       {/* 移动端：单栏布局 */}
@@ -137,7 +105,7 @@ export function ArticleLayout({
         )}
 
         {/* 主内容 */}
-        <article className="prose prose-gray dark:prose-invert max-w-none">
+        <article>
           {children}
         </article>
 

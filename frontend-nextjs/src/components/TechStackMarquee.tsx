@@ -14,6 +14,10 @@ import {
   SiSolana,
   SiGo,
   SiShadcnui,
+  SiVite,
+  SiRedis,
+  SiEthereum,
+  SiVercel,
 } from "react-icons/si";
 import { IconType } from "react-icons";
 
@@ -81,6 +85,26 @@ const technologies = [
   {
     name: "Shadcn UI",
     icon: SiShadcnui,
+    color: "text-[#000000] dark:text-[#ffffff]",
+  },
+  {
+    name: "Vite",
+    icon: SiVite,
+    color: "text-[#646CFF]",
+  },
+  {
+    name: "Redis",
+    icon: SiRedis,
+    color: "text-[#DC382D]",
+  },
+  {
+    name: "Ethereum",
+    icon: SiEthereum,
+    color: "text-[#3C3C3D]",
+  },
+  {
+    name: "Vercel",
+    icon: SiVercel,
     color: "text-[#000000] dark:text-[#ffffff]",
   },
 ];

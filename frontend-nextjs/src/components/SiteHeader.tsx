@@ -1,11 +1,10 @@
 'use client'
 
 import Link from 'next/link'
-import { useLocale, useTranslations } from 'next-intl'
+import { useLocale } from 'next-intl'
 import { MainNavigation } from './MainNavigation'
 import { ThemeToggle } from './ThemeToggle'
 import LanguageSwitcher from './LanguageSwitcher'
-import { Button } from './ui/button'
 
 interface SiteHeaderProps {
   showCTA?: boolean
@@ -13,7 +12,6 @@ interface SiteHeaderProps {
 
 export function SiteHeader({ showCTA = false }: SiteHeaderProps) {
   const locale = useLocale()
-  const t = useTranslations('navigation')
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -23,7 +21,7 @@ export function SiteHeader({ showCTA = false }: SiteHeaderProps) {
           <div className="flex items-center z-10">
             <Link href={`/${locale}`}>
               <div className="text-xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent cursor-pointer hover:opacity-80 transition-opacity">
-                CodexDAO
+                CodeX
               </div>
             </Link>
           </div>
@@ -33,15 +31,18 @@ export function SiteHeader({ showCTA = false }: SiteHeaderProps) {
             <MainNavigation />
           </div>
           
-          {/* 右侧：主题切换器、语言切换器和可选的 CTA 按钮 */}
+          {/* 右侧：主题切换器、语言切换器 */}
           <div className="flex items-center gap-2 z-10">
+            {showCTA && (
+              <Link 
+                href={`/${locale}/articles`}
+                className="hidden sm:inline-flex items-center px-3 py-1.5 text-sm font-medium bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors mr-2"
+              >
+                开始探索
+              </Link>
+            )}
             <ThemeToggle />
             <LanguageSwitcher />
-            {showCTA && (
-              <Button size="sm" className="ml-2">
-                {t('getStarted')}
-              </Button>
-            )}
           </div>
         </div>
       </div>
