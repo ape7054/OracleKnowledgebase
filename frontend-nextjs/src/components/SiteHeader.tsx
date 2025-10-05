@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useLocale } from 'next-intl'
-import { MainNavigation } from './MainNavigation'
+import { MainNavigationOptimized } from './MainNavigationOptimized'
 import { ThemeToggle } from './ThemeToggle'
 import LanguageSwitcher from './LanguageSwitcher'
 
@@ -28,7 +28,7 @@ export function SiteHeader({ showCTA = false }: SiteHeaderProps) {
           
           {/* 中间：导航菜单（桌面端）- 绝对定位居中 */}
           <div className="absolute left-1/2 -translate-x-1/2 hidden md:flex">
-            <MainNavigation />
+            <MainNavigationOptimized />
           </div>
           
           {/* 右侧：主题切换器、语言切换器 */}
