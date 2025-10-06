@@ -49,4 +49,4 @@ export default async function ArticlesPage({ params }: ArticlesPageProps) {
       </div>
     </div>
   )
-}
+} 

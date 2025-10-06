@@ -2,6 +2,7 @@
   "navigation": {
     "home": "首页",
     "articles": "文章",
+    "web3": "项目研究",
     "tools": "工具导航",
     "about": "关于",
     "github": "GitHub",
@@ -180,6 +181,28 @@
   "about": {
     "title": "关于我",
     "subtitle": "一个相信作品胜于证书的全栈开发者与Web3探索者",
+    "hero": {
+      "status": "开放合作机会",
+      "location": "远程 / 中国"
+    },
+    "stats": {
+      "articles": {
+        "label": "深度文章",
+        "description": "技术、产品、Web3"
+      },
+      "domains": {
+        "label": "技术领域",
+        "description": "跨学科知识体系"
+      },
+      "github": {
+        "label": "GitHub Stars",
+        "description": "开源贡献"
+      },
+      "experience": {
+        "label": "工作年限",
+        "description": "持续学习成长"
+      }
+    },
     "intro": {
       "title": "个人介绍",
       "description": "我是一名全栈开发者，对区块链技术和去中心化应用有着深厚的热情。从毕业后深入研究Web3技术，到成为DeFi量化交易系统开发者，我始终保持对新技术的好奇心和学习热情。在AI时代，我相信技术的边界正在被打破，而真正的价值在于我们能创造什么。"
@@ -211,6 +234,110 @@
         "period": "现在",
         "title": "AI时代的转变",
         "description": "在日常开发中高频使用AI辅助编程，我深刻感受到AI技术正在重新定义软件开发行业。AI打破了传统技术知识的垄断壁垒，降低了跨领域学习的门槛。经过广泛的技术探索后，我决定将学习重心聚焦于前端开发，为全栈开发打下坚实基础。"
+      }
+    },
+    "timeline": {
+      "transformation": {
+        "period": "现在",
+        "title": "AI时代的转变",
+        "description": "在日常开发中高频使用AI辅助编程，我深刻感受到AI技术正在重新定义软件开发行业。AI打破了传统技术知识的垄断壁垒，降低了跨领域学习的门槛。经过广泛的技术探索后，我决定将学习重心聚焦于前端开发，为全栈开发打下坚实基础。",
+        "highlight1": "掌握现代前端技术栈 (React/Next.js/TypeScript)",
+        "highlight2": "深度使用AI辅助开发提升效率"
+      },
+      "defi": {
+        "period": "2023-2024",
+        "title": "DeFi量化系统开发",
+        "description": "凭借扎实的Rust基础与对区块链的深入理解，我成功加入专注于DeFi量化交易的技术团队，参与了多个高频交易系统的开发。",
+        "project1": {
+          "name": "Solana套利机器人",
+          "description": "使用Rust开发数据监听服务，通过gRPC协议监听Solana区块链池子数据，为套利策略提供实时数据支持。"
+        },
+        "project2": {
+          "name": "Telegram交易机器人",
+          "description": "开发狙击跟单机器人，实现自动化交易策略执行。"
+        }
+      },
+      "exploration": {
+        "period": "毕业后",
+        "title": "探索期",
+        "description": "毕业后，我选择深入研究区块链、Web3和加密货币领域，学习Rust编程语言，并通过数字货币交易实践我对这个新兴技术的理解。虽然经历了合约爆仓的挫折，但这并未削弱我对区块链技术的信念。",
+        "highlight1": "系统学习Rust编程语言",
+        "highlight2": "深入研究区块链技术和Web3生态"
+      }
+    },
+    "skills": {
+      "categories": {
+        "frontend": "前端开发",
+        "backend": "后端开发",
+        "blockchain": "区块链",
+        "devops": "DevOps"
+      },
+      "experience": "使用经验",
+      "years": "年",
+      "noSkills": "暂无技能数据",
+      "proficiency": "熟练度",
+      "radarChart": {
+        "title": "技能雷达图",
+        "description": "各技术领域综合能力评估"
+      }
+    },
+    "socialLinks": {
+      "github": {
+        "description": "查看我的开源项目"
+      },
+      "email": {
+        "description": "发送邮件联系我"
+      },
+      "twitter": {
+        "description": "关注我的动态"
+      },
+      "linkedin": {
+        "description": "职业社交网络"
+      }
+    },
+    "projects": {
+      "title": "精选项目",
+      "viewDetails": "查看详情",
+      "viewDemo": "查看演示",
+      "techStack": "技术栈",
+      "background": "项目背景",
+      "achievements": "核心成就",
+      "challenges": "技术挑战",
+      "solutions": "解决方案",
+      "categories": {
+        "all": "全部",
+        "web3": "Web3",
+        "frontend": "前端",
+        "backend": "后端",
+        "tools": "工具"
+      },
+      "solanaBot": {
+        "title": "Solana套利机器人",
+        "description": "使用Rust构建的高性能数据监听服务，通过gRPC协议提供实时套利数据",
+        "achievement1": "实时监听Solana链上池子数据",
+        "achievement2": "使用Rust实现高性能数据处理",
+        "achievement3": "基于gRPC的微服务架构",
+        "details": {
+          "background": "为DeFi量化交易团队构建，实时捕获套利机会",
+          "challenge1": "高频实时数据处理",
+          "challenge2": "低延迟gRPC通信",
+          "solution1": "优化Rust异步运行时以实现最大吞吐量",
+          "solution2": "实现高效的gRPC流式协议",
+          "result1": "成功部署到生产交易系统",
+          "result2": "实现亚毫秒级数据延迟"
+        }
+      },
+      "telegramBot": {
+        "title": "Telegram交易机器人",
+        "description": "自动化狙击交易机器人，支持实时策略执行",
+        "achievement1": "自动化交易策略执行",
+        "achievement2": "实时市场监控和提醒"
+      },
+      "learningStack": {
+        "title": "知识管理平台",
+        "description": "基于Next.js构建的个人知识管理系统，支持MDX文章和现代化UI",
+        "achievement1": "系统化的知识组织和展示",
+        "achievement2": "现代化前端技术栈实现"
       }
     },
     "purpose": {
@@ -272,6 +399,54 @@
       "description": "查看我的所有文章，或者返回首页了解更多关于这个知识库的信息。",
       "articles": "浏览文章",
       "home": "返回首页"
+    },
+    "featuredArticles": {
+      "title": "精选文章",
+      "readMore": "阅读更多",
+      "viewAll": "查看所有文章",
+      "manifesto": {
+        "title": "拉马努金的复仇：去中心化人才共和国宣言",
+        "description": "当天才因英语不及格被扼杀，当学生为无意义的学分奔波，当教育沦为驯化工具——是时候改变了。",
+        "category": "思想",
+        "readTime": "12 分钟"
+      },
+      "webArchitecture": {
+        "title": "Web架构演进史：从静态页面到去中心化应用",
+        "description": "一文读懂三十年变迁：从Apache到智能合约，理解我们今天所处的技术坐标。",
+        "category": "技术",
+        "readTime": "25 分钟"
+      },
+      "daoGuide": {
+        "title": "DAO完全指南：重塑组织的未来",
+        "description": "深入探索去中心化自治组织如何改变传统公司治理模式，开启协作新纪元。",
+        "category": "Web3",
+        "readTime": "20 分钟"
+      }
+    }
+  },
+  "web3": {
+    "title": "Web3 项目研究",
+    "subtitle": "追踪研究主流区块链项目：技术升级、监管动态、生态发展",
+    "totalProjects": "追踪 {count} 个项目",
+    "lastUpdate": "最近更新",
+    "daysAgo": "{days} 天前",
+    "allCategories": "全部分类",
+    "timeline": "研究时间线",
+    "projects": "项目列表",
+    "noUpdates": "暂无更新",
+    "viewDetails": "查看详情",
+    "visitWebsite": "访问官网",
+    "categories": {
+      "layer1": "Layer 1",
+      "layer2": "Layer 2",
+      "defi": "DeFi",
+      "infrastructure": "基础设施"
+    },
+    "updateTypes": {
+      "regulatory": "监管动态",
+      "tech": "技术升级",
+      "ecosystem": "生态发展",
+      "other": "其他"
     }
   },
   "tools": {

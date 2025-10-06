@@ -30,6 +30,9 @@ export function MainNavigationOptimized() {
         <Link href={`/${locale}/articles`} className="text-sm font-medium" prefetch={true}>
           {t('articles')}
         </Link>
+        <Link href={`/${locale}/web3`} className="text-sm font-medium" prefetch={true}>
+          {t('web3')}
+        </Link>
         <Link href={`/${locale}/tools`} className="text-sm font-medium" prefetch={true}>
           {t('tools')}
         </Link>
@@ -57,6 +60,15 @@ export function MainNavigationOptimized() {
           <NavigationMenuLink asChild>
             <Link href={`/${locale}/articles`} className={navigationMenuTriggerStyle()} prefetch={true}>
               {t('articles')}
+            </Link>
+          </NavigationMenuLink>
+        </NavigationMenuItem>
+
+        {/* Web3 Research */}
+        <NavigationMenuItem>
+          <NavigationMenuLink asChild>
+            <Link href={`/${locale}/web3`} className={navigationMenuTriggerStyle()} prefetch={true}>
+              {t('web3')}
             </Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
