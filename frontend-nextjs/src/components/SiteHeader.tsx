@@ -35,7 +35,7 @@ export function SiteHeader({ showCTA = false }: SiteHeaderProps) {
           <div className="flex items-center gap-2 z-10">
             {showCTA && (
               <Link 
-                href={`/${locale}/articles`}
+                href={`/${locale}/knowledge`}
                 className="hidden sm:inline-flex items-center px-3 py-1.5 text-sm font-medium bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors mr-2"
               >
                 开始探索

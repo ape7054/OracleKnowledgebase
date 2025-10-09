@@ -2,6 +2,7 @@
   "navigation": {
     "home": "首页",
     "articles": "文章",
+    "knowledge": "知识库",
     "web3": "项目研究",
     "tools": "工具导航",
     "about": "关于",
@@ -149,7 +150,20 @@
     "subtitle": "{count} 篇文章 · 涵盖技术、产品、Web3 和跨学科思考",
     "backToList": "返回文章列表",
     "prevArticle": "上一篇",
-    "nextArticle": "下一篇"
+    "nextArticle": "下一篇",
+    "uncategorized": "未分类"
+  },
+  "knowledge": {
+    "title": "知识库",
+    "subtitle": "{count} 条知识 · 系统化记录学习与思考",
+    "backToList": "返回知识库",
+    "prevItem": "上一条知识",
+    "nextItem": "下一条知识",
+    "uncategorized": "未分类",
+    "searchPlaceholder": "搜索知识...",
+    "allCategories": "全部分类",
+    "noResults": "暂无相关知识",
+    "relatedKnowledge": "相关知识"
   },
   "techStack": {
     "title": "技术栈",
@@ -176,7 +190,7 @@
   },
   "about": {
     "title": "关于我",
-    "subtitle": "一个全栈开发和web3的探索者",
+    "subtitle": "一个专注于全栈开发、Web3 和 AI 的探索者",
     "hero": {
       "status": "开放合作机会",
       "location": "远程 / 中国"
@@ -380,7 +394,7 @@
       },
       "blockchain": {
         "title": "区块链",
-        "items": "Solidity, Solana, BSC, Web3.js, Ethers.js"
+        "items": "Solidity, Solana, BSC, Web3.js"
       },
       "devops": {
         "title": "DevOps",
@@ -395,14 +409,14 @@
     },
     "cta": {
       "title": "准备好探索了吗？",
-      "description": "查看我的所有文章，或者返回首页了解更多关于这个知识库的信息。",
-      "articles": "浏览文章",
+      "description": "查看我的所有知识，或者返回首页了解更多关于这个知识库的信息。",
+      "articles": "浏览知识库",
       "home": "返回首页"
     },
     "featuredArticles": {
-      "title": "精选文章",
+      "title": "内容精选",
       "readMore": "阅读更多",
-      "viewAll": "查看所有文章",
+      "viewAll": "浏览知识库",
       "manifesto": {
         "title": "拉马努金的复仇：去中心化人才共和国宣言",
         "description": "当天才因英语不及格被扼杀，当学生为无意义的学分奔波，当教育沦为驯化工具——是时候改变了。",

@@ -221,14 +221,6 @@ export const skills: Skill[] = [
     yearsOfExperience: 0.5
   },
   {
-    id: 'ethersjs',
-    name: 'Ethers.js',
-    category: 'blockchain',
-    proficiency: 20,
-    yearsOfExperience: 0.5,
-    relatedProjects: ['web3-wallet', 'dapp-integration', 'smart-contract-interaction']
-  },
-  {
     id: 'bsc',
     name: 'BSC',
     category: 'blockchain',

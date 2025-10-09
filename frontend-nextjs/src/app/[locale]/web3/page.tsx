@@ -1,14 +1,32 @@
 import { SiteHeader } from '@/components/SiteHeader'
 import { Separator } from "@/components/ui/separator"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { BlurFade } from "@/components/ui/blur-fade"
 import { web3Projects, projectCategories } from '@/config/web3-projects'
 import { Web3ProjectCard } from '@/components/Web3ProjectCard'
 import { Web3Timeline } from '@/components/Web3Timeline'
 import { getTranslations } from 'next-intl/server'
 import web3UpdatesData from '@/data/web3-updates.json'
+import { Web3Icon } from '@/lib/web3-icons'
 
 interface Web3PageProps {
   params: Promise<{ locale: string }>
+}
+
+interface ProjectUpdate {
+  id: string
+  projectId: string
+  date: string
+  type: 'regulatory' | 'tech' | 'ecosystem' | 'other'
+  title: {
+    en: string
+    zh: string
+  }
+  summary: {
+    en: string
+    zh: string
+  }
+  sourceUrl?: string
 }
 
 export default async function Web3Page({ params }: Web3PageProps) {
@@ -33,22 +51,27 @@ export default async function Web3Page({ params }: Web3PageProps) {
       <SiteHeader />
 
       {/* 头部区域 */}
-      <section className="py-16 md:py-20 border-b border-border/40">
-        <div className="container mx-auto px-6 md:px-8 max-w-6xl">
-          <div className="text-center space-y-6">
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-primary to-primary/60 text-4xl">
-              ⛓️
+      <section className="py-16 md:py-20 border-b border-border/40 relative overflow-hidden">
+        {/* 背景装饰 */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent pointer-events-none" />
+        
+        <div className="container mx-auto px-6 md:px-8 max-w-6xl relative">
+          <BlurFade delay={0.1} inView>
+            <div className="text-center space-y-6">
+              <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 shadow-xl">
+                <Web3Icon className="h-10 w-10 text-white" />
+              </div>
+              <h1 className="text-4xl md:text-5xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text">
+                {t('web3.title')}
+              </h1>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                {t('web3.subtitle')}
+              </p>
+              <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+                <span>{t('web3.totalProjects', { count: web3Projects.length })}</span>
+              </div>
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
-              {t('web3.title')}
-            </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              {t('web3.subtitle')}
-            </p>
-            <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-              <span>{t('web3.totalProjects', { count: web3Projects.length })}</span>
-            </div>
-          </div>
+          </BlurFade>
         </div>
       </section>
 
@@ -75,12 +98,13 @@ export default async function Web3Page({ params }: Web3PageProps) {
             {/* 所有项目 */}
             <TabsContent value="all" className="mt-0">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {web3Projects.map(project => (
-                  <Web3ProjectCard
-                    key={project.id}
-                    project={project}
-                    latestUpdate={getLatestUpdate(project.id)}
-                  />
+                {web3Projects.map((project, index) => (
+                  <BlurFade key={project.id} delay={0.1 + index * 0.05} inView>
+                    <Web3ProjectCard
+                      project={project}
+                      latestUpdate={getLatestUpdate(project.id)}
+                    />
+                  </BlurFade>
                 ))}
               </div>
             </TabsContent>
@@ -91,12 +115,13 @@ export default async function Web3Page({ params }: Web3PageProps) {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {web3Projects
                     .filter(project => project.category === category)
-                    .map(project => (
-                      <Web3ProjectCard
-                        key={project.id}
-                        project={project}
-                        latestUpdate={getLatestUpdate(project.id)}
-                      />
+                    .map((project, index) => (
+                      <BlurFade key={project.id} delay={0.1 + index * 0.05} inView>
+                        <Web3ProjectCard
+                          project={project}
+                          latestUpdate={getLatestUpdate(project.id)}
+                        />
+                      </BlurFade>
                     ))}
                 </div>
               </TabsContent>

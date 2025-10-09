@@ -11,7 +11,7 @@ import { TableOfContents } from '@/components/TableOfContents'
 import { ArticleSidebar } from '@/components/ArticleSidebar'
 import { ArticleNavigation } from '@/components/ArticleNavigation'
 
-interface ArticlePageProps {
+interface KnowledgeItemPageProps {
   params: Promise<{
     slug: string[]
     locale: string
@@ -38,7 +38,7 @@ export async function generateStaticParams() {
   }))
 }
 
-export default async function ArticlePage({ params }: ArticlePageProps) {
+export default async function KnowledgeItemPage({ params }: KnowledgeItemPageProps) {
   const resolvedParams = await params
   const article = await getArticleFromParams(resolvedParams)
   const t = await getTranslations({ locale: resolvedParams.locale })
@@ -82,7 +82,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     .slice(0, 3)
     .map(a => ({
       title: a.title,
-      href: `/${resolvedParams.locale}/articles/${a.slugAsParams}`,
+      href: `/${resolvedParams.locale}/knowledge/${a.slugAsParams}`,
       category: a.category,
     }));
 
@@ -96,8 +96,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         <Breadcrumbs 
           locale={resolvedParams.locale}
           customItems={[
-            { label: t('navigation.articles'), href: `/${resolvedParams.locale}/articles` },
-            { label: article.category || t('articles.uncategorized'), href: `/${resolvedParams.locale}/articles?category=${article.category}` },
+            { label: t('navigation.knowledge'), href: `/${resolvedParams.locale}/knowledge` },
+            { label: article.category || t('knowledge.uncategorized'), href: `/${resolvedParams.locale}/knowledge?category=${article.category}` },
             { label: article.title }
           ]}
         />
@@ -183,19 +183,19 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             description: nextArticle.description,
           } : undefined}
           locale={resolvedParams.locale}
-          prevLabel={t('articles.prevArticle')}
-          nextLabel={t('articles.nextArticle')}
+          prevLabel={t('knowledge.prevItem')}
+          nextLabel={t('knowledge.nextItem')}
         />
 
         {/* 文章底部 */}
         <footer className="mt-8 pt-8 border-t border-border/40">
           <div className="flex items-center justify-between">
             <Link 
-              href={`/${resolvedParams.locale}/articles`}
+              href={`/${resolvedParams.locale}/knowledge`}
               className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
-              {t('articles.backToList')}
+              {t('knowledge.backToList')}
             </Link>
 
             <Link 
@@ -210,3 +210,4 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     </div>
   )
 } 
+

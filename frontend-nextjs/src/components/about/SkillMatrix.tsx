@@ -227,7 +227,6 @@ export function SkillMatrix() {
                           <div 
                             className={`relative h-2 w-full overflow-hidden rounded-full ${colors.progressBg}`}
                             style={{
-                              // @ts-expect-error - CSS custom properties for dynamic animation
                               '--skill-progress': `${skill.proficiency}%`,
                               '--skill-delay': `${0.5 + index * 0.03 + 0.2}s`
                             } as React.CSSProperties}

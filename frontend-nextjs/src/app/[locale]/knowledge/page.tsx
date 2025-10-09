@@ -1,13 +1,13 @@
 import { articles } from '#site/content'
 import { SiteHeader } from '@/components/SiteHeader'
-import { ArticlesFilter } from '@/components/ArticlesFilter'
+import { KnowledgeFilter } from '@/components/KnowledgeFilter'
 import { Breadcrumbs } from '@/components/Breadcrumbs'
 
-interface ArticlesPageProps {
+interface KnowledgePageProps {
   params: Promise<{ locale: string }>
 }
 
-export default async function ArticlesPage({ params }: ArticlesPageProps) {
+export default async function KnowledgePage({ params }: KnowledgePageProps) {
   const { locale } = await params
   
   // 筛选当前语言和已发布的文章
@@ -27,12 +27,13 @@ export default async function ArticlesPage({ params }: ArticlesPageProps) {
 
   // 分类图标和颜色配置
   const categoryConfig: Record<string, { icon: string; color: string; desc: string }> = {
-    'Web3': { icon: '🔗', color: 'bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-200/50', desc: '区块链与去中心化' },
-    '技术': { icon: '💻', color: 'bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 border-cyan-200/50', desc: '编程与开发' },
-    '科学': { icon: '🔬', color: 'bg-purple-500/10 text-purple-700 dark:text-purple-400 border-purple-200/50', desc: '科学知识与研究' },
-    '法律': { icon: '⚖️', color: 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-200/50', desc: '法律与权益' },
-    '产品': { icon: '📱', color: 'bg-green-500/10 text-green-700 dark:text-green-400 border-green-200/50', desc: '产品设计与开发' },
-    '量子': { icon: '⚛️', color: 'bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 border-indigo-200/50', desc: '量子科学' },
+    'Web3': { icon: 'Link2', color: 'bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-200/50', desc: '区块链与去中心化' },
+    '技术': { icon: 'Code2', color: 'bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 border-cyan-200/50', desc: '编程与开发' },
+    '科学': { icon: 'Microscope', color: 'bg-purple-500/10 text-purple-700 dark:text-purple-400 border-purple-200/50', desc: '科学知识与研究' },
+    '法律': { icon: 'Scale', color: 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-200/50', desc: '法律与权益' },
+    '产品': { icon: 'Smartphone', color: 'bg-green-500/10 text-green-700 dark:text-green-400 border-green-200/50', desc: '产品设计与开发' },
+    '量子': { icon: 'Atom', color: 'bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 border-indigo-200/50', desc: '量子科学' },
+    'Web3 & 区块链': { icon: 'Link2', color: 'bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-200/50', desc: 'Web3 与区块链技术' },
   }
 
   return (
@@ -45,7 +46,7 @@ export default async function ArticlesPage({ params }: ArticlesPageProps) {
         {/* 面包屑导航 */}
         <Breadcrumbs locale={locale} />
         
-        <ArticlesFilter 
+        <KnowledgeFilter 
           articles={publishedArticles}
           articlesByCategory={articlesByCategory}
           categoryConfig={categoryConfig}
@@ -54,3 +55,4 @@ export default async function ArticlesPage({ params }: ArticlesPageProps) {
     </div>
   )
 } 
+

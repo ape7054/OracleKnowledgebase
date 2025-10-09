@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import Link from 'next/link'
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 import { motion } from 'framer-motion'
 import { fadeInUp, staggerContainer, listItem } from '@/lib/motion'
 import { ArrowRight, Clock } from 'lucide-react'
@@ -43,6 +43,7 @@ const featuredArticles = [
 
 export function FeaturedArticles() {
   const t = useTranslations('about')
+  const locale = useLocale()
 
   return (
     <section className="py-16 md:py-24">
@@ -99,7 +100,7 @@ export function FeaturedArticles() {
                       <span>{t(article.readTime)}</span>
                     </div>
                     <Button variant="ghost" size="sm" asChild>
-                      <Link href={`/articles/${article.slug}`} className="gap-1">
+                      <Link href={`/${locale}/knowledge/${article.slug}`} className="gap-1">
                         {t('featuredArticles.readMore')}
                         <ArrowRight className="w-3 h-3" />
                       </Link>
@@ -120,7 +121,7 @@ export function FeaturedArticles() {
           variants={fadeInUp}
         >
           <Button size="lg" variant="outline" asChild>
-            <Link href="/articles" className="gap-2">
+            <Link href={`/${locale}/knowledge`} className="gap-2">
               {t('featuredArticles.viewAll')}
               <ArrowRight className="w-4 h-4" />
             </Link>

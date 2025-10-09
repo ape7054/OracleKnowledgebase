@@ -4,8 +4,9 @@ import { Web3Project } from '@/config/web3-projects'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { ExternalLink, Globe, Twitter, BookOpen } from 'lucide-react'
+import { Globe, Twitter, BookOpen } from 'lucide-react'
 import { useTranslations, useLocale } from 'next-intl'
+import { getProjectIcon, getUpdateTypeIcon } from '@/lib/web3-icons'
 
 interface Web3ProjectCardProps {
   project: Web3Project
@@ -29,23 +30,18 @@ export function Web3ProjectCard({ project, latestUpdate, onClick }: Web3ProjectC
     return diffDays
   }
 
-  // 获取更新类型的图标和颜色
-  const getUpdateTypeStyle = (type: string) => {
-    const styles = {
-      regulatory: { icon: '🔴', color: 'bg-red-500/10 text-red-700 dark:text-red-400' },
-      tech: { icon: '🔵', color: 'bg-blue-500/10 text-blue-700 dark:text-blue-400' },
-      ecosystem: { icon: '🟢', color: 'bg-green-500/10 text-green-700 dark:text-green-400' },
-      other: { icon: '⚪', color: 'bg-gray-500/10 text-gray-700 dark:text-gray-400' }
-    }
-    return styles[type as keyof typeof styles] || styles.other
-  }
+  // 获取项目图标组件
+  const ProjectIcon = getProjectIcon(project.id)
 
   return (
-    <Card className="group cursor-pointer hover:shadow-lg transition-all duration-300 hover:border-primary/50" onClick={onClick}>
+    <Card className="group cursor-pointer hover:shadow-xl hover:scale-[1.02] transition-all duration-300 hover:border-primary/50 overflow-hidden" onClick={onClick}>
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
-            <div className="text-4xl">{project.logo}</div>
+            {/* 渐变色图标背景 */}
+            <div className={`p-3 rounded-xl bg-gradient-to-br ${project.color || 'from-primary to-primary/60'} shadow-lg group-hover:shadow-xl transition-all`}>
+              <ProjectIcon className="h-6 w-6 text-white" />
+            </div>
             <div>
               <CardTitle className="text-xl group-hover:text-primary transition-colors">
                 {project.name}
@@ -64,16 +60,21 @@ export function Web3ProjectCard({ project, latestUpdate, onClick }: Web3ProjectC
         </CardDescription>
 
         {/* 最新动态标识 */}
-        {latestUpdate && (
-          <div className="flex items-center gap-2 text-sm">
-            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getUpdateTypeStyle(latestUpdate.type).color}`}>
-              {getUpdateTypeStyle(latestUpdate.type).icon} {t(`updateTypes.${latestUpdate.type}`)}
-            </span>
-            <span className="text-muted-foreground">
-              {t('daysAgo', { days: getDaysAgo(latestUpdate.date) })}
-            </span>
-          </div>
-        )}
+        {latestUpdate && (() => {
+          const updateIcon = getUpdateTypeIcon(latestUpdate.type)
+          const UpdateIcon = updateIcon.icon
+          return (
+            <div className="flex items-center gap-2 text-sm">
+              <span className={`flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium border ${updateIcon.color}`}>
+                <UpdateIcon className="h-3 w-3" />
+                {t(`updateTypes.${latestUpdate.type}`)}
+              </span>
+              <span className="text-muted-foreground">
+                {t('daysAgo', { days: getDaysAgo(latestUpdate.date) })}
+              </span>
+            </div>
+          )
+        })()}
 
         {/* 链接 */}
         <div className="flex items-center gap-2 pt-2">

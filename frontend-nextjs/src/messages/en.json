@@ -2,6 +2,7 @@
   "navigation": {
     "home": "Home",
     "articles": "Articles",
+    "knowledge": "Knowledge Base",
     "web3": "Web3 Research",
     "tools": "Tools",
     "about": "About",
@@ -167,7 +168,20 @@
     "subtitle": "{count} articles · Covering tech, product, Web3 and interdisciplinary thinking",
     "backToList": "Back to Articles",
     "prevArticle": "Previous",
-    "nextArticle": "Next"
+    "nextArticle": "Next",
+    "uncategorized": "Uncategorized"
+  },
+  "knowledge": {
+    "title": "Knowledge Base",
+    "subtitle": "{count} knowledge entries · Systematic learning & thinking",
+    "backToList": "Back to Knowledge Base",
+    "prevItem": "Previous",
+    "nextItem": "Next",
+    "uncategorized": "Uncategorized",
+    "searchPlaceholder": "Search knowledge...",
+    "allCategories": "All Categories",
+    "noResults": "No knowledge found",
+    "relatedKnowledge": "Related Knowledge"
   },
   "seo": {
     "title": "Oracle - A Crucible of Thoughts on Code, Product & Web3",
@@ -176,7 +190,7 @@
   },
   "about": {
     "title": "About Me",
-    "subtitle": "A full-stack developer & Web3 explorer",
+    "subtitle": "An explorer focusing on full-stack development, Web3, and AI",
     "hero": {
       "status": "Open to Opportunities",
       "location": "Remote / China"
@@ -381,7 +395,7 @@
       },
       "blockchain": {
         "title": "Blockchain",
-        "items": "Solidity, Solana, BSC, Web3.js, Ethers.js"
+        "items": "Solidity, Solana, BSC, Web3.js"
       },
       "devops": {
         "title": "DevOps",
@@ -396,14 +410,14 @@
     },
     "cta": {
       "title": "Ready to Explore?",
-      "description": "Check out all my articles or return to the homepage to learn more about this knowledge base.",
-      "articles": "Browse Articles",
+      "description": "Check out all my knowledge or return to the homepage to learn more about this knowledge base.",
+      "articles": "Browse Knowledge Base",
       "home": "Back to Home"
     },
     "featuredArticles": {
-      "title": "Featured Articles",
+      "title": "Featured Content",
       "readMore": "Read More",
-      "viewAll": "View All Articles",
+      "viewAll": "Browse Knowledge Base",
       "manifesto": {
         "title": "Ramanujan's Revenge: A Decentralized Republic of Talent Manifesto",
         "description": "When genius is killed by failing English, when students chase meaningless credits—it's time for change.",

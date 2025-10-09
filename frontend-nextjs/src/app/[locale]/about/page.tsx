@@ -221,7 +221,7 @@ export default function AboutPage() {
                   </p>
                   <div className="flex flex-wrap items-center justify-center gap-4">
                   <Button size="lg" asChild>
-                    <Link href="/articles">
+                    <Link href={`/${locale}/knowledge`}>
                       {t('cta.articles')}
                     </Link>
                   </Button>

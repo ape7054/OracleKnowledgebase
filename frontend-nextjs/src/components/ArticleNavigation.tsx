@@ -35,7 +35,7 @@ export function ArticleNavigation({
         {/* 上一篇 */}
         {prev ? (
           <Link
-            href={`/${locale}/articles/${prev.slug}`}
+            href={`/${locale}/knowledge/${prev.slug}`}
             className="group block"
           >
             <Card className="h-full p-6 transition-all hover:shadow-lg hover:border-primary/50">
@@ -64,7 +64,7 @@ export function ArticleNavigation({
         {/* 下一篇 */}
         {next && (
           <Link
-            href={`/${locale}/articles/${next.slug}`}
+            href={`/${locale}/knowledge/${next.slug}`}
             className="group block"
           >
             <Card className="h-full p-6 transition-all hover:shadow-lg hover:border-primary/50">

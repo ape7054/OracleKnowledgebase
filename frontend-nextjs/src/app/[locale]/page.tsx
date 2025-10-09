@@ -142,7 +142,7 @@ export default async function Home({ params }: HomeProps) {
                 {t('hero.subtitle')}
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2 px-4">
-                <Link href={`/${locale}/articles`} className="w-full sm:w-auto">
+                <Link href={`/${locale}/knowledge`} className="w-full sm:w-auto">
                   <Button size="lg" className="w-full sm:w-auto">
                     <Rocket className="mr-2 h-4 w-4" />
                     {t('hero.cta.primary')}
@@ -194,7 +194,7 @@ export default async function Home({ params }: HomeProps) {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* 技术开发卡片 */}
             <Link 
-              href={`/${locale}/articles?category=${siteConfig.knowledgeDomains.tech}`}
+              href={`/${locale}/knowledge?category=${siteConfig.knowledgeDomains.tech}`}
               className="block group"
               aria-label={t('domains.cards.tech.title')}
             >
@@ -225,7 +225,7 @@ export default async function Home({ params }: HomeProps) {
 
             {/* Web3 & 区块链卡片 */}
             <Link 
-              href={`/${locale}/articles?category=${siteConfig.knowledgeDomains.web3}`}
+              href={`/${locale}/knowledge?category=${siteConfig.knowledgeDomains.web3}`}
               className="block group"
               aria-label={t('domains.cards.web3.title')}
             >
@@ -256,7 +256,7 @@ export default async function Home({ params }: HomeProps) {
 
             {/* 跨学科思考卡片 */}
             <Link 
-              href={`/${locale}/articles?category=${siteConfig.knowledgeDomains.thinking}`}
+              href={`/${locale}/knowledge?category=${siteConfig.knowledgeDomains.thinking}`}
               className="block group"
               aria-label={t('domains.cards.thinking.title')}
             >
@@ -287,7 +287,7 @@ export default async function Home({ params }: HomeProps) {
 
             {/* 产品与流程卡片 */}
             <Link 
-              href={`/${locale}/articles?category=${siteConfig.knowledgeDomains.product}`}
+              href={`/${locale}/knowledge?category=${siteConfig.knowledgeDomains.product}`}
               className="block group"
               aria-label={t('domains.cards.product.title')}
             >
@@ -318,7 +318,7 @@ export default async function Home({ params }: HomeProps) {
 
             {/* 实用工具箱卡片 */}
             <Link 
-              href={`/${locale}/articles?category=${siteConfig.knowledgeDomains.tools}`}
+              href={`/${locale}/knowledge?category=${siteConfig.knowledgeDomains.tools}`}
               className="block group md:col-span-2 lg:col-span-1"
               aria-label={t('domains.cards.tools.title')}
             >
@@ -369,7 +369,7 @@ export default async function Home({ params }: HomeProps) {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* 思想代表作 */}
             <Link 
-              href={siteConfig.articles.featured.manifesto.slug || `/${locale}/articles?category=${siteConfig.articles.featured.manifesto.category}`}
+              href={siteConfig.articles.featured.manifesto.slug || `/${locale}/knowledge?category=${siteConfig.articles.featured.manifesto.category}`}
               className="block group"
               aria-label={t('featured.articles.manifesto.title')}
             >
@@ -396,7 +396,7 @@ export default async function Home({ params }: HomeProps) {
 
             {/* 技术代表作 */}
             <Link 
-              href={siteConfig.articles.featured.web.slug || `/${locale}/articles?category=${siteConfig.articles.featured.web.category}`}
+              href={siteConfig.articles.featured.web.slug || `/${locale}/knowledge?category=${siteConfig.articles.featured.web.category}`}
               className="block group"
               aria-label={t('featured.articles.web.title')}
             >
@@ -423,7 +423,7 @@ export default async function Home({ params }: HomeProps) {
 
             {/* 实用代表作 */}
             <Link 
-              href={siteConfig.articles.featured.labor.slug || `/${locale}/articles?category=${siteConfig.articles.featured.labor.category}`}
+              href={siteConfig.articles.featured.labor.slug || `/${locale}/knowledge?category=${siteConfig.articles.featured.labor.category}`}
               className="block group"
               aria-label={t('featured.articles.labor.title')}
             >
@@ -451,7 +451,7 @@ export default async function Home({ params }: HomeProps) {
           
           {/* 查看更多链接 */}
           <div className="text-center mt-12">
-            <Link href={`/${locale}/articles`} className="text-primary hover:underline inline-flex items-center gap-2">
+            <Link href={`/${locale}/knowledge`} className="text-primary hover:underline inline-flex items-center gap-2">
               {t('featured.moreLink')}
             </Link>
           </div>
@@ -539,7 +539,7 @@ export default async function Home({ params }: HomeProps) {
               {t('finalCta.subtitle')}
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-4 px-4">
-              <Link href={`/${locale}/articles`} className="w-full sm:w-auto">
+              <Link href={`/${locale}/knowledge`} className="w-full sm:w-auto">
                 <Button size="lg" className="px-8 w-full sm:w-auto">
                   {t('finalCta.primary')}
                 </Button>
@@ -552,14 +552,14 @@ export default async function Home({ params }: HomeProps) {
             </div>
             <div className="flex items-center justify-center gap-6 pt-4 text-sm">
               <Link 
-                href={siteConfig.social.github || `/${locale}/articles`} 
+                href={siteConfig.social.github || `/${locale}/knowledge`} 
                 className="text-muted-foreground hover:text-primary transition-colors"
                 aria-label={t('finalCta.links.github')}
               >
                 {t('finalCta.links.github')}
               </Link>
               <Link 
-                href={`/${locale}/articles`}
+                href={`/${locale}/knowledge`}
                 className="text-muted-foreground hover:text-primary transition-colors"
                 aria-label={t('finalCta.links.resume')}
               >
@@ -604,7 +604,7 @@ export default async function Home({ params }: HomeProps) {
             <div className="space-y-3">
               <h4 className="font-semibold text-sm">{t('footer.sections.quickLinks')}</h4>
               <div className="flex flex-col space-y-2 text-sm text-muted-foreground">
-                <Link href={`/${locale}/articles`} className="hover:text-primary transition-colors">
+                <Link href={`/${locale}/knowledge`} className="hover:text-primary transition-colors">
                   {t('navigation.articles')}
                 </Link>
                 <Link href={`/${locale}/about`} className="hover:text-primary transition-colors">

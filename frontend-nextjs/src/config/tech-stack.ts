@@ -159,14 +159,6 @@ export const techStack: TechStackItem[] = [
     category: 'blockchain'
   },
   {
-    id: 'ethersjs',
-    name: 'Ethers.js',
-    icon: SiEthereum,
-    colorClass: 'text-[#627EEA]',
-    colorValue: '#627EEA',
-    category: 'blockchain'
-  },
-  {
     id: 'bsc',
     name: 'BSC',
     icon: RiBnbFill,
