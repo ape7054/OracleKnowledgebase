@@ -9,6 +9,7 @@ import { Briefcase, GraduationCap, Sparkles } from 'lucide-react'
 import { Rocket } from '@/lib/icons'
 import { motion } from 'framer-motion'
 import { fadeInUp, slideInLeft, slideInRight } from '@/lib/motion'
+import { Boxes } from '@/components/ui/background-boxes'
 
 const iconMap = {
   exploration: GraduationCap,
@@ -26,8 +27,13 @@ export function CareerTimeline() {
   const t = useTranslations('about')
 
   return (
-    <section className="py-16 md:py-24">
-      <div className="container mx-auto px-6 md:px-8 max-w-4xl">
+    <section className="py-16 md:py-24 relative overflow-hidden">
+      {/* Background Boxes 装饰 */}
+      <div className="absolute inset-0 w-full h-full opacity-[0.15] dark:opacity-[0.2]">
+        <Boxes />
+      </div>
+      
+      <div className="container mx-auto px-6 md:px-8 max-w-4xl relative z-10">
         <motion.h2 
           className="text-3xl md:text-4xl font-bold tracking-tight mb-12 flex items-center gap-3"
           initial="initial"

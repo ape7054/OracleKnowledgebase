@@ -38,9 +38,9 @@ export function Web3ProjectCard({ project, latestUpdate, onClick }: Web3ProjectC
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
-            {/* 渐变色图标背景 */}
-            <div className={`p-3 rounded-xl bg-gradient-to-br ${project.color || 'from-primary to-primary/60'} shadow-lg group-hover:shadow-xl transition-all`}>
-              <ProjectIcon className="h-6 w-6 text-white" />
+            {/* 项目图标 - 显示官方颜色 */}
+            <div className="flex items-center justify-center">
+              <ProjectIcon className="h-12 w-12 transition-transform group-hover:scale-110" />
             </div>
             <div>
               <CardTitle className="text-xl group-hover:text-primary transition-colors">

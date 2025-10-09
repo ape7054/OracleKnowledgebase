@@ -7,7 +7,7 @@ import { Web3ProjectCard } from '@/components/Web3ProjectCard'
 import { Web3Timeline } from '@/components/Web3Timeline'
 import { getTranslations } from 'next-intl/server'
 import web3UpdatesData from '@/data/web3-updates.json'
-import { Web3Icon } from '@/lib/web3-icons'
+import { Blocks } from 'lucide-react'
 
 interface Web3PageProps {
   params: Promise<{ locale: string }>
@@ -35,9 +35,9 @@ export default async function Web3Page({ params }: Web3PageProps) {
 
   // 获取每个项目的最新更新
   const getLatestUpdate = (projectId: string) => {
-    const projectUpdates = web3UpdatesData
-      .filter((update: any) => update.projectId === projectId)
-      .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    const projectUpdates = (web3UpdatesData as ProjectUpdate[])
+      .filter((update) => update.projectId === projectId)
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     
     return projectUpdates.length > 0 ? {
       date: projectUpdates[0].date,
@@ -59,7 +59,7 @@ export default async function Web3Page({ params }: Web3PageProps) {
           <BlurFade delay={0.1} inView>
             <div className="text-center space-y-6">
               <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 shadow-xl">
-                <Web3Icon className="h-10 w-10 text-white" />
+                <Blocks className="h-10 w-10 text-white" />
               </div>
               <h1 className="text-4xl md:text-5xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text">
                 {t('web3.title')}
@@ -130,7 +130,7 @@ export default async function Web3Page({ params }: Web3PageProps) {
             {/* 时间线视图 */}
             <TabsContent value="timeline" className="mt-0">
               <div className="max-w-3xl mx-auto pl-8">
-                <Web3Timeline updates={web3UpdatesData as any} />
+                <Web3Timeline updates={web3UpdatesData as ProjectUpdate[]} />
               </div>
             </TabsContent>
           </Tabs>

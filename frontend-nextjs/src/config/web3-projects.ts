@@ -38,7 +38,7 @@ export const web3Projects: Web3Project[] = [
     name: 'Ethereum',
     logo: 'ethereum',
     category: 'layer1',
-    color: 'from-blue-500 to-purple-500',
+    color: 'from-[#627EEA] to-[#8A92B2]', // Ethereum 官方品牌色
     description: {
       en: 'The world\'s programmable blockchain, pioneering smart contracts and decentralized applications.',
       zh: '全球可编程区块链，智能合约和去中心化应用的先驱。'
@@ -54,7 +54,7 @@ export const web3Projects: Web3Project[] = [
     name: 'Solana',
     logo: 'solana',
     category: 'layer1',
-    color: 'from-purple-500 to-pink-500',
+    color: 'from-[#9945FF] to-[#14F195]', // Solana 官方渐变色
     description: {
       en: 'High-performance blockchain supporting fast transactions and low fees through innovative Proof of History.',
       zh: '高性能区块链，通过创新的历史证明机制支持快速交易和低费用。'
@@ -70,7 +70,7 @@ export const web3Projects: Web3Project[] = [
     name: 'Arbitrum',
     logo: 'arbitrum',
     category: 'layer2',
-    color: 'from-blue-400 to-cyan-400',
+    color: 'from-[#28A0F0] to-[#96BEDC]', // Arbitrum 官方蓝色
     description: {
       en: 'Leading Ethereum Layer 2 scaling solution using Optimistic Rollups for faster and cheaper transactions.',
       zh: '领先的以太坊 Layer 2 扩容方案，使用 Optimistic Rollups 实现更快更便宜的交易。'
@@ -86,7 +86,7 @@ export const web3Projects: Web3Project[] = [
     name: 'Polygon',
     logo: 'polygon',
     category: 'layer2',
-    color: 'from-purple-600 to-indigo-600',
+    color: 'from-[#8247E5] to-[#A882DD]', // Polygon 官方紫色
     description: {
       en: 'Multi-chain scaling solution for Ethereum, providing faster and more affordable transactions.',
       zh: '以太坊的多链扩容解决方案，提供更快速和更实惠的交易。'
@@ -102,7 +102,7 @@ export const web3Projects: Web3Project[] = [
     name: 'Avalanche',
     logo: 'avalanche',
     category: 'layer1',
-    color: 'from-red-500 to-orange-500',
+    color: 'from-[#E84142] to-[#F5A5A5]', // Avalanche 官方红色
     description: {
       en: 'Open, programmable smart contracts platform for decentralized applications with sub-second finality.',
       zh: '开放的可编程智能合约平台，为去中心化应用提供亚秒级最终性。'
