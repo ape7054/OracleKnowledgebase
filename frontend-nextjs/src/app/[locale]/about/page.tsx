@@ -3,8 +3,9 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Link from 'next/link'
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 import { SiteHeader } from '@/components/SiteHeader'
+import { Breadcrumbs } from '@/components/Breadcrumbs'
 import { motion } from 'framer-motion'
 import { fadeInUp, staggerContainer, listItem } from '@/lib/motion'
 import { Target, Lightbulb, GraduationCap, Network, Rocket, Sparkles, BookOpen } from '@/lib/icons'
@@ -23,6 +24,7 @@ import { ContactSection } from '@/components/about/ContactSection'
 
 export default function AboutPage() {
   const t = useTranslations('about')
+  const locale = useLocale()
 
   return (
     <>
@@ -46,6 +48,11 @@ export default function AboutPage() {
       <div className="min-h-screen bg-background">
         {/* 顶部导航条 */}
         <SiteHeader />
+
+      {/* 面包屑导航 */}
+      <div className="container mx-auto px-4 md:px-6 lg:px-8 pt-8">
+        <Breadcrumbs locale={locale} />
+      </div>
 
       {/* Hero Section - 新组件 */}
       <HeroSection />

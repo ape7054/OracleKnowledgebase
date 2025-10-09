@@ -20,13 +20,13 @@ const TechCard = ({ name, icon: Icon, color }: TechCardProps) => {
   return (
     <div
       className={cn(
-        "relative mx-6 flex h-32 w-44 cursor-pointer items-center justify-center rounded-xl border border-border/50 bg-card/30 backdrop-blur-sm transition-all hover:scale-105 hover:shadow-lg",
+        "relative mx-4 sm:mx-6 flex h-28 w-32 sm:h-32 sm:w-40 md:w-44 cursor-pointer items-center justify-center rounded-xl border border-border/50 bg-card/30 backdrop-blur-sm transition-all hover:scale-105 hover:shadow-lg",
         "dark:bg-card/50 dark:hover:bg-card/70"
       )}
     >
-      <div className="flex flex-col items-center gap-3 p-6">
-        <Icon className={cn("text-5xl", color)} />
-        <p className="text-base font-semibold">{name}</p>
+      <div className="flex flex-col items-center gap-2 sm:gap-3 p-4 sm:p-6">
+        <Icon className={cn("text-4xl sm:text-5xl", color)} />
+        <p className="text-sm sm:text-base font-semibold text-center">{name}</p>
       </div>
     </div>
   );

@@ -2,12 +2,15 @@
 
 import { Card, CardContent } from "@/components/ui/card"
 import { IconCloud } from "@/components/ui/icon-cloud"
+import { NumberTicker } from "@/components/ui/number-ticker"
+import { BlurFade } from "@/components/ui/blur-fade"
 import { skills, skillCategories } from "@/config/about-data"
 import { techStack } from "@/config/tech-stack"
 import { useTranslations } from 'next-intl'
 import { motion } from 'framer-motion'
 import { fadeInUp, staggerContainer } from '@/lib/motion'
-import { Cog } from '@/lib/icons'
+import { Cog, Monitor, Server, Layers, Settings } from '@/lib/icons'
+import type { LucideIcon } from 'lucide-react'
 
 // 创建图标映射 - 使用 colorValue 用于 Canvas 渲染
 const iconMap: Record<string, React.ReactNode> = Object.fromEntries(
@@ -16,6 +19,72 @@ const iconMap: Record<string, React.ReactNode> = Object.fromEntries(
     <tech.icon key={tech.id} size={60} color={tech.colorValue} />
   ])
 )
+
+// 技能分类的图标和渐变色配置
+const categoryConfig: Record<string, {
+  icon: LucideIcon
+  gradientFrom: string
+  gradientTo: string
+  bgGradient: string
+  iconColor: string
+}> = {
+  frontend: {
+    icon: Monitor,
+    gradientFrom: 'from-blue-500',
+    gradientTo: 'to-cyan-500',
+    bgGradient: 'bg-gradient-to-br from-blue-500/10 to-cyan-500/10',
+    iconColor: 'text-cyan-500'
+  },
+  backend: {
+    icon: Server,
+    gradientFrom: 'from-green-500',
+    gradientTo: 'to-emerald-500',
+    bgGradient: 'bg-gradient-to-br from-green-500/10 to-emerald-500/10',
+    iconColor: 'text-emerald-500'
+  },
+  blockchain: {
+    icon: Layers,
+    gradientFrom: 'from-purple-500',
+    gradientTo: 'to-pink-500',
+    bgGradient: 'bg-gradient-to-br from-purple-500/10 to-pink-500/10',
+    iconColor: 'text-pink-500'
+  },
+  devops: {
+    icon: Settings,
+    gradientFrom: 'from-orange-500',
+    gradientTo: 'to-red-500',
+    bgGradient: 'bg-gradient-to-br from-orange-500/10 to-red-500/10',
+    iconColor: 'text-red-500'
+  }
+}
+
+// 技能类别的颜色配置（用于进度条和圆点）
+const skillCategoryColors: Record<string, {
+  dot: string
+  progress: string
+  progressBg: string
+}> = {
+  frontend: {
+    dot: 'bg-cyan-500',
+    progress: 'bg-gradient-to-r from-blue-500 to-cyan-500',
+    progressBg: 'bg-blue-500/10'
+  },
+  backend: {
+    dot: 'bg-emerald-500',
+    progress: 'bg-gradient-to-r from-green-500 to-emerald-500',
+    progressBg: 'bg-green-500/10'
+  },
+  blockchain: {
+    dot: 'bg-pink-500',
+    progress: 'bg-gradient-to-r from-purple-500 to-pink-500',
+    progressBg: 'bg-purple-500/10'
+  },
+  devops: {
+    dot: 'bg-red-500',
+    progress: 'bg-gradient-to-r from-orange-500 to-red-500',
+    progressBg: 'bg-orange-500/10'
+  }
+}
 
 export function SkillMatrix() {
   const t = useTranslations('about')
@@ -69,60 +138,117 @@ export function SkillMatrix() {
               </div>
 
               {/* 技能分类统计 */}
-              <motion.div 
-                className="mt-8 pt-6 border-t border-border/50"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3, duration: 0.4 }}
-              >
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {categoryStats.map((category) => (
-                    <motion.div 
-                      key={category.id}
-                      className="text-center p-4 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 0.4, duration: 0.3 }}
-                    >
-                      <div className="text-2xl font-bold text-primary mb-1">
-                        {category.count}
-                      </div>
-                      <div className="text-sm font-medium mb-1">
-                        {t(category.label)}
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        {t('skills.avgProficiency', { value: category.avgProficiency })}
-                      </div>
-                    </motion.div>
-                  ))}
+              <div className="mt-8 pt-6 border-t border-border/50">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                  {categoryStats.map((category, index) => {
+                    const config = categoryConfig[category.id as keyof typeof categoryConfig]
+                    const Icon = config.icon
+                    
+                    return (
+                      <BlurFade 
+                        key={category.id}
+                        delay={0.3 + index * 0.1}
+                        direction="up"
+                        inView
+                      >
+                        <div className="group relative text-center p-6 rounded-xl bg-card border border-border/50 hover:border-border hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden">
+                          {/* 背景渐变装饰 */}
+                          <div className={`absolute inset-0 ${config.bgGradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
+                          
+                          {/* 内容 */}
+                          <div className="relative z-10">
+                            {/* 图标 */}
+                            <div className="flex justify-center mb-4">
+                              <div className={`w-16 h-16 rounded-full bg-gradient-to-br ${config.gradientFrom} ${config.gradientTo} p-0.5 shadow-lg group-hover:shadow-xl transition-shadow duration-300`}>
+                                <div className="w-full h-full rounded-full bg-background flex items-center justify-center">
+                                  <Icon className={`w-7 h-7 ${config.iconColor}`} />
+                                </div>
+                              </div>
+                            </div>
+                            
+                            {/* 技能数量 */}
+                            <div className="text-3xl font-bold text-primary mb-2">
+                              <NumberTicker value={category.count} delay={0.5 + index * 0.1} />
+                            </div>
+                            
+                            {/* 类别名称 */}
+                            <div className="text-sm font-semibold mb-2 text-foreground">
+                              {t(category.label)}
+                            </div>
+                            
+                            {/* 平均熟练度 */}
+                            <div className="text-xs text-muted-foreground flex items-center justify-center gap-1">
+                              <span>{t('skills.average')}</span>
+                              <NumberTicker 
+                                value={category.avgProficiency} 
+                                delay={0.7 + index * 0.1}
+                                className="text-xs"
+                              />
+                              <span>%</span>
+                            </div>
+                          </div>
+                        </div>
+                      </BlurFade>
+                    )
+                  })}
                 </div>
-              </motion.div>
+              </div>
 
               {/* 技能列表 */}
-              <motion.div 
-                className="mt-8 pt-6 border-t border-border/50"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5, duration: 0.4 }}
-              >
-                <h3 className="text-lg font-semibold mb-4">{t('skills.allSkills')}</h3>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                  {skills.map((skill, index) => (
-                    <motion.div 
-                      key={skill.id}
-                      className="flex items-center justify-between gap-2 text-sm p-2 rounded-md bg-muted/30 hover:bg-muted/50 transition-colors"
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.6 + index * 0.02, duration: 0.3 }}
-                    >
-                      <span className="font-medium truncate flex-1">{skill.name}</span>
-                      <span className="text-xs font-semibold text-primary px-2 py-0.5 rounded-full bg-primary/10">
-                        {skill.proficiency}%
-                      </span>
-                    </motion.div>
-                  ))}
+              <div className="mt-8 pt-6 border-t border-border/50">
+                <h3 className="text-lg font-semibold mb-6">{t('skills.allSkills')}</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {skills.map((skill, index) => {
+                    const colors = skillCategoryColors[skill.category]
+                    
+                    return (
+                      <BlurFade
+                        key={skill.id}
+                        delay={0.5 + index * 0.03}
+                        direction="up"
+                        inView
+                      >
+                        <div className="group p-4 rounded-lg border border-border/50 bg-card hover:border-border hover:shadow-md transition-all duration-300">
+                          {/* 标题行：圆点 + 名称 + 百分比 */}
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center gap-2.5 flex-1 min-w-0">
+                              {/* 类别颜色圆点 */}
+                              <div className={`w-2 h-2 rounded-full ${colors.dot} flex-shrink-0`} />
+                              {/* 技能名称 */}
+                              <span className="font-medium text-sm truncate">{skill.name}</span>
+                            </div>
+                            {/* 百分比数字 */}
+                            <span className="text-xs font-bold text-foreground ml-2 flex-shrink-0">
+                              {skill.proficiency}%
+                            </span>
+                          </div>
+                          
+                          {/* 进度条 */}
+                          <div 
+                            className={`relative h-2 w-full overflow-hidden rounded-full ${colors.progressBg}`}
+                            style={{
+                              // @ts-expect-error - CSS custom properties for dynamic animation
+                              '--skill-progress': `${skill.proficiency}%`,
+                              '--skill-delay': `${0.5 + index * 0.03 + 0.2}s`
+                            } as React.CSSProperties}
+                          >
+                            <div 
+                              className={`h-full ${colors.progress} rounded-full`}
+                              style={{
+                                width: 'var(--skill-progress)',
+                                transitionDelay: 'var(--skill-delay)',
+                                transitionProperty: 'width',
+                                transitionDuration: '1000ms',
+                                transitionTimingFunction: 'ease-out'
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </BlurFade>
+                    )
+                  })}
                 </div>
-              </motion.div>
+              </div>
             </CardContent>
           </Card>
 

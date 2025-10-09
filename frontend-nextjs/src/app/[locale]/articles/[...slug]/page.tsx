@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import { SiteHeader } from '@/components/SiteHeader'
+import { Breadcrumbs } from '@/components/Breadcrumbs'
 import { getTranslations } from 'next-intl/server'
 import { ArticleLayout } from '@/components/ArticleLayout'
 import { TableOfContents } from '@/components/TableOfContents'
@@ -89,6 +90,18 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     <div className="min-h-screen bg-background">
       {/* 顶部导航条 */}
       <SiteHeader />
+
+      {/* 面包屑导航 */}
+      <div className="container mx-auto px-4 md:px-6 lg:px-8 pt-8">
+        <Breadcrumbs 
+          locale={resolvedParams.locale}
+          customItems={[
+            { label: t('navigation.articles'), href: `/${resolvedParams.locale}/articles` },
+            { label: article.category || t('articles.uncategorized'), href: `/${resolvedParams.locale}/articles?category=${article.category}` },
+            { label: article.title }
+          ]}
+        />
+      </div>
 
       {/* 三栏布局 */}
       <ArticleLayout

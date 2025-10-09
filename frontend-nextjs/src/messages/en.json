@@ -16,7 +16,7 @@
     "subtitle": "Systematically documenting thoughts, building personal knowledge systems, and refining theories. Here, every article is a crystallization of thinking, every theory is deeply contemplated.",
     "maintainedBy": "A lifelong learner's knowledge laboratory, continuously evolving with cognition",
     "cta": {
-      "primary": "🚀 Start Exploring",
+      "primary": "Start Exploring",
       "tertiary": "Read Origin Story"
     }
   },
@@ -25,35 +25,30 @@
     "subtitle": "Cross-domain integration, systematic learning, building complete cognitive networks",
     "cards": {
       "tech": {
-        "icon": "💻",
         "title": "Technical Development",
         "description": "From Web1.0 to Web3.0 architecture evolution, from Next.js to Solidity engineering practices. Building reliable, efficient, and decentralized digital products.",
         "keywords": "Next.js, Solidity, Web Architecture, Performance Optimization, Smart Contracts",
         "articleCount": "8+ In-depth Articles"
       },
       "web3": {
-        "icon": "⛓️",
         "title": "Web3 & Blockchain",
         "description": "Deep dive into DAO governance mechanisms, decentralized reputation systems, and anti-cheating frameworks. Exploring how Web3 reshapes trust, value, and collaboration. From beginner to advanced, from theory to practice.",
         "keywords": "DAO, SBT, Anti-cheating Systems, DeFi, NFT, Decentralization",
         "articleCount": "12+ Series Articles"
       },
       "thinking": {
-        "icon": "🧠",
         "title": "Interdisciplinary Thinking",
         "description": "Using systems theory to compare human body and society, applying first principles to critique education systems, using blockchain thinking to reconstruct talent evaluation. Building profound connections between seemingly unrelated fields.",
         "keywords": "Systems Thinking, Education Critique, Ramanujan Manifesto, Decentralized Education",
         "articleCount": "Thought Laboratory"
       },
       "product": {
-        "icon": "📋",
         "title": "Product & Process",
         "description": "From PRD writing to 6-8 week MVP landing, complete processes from user research to gradual releases. Sharing real 0-to-1 product building experiences, rejecting armchair theorizing.",
         "keywords": "PRD, Development Process, MVP, Agile Development, Product Design",
         "articleCount": "Practical Handbook"
       },
       "tools": {
-        "icon": "🛠️",
         "title": "Practical Toolbox",
         "description": "Plug-and-play Prompt templates, labor rights action packs, and problem-solving reports. Knowledge is not just power, but also a weapon. These tools hope to help you in critical moments.",
         "keywords": "Labor Rights, Prompt Engineering, Problem Solving, Learning Checklists",
@@ -69,22 +64,19 @@
         "title": "Ramanujan's Revenge: A Manifesto for a Decentralized Republic of Talent",
         "description": "When genius is killed by failing English, when students chase meaningless credits, when education becomes domestication—it's time for change. Not reform, but revolution.",
         "tag": "Philosophy",
-        "readTime": "12 min read",
-        "icon": "🔥"
+        "readTime": "12 min read"
       },
       "web": {
         "title": "The Evolution of Web Architecture: From Static Pages to Decentralized Applications",
         "description": "Understanding 30 years of evolution: from Apache to smart contracts, from centralized databases to IPFS. Know where we stand today, foresee tomorrow's architecture.",
         "tag": "Technical",
-        "readTime": "25 min read",
-        "icon": "⚡"
+        "readTime": "25 min read"
       },
       "labor": {
         "title": "Labor Rights Action Pack: A Practical Guide for Every Worker",
         "description": "No contract? Unpaid wages? Fake job posting? From evidence collection to arbitration process, from demand letters to operation templates. Knowledge is a weapon, and this pack hopes to help those in need.",
         "tag": "Practical",
-        "readTime": "8 min read",
-        "icon": "⚖️"
+        "readTime": "8 min read"
       }
     },
     "moreLink": "View More Featured Articles →"
@@ -156,6 +148,10 @@
     "copyright": "© 2025 Oracle Knowledge Base. Here, value is defined by work, not by credentials.",
     "builtWith": "Built with Next.js + Nextra",
     "license": "Content licensed under CC BY-NC-SA 4.0",
+    "sections": {
+      "quickLinks": "Quick Links",
+      "social": "Social Media"
+    },
     "social": {
       "github": "GitHub",
       "twitter": "Twitter",
@@ -276,6 +272,7 @@
       "years": "years",
       "noSkills": "No skills data available",
       "proficiency": "Proficiency",
+      "average": "Avg",
       "avgProficiency": "Avg {value}%",
       "allSkills": "All Skills",
       "radarChart": {
@@ -390,7 +387,7 @@
         "title": "DevOps",
         "items": "Docker, CI/CD, Git, Linux"
       },
-      "note": "💡 I believe in the AI era, breadth of tech stack is no longer a barrier. The key lies in learning ability, systems thinking, and actual creativity."
+      "note": "I believe in the AI era, breadth of tech stack is no longer a barrier. The key lies in learning ability, systems thinking, and actual creativity."
     },
     "contact": {
       "title": "Contact",

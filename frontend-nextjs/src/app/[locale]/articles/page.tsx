@@ -1,6 +1,7 @@
 import { articles } from '#site/content'
 import { SiteHeader } from '@/components/SiteHeader'
 import { ArticlesFilter } from '@/components/ArticlesFilter'
+import { Breadcrumbs } from '@/components/Breadcrumbs'
 
 interface ArticlesPageProps {
   params: Promise<{ locale: string }>
@@ -41,6 +42,9 @@ export default async function ArticlesPage({ params }: ArticlesPageProps) {
 
       {/* 页面容器 */}
       <div className="container mx-auto px-4 md:px-6 lg:px-8 py-8">
+        {/* 面包屑导航 */}
+        <Breadcrumbs locale={locale} />
+        
         <ArticlesFilter 
           articles={publishedArticles}
           articlesByCategory={articlesByCategory}

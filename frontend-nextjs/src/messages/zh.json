@@ -16,7 +16,7 @@
     "subtitle": "系统化记录思考，构建个人知识体系，沉淀认知与理论。在这里，每一篇文章都是思维的结晶，每一个理论都经过深度推敲。",
     "maintainedBy": "一个终身学习者的知识实验室，与认知一起持续进化",
     "cta": {
-      "primary": "🚀 开始探索",
+      "primary": "开始探索",
       "tertiary": "查看初衷"
     }
   },
@@ -25,35 +25,30 @@
     "subtitle": "跨领域整合，系统化学习，构建完整的认知网络",
     "cards": {
       "tech": {
-        "icon": "💻",
         "title": "技术开发",
         "description": "从Web1.0到Web3.0的架构演进，从Next.js到Solidity的工程实践。构建可靠、高效、去中心化的数字产品。",
         "keywords": "Next.js, Solidity, Web架构, 性能优化, 智能合约",
         "articleCount": "8+ 篇深度文章"
       },
       "web3": {
-        "icon": "⛓️",
         "title": "Web3 & 区块链",
         "description": "深入DAO治理机制、去中心化声誉系统、防作弊框架。探索Web3如何重塑信任、价值与协作。从入门到深度，从理念到实践。",
         "keywords": "DAO, SBT, 防作弊系统, DeFi, NFT, 去中心化",
         "articleCount": "12+ 篇系列文章"
       },
       "thinking": {
-        "icon": "🧠",
         "title": "跨学科思考",
         "description": "用系统论类比人体与社会，用第一性原理批判教育制度，用区块链思维重构人才评价。在看似无关的领域间建立深刻连接。",
         "keywords": "系统思维, 教育批判, Ramanujan宣言, 去中心化教育",
         "articleCount": "思想实验室"
       },
       "product": {
-        "icon": "📋",
         "title": "产品与流程",
         "description": "从PRD撰写到6-8周MVP落地的完整流程，从用户调研到灰度发布的每个环节。分享真实的0到1产品构建经验，拒绝纸上谈兵。",
         "keywords": "PRD, 开发流程, MVP, 敏捷开发, 产品设计",
         "articleCount": "实战手册"
       },
       "tools": {
-        "icon": "🛠️",
         "title": "实用工具箱",
         "description": "即插即用的Prompt模板、劳动维权操作包、问题解决报告。知识不仅是力量，更是武器。这些工具希望能在关键时刻帮助到你。",
         "keywords": "劳动维权, Prompt工程, 问题解决, 学习清单",
@@ -69,22 +64,19 @@
         "title": "拉马努金的复仇：一份去中心化人才共和国宣言",
         "description": "当天才因英语不及格被扼杀，当学生为无意义的学分奔波，当教育沦为驯化工具——是时候改变了。这不是改良，是革命。",
         "tag": "思想",
-        "readTime": "12 分钟",
-        "icon": "🔥"
+        "readTime": "12 分钟"
       },
       "web": {
         "title": "Web架构演进史：从静态页面到去中心化应用",
         "description": "一文读懂三十年变迁：从Apache到智能合约，从中心化数据库到IPFS。理解我们今天所处的技术坐标，预见明天的架构演进。",
         "tag": "技术",
-        "readTime": "25 分钟",
-        "icon": "⚡"
+        "readTime": "25 分钟"
       },
       "labor": {
         "title": "劳动维权操作包：写给每个打工人的实用指南",
         "description": "未签合同？拖欠工资？虚假招聘？从证据收集到仲裁流程，从催告函到操作模板。知识是武器，这份操作包希望能帮助需要的人。",
         "tag": "实用",
-        "readTime": "8 分钟",
-        "icon": "⚖️"
+        "readTime": "8 分钟"
       }
     },
     "moreLink": "查看更多精选文章 →"
@@ -167,6 +159,10 @@
     "copyright": "© 2025 Oracle Knowledge Base. 在这里，价值由作品定义，而非证书。",
     "builtWith": "使用 Next.js + Nextra 构建",
     "license": "内容基于 CC BY-NC-SA 4.0 许可",
+    "sections": {
+      "quickLinks": "快速链接",
+      "social": "社交媒体"
+    },
     "social": {
       "github": "GitHub",
       "twitter": "Twitter",
@@ -276,6 +272,7 @@
       "years": "年",
       "noSkills": "暂无技能数据",
       "proficiency": "熟练度",
+      "average": "平均",
       "avgProficiency": "平均 {value}%",
       "allSkills": "所有技能",
       "radarChart": {
@@ -389,7 +386,7 @@
         "title": "DevOps",
         "items": "Docker, CI/CD, Git, Linux"
       },
-      "note": "💡 我相信在AI时代，技术栈的广度已不再是壁垒，关键在于学习能力、系统思维和实际的创造力。"
+      "note": "我相信在AI时代，技术栈的广度已不再是壁垒，关键在于学习能力、系统思维和实际的创造力。"
     },
     "contact": {
       "title": "联系方式",

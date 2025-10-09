@@ -123,12 +123,12 @@ export const timeline: TimelineItem[] = [
 
 // 技能列表
 export const skills: Skill[] = [
-  // 前端
+  // 前端 (目标平均: 85%)
   {
     id: 'react',
     name: 'React',
     category: 'frontend',
-    proficiency: 85,
+    proficiency: 90,
     yearsOfExperience: 2,
     icon: 'AtomIcon'
   },
@@ -136,7 +136,7 @@ export const skills: Skill[] = [
     id: 'nextjs',
     name: 'Next.js',
     category: 'frontend',
-    proficiency: 80,
+    proficiency: 85,
     yearsOfExperience: 1.5
   },
   {
@@ -157,22 +157,22 @@ export const skills: Skill[] = [
     id: 'vue',
     name: 'Vue.js',
     category: 'frontend',
-    proficiency: 70,
+    proficiency: 75,
     yearsOfExperience: 1.5
   },
   {
     id: 'uniapp',
     name: 'UniApp',
     category: 'frontend',
-    proficiency: 65,
+    proficiency: 70,
     yearsOfExperience: 1
   },
-  // 后端
+  // 后端 (目标平均: 77%)
   {
     id: 'rust',
     name: 'Rust',
     category: 'backend',
-    proficiency: 80,
+    proficiency: 78,
     yearsOfExperience: 2,
     icon: 'Zap'
   },
@@ -180,89 +180,90 @@ export const skills: Skill[] = [
     id: 'nodejs',
     name: 'Node.js',
     category: 'backend',
-    proficiency: 85,
+    proficiency: 82,
     yearsOfExperience: 2.5
   },
   {
     id: 'go',
     name: 'Go',
     category: 'backend',
-    proficiency: 60,
+    proficiency: 68,
     yearsOfExperience: 1
   },
   {
     id: 'grpc',
     name: 'gRPC',
     category: 'backend',
-    proficiency: 75,
+    proficiency: 78,
     yearsOfExperience: 1.5
   },
-  // 区块链
+  // 区块链 (目标平均: 20%)
   {
     id: 'solidity',
     name: 'Solidity',
     category: 'blockchain',
-    proficiency: 70,
-    yearsOfExperience: 2,
+    proficiency: 18,
+    yearsOfExperience: 0.5,
     icon: 'Link'
   },
   {
     id: 'solana',
     name: 'Solana',
     category: 'blockchain',
-    proficiency: 80,
-    yearsOfExperience: 1.5
+    proficiency: 25,
+    yearsOfExperience: 0.5
   },
   {
     id: 'web3js',
     name: 'Web3.js',
     category: 'blockchain',
-    proficiency: 75,
-    yearsOfExperience: 2
+    proficiency: 20,
+    yearsOfExperience: 0.5
   },
   {
     id: 'ethersjs',
     name: 'Ethers.js',
     category: 'blockchain',
-    proficiency: 75,
-    yearsOfExperience: 2
+    proficiency: 20,
+    yearsOfExperience: 0.5,
+    relatedProjects: ['web3-wallet', 'dapp-integration', 'smart-contract-interaction']
   },
   {
     id: 'bsc',
     name: 'BSC',
     category: 'blockchain',
-    proficiency: 70,
-    yearsOfExperience: 1.5
+    proficiency: 17,
+    yearsOfExperience: 0.3
   },
-  // DevOps
+  // DevOps (目标平均: 30%)
   {
     id: 'docker',
     name: 'Docker',
     category: 'devops',
-    proficiency: 75,
-    yearsOfExperience: 2,
+    proficiency: 28,
+    yearsOfExperience: 1,
     icon: 'Container'
   },
   {
     id: 'git',
     name: 'Git',
     category: 'devops',
-    proficiency: 90,
-    yearsOfExperience: 3
+    proficiency: 40,
+    yearsOfExperience: 2
   },
   {
     id: 'cicd',
     name: 'CI/CD',
     category: 'devops',
-    proficiency: 70,
-    yearsOfExperience: 1.5
+    proficiency: 25,
+    yearsOfExperience: 0.5
   },
   {
     id: 'linux',
     name: 'Linux',
     category: 'devops',
-    proficiency: 80,
-    yearsOfExperience: 3
+    proficiency: 27,
+    yearsOfExperience: 1.5
   }
 ]
 
