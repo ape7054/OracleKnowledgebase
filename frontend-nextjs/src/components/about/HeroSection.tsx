@@ -1,6 +1,5 @@
 'use client'
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { socialLinks } from "@/config/about-data"
@@ -8,6 +7,8 @@ import { Github, Mail, Twitter, Linkedin } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { motion } from 'framer-motion'
 import { fadeInUp, fadeIn, staggerContainer } from '@/lib/motion'
+import { AnimatedAvatarFallback } from './AnimatedAvatarFallback'
+import { AnimatedGradientText } from '@/components/ui/animated-gradient-text'
 
 const iconMap = {
   Github,
@@ -29,19 +30,20 @@ export function HeroSection() {
       <div className="container mx-auto px-6 md:px-8 max-w-4xl">
         <div className="text-center space-y-6">
           {/* 头像 */}
-          <motion.div variants={fadeIn}>
-            <Avatar className="w-24 h-24 mx-auto ring-4 ring-primary/10 hover:ring-primary/30 transition-all">
-              <AvatarImage src="/avatar.png" alt="Avatar" />
-              <AvatarFallback className="text-2xl bg-gradient-to-br from-primary to-primary/60">
-                O
-              </AvatarFallback>
-            </Avatar>
+          <motion.div variants={fadeIn} className="flex justify-center">
+            <AnimatedAvatarFallback 
+              src="/avatar_nft.png" 
+              alt="Avatar"
+              size={160}
+            />
           </motion.div>
 
           {/* 标题 */}
           <motion.div className="space-y-3" variants={fadeInUp}>
             <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
-              {t('title')}
+              <AnimatedGradientText>
+                {t('title')}
+              </AnimatedGradientText>
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               {t('subtitle')}

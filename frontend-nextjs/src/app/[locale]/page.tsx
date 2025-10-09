@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { SparklesCore } from "@/components/ui/sparkles"
+import { AnimatedGradientText } from "@/components/ui/animated-gradient-text"
 import { SiteHeader } from '@/components/SiteHeader';
 import { TechStackMarquee } from '@/components/TechStackMarquee';
 import { getTranslations } from 'next-intl/server';
@@ -28,8 +29,9 @@ export default async function Home({ params }: HomeProps) {
             id="tsparticles"
             background="transparent"
             minSize={1}
-            maxSize={3}
-            particleDensity={90}
+            maxSize={5}
+            speed={2}
+            particleDensity={30}
             className="w-full h-full"
             particleColor="#888888"
           />
@@ -46,7 +48,9 @@ export default async function Home({ params }: HomeProps) {
                 {t('hero.badge')}
               </div>
               <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
-                {t('hero.title')}
+                <AnimatedGradientText>
+                  {t('hero.title')}
+                </AnimatedGradientText>
               </h1>
               <p className="text-base md:text-lg text-muted-foreground">
                 {t('hero.subtitle')}
@@ -376,7 +380,9 @@ export default async function Home({ params }: HomeProps) {
         <div className="container mx-auto px-6 md:px-8 max-w-4xl relative z-10">
           <div className="text-center space-y-6">
             <h2 className="text-3xl md:text-5xl font-bold tracking-tight">
-              {t('finalCta.title')}
+              <AnimatedGradientText colorFrom="#3b82f6" colorTo="#8b5cf6">
+                {t('finalCta.title')}
+              </AnimatedGradientText>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               {t('finalCta.subtitle')}
@@ -410,8 +416,10 @@ export default async function Home({ params }: HomeProps) {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
             {/* 左侧：品牌信息 */}
             <div className="space-y-3">
-              <div className="text-lg font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-                Oracle Knowledge Base
+              <div className="text-lg font-bold">
+                <AnimatedGradientText colorFrom="#10b981" colorTo="#3b82f6" speed={0.8}>
+                  Oracle Knowledge Base
+                </AnimatedGradientText>
               </div>
               <p className="text-sm text-muted-foreground">
                 {t('footer.builtWith')}

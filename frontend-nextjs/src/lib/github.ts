@@ -16,6 +16,21 @@ interface GitHubRepo {
   url: string
 }
 
+// GitHub API 返回的原始仓库数据
+interface GitHubApiRepo {
+  name: string
+  description: string | null
+  stargazers_count: number
+  language: string | null
+  html_url: string
+}
+
+// GitHub API 返回的用户数据
+interface GitHubApiUser {
+  public_repos: number
+  followers: number
+}
+
 // 缓存配置
 const CACHE_KEY = 'github_stats'
 const CACHE_DURATION = 1000 * 60 * 60 // 1 小时
@@ -80,7 +95,7 @@ export async function getGitHubStats(username: string = 'yourusername'): Promise
       throw new Error('Failed to fetch user data')
     }
 
-    const userData = await userResponse.json()
+    const userData = await userResponse.json() as GitHubApiUser
 
     // 获取仓库信息
     const reposResponse = await fetch(`https://api.github.com/users/${username}/repos?per_page=100`, {
@@ -94,10 +109,10 @@ export async function getGitHubStats(username: string = 'yourusername'): Promise
       throw new Error('Failed to fetch repos data')
     }
 
-    const reposData = await reposResponse.json()
+    const reposData = await reposResponse.json() as GitHubApiRepo[]
 
     // 计算总stars
-    const totalStars = reposData.reduce((acc: number, repo: any) => acc + repo.stargazers_count, 0)
+    const totalStars = reposData.reduce((acc: number, repo: GitHubApiRepo) => acc + repo.stargazers_count, 0)
 
     const stats: GitHubStats = {
       repos: userData.public_repos || 0,
@@ -142,12 +157,12 @@ export async function getTopRepos(username: string = 'yourusername', limit: numb
       throw new Error('Failed to fetch repos')
     }
 
-    const data = await response.json()
+    const data = await response.json() as GitHubApiRepo[]
 
     return data
-      .sort((a: any, b: any) => b.stargazers_count - a.stargazers_count)
+      .sort((a: GitHubApiRepo, b: GitHubApiRepo) => b.stargazers_count - a.stargazers_count)
       .slice(0, limit)
-      .map((repo: any) => ({
+      .map((repo: GitHubApiRepo) => ({
         name: repo.name,
         description: repo.description || 'No description',
         stars: repo.stargazers_count,

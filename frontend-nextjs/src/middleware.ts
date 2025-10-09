@@ -12,6 +12,6 @@ export default createMiddleware({
 });
 
 export const config = {
-  // 匹配所有路径除了 api、_next/static、_next/image、favicon.ico
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)']
+  // 匹配所有路径除了 api、_next、静态资源文件
+  matcher: ['/((?!api|_next|.*\\..*).*)']
 }; 

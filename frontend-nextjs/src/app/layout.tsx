@@ -1,7 +1,6 @@
 import "./globals.css"
 import type React from "react"
 import type { Metadata } from "next"
-import MouseMoveEffect from "@/components/mouse-move-effect"
 import { ThemeProvider } from "@/components/theme-provider"
 
 export const metadata: Metadata = {
@@ -23,7 +22,6 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <MouseMoveEffect />
           {children}
         </ThemeProvider>
       </body>

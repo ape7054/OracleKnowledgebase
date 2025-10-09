@@ -1,113 +1,14 @@
 import { Marquee } from "@/components/ui/marquee";
 import { cn } from "@/lib/utils";
-import {
-  SiReact,
-  SiNextdotjs,
-  SiTypescript,
-  SiTailwindcss,
-  SiNodedotjs,
-  SiPostgresql,
-  SiDocker,
-  SiVuedotjs,
-  SiRust,
-  SiSolidity,
-  SiSolana,
-  SiGo,
-  SiShadcnui,
-  SiVite,
-  SiRedis,
-  SiEthereum,
-  SiVercel,
-} from "react-icons/si";
+import { techStack } from "@/config/tech-stack";
 import { IconType } from "react-icons";
 
-const technologies = [
-  {
-    name: "React",
-    icon: SiReact,
-    color: "text-[#61DAFB]",
-  },
-  {
-    name: "Next.js",
-    icon: SiNextdotjs,
-    color: "text-black dark:text-white",
-  },
-  {
-    name: "TypeScript",
-    icon: SiTypescript,
-    color: "text-[#3178C6]",
-  },
-  {
-    name: "Tailwind CSS",
-    icon: SiTailwindcss,
-    color: "text-[#06B6D4]",
-  },
-  {
-    name: "Node.js",
-    icon: SiNodedotjs,
-    color: "text-[#339933]",
-  },
-  {
-    name: "PostgreSQL",
-    icon: SiPostgresql,
-    color: "text-[#4169E1]",
-  },
-  {
-    name: "Docker",
-    icon: SiDocker,
-    color: "text-[#2496ED]",
-  },
-  {
-    name: "Vue.js",
-    icon: SiVuedotjs,
-    color: "text-[#4FC08D]",
-  },
-  {
-    name: "Rust",
-    icon: SiRust,
-    color: "text-[#000000] dark:text-[#ffffff]",
-  },
-  {
-    name: "Solidity",
-    icon: SiSolidity,
-    color: "text-[#363636] dark:text-[#ffffff]",
-  },
-  {
-    name: "Solana",
-    icon: SiSolana,
-    color: "text-[#14F195]",
-  },
-  {
-    name: "Go",
-    icon: SiGo,
-    color: "text-[#00ADD8]",
-  },
-  {
-    name: "Shadcn UI",
-    icon: SiShadcnui,
-    color: "text-[#000000] dark:text-[#ffffff]",
-  },
-  {
-    name: "Vite",
-    icon: SiVite,
-    color: "text-[#646CFF]",
-  },
-  {
-    name: "Redis",
-    icon: SiRedis,
-    color: "text-[#DC382D]",
-  },
-  {
-    name: "Ethereum",
-    icon: SiEthereum,
-    color: "text-[#3C3C3D]",
-  },
-  {
-    name: "Vercel",
-    icon: SiVercel,
-    color: "text-[#000000] dark:text-[#ffffff]",
-  },
-];
+// 直接使用共享配置
+const technologies = techStack.map(tech => ({
+  name: tech.name,
+  icon: tech.icon,
+  color: tech.colorClass,
+}));
 
 interface TechCardProps {
   name: string;
@@ -155,14 +56,14 @@ export function TechStackMarquee({ title, subtitle }: TechStackMarqueeProps) {
       )}
 
       {/* 第一行：从左到右 */}
-      <Marquee pauseOnHover repeat={4} className="[--duration:50s]">
+      <Marquee pauseOnHover repeat={2} className="[--duration:50s]">
         {firstRow.map((tech) => (
           <TechCard key={tech.name} {...tech} />
         ))}
       </Marquee>
 
       {/* 第二行：从右到左 */}
-      <Marquee reverse pauseOnHover repeat={4} className="[--duration:50s]">
+      <Marquee reverse pauseOnHover repeat={2} className="[--duration:50s]">
         {secondRow.map((tech) => (
           <TechCard key={tech.name} {...tech} />
         ))}

@@ -8,6 +8,7 @@ import { useTranslations } from 'next-intl'
 import { motion } from 'framer-motion'
 import { fadeInUp, staggerContainer, listItem } from '@/lib/motion'
 import { ArrowRight, Clock } from 'lucide-react'
+import { FileText, DynamicIcon } from '@/lib/icons'
 
 // 精选文章数据（可以从实际的文章数据中获取）
 const featuredArticles = [
@@ -18,7 +19,7 @@ const featuredArticles = [
     category: 'featuredArticles.manifesto.category',
     readTime: 'featuredArticles.manifesto.readTime',
     slug: 'the-ramanujan-manifesto',
-    icon: '🔥'
+    icon: 'Flame'
   },
   {
     id: 'web-architecture',
@@ -27,7 +28,7 @@ const featuredArticles = [
     category: 'featuredArticles.webArchitecture.category',
     readTime: 'featuredArticles.webArchitecture.readTime',
     slug: 'web-architecture-evolution',
-    icon: '⚡'
+    icon: 'Zap'
   },
   {
     id: 'dao-guide',
@@ -36,7 +37,7 @@ const featuredArticles = [
     category: 'featuredArticles.daoGuide.category',
     readTime: 'featuredArticles.daoGuide.readTime',
     slug: 'dao-beginner-guide',
-    icon: '⛓️'
+    icon: 'Link'
   }
 ]
 
@@ -53,7 +54,9 @@ export function FeaturedArticles() {
           variants={fadeInUp}
         >
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-12 flex items-center gap-3">
-            <span>📝</span>
+            <div className="p-2 rounded-lg bg-primary/10 text-primary">
+              <FileText className="w-6 h-6" />
+            </div>
             {t('featuredArticles.title')}
           </h2>
         </motion.div>
@@ -71,7 +74,9 @@ export function FeaturedArticles() {
                 <CardContent className="p-6 space-y-4 flex flex-col h-full">
                   {/* 图标和分类 */}
                   <div className="flex items-center justify-between">
-                    <span className="text-3xl">{article.icon}</span>
+                    <div className="p-2 rounded-lg bg-primary/10 text-primary">
+                      <DynamicIcon name={article.icon} size={24} />
+                    </div>
                     <Badge variant="secondary" className="text-xs">
                       {t(article.category)}
                     </Badge>

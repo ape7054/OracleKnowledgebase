@@ -45,28 +45,28 @@ export interface SocialLink {
 export const stats: Stat[] = [
   {
     id: 'articles',
-    icon: '📝',
+    icon: 'FileText',
     number: '30+',
     label: 'stats.articles.label',
     description: 'stats.articles.description'
   },
   {
     id: 'domains',
-    icon: '💻',
+    icon: 'Code2',
     number: '5',
     label: 'stats.domains.label',
     description: 'stats.domains.description'
   },
   {
     id: 'github',
-    icon: '⭐',
+    icon: 'Star',
     number: '200+',
     label: 'stats.github.label',
     description: 'stats.github.description'
   },
   {
     id: 'experience',
-    icon: '📅',
+    icon: 'Calendar',
     number: '2+',
     label: 'stats.experience.label',
     description: 'stats.experience.description'
@@ -130,7 +130,7 @@ export const skills: Skill[] = [
     category: 'frontend',
     proficiency: 85,
     yearsOfExperience: 2,
-    icon: '⚛️'
+    icon: 'AtomIcon'
   },
   {
     id: 'nextjs',
@@ -174,7 +174,7 @@ export const skills: Skill[] = [
     category: 'backend',
     proficiency: 80,
     yearsOfExperience: 2,
-    icon: '🦀'
+    icon: 'Zap'
   },
   {
     id: 'nodejs',
@@ -204,7 +204,7 @@ export const skills: Skill[] = [
     category: 'blockchain',
     proficiency: 70,
     yearsOfExperience: 2,
-    icon: '⛓️'
+    icon: 'Link'
   },
   {
     id: 'solana',
@@ -241,7 +241,7 @@ export const skills: Skill[] = [
     category: 'devops',
     proficiency: 75,
     yearsOfExperience: 2,
-    icon: '🐳'
+    icon: 'Container'
   },
   {
     id: 'git',
@@ -300,9 +300,9 @@ export const socialLinks: SocialLink[] = [
 
 // 技能分类
 export const skillCategories = [
-  { id: 'frontend', label: 'skills.categories.frontend', icon: '💻' },
-  { id: 'backend', label: 'skills.categories.backend', icon: '🔧' },
-  { id: 'blockchain', label: 'skills.categories.blockchain', icon: '⛓️' },
-  { id: 'devops', label: 'skills.categories.devops', icon: '🛠️' }
+  { id: 'frontend', label: 'skills.categories.frontend', icon: 'Monitor' },
+  { id: 'backend', label: 'skills.categories.backend', icon: 'Server' },
+  { id: 'blockchain', label: 'skills.categories.blockchain', icon: 'Layers' },
+  { id: 'devops', label: 'skills.categories.devops', icon: 'Settings' }
 ] as const
 

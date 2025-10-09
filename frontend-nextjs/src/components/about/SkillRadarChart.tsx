@@ -7,6 +7,7 @@ import { useTranslations } from 'next-intl'
 import { motion } from 'framer-motion'
 import { fadeInUp, staggerContainer, listItem } from '@/lib/motion'
 import { PolarAngleAxis, PolarGrid, PolarRadiusAxis, Radar, RadarChart } from "recharts"
+import { DynamicIcon, BarChart3 } from '@/lib/icons'
 
 export function SkillRadarChart() {
   const t = useTranslations('about')
@@ -51,7 +52,7 @@ export function SkillRadarChart() {
       <Card className="border border-border/50 bg-card/50 backdrop-blur shadow-lg overflow-hidden">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <span>📊</span>
+            <BarChart3 className="w-5 h-5" />
             {t('skills.radarChart.title')}
           </CardTitle>
           <CardDescription>
@@ -85,7 +86,7 @@ export function SkillRadarChart() {
                   return (
                     <div className="rounded-lg border-2 border-primary/50 bg-background/95 backdrop-blur-sm px-4 py-3 shadow-2xl">
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="text-2xl">{data.icon}</span>
+                        <DynamicIcon name={data.icon} size={24} />
                         <span className="font-bold text-base">{data.category}</span>
                       </div>
                       <div className="text-sm space-y-1">
@@ -125,7 +126,7 @@ export function SkillRadarChart() {
               />
               
               <PolarRadiusAxis 
-                angle={90}
+                angle={45}
                 domain={[0, 100]}
                 tick={{ 
                   fill: 'hsl(var(--muted-foreground))', 
@@ -215,7 +216,7 @@ export function SkillRadarChart() {
                 className="flex flex-col items-center gap-2 p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors"
                 variants={listItem}
               >
-                <span className="text-2xl">{item.icon}</span>
+                <DynamicIcon name={item.icon} size={28} />
                 <div className="text-center">
                   <div className="text-sm font-medium truncate max-w-full">{item.category}</div>
                   <div className="text-xs text-muted-foreground mt-1">{item.skillCount} 项技能</div>

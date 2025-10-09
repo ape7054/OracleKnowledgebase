@@ -180,7 +180,7 @@
   },
   "about": {
     "title": "关于我",
-    "subtitle": "一个相信作品胜于证书的全栈开发者与Web3探索者",
+    "subtitle": "一个全栈开发和web3的探索者",
     "hero": {
       "status": "开放合作机会",
       "location": "远程 / 中国"
@@ -276,6 +276,8 @@
       "years": "年",
       "noSkills": "暂无技能数据",
       "proficiency": "熟练度",
+      "avgProficiency": "平均 {value}%",
+      "allSkills": "所有技能",
       "radarChart": {
         "title": "技能雷达图",
         "description": "各技术领域综合能力评估"

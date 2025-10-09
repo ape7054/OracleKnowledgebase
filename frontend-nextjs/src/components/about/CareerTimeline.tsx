@@ -6,6 +6,7 @@ import { Separator } from "@/components/ui/separator"
 import { timeline } from "@/config/about-data"
 import { useTranslations } from 'next-intl'
 import { Briefcase, GraduationCap, Sparkles } from 'lucide-react'
+import { Rocket } from '@/lib/icons'
 import { motion } from 'framer-motion'
 import { fadeInUp, slideInLeft, slideInRight } from '@/lib/motion'
 
@@ -34,7 +35,9 @@ export function CareerTimeline() {
           viewport={{ once: true, margin: "-100px" }}
           variants={fadeInUp}
         >
-          <span>🚀</span>
+          <div className="p-2 rounded-lg bg-primary/10 text-primary">
+            <Rocket className="w-6 h-6" />
+          </div>
           {t('journey.title')}
         </motion.h2>
 

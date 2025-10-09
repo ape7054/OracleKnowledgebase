@@ -1,61 +1,42 @@
 'use client'
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent } from "@/components/ui/card"
-import { ChartContainer, ChartTooltip } from "@/components/ui/chart"
+import { IconCloud } from "@/components/ui/icon-cloud"
 import { skills, skillCategories } from "@/config/about-data"
+import { techStack } from "@/config/tech-stack"
 import { useTranslations } from 'next-intl'
-import { motion, AnimatePresence } from 'framer-motion'
-import { fadeInUp, staggerContainer, listItem } from '@/lib/motion'
-import { PolarAngleAxis, PolarGrid, PolarRadiusAxis, Radar, RadarChart } from "recharts"
-import { useState } from 'react'
+import { motion } from 'framer-motion'
+import { fadeInUp, staggerContainer } from '@/lib/motion'
+import { Cog } from '@/lib/icons'
 
-// 为不同技能类别定义主题色
-const categoryColors = {
-  frontend: {
-    primary: "hsl(217, 91%, 60%)", // 蓝色
-    gradient: ["hsl(217, 91%, 60%)", "hsl(217, 91%, 70%)"],
-  },
-  backend: {
-    primary: "hsl(142, 71%, 45%)", // 绿色
-    gradient: ["hsl(142, 71%, 45%)", "hsl(142, 71%, 55%)"],
-  },
-  blockchain: {
-    primary: "hsl(271, 76%, 53%)", // 紫色
-    gradient: ["hsl(271, 76%, 53%)", "hsl(271, 76%, 63%)"],
-  },
-  devops: {
-    primary: "hsl(24, 95%, 53%)", // 橙色
-    gradient: ["hsl(24, 95%, 53%)", "hsl(24, 95%, 63%)"],
-  },
-} as const
+// 创建图标映射 - 使用 colorValue 用于 Canvas 渲染
+const iconMap: Record<string, React.ReactNode> = Object.fromEntries(
+  techStack.map(tech => [
+    tech.id,
+    <tech.icon key={tech.id} size={60} color={tech.colorValue} />
+  ])
+)
 
 export function SkillMatrix() {
   const t = useTranslations('about')
-  const [activeTab, setActiveTab] = useState<string>("frontend")
 
-  // 雷达图进入动画
-  const radarAnimation = {
-    hidden: { 
-      opacity: 0, 
-      scale: 0.8,
-    },
-    visible: { 
-      opacity: 1, 
-      scale: 1,
-      transition: {
-        duration: 0.5,
-        ease: [0.4, 0, 0.2, 1] as const // easeOut
-      }
-    },
-    exit: { 
-      opacity: 0, 
-      scale: 0.8,
-      transition: {
-        duration: 0.3
-      }
+  // 获取所有技能的图标
+  const allIcons = skills
+    .filter(skill => iconMap[skill.id])
+    .map(skill => iconMap[skill.id])
+
+  // 按类别统计技能
+  const categoryStats = skillCategories.map(category => {
+    const categorySkills = skills.filter(skill => skill.category === category.id)
+    const avgProficiency = Math.round(
+      categorySkills.reduce((sum, skill) => sum + skill.proficiency, 0) / categorySkills.length
+    )
+    return {
+      ...category,
+      count: categorySkills.length,
+      avgProficiency
     }
-  }
+  })
 
   return (
     <section className="py-16 md:py-24">
@@ -67,7 +48,7 @@ export function SkillMatrix() {
           viewport={{ once: true, margin: "-100px" }}
           variants={fadeInUp}
         >
-          <span>⚙️</span>
+          <Cog className="w-8 h-8" />
           {t('techStack.title')}
         </motion.h2>
 
@@ -76,203 +57,80 @@ export function SkillMatrix() {
           whileInView="animate"
           viewport={{ once: true, margin: "-50px" }}
           variants={staggerContainer}
+          className="space-y-8"
         >
-          <Tabs defaultValue="frontend" className="w-full" onValueChange={setActiveTab}>
-            <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 mb-8">
-              {skillCategories.map((category) => (
-                <TabsTrigger key={category.id} value={category.id} className="gap-2">
-                  <span>{category.icon}</span>
-                  <span className="hidden sm:inline">{t(category.label)}</span>
-                </TabsTrigger>
-              ))}
-            </TabsList>
+          {/* Icon Cloud 展示 */}
+          <Card className="border border-border/50 bg-card/50 backdrop-blur shadow-lg overflow-hidden">
+            <CardContent className="p-6 md:p-10">
+              <div className="flex justify-center items-center">
+                <div className="w-full max-w-[700px] aspect-square flex items-center justify-center">
+                  <IconCloud icons={allIcons} />
+                </div>
+              </div>
 
-            <AnimatePresence mode="wait">
-              {skillCategories.map((category) => {
-                const categorySkills = skills.filter(
-                  (skill) => skill.category === category.id
-                )
+              {/* 技能分类统计 */}
+              <motion.div 
+                className="mt-8 pt-6 border-t border-border/50"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.4 }}
+              >
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {categoryStats.map((category) => (
+                    <motion.div 
+                      key={category.id}
+                      className="text-center p-4 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.4, duration: 0.3 }}
+                    >
+                      <div className="text-2xl font-bold text-primary mb-1">
+                        {category.count}
+                      </div>
+                      <div className="text-sm font-medium mb-1">
+                        {t(category.label)}
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        {t('skills.avgProficiency', { value: category.avgProficiency })}
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
 
-                // 转换为雷达图数据格式
-                const radarData = categorySkills.map((skill) => ({
-                  skill: skill.name,
-                  proficiency: skill.proficiency,
-                  experience: skill.yearsOfExperience,
-                  icon: skill.icon,
-                }))
-
-                const categoryColor = categoryColors[category.id as keyof typeof categoryColors]
-
-                // 图表配置
-                const chartConfig = {
-                  proficiency: {
-                    label: t('skills.proficiency') || 'Proficiency',
-                    color: categoryColor.primary,
-                  },
-                }
-
-                return (
-                  <TabsContent 
-                    key={category.id} 
-                    value={category.id}
-                    className="mt-0"
-                  >
-                    {activeTab === category.id && (
-                      <motion.div 
-                        variants={radarAnimation}
-                        initial="hidden"
-                        animate="visible"
-                        exit="exit"
-                      >
-                        {categorySkills.length > 0 ? (
-                          <Card className="border border-border/50 bg-card/50 backdrop-blur shadow-lg overflow-hidden">
-                            <CardContent className="p-6 md:p-10">
-                              <ChartContainer
-                                config={chartConfig}
-                                className="mx-auto aspect-square max-h-[500px] w-full"
-                              >
-                                <RadarChart data={radarData}>
-                                  {/* 渐变定义 */}
-                                  <defs>
-                                    <radialGradient id={`gradient-${category.id}`}>
-                                      <stop offset="0%" stopColor={categoryColor.gradient[0]} stopOpacity={0.8} />
-                                      <stop offset="100%" stopColor={categoryColor.gradient[1]} stopOpacity={0.2} />
-                                    </radialGradient>
-                                  </defs>
-
-                                  <ChartTooltip
-                                    cursor={{ stroke: categoryColor.primary, strokeWidth: 2 }}
-                                    content={({ active, payload }) => {
-                                      if (!active || !payload?.length) return null
-                                      const data = payload[0].payload
-                                      return (
-                                        <div className="rounded-lg border-2 border-border/80 bg-background/95 backdrop-blur-sm px-4 py-3 shadow-2xl">
-                                          <div className="flex items-center gap-2 mb-2">
-                                            {data.icon && <span className="text-xl">{data.icon}</span>}
-                                            <span className="font-bold text-base">{data.skill}</span>
-                                          </div>
-                                          <div className="text-sm space-y-1">
-                                            <div className="flex items-center justify-between gap-6">
-                                              <span className="text-muted-foreground">{t('skills.proficiency') || 'Proficiency'}:</span>
-                                              <span 
-                                                className="font-semibold" 
-                                                style={{ color: categoryColor.primary } as React.CSSProperties}
-                                              >
-                                                {data.proficiency}%
-                                              </span>
-                                            </div>
-                                            <div className="flex items-center justify-between gap-6">
-                                              <span className="text-muted-foreground">{t('skills.experience') || 'Experience'}:</span>
-                                              <span className="font-semibold">
-                                                {data.experience} {t('skills.years') || 'years'}
-                                              </span>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      )
-                                    }}
-                                  />
-                                  <PolarGrid 
-                                    className="stroke-border/40"
-                                    strokeDasharray="4 4"
-                                    strokeWidth={1}
-                                    gridType="circle"
-                                  />
-                                  <PolarAngleAxis 
-                                    dataKey="skill"
-                                    tick={{ 
-                                      fill: 'hsl(var(--foreground))', 
-                                      fontSize: 13,
-                                      fontWeight: 500
-                                    }}
-                                    tickLine={false}
-                                  />
-                                  <PolarRadiusAxis 
-                                    angle={90}
-                                    domain={[0, 100]}
-                                    tick={{ 
-                                      fill: 'hsl(var(--muted-foreground))', 
-                                      fontSize: 11,
-                                      opacity: 0.7
-                                    }}
-                                    axisLine={false}
-                                    tickCount={6}
-                                  />
-                                  <Radar
-                                    dataKey="proficiency"
-                                    fill={`url(#gradient-${category.id})`}
-                                    fillOpacity={0.7}
-                                    stroke={categoryColor.primary}
-                                    strokeWidth={2.5}
-                                    dot={{
-                                      r: 5,
-                                      fill: categoryColor.primary,
-                                      strokeWidth: 2,
-                                      stroke: 'hsl(var(--background))',
-                                    }}
-                                    activeDot={{
-                                      r: 7,
-                                      fill: categoryColor.primary,
-                                      strokeWidth: 3,
-                                      stroke: 'hsl(var(--background))',
-                                    }}
-                                  />
-                                </RadarChart>
-                              </ChartContainer>
-                              
-                              {/* 技能列表摘要 */}
-                              <motion.div 
-                                className="mt-8 pt-6 border-t border-border/50"
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.3, duration: 0.4 }}
-                              >
-                                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                                  {categorySkills.map((skill, index) => (
-                                    <motion.div 
-                                      key={skill.id}
-                                      className="flex items-center gap-2 text-sm p-2 rounded-md hover:bg-muted/50 transition-colors"
-                                      initial={{ opacity: 0, x: -10 }}
-                                      animate={{ opacity: 1, x: 0 }}
-                                      transition={{ delay: 0.4 + index * 0.05, duration: 0.3 }}
-                                    >
-                                      {skill.icon && <span className="text-base">{skill.icon}</span>}
-                                      <span className="font-medium truncate flex-1">{skill.name}</span>
-                                      <span 
-                                        className="font-semibold text-xs px-2 py-0.5 rounded-full"
-                                        style={{ 
-                                          backgroundColor: `${categoryColor.primary}20`,
-                                          color: categoryColor.primary 
-                                        } as React.CSSProperties}
-                                      >
-                                        {skill.proficiency}%
-                                      </span>
-                                    </motion.div>
-                                  ))}
-                                </div>
-                              </motion.div>
-                            </CardContent>
-                          </Card>
-                        ) : (
-                          <Card className="border border-border/50 bg-card/50 backdrop-blur">
-                            <CardContent className="p-12">
-                              <div className="text-center text-muted-foreground">
-                                {t('skills.noSkills')}
-                              </div>
-                            </CardContent>
-                          </Card>
-                        )}
-                      </motion.div>
-                    )}
-                  </TabsContent>
-                )
-              })}
-            </AnimatePresence>
-          </Tabs>
+              {/* 技能列表 */}
+              <motion.div 
+                className="mt-8 pt-6 border-t border-border/50"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.4 }}
+              >
+                <h3 className="text-lg font-semibold mb-4">{t('skills.allSkills')}</h3>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                  {skills.map((skill, index) => (
+                    <motion.div 
+                      key={skill.id}
+                      className="flex items-center justify-between gap-2 text-sm p-2 rounded-md bg-muted/30 hover:bg-muted/50 transition-colors"
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.6 + index * 0.02, duration: 0.3 }}
+                    >
+                      <span className="font-medium truncate flex-1">{skill.name}</span>
+                      <span className="text-xs font-semibold text-primary px-2 py-0.5 rounded-full bg-primary/10">
+                        {skill.proficiency}%
+                      </span>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            </CardContent>
+          </Card>
 
           <motion.div 
-            className="mt-8 p-6 border border-primary/50 bg-primary/5 rounded-lg"
-            variants={listItem}
+            className="p-6 border border-primary/50 bg-primary/5 rounded-lg"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7, duration: 0.4 }}
           >
             <p className="text-sm text-muted-foreground italic">
               {t('techStack.note')}

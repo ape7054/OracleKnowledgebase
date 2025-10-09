@@ -18,9 +18,11 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
+import { BorderBeam } from "@/components/ui/border-beam"
 import { projects } from "@/config/projects-data"
 import { useTranslations } from 'next-intl'
 import { ExternalLink, Github } from 'lucide-react'
+import { Rocket } from '@/lib/icons'
 import { motion } from 'framer-motion'
 import { fadeInUp } from '@/lib/motion'
 
@@ -39,7 +41,9 @@ export function ProjectCarousel() {
           variants={fadeInUp}
         >
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-12 flex items-center gap-3">
-            <span>🚀</span>
+            <div className="p-2 rounded-lg bg-primary/10 text-primary">
+              <Rocket className="w-6 h-6" />
+            </div>
             {t('projects.title')}
           </h2>
         </motion.div>
@@ -62,7 +66,8 @@ export function ProjectCarousel() {
                   transition={{ delay: index * 0.1 }}
                   className="h-full"
                 >
-                  <Card className="h-full border border-border/50 hover:shadow-xl transition-all hover:-translate-y-2">
+                  <Card className="h-full border border-border/50 hover:shadow-xl transition-all hover:-translate-y-2 relative overflow-hidden">
+                    <BorderBeam size={250} duration={12} delay={index * 2} />
                     <CardContent className="p-6 space-y-4 flex flex-col h-full">
                       {/* 项目标题 */}
                       <div className="space-y-2">

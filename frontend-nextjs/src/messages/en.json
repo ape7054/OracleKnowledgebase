@@ -180,7 +180,7 @@
   },
   "about": {
     "title": "About Me",
-    "subtitle": "A full-stack developer & Web3 explorer who believes in work over credentials",
+    "subtitle": "A full-stack developer & Web3 explorer",
     "hero": {
       "status": "Open to Opportunities",
       "location": "Remote / China"
@@ -276,6 +276,8 @@
       "years": "years",
       "noSkills": "No skills data available",
       "proficiency": "Proficiency",
+      "avgProficiency": "Avg {value}%",
+      "allSkills": "All Skills",
       "radarChart": {
         "title": "Skills Radar Chart",
         "description": "Comprehensive assessment of technical domains"

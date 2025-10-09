@@ -3,12 +3,13 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { socialLinks } from "@/config/about-data"
-import { Github, Mail, Twitter, Linkedin } from 'lucide-react'
+import { Github, Mail as MailIcon, Twitter, Linkedin } from 'lucide-react'
+import { Mail } from '@/lib/icons'
 import { useTranslations } from 'next-intl'
 
-const iconMap: Record<string, any> = {
+const iconMap: Record<string, typeof Github> = {
   Github,
-  Mail,
+  Mail: MailIcon,
   Twitter,
   Linkedin
 }
@@ -20,7 +21,9 @@ export function ContactSection() {
     <section className="py-16 md:py-24 bg-muted/30">
       <div className="container mx-auto px-6 md:px-8 max-w-4xl space-y-8">
         <h2 className="text-3xl md:text-4xl font-bold tracking-tight flex items-center gap-3">
-          <span>📧</span>
+          <div className="p-2 rounded-lg bg-primary/10 text-primary">
+            <Mail className="w-6 h-6" />
+          </div>
           {t('contact.title')}
         </h2>
         <Card className="border border-border/50 bg-card/50 backdrop-blur">

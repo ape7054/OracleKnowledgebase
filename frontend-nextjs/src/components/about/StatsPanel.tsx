@@ -2,8 +2,10 @@
 
 import { Card, CardContent } from "@/components/ui/card"
 import { stats } from "@/config/about-data"
+import { DynamicIcon } from "@/lib/icons"
 import { useTranslations } from 'next-intl'
 import { useEffect, useRef, useState } from 'react'
+import { NumberTicker } from "@/components/ui/number-ticker"
 
 export function StatsPanel() {
   const t = useTranslations('about')
@@ -42,9 +44,27 @@ export function StatsPanel() {
               }}
             >
               <CardContent className="p-6 text-center space-y-2">
-                <div className="text-3xl mb-2">{stat.icon}</div>
+                <div className="mb-2 flex justify-center">
+                  <div className="p-3 rounded-xl bg-primary/10 text-primary">
+                    <DynamicIcon name={stat.icon} size={28} />
+                  </div>
+                </div>
                 <div className="text-3xl md:text-4xl font-bold tracking-tight">
-                  {stat.number}
+                  {(() => {
+                    // 解析数字和后缀（如 30+、200+、2+）
+                    const match = stat.number.match(/^(\d+)(.*)$/)
+                    if (match) {
+                      const num = parseInt(match[1])
+                      const suffix = match[2]
+                      return (
+                        <>
+                          <NumberTicker value={num} delay={index * 0.2} />
+                          {suffix}
+                        </>
+                      )
+                    }
+                    return stat.number
+                  })()}
                 </div>
                 <div className="text-sm font-medium">{t(stat.label)}</div>
                 <div className="text-xs text-muted-foreground">
