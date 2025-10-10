@@ -45,14 +45,14 @@ export default function AboutPage() {
         }}
       />
       
+      {/* 顶部导航条 - 移到外层以支持 sticky 定位 */}
+      <SiteHeader />
+      
       <div className="min-h-screen bg-background overflow-x-hidden">
-        {/* 顶部导航条 */}
-        <SiteHeader />
-
-      {/* 面包屑导航 */}
-      <div className="container mx-auto px-4 md:px-6 lg:px-8 pt-8">
-        <Breadcrumbs locale={locale} />
-      </div>
+        {/* 面包屑导航 */}
+        <div className="container mx-auto px-4 md:px-6 lg:px-8 pt-8">
+          <Breadcrumbs locale={locale} />
+        </div>
 
       {/* Hero Section - 新组件 */}
       <HeroSection />

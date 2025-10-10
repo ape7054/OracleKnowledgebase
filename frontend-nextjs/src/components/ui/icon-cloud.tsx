@@ -51,8 +51,8 @@ export function IconCloud({ icons, images }: IconCloudProps) {
 
     const newIconCanvases = items.map((item, index) => {
       const offscreen = document.createElement("canvas")
-      offscreen.width = 60
-      offscreen.height = 60
+      offscreen.width = 150
+      offscreen.height = 150
       const offCtx = offscreen.getContext("2d")
 
       if (offCtx) {
@@ -66,18 +66,18 @@ export function IconCloud({ icons, images }: IconCloudProps) {
 
             // Create circular clipping path
             offCtx.beginPath()
-            offCtx.arc(30, 30, 30, 0, Math.PI * 2)
+            offCtx.arc(75, 75, 75, 0, Math.PI * 2)
             offCtx.closePath()
             offCtx.clip()
 
             // Draw the image
-            offCtx.drawImage(img, 0, 0, 60, 60)
+            offCtx.drawImage(img, 0, 0, 150, 150)
 
             imagesLoadedRef.current[index] = true
           }
         } else {
           // Handle SVG icons
-          offCtx.scale(0.6, 0.6)
+          offCtx.scale(1.5, 1.5)
           const svgString = renderToString(item as React.ReactElement)
           const img = new Image()
           img.src = "data:image/svg+xml;base64," + btoa(svgString)
@@ -113,9 +113,9 @@ export function IconCloud({ icons, images }: IconCloudProps) {
       const z = Math.sin(phi) * r
 
       newIcons.push({
-        x: x * 150,
-        y: y * 150,
-        z: z * 150,
+        x: x * 280,
+        y: y * 280,
+        z: z * 280,
         scale: 1,
         opacity: 1,
         id: i,
@@ -148,8 +148,8 @@ export function IconCloud({ icons, images }: IconCloudProps) {
       const screenX = canvasRef.current!.width / 2 + rotatedX
       const screenY = canvasRef.current!.height / 2 + rotatedY
 
-      const scale = (rotatedZ + 300) / 450
-      const radius = 30 * scale
+      const scale = (rotatedZ + 500) / 650
+      const radius = 75 * scale
       const dx = x - screenX
       const dy = y - screenY
 
@@ -225,7 +225,7 @@ export function IconCloud({ icons, images }: IconCloudProps) {
       const dx = mousePos.x - centerX
       const dy = mousePos.y - centerY
       const distance = Math.sqrt(dx * dx + dy * dy)
-      const speed = 0.003 + (distance / maxDistance) * 0.01
+      const speed = 0.001 + (distance / maxDistance) * 0.004
 
       if (targetRotation) {
         const elapsed = performance.now() - targetRotation.startTime
@@ -251,18 +251,26 @@ export function IconCloud({ icons, images }: IconCloudProps) {
         }
       }
 
-      iconPositions.forEach((icon, index) => {
-        const cosX = Math.cos(rotationRef.current.x)
-        const sinX = Math.sin(rotationRef.current.x)
-        const cosY = Math.cos(rotationRef.current.y)
-        const sinY = Math.sin(rotationRef.current.y)
+      // Calculate rotated positions and sort by depth (Z-axis)
+      const sortedIcons = iconPositions
+        .map((icon, index) => {
+          const cosX = Math.cos(rotationRef.current.x)
+          const sinX = Math.sin(rotationRef.current.x)
+          const cosY = Math.cos(rotationRef.current.y)
+          const sinY = Math.sin(rotationRef.current.y)
 
-        const rotatedX = icon.x * cosY - icon.z * sinY
-        const rotatedZ = icon.x * sinY + icon.z * cosY
-        const rotatedY = icon.y * cosX + rotatedZ * sinX
+          const rotatedX = icon.x * cosY - icon.z * sinY
+          const rotatedZ = icon.x * sinY + icon.z * cosY
+          const rotatedY = icon.y * cosX + rotatedZ * sinX
 
-        const scale = (rotatedZ + 300) / 450
-        const opacity = Math.max(0.2, Math.min(1, (rotatedZ + 225) / 300))
+          return { icon, index, rotatedX, rotatedY, rotatedZ }
+        })
+        .sort((a, b) => a.rotatedZ - b.rotatedZ) // Sort back to front
+
+      // Render icons from back to front
+      sortedIcons.forEach(({ icon, index, rotatedX, rotatedY, rotatedZ }) => {
+        const scale = (rotatedZ + 500) / 650
+        const opacity = Math.max(0.4, Math.min(1, (rotatedZ + 350) / 550))
 
         ctx.save()
         ctx.translate(canvas.width / 2 + rotatedX, canvas.height / 2 + rotatedY)
@@ -275,18 +283,18 @@ export function IconCloud({ icons, images }: IconCloudProps) {
             iconCanvasesRef.current[index] &&
             imagesLoadedRef.current[index]
           ) {
-            ctx.drawImage(iconCanvasesRef.current[index], -30, -30, 60, 60)
+            ctx.drawImage(iconCanvasesRef.current[index], -75, -75, 150, 150)
           }
         } else {
           // Show numbered circles if no icons/images are provided
           ctx.beginPath()
-          ctx.arc(0, 0, 30, 0, Math.PI * 2)
+          ctx.arc(0, 0, 75, 0, Math.PI * 2)
           ctx.fillStyle = "#4444ff"
           ctx.fill()
           ctx.fillStyle = "white"
           ctx.textAlign = "center"
           ctx.textBaseline = "middle"
-          ctx.font = "24px Arial"
+          ctx.font = "60px Arial"
           ctx.fillText(`${icon.id + 1}`, 0, 0)
         }
 
@@ -307,13 +315,13 @@ export function IconCloud({ icons, images }: IconCloudProps) {
   return (
     <canvas
       ref={canvasRef}
-      width={600}
-      height={600}
+      width={1000}
+      height={1000}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
-      className="rounded-lg"
+      className="rounded-lg w-full h-full"
       aria-label="Interactive 3D Icon Cloud"
       role="img"
     />

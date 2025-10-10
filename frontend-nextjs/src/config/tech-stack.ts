@@ -47,7 +47,7 @@ export const techStack: TechStackItem[] = [
     name: 'Next.js',
     icon: SiNextdotjs,
     colorClass: 'text-black dark:text-white',
-    colorValue: '#FFFFFF',
+    colorValue: '#666666',
     category: 'frontend'
   },
   {
@@ -79,7 +79,7 @@ export const techStack: TechStackItem[] = [
     name: 'Shadcn UI',
     icon: SiShadcnui,
     colorClass: 'text-black dark:text-white',
-    colorValue: '#FFFFFF',
+    colorValue: '#666666',
     category: 'frontend'
   },
   {
@@ -205,7 +205,7 @@ export const techStack: TechStackItem[] = [
     name: 'Vercel',
     icon: SiVercel,
     colorClass: 'text-black dark:text-white',
-    colorValue: '#FFFFFF',
+    colorValue: '#666666',
     category: 'devops'
   },
 ]

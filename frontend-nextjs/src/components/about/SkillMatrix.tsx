@@ -11,14 +11,8 @@ import { motion } from 'framer-motion'
 import { fadeInUp, staggerContainer } from '@/lib/motion'
 import { Cog, Monitor, Server, Layers, Settings } from '@/lib/icons'
 import type { LucideIcon } from 'lucide-react'
-
-// 创建图标映射 - 使用 colorValue 用于 Canvas 渲染
-const iconMap: Record<string, React.ReactNode> = Object.fromEntries(
-  techStack.map(tech => [
-    tech.id,
-    <tech.icon key={tech.id} size={60} color={tech.colorValue} />
-  ])
-)
+import { useTheme } from 'next-themes'
+import { useMemo } from 'react'
 
 // 技能分类的图标和渐变色配置
 const categoryConfig: Record<string, {
@@ -88,6 +82,31 @@ const skillCategoryColors: Record<string, {
 
 export function SkillMatrix() {
   const t = useTranslations('about')
+  const { theme, systemTheme } = useTheme()
+  
+  // 根据主题动态确定需要变色的图标颜色
+  const currentTheme = theme === 'system' ? systemTheme : theme
+  const isDark = currentTheme === 'dark'
+  
+  // 需要根据主题变色的图标ID
+  const themeAwareIcons = ['nextjs', 'shadcnui', 'vercel']
+  
+  // 创建图标映射 - 使用 colorValue 用于 Canvas 渲染
+  const iconMap: Record<string, React.ReactNode> = useMemo(() => {
+    return Object.fromEntries(
+      techStack.map(tech => {
+        // 对于需要变色的图标，根据主题使用不同颜色
+        const color = themeAwareIcons.includes(tech.id)
+          ? (isDark ? '#FFFFFF' : '#000000')
+          : tech.colorValue
+        
+        return [
+          tech.id,
+          <tech.icon key={tech.id} size={60} color={color} />
+        ]
+      })
+    )
+  }, [isDark])
 
   // 获取所有技能的图标
   const allIcons = skills
@@ -130,15 +149,15 @@ export function SkillMatrix() {
         >
           {/* Icon Cloud 展示 */}
           <Card className="border border-border/50 bg-card/50 backdrop-blur shadow-lg overflow-hidden">
-            <CardContent className="p-6 md:p-10">
-              <div className="flex justify-center items-center">
-                <div className="w-full max-w-[700px] aspect-square flex items-center justify-center">
+            <CardContent className="p-0">
+              <div className="flex justify-center items-center min-h-[700px] md:min-h-[1000px]">
+                <div className="w-full h-full flex items-center justify-center">
                   <IconCloud icons={allIcons} />
                 </div>
               </div>
 
               {/* 技能分类统计 */}
-              <div className="mt-8 pt-6 border-t border-border/50">
+              <div className="mt-8 pt-6 px-6 md:px-10 border-t border-border/50">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
                   {categoryStats.map((category, index) => {
                     const config = categoryConfig[category.id as keyof typeof categoryConfig]
@@ -195,7 +214,7 @@ export function SkillMatrix() {
               </div>
 
               {/* 技能列表 */}
-              <div className="mt-8 pt-6 border-t border-border/50">
+              <div className="mt-8 pt-6 px-6 md:px-10 pb-6 md:pb-10 border-t border-border/50">
                 <h3 className="text-lg font-semibold mb-6">{t('skills.allSkills')}</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {skills.map((skill, index) => {
