@@ -11,7 +11,6 @@ import { motion } from 'framer-motion'
 import { fadeInUp, staggerContainer } from '@/lib/motion'
 import { Cog, Monitor, Server, Layers, Settings } from '@/lib/icons'
 import type { LucideIcon } from 'lucide-react'
-import { Boxes } from '@/components/ui/background-boxes'
 
 // 创建图标映射 - 使用 colorValue 用于 Canvas 渲染
 const iconMap: Record<string, React.ReactNode> = Object.fromEntries(
@@ -109,13 +108,8 @@ export function SkillMatrix() {
   })
 
   return (
-    <section className="py-16 md:py-24 relative overflow-hidden">
-      {/* Background Boxes 装饰 */}
-      <div className="absolute inset-0 w-full h-full opacity-[0.15] dark:opacity-[0.2]">
-        <Boxes />
-      </div>
-      
-      <div className="container mx-auto px-6 md:px-8 max-w-6xl relative z-10">
+    <section className="py-16 md:py-24">
+      <div className="container mx-auto px-6 md:px-8 max-w-6xl">
         <motion.h2 
           className="text-3xl md:text-4xl font-bold tracking-tight mb-12 flex items-center gap-3"
           initial="initial"
