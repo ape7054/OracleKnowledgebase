@@ -4,23 +4,42 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Link from 'next/link'
 import { useTranslations, useLocale } from 'next-intl'
-import { SiteHeader } from '@/components/SiteHeader'
 import { Breadcrumbs } from '@/components/Breadcrumbs'
 import { motion } from 'framer-motion'
 import { fadeInUp, staggerContainer, listItem } from '@/lib/motion'
 import { Target, Lightbulb, GraduationCap, Network, Rocket, Sparkles, BookOpen } from '@/lib/icons'
 import Script from 'next/script'
 import { BlurFade } from '@/components/ui/blur-fade'
+import dynamic from 'next/dynamic'
 
 // Import new components
 import { HeroSection } from '@/components/about/HeroSection'
 import { StatsPanel } from '@/components/about/StatsPanel'
-import { ProjectCarousel } from '@/components/about/ProjectCarousel'
 import { CareerTimeline } from '@/components/about/CareerTimeline'
 import { SkillMatrix } from '@/components/about/SkillMatrix'
-import { SkillRadarChart } from '@/components/about/SkillRadarChart'
 import { FeaturedArticles } from '@/components/about/FeaturedArticles'
 import { ContactSection } from '@/components/about/ContactSection'
+
+// Loading skeletons
+import { SkillRadarLoadingSkeleton } from '@/components/about/SkillRadarLoadingSkeleton'
+import { ProjectCarouselLoadingSkeleton } from '@/components/about/ProjectCarouselLoadingSkeleton'
+
+// Dynamic imports for heavy components below the fold
+const ProjectCarousel = dynamic(
+  () => import('@/components/about/ProjectCarousel').then(mod => ({ default: mod.ProjectCarousel })),
+  { 
+    loading: () => <ProjectCarouselLoadingSkeleton />,
+    ssr: false 
+  }
+)
+
+const SkillRadarChart = dynamic(
+  () => import('@/components/about/SkillRadarChart').then(mod => ({ default: mod.SkillRadarChart })),
+  { 
+    loading: () => <SkillRadarLoadingSkeleton />,
+    ssr: false 
+  }
+)
 
 export default function AboutPage() {
   const t = useTranslations('about')
@@ -44,9 +63,6 @@ export default function AboutPage() {
           })
         }}
       />
-      
-      {/* 顶部导航条 - 移到外层以支持 sticky 定位 */}
-      <SiteHeader />
       
       <div className="min-h-screen bg-background overflow-x-hidden">
         {/* 面包屑导航 */}

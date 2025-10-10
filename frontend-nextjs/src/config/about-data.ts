@@ -221,6 +221,13 @@ export const skills: Skill[] = [
     yearsOfExperience: 0.5
   },
   {
+    id: 'ethereum',
+    name: 'Ethereum',
+    category: 'blockchain',
+    proficiency: 22,
+    yearsOfExperience: 0.5
+  },
+  {
     id: 'bsc',
     name: 'BSC',
     category: 'blockchain',

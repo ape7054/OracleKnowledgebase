@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import { SiteHeader } from '@/components/SiteHeader'
 
 interface AboutLayoutProps {
   children: React.ReactNode
@@ -69,6 +70,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 }
 
 export default function AboutLayout({ children }: AboutLayoutProps) {
-  return <>{children}</>
+  return (
+    <>
+      <SiteHeader />
+      {children}
+    </>
+  )
 }
 
