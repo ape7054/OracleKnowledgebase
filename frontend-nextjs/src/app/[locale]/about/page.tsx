@@ -45,7 +45,7 @@ export default function AboutPage() {
         }}
       />
       
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background overflow-x-hidden">
         {/* 顶部导航条 */}
         <SiteHeader />
 

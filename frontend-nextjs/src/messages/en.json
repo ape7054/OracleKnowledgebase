@@ -9,7 +9,9 @@
     "github": "GitHub",
     "resume": "Resume",
     "contact": "Contact",
-    "getStarted": "Start Exploring"
+    "getStarted": "Start Exploring",
+    "theme": "Theme",
+    "language": "Language"
   },
   "hero": {
     "badge": "Systematic Knowledge Management",
@@ -74,10 +76,10 @@
         "readTime": "25 min read"
       },
       "labor": {
-        "title": "Labor Rights Action Pack: A Practical Guide for Every Worker",
-        "description": "No contract? Unpaid wages? Fake job posting? From evidence collection to arbitration process, from demand letters to operation templates. Knowledge is a weapon, and this pack hopes to help those in need.",
-        "tag": "Practical",
-        "readTime": "8 min read"
+        "title": "Complete DAO Guide: Reshaping the Future of Organizations",
+        "description": "Explore how decentralized autonomous organizations are changing traditional governance models.",
+        "tag": "Web3",
+        "readTime": "20 min read"
       }
     },
     "moreLink": "View More Featured Articles →"

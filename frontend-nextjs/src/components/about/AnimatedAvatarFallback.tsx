@@ -6,16 +6,17 @@ interface AnimatedAvatarProps {
   src: string
   alt: string
   size?: number
+  className?: string
 }
 
-export function AnimatedAvatarFallback({ src, alt, size = 160 }: AnimatedAvatarProps) {
+export function AnimatedAvatarFallback({ src, alt, size = 160, className }: AnimatedAvatarProps) {
   return (
-    <div className="relative inline-block group">
+    <div className={`relative inline-block group ${className || ''}`}>
       {/* 发光背景 */}
-      <div className="absolute -inset-8 bg-gradient-radial from-orange-500/20 via-yellow-500/10 to-transparent blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      <div className="absolute -inset-4 md:-inset-8 bg-gradient-radial from-orange-500/20 via-yellow-500/10 to-transparent blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       
       {/* 旋转光环容器 */}
-      <div className="relative" style={{ width: size, height: size }}>
+      <div className="relative w-full h-full">
         {/* 旋转彩虹边框 - 使用圆锥渐变实现真正的彩虹效果 */}
         <div className="absolute inset-0 rounded-full animate-spin-slow" 
              style={{
@@ -30,8 +31,8 @@ export function AnimatedAvatarFallback({ src, alt, size = 160 }: AnimatedAvatarP
           <Image
             src={src}
             alt={alt}
-            width={size - 6}
-            height={size - 6}
+            width={size}
+            height={size}
             className="object-cover w-full h-full"
             priority
           />

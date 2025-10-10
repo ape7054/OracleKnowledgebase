@@ -39,7 +39,7 @@ export function ProjectCarousel() {
 
   return (
     <section className="py-16 md:py-24 bg-muted/30">
-      <div className="container mx-auto px-6 md:px-8 max-w-6xl">
+      <div className="container mx-auto px-4 md:px-8 max-w-6xl">
         <motion.div
           initial="initial"
           whileInView="animate"

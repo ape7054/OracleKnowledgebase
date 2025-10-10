@@ -23,61 +23,62 @@ export function HeroSection() {
   const t = useTranslations('about')
 
   return (
-    <AuroraBackground className="h-auto min-h-[600px] border-b border-border/40">
+    <AuroraBackground className="h-auto min-h-[500px] md:min-h-[600px] border-b border-border/40">
       <motion.div 
-        className="relative z-10 py-16 md:py-24 w-full"
+        className="relative z-10 py-12 md:py-16 lg:py-24 w-full"
         initial="initial"
         animate="animate"
         variants={staggerContainer}
       >
-        <div className="container mx-auto px-6 md:px-8 max-w-4xl">
-          <div className="text-center space-y-6">
+        <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-4xl">
+          <div className="text-center space-y-4 md:space-y-6">
             {/* 头像 */}
             <motion.div variants={fadeIn} className="flex justify-center">
               <AnimatedAvatarFallback 
                 src="/avatar_nft.png" 
                 alt="Avatar"
                 size={160}
+                className="w-[120px] h-[120px] md:w-40 md:h-40"
               />
             </motion.div>
 
             {/* 标题 */}
-            <motion.div className="space-y-3" variants={fadeInUp}>
-              <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
+            <motion.div className="space-y-2 md:space-y-3" variants={fadeInUp}>
+              <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight px-4">
                 <AnimatedGradientText>
                   {t('title')}
                 </AnimatedGradientText>
               </h1>
-              <div className="flex items-center justify-center gap-2 max-w-4xl mx-auto whitespace-nowrap">
-                <span className="text-lg md:text-2xl text-foreground/80">{t('flipWords.prefix')}</span>
+              <div className="flex flex-row flex-nowrap items-center justify-center gap-1 md:gap-2 mx-auto px-2 md:px-4 whitespace-nowrap overflow-x-auto">
+                <span className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-foreground/80">{t('flipWords.prefix')}</span>
                 <ContainerTextFlip 
                   words={t.raw('flipWords.words')}
                   interval={2500}
-                  className="text-lg md:text-2xl py-1 px-4"
-                  textClassName="text-lg md:text-2xl"
+                  className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl py-1 px-2 md:px-4 flex-shrink-0"
+                  textClassName="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl"
                   animationDuration={500}
                 />
-                <span className="text-lg md:text-2xl text-foreground/80">{t('flipWords.suffix')}</span>
+                <span className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-foreground/80">{t('flipWords.suffix')}</span>
               </div>
             </motion.div>
 
             {/* 当前状态标签 */}
             <motion.div 
-              className="flex items-center justify-center gap-2 flex-wrap"
+              className="flex items-center justify-center gap-2 flex-wrap px-4"
               variants={fadeInUp}
             >
-              <Badge variant="outline" className="text-sm backdrop-blur-sm bg-background/50">
+              <Badge variant="outline" className="text-xs md:text-sm backdrop-blur-sm bg-background/50">
                 <span className="w-2 h-2 rounded-full bg-green-500 mr-2 animate-pulse" />
                 {t('hero.status')}
               </Badge>
-              <Badge variant="secondary" className="text-sm backdrop-blur-sm bg-secondary/50">
+              <Badge variant="secondary" className="text-xs md:text-sm backdrop-blur-sm bg-secondary/50">
                 {t('hero.location')}
               </Badge>
             </motion.div>
 
             {/* 社交媒体链接 */}
             <motion.div 
-              className="flex items-center justify-center gap-3 pt-4"
+              className="flex items-center justify-center gap-2 md:gap-3 pt-4"
               variants={fadeInUp}
             >
               {socialLinks.map((link) => {
@@ -91,7 +92,7 @@ export function HeroSection() {
                     <Button
                       variant="outline"
                       size="icon"
-                      className="rounded-full backdrop-blur-sm bg-white/10 hover:bg-white/20 dark:bg-white/5 dark:hover:bg-white/10 border-white/20 dark:border-white/10 text-foreground hover:text-primary transition-all"
+                      className="rounded-full backdrop-blur-sm bg-white/10 hover:bg-white/20 dark:bg-white/5 dark:hover:bg-white/10 border-white/20 dark:border-white/10 text-foreground hover:text-primary transition-all min-w-[44px] min-h-[44px]"
                       asChild
                     >
                       <a

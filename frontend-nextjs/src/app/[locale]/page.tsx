@@ -108,7 +108,7 @@ export default async function Home({ params }: HomeProps) {
 
       {/* 第1部分：英雄区 (Hero Section) - "我是谁，这是什么？" */}
       <section 
-        className="relative overflow-hidden isolate min-h-screen flex flex-col"
+        className="relative overflow-hidden isolate min-h-[85vh] md:min-h-screen flex flex-col"
         aria-label="Hero section"
       >
         {/* Sparkles 背景效果 */}
@@ -118,7 +118,7 @@ export default async function Home({ params }: HomeProps) {
             minSize={1}
             maxSize={5}
             speed={2}
-            particleDensity={30}
+            particleDensity={20}
             particleColor="#888888"
           />
         </div>
@@ -127,34 +127,34 @@ export default async function Home({ params }: HomeProps) {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background"></div>
         
         {/* 主要内容区域 */}
-        <div className="flex-1 flex items-center pt-16 md:pt-20 lg:pt-24">
-          <div className="container mx-auto px-4 sm:px-6 md:px-8 max-w-6xl relative z-10 w-full">
+        <div className="flex-1 flex items-center pt-8 md:pt-16 lg:pt-20">
+          <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-6xl relative z-10 w-full">
             <div className="mx-auto max-w-3xl text-center space-y-4 md:space-y-6">
               <div className="inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium">
                 {t('hero.badge')}
               </div>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight px-4">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
                 <AnimatedGradientText>
                   {t('hero.title')}
                 </AnimatedGradientText>
               </h1>
-              <p className="text-sm sm:text-base md:text-lg text-muted-foreground px-4">
+              <p className="text-sm sm:text-base md:text-lg text-muted-foreground px-2">
                 {t('hero.subtitle')}
               </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2 px-4">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
                 <Link href={`/${locale}/knowledge`} className="w-full sm:w-auto">
-                  <Button size="lg" className="w-full sm:w-auto">
+                  <Button size="lg" className="w-full sm:w-auto min-h-[44px]">
                     <Rocket className="mr-2 h-4 w-4" />
                     {t('hero.cta.primary')}
                   </Button>
                 </Link>
                 <a href="#site-origin" className="w-full sm:w-auto">
-                  <Button size="lg" variant="ghost" className="w-full sm:w-auto">
+                  <Button size="lg" variant="ghost" className="w-full sm:w-auto min-h-[44px]">
                     {t('hero.cta.tertiary')}
                   </Button>
                 </a>
               </div>
-              <p className="text-xs sm:text-sm text-muted-foreground pt-2 px-4">
+              <p className="text-xs sm:text-sm text-muted-foreground pt-2">
                 {t('hero.maintainedBy')}
               </p>
             </div>
@@ -162,9 +162,9 @@ export default async function Home({ params }: HomeProps) {
         </div>
 
         {/* 技术栈跑马灯 - 在 Hero Section 底部 */}
-        <div className="relative z-10 pb-12 pt-16 md:pt-20">
-          <div className="text-center mb-10">
-            <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-2">
+        <div className="relative z-10 pb-8 md:pb-12 pt-12 md:pt-16 lg:pt-20">
+          <div className="text-center mb-6 md:mb-10 px-4">
+            <h2 className="text-xl md:text-2xl lg:text-3xl font-bold tracking-tight mb-2">
               {t('techStack.title')}
             </h2>
             <p className="text-sm md:text-base font-medium text-muted-foreground">
@@ -177,21 +177,21 @@ export default async function Home({ params }: HomeProps) {
 
       {/* 第2部分：知识体系架构 (Knowledge Architecture) - "这里有什么？" */}
       <section 
-        className="py-16 md:py-24 bg-muted/30"
+        className="py-12 md:py-16 lg:py-24 bg-muted/30"
         aria-labelledby="knowledge-domains-title"
       >
-        <div className="container mx-auto px-6 md:px-8 max-w-6xl">
-          <div className="text-center mb-16 space-y-4">
-            <h2 id="knowledge-domains-title" className="text-3xl md:text-5xl font-bold tracking-tight">
+        <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-6xl">
+          <div className="text-center mb-8 md:mb-12 lg:mb-16 space-y-3 md:space-y-4">
+            <h2 id="knowledge-domains-title" className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold tracking-tight px-4">
               {t('domains.title')}
             </h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+            <p className="text-muted-foreground text-sm md:text-base lg:text-lg max-w-2xl mx-auto px-4">
               {t('domains.subtitle')}
             </p>
           </div>
           
           {/* 知识域卡片 - 5个卡片网格 */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {/* 技术开发卡片 */}
             <Link 
               href={`/${locale}/knowledge?category=${siteConfig.knowledgeDomains.tech}`}
@@ -199,20 +199,20 @@ export default async function Home({ params }: HomeProps) {
               aria-label={t('domains.cards.tech.title')}
             >
               <Card className="border border-border/50 bg-card/50 backdrop-blur hover:shadow-lg hover:shadow-primary/10 transition-all duration-300 h-full group-hover:border-primary/50">
-                <CardContent className="p-6 space-y-4">
+                <CardContent className="p-4 md:p-6 space-y-3 md:space-y-4">
                   <div className="flex items-center justify-between">
-                    <Code2 className="h-10 w-10 text-primary" />
+                    <Code2 className="h-8 w-8 md:h-10 md:w-10 text-primary" />
                     <Badge variant="outline" className="text-xs">
                       {t('domains.cards.tech.articleCount')}
                     </Badge>
                   </div>
-                  <h3 className="text-xl font-semibold group-hover:text-primary transition-colors">
+                  <h3 className="text-lg md:text-xl font-semibold group-hover:text-primary transition-colors">
                     {t('domains.cards.tech.title')}
                   </h3>
                   <p className="text-muted-foreground text-sm">
                     {t('domains.cards.tech.description')}
                   </p>
-                  <div className="flex flex-wrap gap-2 pt-2">
+                  <div className="flex flex-wrap gap-1.5 md:gap-2 pt-2">
                     {t('domains.cards.tech.keywords').split(', ').map((keyword: string, i: number) => (
                       <Badge key={i} variant="secondary" className="text-xs">
                         {keyword}
@@ -230,20 +230,20 @@ export default async function Home({ params }: HomeProps) {
               aria-label={t('domains.cards.web3.title')}
             >
               <Card className="border border-border/50 bg-card/50 backdrop-blur hover:shadow-lg hover:shadow-primary/10 transition-all duration-300 h-full group-hover:border-primary/50">
-                <CardContent className="p-6 space-y-4">
+                <CardContent className="p-4 md:p-6 space-y-3 md:space-y-4">
                   <div className="flex items-center justify-between">
-                    <Network className="h-10 w-10 text-primary" />
+                    <Network className="h-8 w-8 md:h-10 md:w-10 text-primary" />
                     <Badge variant="outline" className="text-xs">
                       {t('domains.cards.web3.articleCount')}
                     </Badge>
                   </div>
-                  <h3 className="text-xl font-semibold group-hover:text-primary transition-colors">
+                  <h3 className="text-lg md:text-xl font-semibold group-hover:text-primary transition-colors">
                     {t('domains.cards.web3.title')}
                   </h3>
                   <p className="text-muted-foreground text-sm">
                     {t('domains.cards.web3.description')}
                   </p>
-                  <div className="flex flex-wrap gap-2 pt-2">
+                  <div className="flex flex-wrap gap-1.5 md:gap-2 pt-2">
                     {t('domains.cards.web3.keywords').split(', ').map((keyword: string, i: number) => (
                       <Badge key={i} variant="secondary" className="text-xs">
                         {keyword}
@@ -261,20 +261,20 @@ export default async function Home({ params }: HomeProps) {
               aria-label={t('domains.cards.thinking.title')}
             >
               <Card className="border border-border/50 bg-card/50 backdrop-blur hover:shadow-lg hover:shadow-primary/10 transition-all duration-300 h-full group-hover:border-primary/50">
-                <CardContent className="p-6 space-y-4">
+                <CardContent className="p-4 md:p-6 space-y-3 md:space-y-4">
                   <div className="flex items-center justify-between">
-                    <Brain className="h-10 w-10 text-primary" />
+                    <Brain className="h-8 w-8 md:h-10 md:w-10 text-primary" />
                     <Badge variant="outline" className="text-xs">
                       {t('domains.cards.thinking.articleCount')}
                     </Badge>
                   </div>
-                  <h3 className="text-xl font-semibold group-hover:text-primary transition-colors">
+                  <h3 className="text-lg md:text-xl font-semibold group-hover:text-primary transition-colors">
                     {t('domains.cards.thinking.title')}
                   </h3>
                   <p className="text-muted-foreground text-sm">
                     {t('domains.cards.thinking.description')}
                   </p>
-                  <div className="flex flex-wrap gap-2 pt-2">
+                  <div className="flex flex-wrap gap-1.5 md:gap-2 pt-2">
                     {t('domains.cards.thinking.keywords').split(', ').map((keyword: string, i: number) => (
                       <Badge key={i} variant="secondary" className="text-xs">
                         {keyword}
@@ -292,20 +292,20 @@ export default async function Home({ params }: HomeProps) {
               aria-label={t('domains.cards.product.title')}
             >
               <Card className="border border-border/50 bg-card/50 backdrop-blur hover:shadow-lg hover:shadow-primary/10 transition-all duration-300 h-full group-hover:border-primary/50">
-                <CardContent className="p-6 space-y-4">
+                <CardContent className="p-4 md:p-6 space-y-3 md:space-y-4">
                   <div className="flex items-center justify-between">
-                    <ClipboardList className="h-10 w-10 text-primary" />
+                    <ClipboardList className="h-8 w-8 md:h-10 md:w-10 text-primary" />
                     <Badge variant="outline" className="text-xs">
                       {t('domains.cards.product.articleCount')}
                     </Badge>
                   </div>
-                  <h3 className="text-xl font-semibold group-hover:text-primary transition-colors">
+                  <h3 className="text-lg md:text-xl font-semibold group-hover:text-primary transition-colors">
                     {t('domains.cards.product.title')}
                   </h3>
                   <p className="text-muted-foreground text-sm">
                     {t('domains.cards.product.description')}
                   </p>
-                  <div className="flex flex-wrap gap-2 pt-2">
+                  <div className="flex flex-wrap gap-1.5 md:gap-2 pt-2">
                     {t('domains.cards.product.keywords').split(', ').map((keyword: string, i: number) => (
                       <Badge key={i} variant="secondary" className="text-xs">
                         {keyword}
@@ -323,20 +323,20 @@ export default async function Home({ params }: HomeProps) {
               aria-label={t('domains.cards.tools.title')}
             >
               <Card className="border border-border/50 bg-card/50 backdrop-blur hover:shadow-lg hover:shadow-primary/10 transition-all duration-300 h-full group-hover:border-primary/50">
-                <CardContent className="p-6 space-y-4">
+                <CardContent className="p-4 md:p-6 space-y-3 md:space-y-4">
                   <div className="flex items-center justify-between">
-                    <Wrench className="h-10 w-10 text-primary" />
+                    <Wrench className="h-8 w-8 md:h-10 md:w-10 text-primary" />
                     <Badge variant="outline" className="text-xs">
                       {t('domains.cards.tools.articleCount')}
                     </Badge>
                   </div>
-                  <h3 className="text-xl font-semibold group-hover:text-primary transition-colors">
+                  <h3 className="text-lg md:text-xl font-semibold group-hover:text-primary transition-colors">
                     {t('domains.cards.tools.title')}
                   </h3>
                   <p className="text-muted-foreground text-sm">
                     {t('domains.cards.tools.description')}
                   </p>
-                  <div className="flex flex-wrap gap-2 pt-2">
+                  <div className="flex flex-wrap gap-1.5 md:gap-2 pt-2">
                     {t('domains.cards.tools.keywords').split(', ').map((keyword: string, i: number) => (
                       <Badge key={i} variant="secondary" className="text-xs">
                         {keyword}
@@ -352,21 +352,21 @@ export default async function Home({ params }: HomeProps) {
 
       {/* 第3部分：核心内容 (Core Content) - "从哪里开始读？" */}
       <section 
-        className="py-16 md:py-24"
+        className="py-12 md:py-16 lg:py-24"
         aria-labelledby="featured-content-title"
       >
-        <div className="container mx-auto px-6 md:px-8 max-w-6xl">
-          <div className="text-center mb-16 space-y-4">
-            <h2 id="featured-content-title" className="text-3xl md:text-5xl font-bold tracking-tight">
+        <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-6xl">
+          <div className="text-center mb-8 md:mb-12 lg:mb-16 space-y-3 md:space-y-4 px-4">
+            <h2 id="featured-content-title" className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold tracking-tight">
               {t('featured.title')}
             </h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+            <p className="text-muted-foreground text-sm md:text-base lg:text-lg max-w-2xl mx-auto">
               {t('featured.subtitle')}
             </p>
           </div>
           
           {/* 精选文章卡片 */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
             {/* 思想代表作 */}
             <Link 
               href={siteConfig.articles.featured.manifesto.slug || `/${locale}/knowledge?category=${siteConfig.articles.featured.manifesto.category}`}
@@ -374,17 +374,17 @@ export default async function Home({ params }: HomeProps) {
               aria-label={t('featured.articles.manifesto.title')}
             >
               <Card className="border border-border/50 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300 h-full group-hover:border-primary/50">
-                <CardContent className="p-6 space-y-4">
+                <CardContent className="p-4 md:p-6 space-y-3 md:space-y-4">
                   <div className="flex items-center justify-between">
-                    <Badge variant="outline">
+                    <Badge variant="outline" className="text-xs">
                       {t('featured.articles.manifesto.tag')}
                     </Badge>
-                    <Flame className="h-6 w-6 text-orange-500" />
+                    <Flame className="h-5 w-5 md:h-6 md:w-6 text-orange-500" />
                   </div>
-                  <h3 className="text-lg font-semibold group-hover:text-primary transition-colors">
+                  <h3 className="text-base md:text-lg font-semibold group-hover:text-primary transition-colors">
                     {t('featured.articles.manifesto.title')}
                   </h3>
-                  <p className="text-sm text-muted-foreground italic">
+                  <p className="text-sm text-muted-foreground italic line-clamp-2">
                     {t('featured.articles.manifesto.description')}
                   </p>
                   <div className="text-xs text-muted-foreground pt-2">
@@ -401,17 +401,17 @@ export default async function Home({ params }: HomeProps) {
               aria-label={t('featured.articles.web.title')}
             >
               <Card className="border border-border/50 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300 h-full group-hover:border-primary/50">
-                <CardContent className="p-6 space-y-4">
+                <CardContent className="p-4 md:p-6 space-y-3 md:space-y-4">
                   <div className="flex items-center justify-between">
-                    <Badge variant="outline">
+                    <Badge variant="outline" className="text-xs">
                       {t('featured.articles.web.tag')}
                     </Badge>
-                    <Zap className="h-6 w-6 text-yellow-500" />
+                    <Zap className="h-5 w-5 md:h-6 md:w-6 text-yellow-500" />
                   </div>
-                  <h3 className="text-lg font-semibold group-hover:text-primary transition-colors">
+                  <h3 className="text-base md:text-lg font-semibold group-hover:text-primary transition-colors">
                     {t('featured.articles.web.title')}
                   </h3>
-                  <p className="text-sm text-muted-foreground italic">
+                  <p className="text-sm text-muted-foreground italic line-clamp-2">
                     {t('featured.articles.web.description')}
                   </p>
                   <div className="text-xs text-muted-foreground pt-2">
@@ -428,17 +428,17 @@ export default async function Home({ params }: HomeProps) {
               aria-label={t('featured.articles.labor.title')}
             >
               <Card className="border border-border/50 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300 h-full group-hover:border-primary/50">
-                <CardContent className="p-6 space-y-4">
+                <CardContent className="p-4 md:p-6 space-y-3 md:space-y-4">
                   <div className="flex items-center justify-between">
-                    <Badge variant="outline">
+                    <Badge variant="outline" className="text-xs">
                       {t('featured.articles.labor.tag')}
                     </Badge>
-                    <Scale className="h-6 w-6 text-blue-500" />
+                    <Scale className="h-5 w-5 md:h-6 md:w-6 text-blue-500" />
                   </div>
-                  <h3 className="text-lg font-semibold group-hover:text-primary transition-colors">
+                  <h3 className="text-base md:text-lg font-semibold group-hover:text-primary transition-colors">
                     {t('featured.articles.labor.title')}
                   </h3>
-                  <p className="text-sm text-muted-foreground italic">
+                  <p className="text-sm text-muted-foreground italic line-clamp-2">
                     {t('featured.articles.labor.description')}
                   </p>
                   <div className="text-xs text-muted-foreground pt-2">
@@ -461,26 +461,26 @@ export default async function Home({ params }: HomeProps) {
       {/* 第4部分：建站初衷 (Site Origin) - "我为什么做这个？" */}
       <section 
         id="site-origin" 
-        className="py-16 md:py-24 bg-muted/30 scroll-mt-20"
+        className="py-12 md:py-16 lg:py-24 bg-muted/30 scroll-mt-16 md:scroll-mt-20"
         aria-labelledby="site-origin-title"
       >
-        <div className="container mx-auto px-6 md:px-8 max-w-5xl">
-          <div className="space-y-12">
-            <div className="text-center space-y-4">
-              <h2 id="site-origin-title" className="text-3xl md:text-5xl font-bold tracking-tight">
+        <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-5xl">
+          <div className="space-y-8 md:space-y-10 lg:space-y-12">
+            <div className="text-center space-y-3 md:space-y-4 px-4">
+              <h2 id="site-origin-title" className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold tracking-tight">
                 {t('siteOrigin.title')}
               </h2>
-              <p className="text-muted-foreground text-sm uppercase tracking-wider">
+              <p className="text-muted-foreground text-xs md:text-sm uppercase tracking-wider">
                 {t('siteOrigin.subtitle')}
               </p>
             </div>
             
-            <blockquote className="text-base md:text-lg text-muted-foreground leading-relaxed border-l-4 border-primary pl-6 text-left max-w-3xl mx-auto whitespace-pre-line">
+            <blockquote className="text-sm md:text-base lg:text-lg text-muted-foreground leading-relaxed border-l-4 border-primary pl-4 md:pl-6 text-left max-w-3xl mx-auto whitespace-pre-line">
               {t('siteOrigin.quote')}
             </blockquote>
             
             {/* 四个目标 */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pt-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 pt-4 md:pt-8">
               {[
                 { icon: FileText, color: 'text-blue-500' },
                 { icon: Brain, color: 'text-purple-500' },
@@ -489,14 +489,14 @@ export default async function Home({ params }: HomeProps) {
               ].map((item, index) => {
                 const IconComponent = item.icon;
                 return (
-                  <div key={index} className="text-center space-y-2">
+                  <div key={index} className="text-center space-y-2 p-4">
                     <div className="flex justify-center mb-3">
-                      <IconComponent className={`h-12 w-12 ${item.color}`} />
+                      <IconComponent className={`h-10 w-10 md:h-12 md:w-12 ${item.color}`} />
                     </div>
-                    <h3 className="font-semibold">
+                    <h3 className="font-semibold text-sm md:text-base">
                       {t(`siteOrigin.principles.${index}.title`)}
                     </h3>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-xs md:text-sm text-muted-foreground">
                       {t(`siteOrigin.principles.${index}.description`)}
                     </p>
                   </div>
@@ -509,7 +509,7 @@ export default async function Home({ params }: HomeProps) {
 
       {/* 第5部分：学习交流 (Learn Together) - "下一步做什么？" */}
       <section 
-        className="relative py-16 md:py-24 overflow-hidden"
+        className="relative py-12 md:py-16 lg:py-24 overflow-hidden"
         aria-label="Call to action"
       >
         {/* Sparkles 背景效果 - 更柔和的版本 */}
@@ -518,7 +518,7 @@ export default async function Home({ params }: HomeProps) {
             id="tsparticles-cta"
             minSize={1}
             maxSize={3}
-            particleDensity={50}
+            particleDensity={30}
             particleColor="#666666"
             speed={2}
           />
@@ -528,29 +528,29 @@ export default async function Home({ params }: HomeProps) {
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent"></div>
         
         {/* 内容 */}
-        <div className="container mx-auto px-6 md:px-8 max-w-4xl relative z-10">
-          <div className="text-center space-y-6">
-            <h2 className="text-3xl md:text-5xl font-bold tracking-tight">
+        <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-4xl relative z-10">
+          <div className="text-center space-y-4 md:space-y-6">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold tracking-tight px-4">
               <AnimatedGradientText colorFrom="#3b82f6" colorTo="#8b5cf6">
                 {t('finalCta.title')}
               </AnimatedGradientText>
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-sm md:text-base lg:text-lg text-muted-foreground max-w-2xl mx-auto px-4">
               {t('finalCta.subtitle')}
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-4 px-4">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-4">
               <Link href={`/${locale}/knowledge`} className="w-full sm:w-auto">
-                <Button size="lg" className="px-8 w-full sm:w-auto">
+                <Button size="lg" className="px-8 w-full sm:w-auto min-h-[44px]">
                   {t('finalCta.primary')}
                 </Button>
               </Link>
               <Link href={`/${locale}/about`} className="w-full sm:w-auto">
-                <Button size="lg" variant="outline" className="px-8 w-full sm:w-auto">
+                <Button size="lg" variant="outline" className="px-8 w-full sm:w-auto min-h-[44px]">
                   {t('finalCta.secondary')}
                 </Button>
               </Link>
             </div>
-            <div className="flex items-center justify-center gap-6 pt-4 text-sm">
+            <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6 pt-4 text-xs md:text-sm px-4">
               <Link 
                 href={siteConfig.social.github || `/${locale}/knowledge`} 
                 className="text-muted-foreground hover:text-primary transition-colors"
@@ -579,20 +579,20 @@ export default async function Home({ params }: HomeProps) {
 
       {/* Footer */}
       <footer 
-        className="border-t border-border/40 py-12"
+        className="border-t border-border/40 py-8 md:py-12"
         role="contentinfo"
         aria-label="Site footer"
       >
-        <div className="container mx-auto px-6 md:px-8 max-w-6xl">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+        <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-6xl">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-6 md:mb-8">
             {/* 左侧：品牌信息 */}
-            <div className="space-y-3">
-              <div className="text-lg font-bold">
+            <div className="space-y-2 md:space-y-3">
+              <div className="text-base md:text-lg font-bold">
                 <AnimatedGradientText colorFrom="#10b981" colorTo="#3b82f6" speed={0.8}>
                   Oracle Knowledge Base
                 </AnimatedGradientText>
               </div>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-xs md:text-sm text-muted-foreground">
                 {t('footer.builtWith')}
               </p>
               <p className="text-xs text-muted-foreground">
@@ -601,39 +601,39 @@ export default async function Home({ params }: HomeProps) {
             </div>
             
             {/* 中间：快速链接 */}
-            <div className="space-y-3">
+            <div className="space-y-2 md:space-y-3">
               <h4 className="font-semibold text-sm">{t('footer.sections.quickLinks')}</h4>
-              <div className="flex flex-col space-y-2 text-sm text-muted-foreground">
-                <Link href={`/${locale}/knowledge`} className="hover:text-primary transition-colors">
+              <div className="flex flex-col space-y-2 text-xs md:text-sm text-muted-foreground">
+                <Link href={`/${locale}/knowledge`} className="hover:text-primary transition-colors min-h-[44px] flex items-center">
                   {t('navigation.articles')}
                 </Link>
-                <Link href={`/${locale}/about`} className="hover:text-primary transition-colors">
+                <Link href={`/${locale}/about`} className="hover:text-primary transition-colors min-h-[44px] flex items-center">
                   {t('navigation.about')}
                 </Link>
               </div>
             </div>
             
             {/* 右侧：社交链接 */}
-            <div className="space-y-3">
+            <div className="space-y-2 md:space-y-3">
               <h4 className="font-semibold text-sm">{t('footer.sections.social')}</h4>
-              <div className="flex flex-col space-y-2 text-sm text-muted-foreground">
+              <div className="flex flex-col space-y-2 text-xs md:text-sm text-muted-foreground">
                 <Link 
                   href={siteConfig.social.github || '#'} 
-                  className="hover:text-primary transition-colors"
+                  className="hover:text-primary transition-colors min-h-[44px] flex items-center"
                   aria-label={t('footer.social.github')}
                 >
                   {t('footer.social.github')}
                 </Link>
                 <Link 
                   href={siteConfig.social.twitter || '#'} 
-                  className="hover:text-primary transition-colors"
+                  className="hover:text-primary transition-colors min-h-[44px] flex items-center"
                   aria-label={t('footer.social.twitter')}
                 >
                   {t('footer.social.twitter')}
                 </Link>
                 <Link 
                   href={siteConfig.social.email ? `mailto:${siteConfig.social.email}` : '#'} 
-                  className="hover:text-primary transition-colors"
+                  className="hover:text-primary transition-colors min-h-[44px] flex items-center"
                   aria-label={t('footer.social.email')}
                 >
                   {t('footer.social.email')}
@@ -643,7 +643,7 @@ export default async function Home({ params }: HomeProps) {
           </div>
           
           {/* 底部版权 */}
-          <div className="border-t border-border/40 pt-8 text-center text-sm text-muted-foreground">
+          <div className="border-t border-border/40 pt-6 md:pt-8 text-center text-xs md:text-sm text-muted-foreground">
             {t('footer.copyright')}
           </div>
         </div>

@@ -9,7 +9,9 @@
     "github": "GitHub",
     "resume": "简历",
     "contact": "联系",
-    "getStarted": "开始探索"
+    "getStarted": "开始探索",
+    "theme": "主题",
+    "language": "语言"
   },
   "hero": {
     "badge": "系统化知识管理",
@@ -74,10 +76,10 @@
         "readTime": "25 分钟"
       },
       "labor": {
-        "title": "劳动维权操作包：写给每个打工人的实用指南",
-        "description": "未签合同？拖欠工资？虚假招聘？从证据收集到仲裁流程，从催告函到操作模板。知识是武器，这份操作包希望能帮助需要的人。",
-        "tag": "实用",
-        "readTime": "8 分钟"
+        "title": "DAO完全指南：重塑组织的未来",
+        "description": "深入探索去中心化自治组织如何改变传统公司治理模式，开启协作新纪元。",
+        "tag": "Web3",
+        "readTime": "20 分钟"
       }
     },
     "moreLink": "查看更多精选文章 →"

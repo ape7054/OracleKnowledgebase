@@ -26,25 +26,25 @@ export function Breadcrumbs({ locale, customItems }: BreadcrumbsProps) {
   // 如果提供了自定义项，使用它们
   if (customItems && customItems.length > 0) {
     return (
-      <Breadcrumb className="mb-6">
-        <BreadcrumbList>
+      <Breadcrumb className="mb-4 md:mb-6">
+        <BreadcrumbList className="text-xs md:text-sm">
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link href={`/${locale}`} aria-label="Home">
-                <Home className="h-4 w-4" />
+              <Link href={`/${locale}`} aria-label="Home" className="min-h-[44px] flex items-center">
+                <Home className="h-3 w-3 md:h-4 md:w-4" />
               </Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
           {customItems.map((item, index) => (
             <div key={index} className="flex items-center">
-              <BreadcrumbSeparator />
+              <BreadcrumbSeparator className="text-xs md:text-sm" />
               <BreadcrumbItem>
                 {item.href && index < customItems.length - 1 ? (
                   <BreadcrumbLink asChild>
-                    <Link href={item.href}>{item.label}</Link>
+                    <Link href={item.href} className="min-h-[44px] flex items-center truncate max-w-[120px] md:max-w-none">{item.label}</Link>
                   </BreadcrumbLink>
                 ) : (
-                  <BreadcrumbPage>{item.label}</BreadcrumbPage>
+                  <BreadcrumbPage className="truncate max-w-[150px] md:max-w-none">{item.label}</BreadcrumbPage>
                 )}
               </BreadcrumbItem>
             </div>
@@ -66,12 +66,12 @@ export function Breadcrumbs({ locale, customItems }: BreadcrumbsProps) {
   }
 
   return (
-    <Breadcrumb className="mb-6">
-      <BreadcrumbList>
+    <Breadcrumb className="mb-4 md:mb-6">
+      <BreadcrumbList className="text-xs md:text-sm">
         <BreadcrumbItem>
           <BreadcrumbLink asChild>
-            <Link href={`/${locale}`} aria-label="Home">
-              <Home className="h-4 w-4" />
+            <Link href={`/${locale}`} aria-label="Home" className="min-h-[44px] flex items-center">
+              <Home className="h-3 w-3 md:h-4 md:w-4" />
             </Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
@@ -87,13 +87,13 @@ export function Breadcrumbs({ locale, customItems }: BreadcrumbsProps) {
 
           return (
             <div key={segment} className="flex items-center">
-              <BreadcrumbSeparator />
+              <BreadcrumbSeparator className="text-xs md:text-sm" />
               <BreadcrumbItem>
                 {isLast ? (
-                  <BreadcrumbPage>{label}</BreadcrumbPage>
+                  <BreadcrumbPage className="truncate max-w-[150px] md:max-w-none">{label}</BreadcrumbPage>
                 ) : (
                   <BreadcrumbLink asChild>
-                    <Link href={href}>{label}</Link>
+                    <Link href={href} className="min-h-[44px] flex items-center truncate max-w-[120px] md:max-w-none">{label}</Link>
                   </BreadcrumbLink>
                 )}
               </BreadcrumbItem>

@@ -65,11 +65,11 @@ export function SkillRadarChart() {
             {t('skills.radarChart.description')}
           </CardDescription>
         </CardHeader>
-        <CardContent className="pb-6">
+        <CardContent className="pb-4 md:pb-6">
           {mounted ? (
             <ChartContainer
               config={chartConfig}
-              className="mx-auto aspect-square max-h-[400px] w-full"
+              className="mx-auto aspect-square max-h-[280px] md:max-h-[350px] lg:max-h-[400px] w-full"
             >
               <RadarChart data={radarData}>
                 {/* 渐变定义 */}
@@ -91,22 +91,22 @@ export function SkillRadarChart() {
                     if (!active || !payload?.length) return null
                     const data = payload[0].payload
                     return (
-                      <div className="rounded-lg border-2 border-primary/50 bg-background/95 backdrop-blur-sm px-4 py-3 shadow-2xl">
-                        <div className="flex items-center gap-2 mb-2">
-                          <DynamicIcon name={data.icon} size={24} />
-                          <span className="font-bold text-base">{data.category}</span>
+                      <div className="rounded-lg border-2 border-primary/50 bg-background/95 backdrop-blur-sm px-3 py-2 shadow-2xl">
+                        <div className="flex items-center gap-2 mb-1">
+                          <DynamicIcon name={data.icon} size={20} />
+                          <span className="font-bold text-sm">{data.category}</span>
                         </div>
-                        <div className="text-sm space-y-1">
-                          <div className="flex items-center justify-between gap-6">
+                        <div className="text-xs space-y-0.5">
+                          <div className="flex items-center justify-between gap-4">
                             <span className="text-muted-foreground">{t('skills.proficiency') || 'Average'}:</span>
                             <span className="font-bold text-primary">
                               {data.proficiency}%
                             </span>
                           </div>
-                          <div className="flex items-center justify-between gap-6">
-                            <span className="text-muted-foreground">技能数量:</span>
+                          <div className="flex items-center justify-between gap-4">
+                            <span className="text-muted-foreground">技能:</span>
                             <span className="font-semibold">
-                              {data.skillCount} 项
+                              {data.skillCount}项
                             </span>
                           </div>
                         </div>
@@ -126,7 +126,7 @@ export function SkillRadarChart() {
                   dataKey="category" 
                   tick={{ 
                     fill: 'hsl(var(--foreground))', 
-                    fontSize: 14,
+                    fontSize: 11,
                     fontWeight: 600
                   }}
                   tickLine={false}
@@ -137,7 +137,7 @@ export function SkillRadarChart() {
                   domain={[0, 100]}
                   tick={{ 
                     fill: 'hsl(var(--muted-foreground))', 
-                    fontSize: 11,
+                    fontSize: 10,
                     opacity: 0.7
                   }}
                   axisLine={false}
@@ -149,17 +149,17 @@ export function SkillRadarChart() {
                   fill="url(#radarGradient)"
                   fillOpacity={0.8}
                   stroke="url(#strokeGradient)"
-                  strokeWidth={3}
+                  strokeWidth={2}
                   dot={{
-                    r: 6,
+                    r: 4,
                     fill: "hsl(var(--primary))",
-                    strokeWidth: 3,
+                    strokeWidth: 2,
                     stroke: 'hsl(var(--background))',
                   }}
                   activeDot={{
-                    r: 8,
+                    r: 6,
                     fill: "hsl(var(--primary))",
-                    strokeWidth: 4,
+                    strokeWidth: 3,
                     stroke: 'hsl(var(--background))',
                   }}
                 />
@@ -173,42 +173,42 @@ export function SkillRadarChart() {
 
           {/* 统计信息面板 */}
           <motion.div 
-            className="mt-6 pt-6 border-t border-border/50"
+            className="mt-4 md:mt-6 pt-4 md:pt-6 border-t border-border/50"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.3, duration: 0.5 }}
           >
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
               <motion.div 
-                className="text-center p-3 rounded-lg bg-primary/5 border border-primary/20"
+                className="text-center p-2 md:p-3 rounded-lg bg-primary/5 border border-primary/20"
                 variants={listItem}
               >
-                <div className="text-2xl font-bold text-primary">{totalSkills}</div>
+                <div className="text-xl md:text-2xl font-bold text-primary">{totalSkills}</div>
                 <div className="text-xs text-muted-foreground mt-1">总技能数</div>
               </motion.div>
               
               <motion.div 
-                className="text-center p-3 rounded-lg bg-primary/5 border border-primary/20"
+                className="text-center p-2 md:p-3 rounded-lg bg-primary/5 border border-primary/20"
                 variants={listItem}
               >
-                <div className="text-2xl font-bold text-primary">{avgProficiency}%</div>
+                <div className="text-xl md:text-2xl font-bold text-primary">{avgProficiency}%</div>
                 <div className="text-xs text-muted-foreground mt-1">平均熟练度</div>
               </motion.div>
               
               <motion.div 
-                className="text-center p-3 rounded-lg bg-primary/5 border border-primary/20"
+                className="text-center p-2 md:p-3 rounded-lg bg-primary/5 border border-primary/20"
                 variants={listItem}
               >
-                <div className="text-2xl font-bold text-primary">{maxProficiency}%</div>
+                <div className="text-xl md:text-2xl font-bold text-primary">{maxProficiency}%</div>
                 <div className="text-xs text-muted-foreground mt-1">最高熟练度</div>
               </motion.div>
               
               <motion.div 
-                className="text-center p-3 rounded-lg bg-primary/5 border border-primary/20"
+                className="text-center p-2 md:p-3 rounded-lg bg-primary/5 border border-primary/20"
                 variants={listItem}
               >
-                <div className="text-2xl font-bold text-primary">{skillCategories.length}</div>
+                <div className="text-xl md:text-2xl font-bold text-primary">{skillCategories.length}</div>
                 <div className="text-xs text-muted-foreground mt-1">技术领域</div>
               </motion.div>
             </div>
@@ -216,7 +216,7 @@ export function SkillRadarChart() {
 
           {/* 分类详情列表 */}
           <motion.div
-            className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3"
+            className="mt-4 md:mt-6 grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3"
             initial="initial"
             whileInView="animate"
             viewport={{ once: true }}
@@ -225,14 +225,14 @@ export function SkillRadarChart() {
             {radarData.map((item) => (
               <motion.div
                 key={item.category}
-                className="flex flex-col items-center gap-2 p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors"
+                className="flex flex-col items-center gap-1.5 md:gap-2 p-2 md:p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors"
                 variants={listItem}
               >
-                <DynamicIcon name={item.icon} size={28} />
+                <DynamicIcon name={item.icon} size={24} className="md:w-7 md:h-7" />
                 <div className="text-center">
-                  <div className="text-sm font-medium truncate max-w-full">{item.category}</div>
-                  <div className="text-xs text-muted-foreground mt-1">{item.skillCount} 项技能</div>
-                  <div className="text-lg font-bold text-primary mt-1">{item.proficiency}%</div>
+                  <div className="text-xs md:text-sm font-medium truncate max-w-full">{item.category}</div>
+                  <div className="text-xs text-muted-foreground mt-0.5 md:mt-1">{item.skillCount} 项</div>
+                  <div className="text-base md:text-lg font-bold text-primary mt-0.5 md:mt-1">{item.proficiency}%</div>
                 </div>
               </motion.div>
             ))}
