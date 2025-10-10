@@ -10,6 +10,7 @@ import { motion } from 'framer-motion'
 import { fadeInUp, fadeIn, staggerContainer } from '@/lib/motion'
 import { AnimatedAvatarFallback } from './AnimatedAvatarFallback'
 import { AnimatedGradientText } from '@/components/ui/animated-gradient-text'
+import { ContainerTextFlip } from '@/components/ui/container-text-flip'
 
 const iconMap = {
   Github,
@@ -47,9 +48,17 @@ export function HeroSection() {
                   {t('title')}
                 </AnimatedGradientText>
               </h1>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                {t('subtitle')}
-              </p>
+              <div className="flex items-center justify-center gap-2 max-w-4xl mx-auto whitespace-nowrap">
+                <span className="text-lg md:text-2xl text-foreground/80">{t('flipWords.prefix')}</span>
+                <ContainerTextFlip 
+                  words={t.raw('flipWords.words')}
+                  interval={2500}
+                  className="text-lg md:text-2xl py-1 px-4"
+                  textClassName="text-lg md:text-2xl"
+                  animationDuration={500}
+                />
+                <span className="text-lg md:text-2xl text-foreground/80">{t('flipWords.suffix')}</span>
+              </div>
             </motion.div>
 
             {/* 当前状态标签 */}

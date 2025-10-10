@@ -67,9 +67,6 @@ export function CareerTimeline() {
                     <div className="flex items-start justify-between gap-4 flex-wrap">
                       <div className="space-y-2 flex-1 min-w-[200px]">
                         <div className="flex items-center gap-3 flex-wrap">
-                          <Badge variant={item.type === 'work' ? 'default' : 'outline'}>
-                            {t(item.period)}
-                          </Badge>
                           <div className="flex items-center gap-2">
                             <Icon className="w-5 h-5" />
                             <h4 className="text-xl font-semibold">{t(item.title)}</h4>

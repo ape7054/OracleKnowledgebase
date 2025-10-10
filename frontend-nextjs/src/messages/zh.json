@@ -191,6 +191,11 @@
   "about": {
     "title": "关于我",
     "subtitle": "一个专注于全栈开发、Web3 和 AI 的探索者",
+    "flipWords": {
+      "prefix": "一个专注于",
+      "suffix": "的探索者",
+      "words": ["全栈开发", "Web3", "AI", "区块链"]
+    },
     "hero": {
       "status": "开放合作机会",
       "location": "远程 / 中国"

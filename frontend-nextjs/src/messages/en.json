@@ -191,6 +191,11 @@
   "about": {
     "title": "About Me",
     "subtitle": "An explorer focusing on full-stack development, Web3, and AI",
+    "flipWords": {
+      "prefix": "An explorer focusing on",
+      "suffix": "",
+      "words": ["Full-Stack Dev", "Web3", "AI", "Blockchain"]
+    },
     "hero": {
       "status": "Open to Opportunities",
       "location": "Remote / China"
