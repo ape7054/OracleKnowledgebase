@@ -2,6 +2,7 @@ import { SiteHeader } from '@/components/SiteHeader'
 import { Separator } from "@/components/ui/separator"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { BlurFade } from "@/components/ui/blur-fade"
+import { Boxes } from '@/components/ui/background-boxes'
 import { web3Projects, projectCategories } from '@/config/web3-projects'
 import { Web3ProjectCard } from '@/components/Web3ProjectCard'
 import { Web3Timeline } from '@/components/Web3Timeline'
@@ -51,23 +52,26 @@ export default async function Web3Page({ params }: Web3PageProps) {
       <SiteHeader />
 
       {/* 头部区域 */}
-      <section className="py-16 md:py-20 border-b border-border/40 relative overflow-hidden">
-        {/* 背景装饰 */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent pointer-events-none" />
+      <section className="py-16 md:py-20 border-b border-border/40 relative overflow-hidden bg-gradient-to-br from-primary/5 to-transparent">
+        {/* Background Boxes 动态背景 - 放在底层 */}
+        <Boxes className="absolute inset-0 z-0" />
         
-        <div className="container mx-auto px-6 md:px-8 max-w-6xl relative">
+        {/* 渐变遮罩 - 保护内容可读性 */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/20 to-background/70 pointer-events-none z-10" />
+        
+        <div className="container mx-auto px-6 md:px-8 max-w-6xl relative z-20 pointer-events-none">
           <BlurFade delay={0.1} inView>
             <div className="text-center space-y-6">
-              <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 shadow-xl">
+              <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 shadow-xl pointer-events-auto">
                 <Blocks className="h-10 w-10 text-white" />
               </div>
-              <h1 className="text-4xl md:text-5xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text">
+              <h1 className="text-4xl md:text-5xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text pointer-events-auto">
                 {t('web3.title')}
               </h1>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto pointer-events-auto">
                 {t('web3.subtitle')}
               </p>
-              <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+              <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground pointer-events-auto">
                 <span>{t('web3.totalProjects', { count: web3Projects.length })}</span>
               </div>
             </div>
