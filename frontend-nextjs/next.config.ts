@@ -6,9 +6,6 @@ const withNextIntl = createNextIntlPlugin('./src/i18n.ts');
 
 const nextConfig: NextConfig = {
   /* config options here */
-  turbopack: {
-    root: __dirname,
-  },
   webpack: (config) => {
     config.plugins.push(new VeliteWebpackPlugin());
     return config;
