@@ -45,19 +45,10 @@ export const AuroraBackground = ({
         {/* 主动画层 */}
         <div
           className={cn(
-            "pointer-events-none absolute will-change-transform",
-            isDark ? "aurora-layer-dark" : "aurora-layer-light"
+            "pointer-events-none absolute will-change-transform aurora-layer-base",
+            isDark ? "aurora-layer-dark" : "aurora-layer-light",
+            showRadialGradient && "aurora-layer-masked"
           )}
-          style={{
-            inset: "-10px",
-            opacity: isDark ? 0.7 : 0.5,
-            filter: isDark ? "blur(80px)" : "blur(40px) invert(1)",
-            animation: "aurora 60s linear infinite",
-            ...(showRadialGradient && {
-              maskImage: "radial-gradient(ellipse at 100% 0%, black 10%, transparent 70%)",
-              WebkitMaskImage: "radial-gradient(ellipse at 100% 0%, black 10%, transparent 70%)",
-            }),
-          }}
         ></div>
         
         {/* 混合层 */}
@@ -66,10 +57,6 @@ export const AuroraBackground = ({
             "pointer-events-none absolute inset-0",
             isDark ? "aurora-overlay-dark" : "aurora-overlay-light"
           )}
-          style={{
-            opacity: isDark ? 0.6 : 0.4,
-            mixBlendMode: isDark ? "soft-light" : "difference",
-          }}
         ></div>
       </div>
       {children}

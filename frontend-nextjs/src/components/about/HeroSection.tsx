@@ -82,7 +82,7 @@ export function HeroSection() {
                     <Button
                       variant="outline"
                       size="icon"
-                      className="rounded-full backdrop-blur-sm bg-background/50 hover:bg-background/80"
+                      className="rounded-full backdrop-blur-sm bg-white/10 hover:bg-white/20 dark:bg-white/5 dark:hover:bg-white/10 border-white/20 dark:border-white/10 text-foreground hover:text-primary transition-all"
                       asChild
                     >
                       <a

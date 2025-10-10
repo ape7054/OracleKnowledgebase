@@ -220,6 +220,12 @@ html.dark {
   }
 }
 
+/* Aurora 主动画层基础 */
+.aurora-layer-base {
+  inset: -10px;
+  animation: aurora 60s linear infinite;
+}
+
 /* Aurora 背景层 - 亮色模式 */
 .aurora-layer-light {
   background-image: 
@@ -227,6 +233,8 @@ html.dark {
     repeating-linear-gradient(100deg, #3b82f6 10%, #a5b4fc 15%, #93c5fd 20%, #ddd6fe 25%, #60a5fa 30%);
   background-size: 300% 200%;
   background-position: 50% 50%, 50% 50%;
+  opacity: 0.5;
+  filter: blur(40px) invert(1);
 }
 
 /* Aurora 背景层 - 暗色模式 */
@@ -236,6 +244,14 @@ html.dark {
     repeating-linear-gradient(100deg, #3b82f6 10%, #a5b4fc 15%, #93c5fd 20%, #ddd6fe 25%, #60a5fa 30%);
   background-size: 300% 200%;
   background-position: 50% 50%, 50% 50%;
+  opacity: 0.7;
+  filter: blur(80px);
+}
+
+/* Aurora 渐变遮罩 */
+.aurora-layer-masked {
+  mask-image: radial-gradient(ellipse at 100% 0%, black 10%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse at 100% 0%, black 10%, transparent 70%);
 }
 
 /* Aurora 混合层 - 亮色模式 */
@@ -245,6 +261,8 @@ html.dark {
     repeating-linear-gradient(100deg, #3b82f6 10%, #a5b4fc 15%, #93c5fd 20%, #ddd6fe 25%, #60a5fa 30%);
   background-size: 200% 100%;
   background-attachment: fixed;
+  opacity: 0.4;
+  mix-blend-mode: difference;
 }
 
 /* Aurora 混合层 - 暗色模式 */
@@ -254,4 +272,6 @@ html.dark {
     repeating-linear-gradient(100deg, #3b82f6 10%, #a5b4fc 15%, #93c5fd 20%, #ddd6fe 25%, #60a5fa 30%);
   background-size: 200% 100%;
   background-attachment: fixed;
+  opacity: 0.6;
+  mix-blend-mode: soft-light;
 }

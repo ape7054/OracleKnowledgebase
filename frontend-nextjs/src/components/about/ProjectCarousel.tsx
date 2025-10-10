@@ -25,9 +25,15 @@ import { ExternalLink, Github } from 'lucide-react'
 import { Rocket } from '@/lib/icons'
 import { motion } from 'framer-motion'
 import { fadeInUp } from '@/lib/motion'
+import { useState, useEffect } from 'react'
 
 export function ProjectCarousel() {
   const t = useTranslations('about')
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const featuredProjects = projects.filter(p => p.featured)
 
@@ -116,7 +122,7 @@ export function ProjectCarousel() {
                             </a>
                           </Button>
                         )}
-                        {project.details && (
+                        {project.details && mounted && (
                           <Dialog>
                             <DialogTrigger asChild>
                               <Button variant="default" size="sm" className="ml-auto">
