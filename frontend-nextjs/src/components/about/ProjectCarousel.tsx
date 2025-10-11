@@ -26,13 +26,25 @@ import { Rocket } from '@/lib/icons'
 import { motion } from 'framer-motion'
 import { fadeInUp } from '@/lib/motion'
 import { useState, useEffect } from 'react'
+import { getTopRepos } from '@/lib/github'
 
 export function ProjectCarousel() {
   const t = useTranslations('about')
   const [mounted, setMounted] = useState(false)
+  const [githubRepos, setGithubRepos] = useState<Array<{
+    name: string
+    description: string
+    stars: number
+    language: string
+    url: string
+  }>>([])
 
   useEffect(() => {
     setMounted(true)
+    // 获取 GitHub 热门仓库
+    getTopRepos('ape7054', 6).then(repos => {
+      setGithubRepos(repos)
+    })
   }, [])
 
   const featuredProjects = projects.filter(p => p.featured)
@@ -62,6 +74,7 @@ export function ProjectCarousel() {
           className="w-full"
         >
           <CarouselContent>
+            {/* 精选项目 */}
             {featuredProjects.map((project, index) => (
               <CarouselItem key={project.id} className="md:basis-1/2 lg:basis-1/3">
                 <motion.div
@@ -73,7 +86,7 @@ export function ProjectCarousel() {
                   className="h-full"
                 >
                   <Card className="h-full border border-border/50 hover:shadow-xl transition-all hover:-translate-y-2 relative overflow-hidden">
-                    <BorderBeam size={250} duration={12} delay={index * 2} />
+                    <BorderBeam size={250} duration={12} delay={0} />
                     <CardContent className="p-6 space-y-4 flex flex-col h-full">
                       {/* 项目标题 */}
                       <div className="space-y-2">
@@ -237,6 +250,67 @@ export function ProjectCarousel() {
                             </DialogContent>
                           </Dialog>
                         )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              </CarouselItem>
+            ))}
+            
+            {/* GitHub 真实仓库 */}
+            {githubRepos.map((repo, index) => (
+              <CarouselItem key={`github-${repo.name}`} className="md:basis-1/2 lg:basis-1/3">
+                <motion.div
+                  initial="initial"
+                  whileInView="animate"
+                  viewport={{ once: true }}
+                  variants={fadeInUp}
+                  transition={{ delay: (featuredProjects.length + index) * 0.1 }}
+                  className="h-full"
+                >
+                  <Card className="h-full border border-border/50 hover:shadow-xl transition-all hover:-translate-y-2 relative overflow-hidden">
+                    <CardContent className="p-6 space-y-4 flex flex-col h-full">
+                      {/* 项目标题 */}
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <h3 className="text-xl font-semibold line-clamp-1">
+                            {repo.name}
+                          </h3>
+                          <Badge variant="outline" className="text-xs">
+                            <Github className="w-3 h-3 mr-1" />
+                            Live
+                          </Badge>
+                        </div>
+                        <p className="text-sm text-muted-foreground line-clamp-2">
+                          {repo.description}
+                        </p>
+                      </div>
+
+                      {/* 语言和 Stars */}
+                      <div className="flex flex-wrap gap-1.5">
+                        {repo.language && (
+                          <Badge variant="secondary" className="text-xs">
+                            {repo.language}
+                          </Badge>
+                        )}
+                        <Badge variant="secondary" className="text-xs">
+                          ⭐ {repo.stars}
+                        </Badge>
+                      </div>
+
+                      {/* 操作按钮 */}
+                      <div className="flex items-center gap-2 mt-auto pt-2">
+                        <Button variant="outline" size="sm" asChild className="flex-1">
+                          <a
+                            href={repo.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-1 justify-center"
+                          >
+                            <Github className="w-3 h-3" />
+                            <span>View on GitHub</span>
+                          </a>
+                        </Button>
                       </div>
                     </CardContent>
                   </Card>

@@ -46,7 +46,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       title,
       description,
       images: ['/og-about.png'],
-      creator: '@yourusername',
+      creator: '@ency_146904',
     },
     alternates: {
       canonical: `/${locale}/about`,

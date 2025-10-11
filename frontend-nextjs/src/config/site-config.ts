@@ -10,9 +10,9 @@ export const siteConfig = {
   
   // 社交媒体链接
   social: {
-    github: "", // 留空待后续配置
-    twitter: "", // 留空待后续配置
-    email: "", // 留空待后续配置
+    github: "https://github.com/ape7054",
+    twitter: "https://x.com/ency_146904",
+    email: "1469041017@qq.com",
   },
   
   // 精选文章配置

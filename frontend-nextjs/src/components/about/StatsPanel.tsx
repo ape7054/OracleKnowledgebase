@@ -6,10 +6,12 @@ import { DynamicIcon } from "@/lib/icons"
 import { useTranslations } from 'next-intl'
 import { useEffect, useRef, useState } from 'react'
 import { NumberTicker } from "@/components/ui/number-ticker"
+import { getGitHubStats } from "@/lib/github"
 
 export function StatsPanel() {
   const t = useTranslations('about')
   const [isVisible, setIsVisible] = useState(false)
+  const [githubStats, setGithubStats] = useState<{ repos: number; stars: number; followers: number } | null>(null)
   const sectionRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
@@ -27,6 +29,13 @@ export function StatsPanel() {
     }
 
     return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    // 获取 GitHub 统计数据
+    getGitHubStats('ape7054').then(data => {
+      setGithubStats(data)
+    })
   }, [])
 
   return (
@@ -51,8 +60,14 @@ export function StatsPanel() {
                 </div>
                 <div className="text-3xl md:text-4xl font-bold tracking-tight">
                   {(() => {
+                    // 如果是 GitHub stats 且已获取数据，使用真实数据
+                    let displayNumber = stat.number
+                    if (stat.id === 'github' && githubStats) {
+                      displayNumber = `${githubStats.stars}+`
+                    }
+                    
                     // 解析数字和后缀（如 30+、200+、2+）
-                    const match = stat.number.match(/^(\d+)(.*)$/)
+                    const match = displayNumber.match(/^(\d+)(.*)$/)
                     if (match) {
                       const num = parseInt(match[1])
                       const suffix = match[2]
@@ -63,7 +78,7 @@ export function StatsPanel() {
                         </>
                       )
                     }
-                    return stat.number
+                    return displayNumber
                   })()}
                 </div>
                 <div className="text-sm font-medium">{t(stat.label)}</div>

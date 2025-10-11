@@ -272,28 +272,28 @@ export const socialLinks: SocialLink[] = [
     id: 'github',
     name: 'GitHub',
     icon: 'Github',
-    href: 'https://github.com/yourusername',
+    href: 'https://github.com/ape7054',
     description: 'socialLinks.github.description'
   },
   {
     id: 'email',
     name: 'Email',
     icon: 'Mail',
-    href: 'mailto:your.email@example.com',
+    href: 'mailto:1469041017@qq.com',
     description: 'socialLinks.email.description'
   },
   {
     id: 'twitter',
     name: 'Twitter',
     icon: 'Twitter',
-    href: 'https://twitter.com/yourusername',
+    href: 'https://x.com/ency_146904',
     description: 'socialLinks.twitter.description'
   },
   {
     id: 'linkedin',
     name: 'LinkedIn',
     icon: 'Linkedin',
-    href: 'https://linkedin.com/in/yourusername',
+    href: 'https://linkedin.com/in/ency-146904',
     description: 'socialLinks.linkedin.description'
   }
 ]

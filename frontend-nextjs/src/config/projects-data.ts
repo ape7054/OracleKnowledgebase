@@ -29,7 +29,7 @@ export const projects: Project[] = [
     description: 'projects.solanaBot.description',
     tech: ['Rust', 'gRPC', 'Solana', 'WebSocket'],
     links: {
-      github: 'https://github.com/yourusername/solana-bot'
+      github: 'https://github.com/ape7054/rust-grpc'
     },
     category: 'web3',
     featured: true,
@@ -60,7 +60,7 @@ export const projects: Project[] = [
     description: 'projects.telegramBot.description',
     tech: ['TypeScript', 'Node.js', 'Telegram Bot API', 'Web3'],
     links: {
-      github: 'https://github.com/yourusername/telegram-bot'
+      github: 'https://github.com/ape7054/protocol-v2'
     },
     category: 'web3',
     featured: true,
@@ -76,7 +76,7 @@ export const projects: Project[] = [
     tech: ['Next.js', 'React', 'TypeScript', 'TailwindCSS', 'MDX'],
     links: {
       demo: 'https://your-site.vercel.app',
-      github: 'https://github.com/yourusername/learning-stack'
+      github: 'https://github.com/ape7054/nextjs-nextra-starter'
     },
     category: 'frontend',
     featured: true,

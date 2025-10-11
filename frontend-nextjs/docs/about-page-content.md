@@ -96,10 +96,10 @@
 
 如果你对我的项目感兴趣，或者想要交流技术、产品或Web3相关的想法，欢迎通过以下方式联系：
 
-- **Email**: your.email@example.com
-- **GitHub**: [github.com/yourusername](https://github.com/yourusername)
-- **Twitter**: [@yourusername](https://twitter.com/yourusername)
-- **LinkedIn**: [linkedin.com/in/yourusername](https://linkedin.com/in/yourusername)
+- **Email**: 1469041017@qq.com
+- **GitHub**: [github.com/ape7054](https://github.com/ape7054)
+- **Twitter/X**: [@ency_146904](https://x.com/ency_146904)
+- **LinkedIn**: [linkedin.com/in/ency-146904](https://linkedin.com/in/ency-146904)
 
 > 💡 **提示**：请在 `src/app/[locale]/about/page.tsx` 中更新实际的联系方式链接
 

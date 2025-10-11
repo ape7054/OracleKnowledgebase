@@ -35,6 +35,22 @@ interface GitHubApiUser {
 const CACHE_KEY = 'github_stats'
 const CACHE_DURATION = 1000 * 60 * 60 // 1 小时
 
+// GitHub Token (可选，用于提高 API 限制)
+const GITHUB_TOKEN = process.env.NEXT_PUBLIC_GITHUB_TOKEN || process.env.GITHUB_TOKEN
+
+// 获取GitHub API请求头
+function getGitHubHeaders(): HeadersInit {
+  const headers: HeadersInit = {
+    'Accept': 'application/vnd.github.v3+json',
+  }
+  
+  if (GITHUB_TOKEN) {
+    headers['Authorization'] = `Bearer ${GITHUB_TOKEN}`
+  }
+  
+  return headers
+}
+
 // 从localStorage获取缓存数据
 function getCachedData(): { data: GitHubStats; timestamp: number } | null {
   if (typeof window === 'undefined') return null
@@ -75,7 +91,7 @@ function isCacheValid(cached: { data: GitHubStats; timestamp: number } | null): 
  * @param username GitHub 用户名
  * @returns GitHub 统计数据或fallback数据
  */
-export async function getGitHubStats(username: string = 'yourusername'): Promise<GitHubStats> {
+export async function getGitHubStats(username: string = 'ape7054'): Promise<GitHubStats> {
   // 检查缓存
   const cached = getCachedData()
   if (cached && isCacheValid(cached)) {
@@ -85,28 +101,48 @@ export async function getGitHubStats(username: string = 'yourusername'): Promise
   try {
     // 获取用户信息
     const userResponse = await fetch(`https://api.github.com/users/${username}`, {
-      headers: {
-        'Accept': 'application/vnd.github.v3+json',
-      },
+      headers: getGitHubHeaders(),
       next: { revalidate: 3600 } // Next.js 缓存1小时
     })
 
     if (!userResponse.ok) {
-      throw new Error('Failed to fetch user data')
+      const errorDetails = {
+        status: userResponse.status,
+        statusText: userResponse.statusText,
+        rateLimit: userResponse.headers.get('X-RateLimit-Remaining'),
+        rateLimitReset: userResponse.headers.get('X-RateLimit-Reset')
+      }
+      
+      console.error('GitHub API Error (User):', errorDetails)
+      
+      // 如果是速率限制错误，提供更友好的错误信息
+      if (userResponse.status === 403) {
+        const resetTime = errorDetails.rateLimitReset 
+          ? new Date(parseInt(errorDetails.rateLimitReset) * 1000).toLocaleTimeString()
+          : 'unknown'
+        throw new Error(`GitHub API rate limit exceeded. Resets at ${resetTime}. Using cached data.`)
+      }
+      
+      throw new Error(`Failed to fetch user data: ${userResponse.status} ${userResponse.statusText}`)
     }
 
     const userData = await userResponse.json() as GitHubApiUser
 
     // 获取仓库信息
     const reposResponse = await fetch(`https://api.github.com/users/${username}/repos?per_page=100`, {
-      headers: {
-        'Accept': 'application/vnd.github.v3+json',
-      },
+      headers: getGitHubHeaders(),
       next: { revalidate: 3600 }
     })
 
     if (!reposResponse.ok) {
-      throw new Error('Failed to fetch repos data')
+      const errorDetails = {
+        status: reposResponse.status,
+        statusText: reposResponse.statusText,
+        rateLimit: reposResponse.headers.get('X-RateLimit-Remaining'),
+      }
+      
+      console.error('GitHub API Error (Repos):', errorDetails)
+      throw new Error(`Failed to fetch repos data: ${reposResponse.status} ${reposResponse.statusText}`)
     }
 
     const reposData = await reposResponse.json() as GitHubApiRepo[]
@@ -128,7 +164,15 @@ export async function getGitHubStats(username: string = 'yourusername'): Promise
   } catch (error) {
     console.error('Error fetching GitHub stats:', error)
     
+    // 检查是否有缓存数据可用（即使已过期）
+    const cached = getCachedData()
+    if (cached) {
+      console.warn('Using expired cached data due to API error')
+      return cached.data
+    }
+    
     // 返回fallback数据
+    console.warn('Using fallback data due to API error and no cache available')
     return {
       repos: 15,
       stars: 200,
@@ -144,17 +188,30 @@ export async function getGitHubStats(username: string = 'yourusername'): Promise
  * @param limit 返回数量
  * @returns 仓库列表
  */
-export async function getTopRepos(username: string = 'yourusername', limit: number = 6): Promise<GitHubRepo[]> {
+export async function getTopRepos(username: string = 'ape7054', limit: number = 6): Promise<GitHubRepo[]> {
   try {
     const response = await fetch(`https://api.github.com/users/${username}/repos?per_page=100&sort=stars`, {
-      headers: {
-        'Accept': 'application/vnd.github.v3+json',
-      },
+      headers: getGitHubHeaders(),
       next: { revalidate: 3600 }
     })
 
     if (!response.ok) {
-      throw new Error('Failed to fetch repos')
+      const errorDetails = {
+        status: response.status,
+        statusText: response.statusText,
+        rateLimit: response.headers.get('X-RateLimit-Remaining'),
+      }
+      
+      console.error('GitHub API Error (Top Repos):', errorDetails)
+      
+      if (response.status === 403) {
+        const resetTime = response.headers.get('X-RateLimit-Reset')
+          ? new Date(parseInt(response.headers.get('X-RateLimit-Reset')!) * 1000).toLocaleTimeString()
+          : 'unknown'
+        throw new Error(`GitHub API rate limit exceeded. Resets at ${resetTime}.`)
+      }
+      
+      throw new Error(`Failed to fetch repos: ${response.status} ${response.statusText}`)
     }
 
     const data = await response.json() as GitHubApiRepo[]
@@ -171,6 +228,7 @@ export async function getTopRepos(username: string = 'yourusername', limit: numb
       }))
   } catch (error) {
     console.error('Error fetching top repos:', error)
+    console.warn('Returning empty array due to API error')
     return []
   }
 }
