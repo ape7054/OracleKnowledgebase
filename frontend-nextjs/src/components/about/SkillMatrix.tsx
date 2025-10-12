@@ -88,11 +88,11 @@ export function SkillMatrix() {
   const currentTheme = theme === 'system' ? systemTheme : theme
   const isDark = currentTheme === 'dark'
   
-  // 需要根据主题变色的图标ID
-  const themeAwareIcons = ['nextjs', 'shadcnui', 'vercel']
-  
   // 创建图标映射 - 使用 colorValue 用于 Canvas 渲染
   const iconMap: Record<string, React.ReactNode> = useMemo(() => {
+    // 需要根据主题变色的图标ID
+    const themeAwareIcons = ['nextjs', 'shadcnui', 'vercel']
+    
     return Object.fromEntries(
       techStack.map(tech => {
         // 对于需要变色的图标，根据主题使用不同颜色
@@ -112,6 +112,13 @@ export function SkillMatrix() {
   const allIcons = skills
     .filter(skill => iconMap[skill.id])
     .map(skill => iconMap[skill.id])
+  
+  // 创建技能图标映射表（用于技能列表显示）
+  const skillIconMap = useMemo(() => {
+    return Object.fromEntries(
+      techStack.map(tech => [tech.id, { icon: tech.icon, colorClass: tech.colorClass }])
+    )
+  }, [])
 
   // 按类别统计技能
   const categoryStats = skillCategories.map(category => {
@@ -219,6 +226,8 @@ export function SkillMatrix() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {skills.map((skill, index) => {
                     const colors = skillCategoryColors[skill.category]
+                    const skillIcon = skillIconMap[skill.id]
+                    const SkillIcon = skillIcon?.icon
                     
                     return (
                       <BlurFade
@@ -228,11 +237,17 @@ export function SkillMatrix() {
                         inView
                       >
                         <div className="group p-4 rounded-lg border border-border/50 bg-card hover:border-border hover:shadow-md transition-all duration-300">
-                          {/* 标题行：圆点 + 名称 + 百分比 */}
+                          {/* 标题行：圆点 + 图标 + 名称 + 百分比 */}
                           <div className="flex items-center justify-between mb-3">
                             <div className="flex items-center gap-2.5 flex-1 min-w-0">
                               {/* 类别颜色圆点 */}
                               <div className={`w-2 h-2 rounded-full ${colors.dot} flex-shrink-0`} />
+                              {/* 技能图标 */}
+                              {SkillIcon && (
+                                <SkillIcon 
+                                  className={`w-6 h-6 flex-shrink-0 ${skillIcon.colorClass}`}
+                                />
+                              )}
                               {/* 技能名称 */}
                               <span className="font-medium text-sm truncate">{skill.name}</span>
                             </div>

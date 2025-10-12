@@ -89,7 +89,7 @@ const WarpBackgroundCore: React.FC<WarpBackgroundProps> = ({
         x, 
         delay,
         hue: Math.floor(Math.random() * 360),          // 预计算随机色相
-        aspectRatio: Math.floor(Math.random() * 20) + 35 // 适中光束：35-55 的长宽比
+        aspectRatio: Math.floor(Math.random() * 15) + 25 // 较短光束：25-40 的长宽比
       })
     }
     return beams

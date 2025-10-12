@@ -247,8 +247,8 @@ export default function AboutPage() {
                   beamSize={8}
                   beamDelayMin={0}
                   beamDelayMax={10}
-                  beamDuration={4}
-                  gridColor="hsl(var(--primary) / 0.4)"
+                  beamDuration={6}
+                  gridColor="hsl(var(--primary) / 0.7)"
                 />
                 
                 <CardContent className="p-12 text-center space-y-6 relative z-10">

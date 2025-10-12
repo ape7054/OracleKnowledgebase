@@ -98,7 +98,7 @@ export function ProjectCarousel() {
                       beamSize={8}
                       beamDelayMin={0}
                       beamDelayMax={20}
-                      beamDuration={4}
+                      beamDuration={6}
                       gridColor="hsl(var(--primary) / 0.3)"
                     />
                     <BorderBeam size={250} duration={12} delay={0} />
@@ -283,12 +283,14 @@ export function ProjectCarousel() {
                   className="h-full"
                 >
                   <Card className="h-full border border-border/50 hover:shadow-xl transition-all hover:-translate-y-2 relative overflow-hidden bg-card/98">
-                    <WarpBackground 
+                  <WarpBackground 
                       className="absolute inset-0 z-0" 
-                      perspective={200}
-                      beamsPerSide={2}
-                      beamSize={12}
-                      beamDuration={4}
+                      perspective={100}
+                      beamsPerSide={3}
+                      beamSize={8}
+                      beamDelayMin={0}
+                      beamDelayMax={20}
+                      beamDuration={6}
                       gridColor="hsl(var(--primary) / 0.3)"
                     />
                     <CardContent className="relative z-10 p-6 space-y-4 flex flex-col h-full">

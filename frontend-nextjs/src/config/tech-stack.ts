@@ -20,8 +20,10 @@ import {
   SiVite,
   SiRedis,
   SiVercel,
+  SiWeb3Dotjs,
 } from "react-icons/si"
 import { RiBnbFill } from "react-icons/ri"
+import { TbBrandReactNative, TbApi } from "react-icons/tb"
 
 export interface TechStackItem {
   id: string
@@ -75,6 +77,14 @@ export const techStack: TechStackItem[] = [
     category: 'frontend'
   },
   {
+    id: 'uniapp',
+    name: 'UniApp',
+    icon: TbBrandReactNative,
+    colorClass: 'text-[#2DD4BF]',
+    colorValue: '#2DD4BF',
+    category: 'frontend'
+  },
+  {
     id: 'shadcnui',
     name: 'Shadcn UI',
     icon: SiShadcnui,
@@ -117,6 +127,14 @@ export const techStack: TechStackItem[] = [
     category: 'backend'
   },
   {
+    id: 'grpc',
+    name: 'gRPC',
+    icon: TbApi,
+    colorClass: 'text-[#00ADD8]',
+    colorValue: '#00ADD8',
+    category: 'backend'
+  },
+  {
     id: 'postgresql',
     name: 'PostgreSQL',
     icon: SiPostgresql,
@@ -156,6 +174,14 @@ export const techStack: TechStackItem[] = [
     icon: SiEthereum,
     colorClass: 'text-[#627EEA]',
     colorValue: '#627EEA',
+    category: 'blockchain'
+  },
+  {
+    id: 'web3js',
+    name: 'Web3.js',
+    icon: SiWeb3Dotjs,
+    colorClass: 'text-[#F16822]',
+    colorValue: '#F16822',
     category: 'blockchain'
   },
   {
