@@ -8,7 +8,7 @@ import { Web3ProjectCard } from '@/components/Web3ProjectCard'
 import { Web3Timeline } from '@/components/Web3Timeline'
 import { getTranslations } from 'next-intl/server'
 import web3UpdatesData from '@/data/web3-updates.json'
-import { Blocks } from 'lucide-react'
+import { Blocks, Construction } from 'lucide-react'
 
 interface Web3PageProps {
   params: Promise<{ locale: string }>
@@ -65,8 +65,12 @@ export default async function Web3Page({ params }: Web3PageProps) {
               <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 shadow-xl pointer-events-auto">
                 <Blocks className="h-8 w-8 md:h-10 md:w-10 text-white" />
               </div>
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text pointer-events-auto px-4">
-                {t('web3.title')}
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text pointer-events-auto px-4 flex items-center justify-center gap-3 flex-wrap">
+                <span>{t('web3.title')}</span>
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-bold rounded-lg shadow-lg bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white dark:bg-gradient-to-r dark:from-green-400 dark:via-teal-500 dark:to-cyan-500 dark:text-white animate-pulse [animation-duration:2s]">
+                  <Construction className="w-4 h-4" />
+                  {t('web3.status.inDevelopment')}
+                </span>
               </h1>
               <p className="text-sm md:text-base lg:text-lg text-muted-foreground max-w-2xl mx-auto pointer-events-auto px-4">
                 {t('web3.subtitle')}

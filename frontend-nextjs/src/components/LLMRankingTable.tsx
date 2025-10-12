@@ -6,6 +6,7 @@ import { LLMRankingCard } from '@/components/LLMRankingCard'
 import { BlurFade } from '@/components/ui/blur-fade'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useTranslations } from 'next-intl'
+import { Construction } from 'lucide-react'
 
 export function LLMRankingTable() {
   const t = useTranslations('ai.ranking')
@@ -60,7 +61,8 @@ export function LLMRankingTable() {
         <p>{t('dataSource')}</p>
         <p>{t('lastUpdated')}: 2024-10-11</p>
         <div className="flex items-center justify-center gap-2 pt-2">
-          <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-md border border-primary/20 bg-primary/10 text-primary">
+          <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold rounded-md shadow-md bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white dark:bg-gradient-to-r dark:from-green-400 dark:via-teal-500 dark:to-cyan-500 dark:text-white animate-pulse [animation-duration:2s]">
+            <Construction className="w-3 h-3" />
             {t('inDevelopment')}
           </span>
           <span className="text-xs">{t('betaNotice')}</span>

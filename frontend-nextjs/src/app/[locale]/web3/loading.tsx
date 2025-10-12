@@ -30,7 +30,7 @@ export default function Web3Loading() {
             <Skeleton className="w-20 h-20 rounded-2xl mx-auto" />
             <Skeleton className="h-12 w-80 mx-auto" />
             <Skeleton className="h-6 w-[500px] mx-auto" />
-            <Skeleton className="h-4 w-32 mx-auto" />
+            <Skeleton className="h-8 w-32 mx-auto rounded-lg" />
           </div>
         </div>
       </section>

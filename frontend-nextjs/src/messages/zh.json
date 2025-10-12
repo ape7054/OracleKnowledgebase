@@ -457,6 +457,9 @@
     "noUpdates": "暂无更新",
     "viewDetails": "查看详情",
     "visitWebsite": "访问官网",
+    "status": {
+      "inDevelopment": "开发中"
+    },
     "categories": {
       "layer1": "Layer 1",
       "layer2": "Layer 2",

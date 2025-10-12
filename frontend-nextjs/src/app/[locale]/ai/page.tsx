@@ -9,7 +9,7 @@ import { AITimeline } from '@/components/AITimeline'
 import { LLMRankingTable } from '@/components/LLMRankingTable'
 import { getTranslations } from 'next-intl/server'
 import aiUpdatesData from '@/data/ai-updates.json'
-import { Bot } from 'lucide-react'
+import { Bot, Construction } from 'lucide-react'
 
 interface AIPageProps {
   params: Promise<{ locale: string }>
@@ -68,8 +68,9 @@ export default async function AIPage({ params }: AIPageProps) {
               </div>
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text pointer-events-auto px-4 flex items-center justify-center gap-3 flex-wrap">
                 <span>{t('ai.title')}</span>
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 text-sm font-medium rounded-full border border-primary/20 bg-primary/10 text-primary">
-                  🚧 {t('ai.status.inDevelopment')}
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-bold rounded-lg shadow-lg bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white dark:bg-gradient-to-r dark:from-green-400 dark:via-teal-500 dark:to-cyan-500 dark:text-white animate-pulse [animation-duration:2s]">
+                  <Construction className="w-4 h-4" />
+                  {t('ai.status.inDevelopment')}
                 </span>
               </h1>
               <p className="text-sm md:text-base lg:text-lg text-muted-foreground max-w-2xl mx-auto pointer-events-auto px-4">

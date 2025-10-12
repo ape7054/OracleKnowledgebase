@@ -458,6 +458,9 @@
     "noUpdates": "No updates yet",
     "viewDetails": "View Details",
     "visitWebsite": "Visit Website",
+    "status": {
+      "inDevelopment": "In Development"
+    },
     "categories": {
       "layer1": "Layer 1",
       "layer2": "Layer 2",

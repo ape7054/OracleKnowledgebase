@@ -14,7 +14,7 @@ export default function AIPageLoading() {
             <Skeleton className="w-16 h-16 md:w-20 md:h-20 rounded-2xl mx-auto" />
             <Skeleton className="h-10 md:h-12 w-64 md:w-96 mx-auto" />
             <Skeleton className="h-6 w-96 max-w-full mx-auto" />
-            <Skeleton className="h-4 w-32 mx-auto" />
+            <Skeleton className="h-8 w-32 mx-auto rounded-lg" />
           </div>
         </div>
       </section>
