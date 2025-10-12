@@ -46,7 +46,11 @@ export function Marquee({
     <div
       {...props}
       className={cn(
-        "group flex [gap:var(--gap)] overflow-hidden p-2 [--duration:40s] [--gap:1rem]",
+        "group flex [gap:var(--gap)] overflow-hidden p-2",
+        // 响应式动画速度：移动端更快，桌面端更慢
+        "[--duration:20s] sm:[--duration:30s] md:[--duration:40s]",
+        // 响应式间距：移动端更紧凑
+        "[--gap:0.5rem] sm:[--gap:0.75rem] md:[--gap:1rem]",
         {
           "flex-row": !vertical,
           "flex-col": vertical,
