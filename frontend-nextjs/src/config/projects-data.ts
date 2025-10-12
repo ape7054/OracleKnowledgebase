@@ -24,6 +24,22 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    id: 'learning-stack',
+    title: 'projects.learningStack.title',
+    description: 'projects.learningStack.description',
+    tech: ['Next.js', 'React', 'TypeScript', 'TailwindCSS', 'MDX'],
+    links: {
+      demo: 'https://kb.ency.asia/',
+      github: 'https://github.com/ape7054/learning-stack'
+    },
+    category: 'frontend',
+    featured: true,
+    achievements: [
+      'projects.learningStack.achievement1',
+      'projects.learningStack.achievement2'
+    ]
+  },
+  {
     id: 'solana-arbitrage-bot',
     title: 'projects.solanaBot.title',
     description: 'projects.solanaBot.description',
@@ -60,29 +76,13 @@ export const projects: Project[] = [
     description: 'projects.telegramBot.description',
     tech: ['TypeScript', 'Node.js', 'Telegram Bot API', 'Web3'],
     links: {
-      github: 'https://github.com/ape7054/protocol-v2'
+      github: 'https://github.com/ape7054/telbot'
     },
     category: 'web3',
     featured: true,
     achievements: [
       'projects.telegramBot.achievement1',
       'projects.telegramBot.achievement2'
-    ]
-  },
-  {
-    id: 'learning-stack',
-    title: 'projects.learningStack.title',
-    description: 'projects.learningStack.description',
-    tech: ['Next.js', 'React', 'TypeScript', 'TailwindCSS', 'MDX'],
-    links: {
-      demo: 'https://your-site.vercel.app',
-      github: 'https://github.com/ape7054/nextjs-nextra-starter'
-    },
-    category: 'frontend',
-    featured: true,
-    achievements: [
-      'projects.learningStack.achievement1',
-      'projects.learningStack.achievement2'
     ]
   }
 ]

@@ -82,7 +82,6 @@ export function ProjectCarousel() {
                   whileInView="animate"
                   viewport={{ once: true }}
                   variants={fadeInUp}
-                  transition={{ delay: index * 0.1 }}
                   className="h-full"
                 >
                   <Card className="h-full border border-border/50 hover:shadow-xl transition-all hover:-translate-y-2 relative overflow-hidden">
@@ -265,7 +264,6 @@ export function ProjectCarousel() {
                   whileInView="animate"
                   viewport={{ once: true }}
                   variants={fadeInUp}
-                  transition={{ delay: (featuredProjects.length + index) * 0.1 }}
                   className="h-full"
                 >
                   <Card className="h-full border border-border/50 hover:shadow-xl transition-all hover:-translate-y-2 relative overflow-hidden">
