@@ -93,11 +93,11 @@ export function ProjectCarousel() {
                   <Card className="h-full border border-border/50 hover:shadow-xl transition-all hover:-translate-y-2 relative overflow-hidden bg-card/98">
                     <WarpBackground 
                       className="absolute inset-0 z-0" 
-                      perspective={200}
+                      perspective={100}
                       beamsPerSide={3}
                       beamSize={8}
                       beamDelayMin={0}
-                      beamDelayMax={3}
+                      beamDelayMax={20}
                       beamDuration={4}
                       gridColor="hsl(var(--primary) / 0.3)"
                     />
