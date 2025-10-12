@@ -19,6 +19,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import { BorderBeam } from "@/components/ui/border-beam"
+import { LazyWarpBackground } from "@/components/ui/lazy-warp-background"
 import { projects } from "@/config/projects-data"
 import { useTranslations } from 'next-intl'
 import { ExternalLink, Github } from 'lucide-react'
@@ -84,30 +85,38 @@ export function ProjectCarousel() {
                   variants={fadeInUp}
                   className="h-full"
                 >
-                  <Card className="h-full border border-border/50 hover:shadow-xl transition-all hover:-translate-y-2 relative overflow-hidden">
+                  <Card className="h-full border border-border/50 hover:shadow-xl transition-all hover:-translate-y-2 relative overflow-hidden bg-card/98">
+                    <LazyWarpBackground 
+                      className="absolute inset-0 z-0" 
+                      perspective={200}
+                      beamsPerSide={2}
+                      beamSize={12}
+                      beamDuration={4}
+                      gridColor="hsl(var(--primary) / 0.3)"
+                    />
                     <BorderBeam size={250} duration={12} delay={0} />
-                    <CardContent className="p-6 space-y-4 flex flex-col h-full">
+                    <CardContent className="relative z-10 p-6 space-y-4 flex flex-col h-full">
                       {/* 项目标题 */}
-                      <div className="space-y-2">
-                        <h3 className="text-xl font-semibold line-clamp-1">
+                      <div className="space-y-2 p-3 rounded-lg bg-background/80 backdrop-blur-sm">
+                        <h3 className="text-xl font-bold line-clamp-1 text-foreground">
                           {t(project.title)}
                         </h3>
-                        <p className="text-sm text-muted-foreground line-clamp-2">
+                        <p className="text-sm text-muted-foreground line-clamp-2 font-medium">
                           {t(project.description)}
                         </p>
                       </div>
 
                       {/* 技术栈 */}
-                      <div className="flex flex-wrap gap-1.5">
+                      <div className="flex flex-wrap gap-1.5 p-2 rounded-md bg-background/60 backdrop-blur-sm">
                         {project.tech.map((tech, i) => (
-                          <Badge key={i} variant="secondary" className="text-xs">
+                          <Badge key={i} variant="secondary" className="text-xs font-semibold bg-background/90">
                             {tech}
                           </Badge>
                         ))}
                       </div>
 
                       {/* 操作按钮 */}
-                      <div className="flex items-center gap-2 mt-auto pt-2">
+                      <div className="flex items-center gap-2 mt-auto pt-2 p-2 rounded-md bg-background/60 backdrop-blur-sm">
                         {project.links.github && (
                           <Button variant="outline" size="sm" asChild>
                             <a
@@ -266,38 +275,46 @@ export function ProjectCarousel() {
                   variants={fadeInUp}
                   className="h-full"
                 >
-                  <Card className="h-full border border-border/50 hover:shadow-xl transition-all hover:-translate-y-2 relative overflow-hidden">
-                    <CardContent className="p-6 space-y-4 flex flex-col h-full">
+                  <Card className="h-full border border-border/50 hover:shadow-xl transition-all hover:-translate-y-2 relative overflow-hidden bg-card/98">
+                    <LazyWarpBackground 
+                      className="absolute inset-0 z-0" 
+                      perspective={200}
+                      beamsPerSide={2}
+                      beamSize={12}
+                      beamDuration={4}
+                      gridColor="hsl(var(--primary) / 0.3)"
+                    />
+                    <CardContent className="relative z-10 p-6 space-y-4 flex flex-col h-full">
                       {/* 项目标题 */}
-                      <div className="space-y-2">
+                      <div className="space-y-2 p-3 rounded-lg bg-background/80 backdrop-blur-sm">
                         <div className="flex items-center gap-2">
-                          <h3 className="text-xl font-semibold line-clamp-1">
+                          <h3 className="text-xl font-bold line-clamp-1 text-foreground">
                             {repo.name}
                           </h3>
-                          <Badge variant="outline" className="text-xs">
+                          <Badge variant="outline" className="text-xs font-semibold bg-background/90">
                             <Github className="w-3 h-3 mr-1" />
                             Live
                           </Badge>
                         </div>
-                        <p className="text-sm text-muted-foreground line-clamp-2">
+                        <p className="text-sm text-muted-foreground line-clamp-2 font-medium">
                           {repo.description}
                         </p>
                       </div>
 
                       {/* 语言和 Stars */}
-                      <div className="flex flex-wrap gap-1.5">
+                      <div className="flex flex-wrap gap-1.5 p-2 rounded-md bg-background/60 backdrop-blur-sm">
                         {repo.language && (
-                          <Badge variant="secondary" className="text-xs">
+                          <Badge variant="secondary" className="text-xs font-semibold bg-background/90">
                             {repo.language}
                           </Badge>
                         )}
-                        <Badge variant="secondary" className="text-xs">
+                        <Badge variant="secondary" className="text-xs font-semibold bg-background/90">
                           ⭐ {repo.stars}
                         </Badge>
                       </div>
 
                       {/* 操作按钮 */}
-                      <div className="flex items-center gap-2 mt-auto pt-2">
+                      <div className="flex items-center gap-2 mt-auto pt-2 p-2 rounded-md bg-background/60 backdrop-blur-sm">
                         <Button variant="outline" size="sm" asChild className="flex-1">
                           <a
                             href={repo.url}

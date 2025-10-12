@@ -113,7 +113,10 @@ export async function getGitHubStats(username: string = 'ape7054'): Promise<GitH
         rateLimitReset: userResponse.headers.get('X-RateLimit-Reset')
       }
       
-      console.error('GitHub API Error (User):', errorDetails)
+      // 只在开发环境显示详细错误
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('GitHub API Error (User):', errorDetails)
+      }
       
       // 如果是速率限制错误，提供更友好的错误信息
       if (userResponse.status === 403) {
@@ -141,7 +144,10 @@ export async function getGitHubStats(username: string = 'ape7054'): Promise<GitH
         rateLimit: reposResponse.headers.get('X-RateLimit-Remaining'),
       }
       
-      console.error('GitHub API Error (Repos):', errorDetails)
+      // 只在开发环境显示详细错误
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('GitHub API Error (Repos):', errorDetails)
+      }
       throw new Error(`Failed to fetch repos data: ${reposResponse.status} ${reposResponse.statusText}`)
     }
 
@@ -202,7 +208,10 @@ export async function getTopRepos(username: string = 'ape7054', limit: number = 
         rateLimit: response.headers.get('X-RateLimit-Remaining'),
       }
       
-      console.error('GitHub API Error (Top Repos):', errorDetails)
+      // 只在开发环境显示详细错误
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('GitHub API Error (Top Repos):', errorDetails)
+      }
       
       if (response.status === 403) {
         const resetTime = response.headers.get('X-RateLimit-Reset')
