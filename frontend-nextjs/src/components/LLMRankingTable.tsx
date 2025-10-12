@@ -56,9 +56,15 @@ export function LLMRankingTable() {
       </div>
 
       {/* 说明文字 */}
-      <div className="text-center text-xs text-muted-foreground pt-4 border-t">
+      <div className="text-center text-xs text-muted-foreground pt-4 border-t space-y-2">
         <p>{t('dataSource')}</p>
-        <p className="mt-1">{t('lastUpdated')}: 2024-10-11</p>
+        <p>{t('lastUpdated')}: 2024-10-11</p>
+        <div className="flex items-center justify-center gap-2 pt-2">
+          <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-md border border-primary/20 bg-primary/10 text-primary">
+            {t('inDevelopment')}
+          </span>
+          <span className="text-xs">{t('betaNotice')}</span>
+        </div>
       </div>
     </div>
   )

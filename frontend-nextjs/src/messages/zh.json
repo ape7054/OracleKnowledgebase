@@ -585,6 +585,9 @@
     "noUpdates": "暂无更新",
     "viewDetails": "查看详情",
     "visitWebsite": "访问官网",
+    "status": {
+      "inDevelopment": "开发中"
+    },
     "categories": {
       "dev-tools": "开发工具",
       "image-gen": "图像生成",
@@ -617,7 +620,9 @@
       "sortReasoning": "推理能力",
       "sortValue": "性价比",
       "dataSource": "数据来源: Chatbot Arena (LMSYS), HumanEval, MMLU 等公开基准测试",
-      "lastUpdated": "最后更新"
+      "lastUpdated": "最后更新",
+      "inDevelopment": "开发中",
+      "betaNotice": "页面持续更新中，欢迎反馈建议"
     }
   }
 } 

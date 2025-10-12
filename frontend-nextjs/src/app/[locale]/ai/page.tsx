@@ -66,8 +66,11 @@ export default async function AIPage({ params }: AIPageProps) {
               <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-600 shadow-xl pointer-events-auto">
                 <Bot className="h-8 w-8 md:h-10 md:w-10 text-white" />
               </div>
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text pointer-events-auto px-4">
-                {t('ai.title')}
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text pointer-events-auto px-4 flex items-center justify-center gap-3 flex-wrap">
+                <span>{t('ai.title')}</span>
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 text-sm font-medium rounded-full border border-primary/20 bg-primary/10 text-primary">
+                  🚧 {t('ai.status.inDevelopment')}
+                </span>
               </h1>
               <p className="text-sm md:text-base lg:text-lg text-muted-foreground max-w-2xl mx-auto pointer-events-auto px-4">
                 {t('ai.subtitle')}
@@ -85,7 +88,7 @@ export default async function AIPage({ params }: AIPageProps) {
       {/* 主内容区域 */}
       <section className="py-8 md:py-12 lg:py-16">
         <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-6xl">
-          <Tabs defaultValue="all" className="w-full">
+          <Tabs defaultValue="ranking" className="w-full">
             <TabsList className="w-full justify-start mb-6 md:mb-8 flex-nowrap overflow-x-auto h-auto gap-2 md:flex-wrap">
               <TabsTrigger value="all" className="flex-shrink-0">
                 {t('ai.allCategories')}

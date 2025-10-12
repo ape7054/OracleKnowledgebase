@@ -586,6 +586,9 @@
     "noUpdates": "No updates yet",
     "viewDetails": "View Details",
     "visitWebsite": "Visit Website",
+    "status": {
+      "inDevelopment": "In Development"
+    },
     "categories": {
       "dev-tools": "Dev Tools",
       "image-gen": "Image Generation",
@@ -618,7 +621,9 @@
       "sortReasoning": "Reasoning",
       "sortValue": "Value",
       "dataSource": "Data source: Chatbot Arena (LMSYS), HumanEval, MMLU, and other public benchmarks",
-      "lastUpdated": "Last updated"
+      "lastUpdated": "Last updated",
+      "inDevelopment": "In Development",
+      "betaNotice": "Page is continuously updated. Feedback welcome!"
     }
   },
   "projects": {
