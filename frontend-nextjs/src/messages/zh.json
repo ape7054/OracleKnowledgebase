@@ -214,7 +214,7 @@
       },
       "github": {
         "label": "GitHub Stars",
-        "description": "开源贡献"
+        "description": "项目收藏数"
       },
       "experience": {
         "label": "工作年限",

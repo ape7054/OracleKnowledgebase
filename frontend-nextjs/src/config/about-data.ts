@@ -67,7 +67,7 @@ export const stats: Stat[] = [
   {
     id: 'experience',
     icon: 'Calendar',
-    number: '2+',
+    number: '1+',
     label: 'stats.experience.label',
     description: 'stats.experience.description'
   }

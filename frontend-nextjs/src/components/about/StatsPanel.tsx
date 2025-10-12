@@ -60,13 +60,17 @@ export function StatsPanel() {
                 </div>
                 <div className="text-3xl md:text-4xl font-bold tracking-tight">
                   {(() => {
-                    // 如果是 GitHub stats 且已获取数据，使用真实数据
+                    // 如果是 GitHub stats 且已获取数据，使用真实数据（但保证最小显示值）
                     let displayNumber = stat.number
                     if (stat.id === 'github' && githubStats) {
-                      displayNumber = `${githubStats.stars}+`
+                      // 使用真实数据和配置的默认值中较大的那个
+                      const configDefault = parseInt(stat.number)
+                      const actualStars = githubStats.stars
+                      const displayStars = Math.max(configDefault, actualStars)
+                      displayNumber = `${displayStars}+`
                     }
                     
-                    // 解析数字和后缀（如 30+、200+、2+）
+                    // 解析数字和后缀（如 30+、200+、1+）
                     const match = displayNumber.match(/^(\d+)(.*)$/)
                     if (match) {
                       const num = parseInt(match[1])
