@@ -4,6 +4,7 @@
     "articles": "Articles",
     "knowledge": "Knowledge Base",
     "web3": "Web3 Research",
+    "ai": "AI Research",
     "tools": "Tools",
     "about": "About",
     "github": "GitHub",
@@ -571,6 +572,53 @@
       "linear": {
         "description": "Modern project management tool designed for software development teams"
       }
+    }
+  },
+  "ai": {
+    "title": "AI Project Research",
+    "subtitle": "Tracking cutting-edge AI projects: breakthroughs, industry trends, and comprehensive model performance analysis",
+    "totalProjects": "Tracking {count} projects",
+    "lastUpdate": "Last updated",
+    "daysAgo": "{days} days ago",
+    "allCategories": "All Categories",
+    "timeline": "Timeline",
+    "projects": "Projects",
+    "noUpdates": "No updates yet",
+    "viewDetails": "View Details",
+    "visitWebsite": "Visit Website",
+    "categories": {
+      "dev-tools": "Dev Tools",
+      "image-gen": "Image Generation",
+      "llm": "Large Language Models",
+      "infrastructure": "AI Infrastructure",
+      "research": "Research"
+    },
+    "updateTypes": {
+      "tech": "Tech Update",
+      "industry": "Industry News",
+      "funding": "Funding",
+      "application": "Application",
+      "ecosystem": "Ecosystem",
+      "other": "Other"
+    },
+    "ranking": {
+      "title": "LLM Leaderboard",
+      "subtitle": "Comprehensive rankings based on Chatbot Arena, HumanEval, MMLU, and other authoritative benchmarks",
+      "overallScore": "Overall",
+      "coding": "Coding",
+      "math": "Math",
+      "reasoning": "Reasoning",
+      "mmlu": "MMLU",
+      "tokens": "Context",
+      "openSource": "Open Source",
+      "perMillion": "per 1M tokens",
+      "sortOverall": "Overall",
+      "sortCoding": "Coding",
+      "sortMath": "Math",
+      "sortReasoning": "Reasoning",
+      "sortValue": "Value",
+      "dataSource": "Data source: Chatbot Arena (LMSYS), HumanEval, MMLU, and other public benchmarks",
+      "lastUpdated": "Last updated"
     }
   },
   "projects": {

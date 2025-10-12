@@ -3,7 +3,8 @@
     "home": "首页",
     "articles": "文章",
     "knowledge": "知识库",
-    "web3": "项目研究",
+    "web3": "Web3项目研究",
+    "ai": "AI项目研究",
     "tools": "工具导航",
     "about": "关于",
     "github": "GitHub",
@@ -570,6 +571,53 @@
       "linear": {
         "description": "现代化的项目管理工具，专为软件开发团队设计"
       }
+    }
+  },
+  "ai": {
+    "title": "AI 项目研究",
+    "subtitle": "追踪全球前沿AI项目：技术突破、行业动态、模型性能全面解析",
+    "totalProjects": "追踪 {count} 个项目",
+    "lastUpdate": "最近更新",
+    "daysAgo": "{days} 天前",
+    "allCategories": "全部分类",
+    "timeline": "动态时间线",
+    "projects": "项目列表",
+    "noUpdates": "暂无更新",
+    "viewDetails": "查看详情",
+    "visitWebsite": "访问官网",
+    "categories": {
+      "dev-tools": "开发工具",
+      "image-gen": "图像生成",
+      "llm": "大语言模型",
+      "infrastructure": "AI基础设施",
+      "research": "前沿研究"
+    },
+    "updateTypes": {
+      "tech": "技术更新",
+      "industry": "行业动态",
+      "funding": "融资消息",
+      "application": "应用案例",
+      "ecosystem": "生态发展",
+      "other": "其他"
+    },
+    "ranking": {
+      "title": "大语言模型排行榜",
+      "subtitle": "基于 Chatbot Arena、HumanEval、MMLU 等权威基准测试的综合排名",
+      "overallScore": "综合评分",
+      "coding": "编程能力",
+      "math": "数学推理",
+      "reasoning": "推理能力",
+      "mmlu": "多任务理解",
+      "tokens": "上下文",
+      "openSource": "开源免费",
+      "perMillion": "每百万tokens",
+      "sortOverall": "综合排名",
+      "sortCoding": "编程能力",
+      "sortMath": "数学推理",
+      "sortReasoning": "推理能力",
+      "sortValue": "性价比",
+      "dataSource": "数据来源: Chatbot Arena (LMSYS), HumanEval, MMLU 等公开基准测试",
+      "lastUpdated": "最后更新"
     }
   }
 } 
