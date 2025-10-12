@@ -33,9 +33,14 @@ export function StatsPanel() {
 
   useEffect(() => {
     // 获取 GitHub 统计数据
-    getGitHubStats('ape7054').then(data => {
-      setGithubStats(data)
-    })
+    getGitHubStats('ape7054')
+      .then(data => {
+        setGithubStats(data)
+      })
+      .catch(error => {
+        console.error('Failed to fetch GitHub stats:', error)
+        // 组件会使用默认值，所以即使失败也不影响显示
+      })
   }, [])
 
   return (

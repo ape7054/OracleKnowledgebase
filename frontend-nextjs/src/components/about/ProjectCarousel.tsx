@@ -19,7 +19,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import { BorderBeam } from "@/components/ui/border-beam"
-import { LazyWarpBackground } from "@/components/ui/lazy-warp-background"
+import { WarpBackground } from "@/components/ui/warp-background"
 import { projects } from "@/config/projects-data"
 import { useTranslations } from 'next-intl'
 import { ExternalLink, Github } from 'lucide-react'
@@ -43,9 +43,14 @@ export function ProjectCarousel() {
   useEffect(() => {
     setMounted(true)
     // 获取 GitHub 热门仓库
-    getTopRepos('ape7054', 6).then(repos => {
-      setGithubRepos(repos)
-    })
+    getTopRepos('ape7054', 6)
+      .then(repos => {
+        setGithubRepos(repos)
+      })
+      .catch(error => {
+        console.error('Failed to fetch GitHub repos:', error)
+        // 组件会继续显示其他项目，所以即使失败也不影响整体显示
+      })
   }, [])
 
   const featuredProjects = projects.filter(p => p.featured)
@@ -86,11 +91,13 @@ export function ProjectCarousel() {
                   className="h-full"
                 >
                   <Card className="h-full border border-border/50 hover:shadow-xl transition-all hover:-translate-y-2 relative overflow-hidden bg-card/98">
-                    <LazyWarpBackground 
+                    <WarpBackground 
                       className="absolute inset-0 z-0" 
                       perspective={200}
-                      beamsPerSide={2}
-                      beamSize={12}
+                      beamsPerSide={3}
+                      beamSize={8}
+                      beamDelayMin={0}
+                      beamDelayMax={3}
                       beamDuration={4}
                       gridColor="hsl(var(--primary) / 0.3)"
                     />
@@ -276,7 +283,7 @@ export function ProjectCarousel() {
                   className="h-full"
                 >
                   <Card className="h-full border border-border/50 hover:shadow-xl transition-all hover:-translate-y-2 relative overflow-hidden bg-card/98">
-                    <LazyWarpBackground 
+                    <WarpBackground 
                       className="absolute inset-0 z-0" 
                       perspective={200}
                       beamsPerSide={2}

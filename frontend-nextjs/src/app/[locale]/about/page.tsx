@@ -24,9 +24,15 @@ import { ContactSection } from '@/components/about/ContactSection'
 import { SkillRadarLoadingSkeleton } from '@/components/about/SkillRadarLoadingSkeleton'
 import { ProjectCarouselLoadingSkeleton } from '@/components/about/ProjectCarouselLoadingSkeleton'
 
+// Warp background for CTA
+import { WarpBackground } from '@/components/ui/warp-background'
+
 // Dynamic imports for heavy components below the fold
 const ProjectCarousel = dynamic(
-  () => import('@/components/about/ProjectCarousel').then(mod => ({ default: mod.ProjectCarousel })),
+  () => import('@/components/about/ProjectCarousel').then(mod => ({ default: mod.ProjectCarousel })).catch(() => {
+    console.error('Failed to load ProjectCarousel component')
+    return { default: () => <ProjectCarouselLoadingSkeleton /> }
+  }),
   { 
     loading: () => <ProjectCarouselLoadingSkeleton />,
     ssr: false 
@@ -34,7 +40,10 @@ const ProjectCarousel = dynamic(
 )
 
 const SkillRadarChart = dynamic(
-  () => import('@/components/about/SkillRadarChart').then(mod => ({ default: mod.SkillRadarChart })),
+  () => import('@/components/about/SkillRadarChart').then(mod => ({ default: mod.SkillRadarChart })).catch(() => {
+    console.error('Failed to load SkillRadarChart component')
+    return { default: () => <SkillRadarLoadingSkeleton /> }
+  }),
   { 
     loading: () => <SkillRadarLoadingSkeleton />,
     ssr: false 
@@ -221,7 +230,7 @@ export default function AboutPage() {
 
       {/* CTA */}
       <BlurFade delay={0.5}>
-        <section className="py-16 md:py-24">
+        <section className="py-16 md:py-24 relative">
           <div className="container mx-auto px-6 md:px-8 max-w-4xl">
             <motion.div
               initial="initial"
@@ -229,19 +238,31 @@ export default function AboutPage() {
               viewport={{ once: true, margin: "-100px" }}
               variants={fadeInUp}
             >
-              <Card className="border border-border/50 bg-gradient-to-br from-primary/10 to-primary/5">
-                <CardContent className="p-12 text-center space-y-6">
-                  <h2 className="text-3xl font-bold">{t('cta.title')}</h2>
+              <Card className="border border-border/50 bg-gradient-to-br from-primary/10 to-primary/5 relative overflow-hidden group hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500">
+                {/* Warp Background - 动态光束动画，强化行动号召 */}
+                <WarpBackground 
+                  className="absolute inset-0 opacity-60 group-hover:opacity-75 transition-opacity duration-500"
+                  perspective={300}
+                  beamsPerSide={12}
+                  beamSize={3}
+                  beamDelayMin={0}
+                  beamDelayMax={9}
+                  beamDuration={4}
+                  gridColor="hsl(var(--primary) / 0.4)"
+                />
+                
+                <CardContent className="p-12 text-center space-y-6 relative z-10">
+                  <h2 className="text-3xl font-bold group-hover:scale-105 transition-transform duration-300">{t('cta.title')}</h2>
                   <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
                     {t('cta.description')}
                   </p>
                   <div className="flex flex-wrap items-center justify-center gap-4">
-                  <Button size="lg" asChild>
+                  <Button size="lg" asChild className="hover:scale-110 transition-transform duration-300 shadow-lg hover:shadow-xl">
                     <Link href={`/${locale}/knowledge`}>
                       {t('cta.articles')}
                     </Link>
                   </Button>
-                  <Button size="lg" variant="outline" asChild>
+                  <Button size="lg" variant="outline" asChild className="hover:scale-105 transition-transform duration-300">
                     <Link href="/">
                       {t('cta.home')}
                     </Link>

@@ -3,7 +3,7 @@
 import * as React from 'react'
 import Link from 'next/link'
 import { useTranslations, useLocale } from 'next-intl'
-import { Menu, X } from 'lucide-react'
+import { Menu } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Sheet,
@@ -22,6 +22,12 @@ export function MobileNav() {
   const t = useTranslations('navigation')
   const locale = useLocale()
   const [open, setOpen] = React.useState(false)
+  const [mounted, setMounted] = React.useState(false)
+
+  // 解决 hydration mismatch
+  React.useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const navItems = [
     { href: `/${locale}`, label: t('home') },
@@ -31,6 +37,20 @@ export function MobileNav() {
     { href: `/${locale}/tools`, label: t('tools') },
     { href: `/${locale}/about`, label: t('about') },
   ]
+
+  if (!mounted) {
+    return (
+      <Button
+        variant="ghost"
+        size="icon"
+        className="md:hidden"
+        aria-label="Toggle menu"
+        disabled
+      >
+        <Menu className="h-5 w-5" />
+      </Button>
+    )
+  }
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>

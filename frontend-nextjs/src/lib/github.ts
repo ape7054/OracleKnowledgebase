@@ -102,7 +102,7 @@ export async function getGitHubStats(username: string = 'ape7054'): Promise<GitH
     // 获取用户信息
     const userResponse = await fetch(`https://api.github.com/users/${username}`, {
       headers: getGitHubHeaders(),
-      next: { revalidate: 3600 } // Next.js 缓存1小时
+      cache: 'no-cache' // 客户端兼容的缓存选项
     })
 
     if (!userResponse.ok) {
@@ -134,7 +134,7 @@ export async function getGitHubStats(username: string = 'ape7054'): Promise<GitH
     // 获取仓库信息
     const reposResponse = await fetch(`https://api.github.com/users/${username}/repos?per_page=100`, {
       headers: getGitHubHeaders(),
-      next: { revalidate: 3600 }
+      cache: 'no-cache' // 客户端兼容的缓存选项
     })
 
     if (!reposResponse.ok) {
@@ -198,7 +198,7 @@ export async function getTopRepos(username: string = 'ape7054', limit: number = 
   try {
     const response = await fetch(`https://api.github.com/users/${username}/repos?per_page=100&sort=stars`, {
       headers: getGitHubHeaders(),
-      next: { revalidate: 3600 }
+      cache: 'no-cache' // 客户端兼容的缓存选项
     })
 
     if (!response.ok) {

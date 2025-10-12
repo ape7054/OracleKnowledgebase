@@ -1,6 +1,6 @@
 "use client"
 
-import React, { HTMLAttributes, useCallback, useMemo } from "react"
+import React, { HTMLAttributes, useCallback, useEffect, useState } from "react"
 import { motion } from "motion/react"
 
 import { cn } from "@/lib/utils"
@@ -38,12 +38,12 @@ const Beam = React.memo(({
           "--x": `${x}`,
           "--width": `${width}`,
           "--aspect-ratio": `${aspectRatio}`,
-          "--background": `linear-gradient(hsl(${hue} 80% 60%), transparent)`,
+          "--background": `linear-gradient(hsl(${hue} 90% 65%), hsl(${hue} 85% 55% / 0.6), transparent)`,
         } as React.CSSProperties
       }
       className={`absolute top-0 left-[var(--x)] [aspect-ratio:1/var(--aspect-ratio)] [width:var(--width)] [background:var(--background)]`}
-      initial={{ y: "100cqmax", x: "-50%" }}
-      animate={{ y: "-100%", x: "-50%" }}
+      initial={{ y: "150cqmax", x: "-50%" }}
+      animate={{ y: "-150%", x: "-50%" }}
       transition={{
         duration,
         delay,
@@ -68,6 +68,13 @@ const WarpBackgroundCore: React.FC<WarpBackgroundProps> = ({
   gridColor = "var(--border)",
   ...props
 }) => {
+  // 确保只在客户端渲染，避免 SSR hydration 错误
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
   const generateBeams = useCallback(() => {
     const beams = []
     const cellsPerSide = Math.floor(100 / beamSize)
@@ -80,16 +87,22 @@ const WarpBackgroundCore: React.FC<WarpBackgroundProps> = ({
         x, 
         delay,
         hue: Math.floor(Math.random() * 360),          // 预计算随机色相
-        aspectRatio: Math.floor(Math.random() * 10) + 1 // 预计算随机宽高比
+        aspectRatio: Math.floor(Math.random() * 20) + 35 // 适中光束：35-55 的长宽比
       })
     }
     return beams
   }, [beamsPerSide, beamSize, beamDelayMax, beamDelayMin])
 
-  const topBeams = useMemo(() => generateBeams(), [generateBeams])
-  const rightBeams = useMemo(() => generateBeams(), [generateBeams])
-  const bottomBeams = useMemo(() => generateBeams(), [generateBeams])
-  const leftBeams = useMemo(() => generateBeams(), [generateBeams])
+  // 使用 useState 确保只在客户端初始化一次，避免 SSR/CSR 不匹配
+  const [topBeams] = useState(() => generateBeams())
+  const [rightBeams] = useState(() => generateBeams())
+  const [bottomBeams] = useState(() => generateBeams())
+  const [leftBeams] = useState(() => generateBeams())
+
+  // 在客户端挂载前返回占位 div
+  if (!isMounted) {
+    return <div className={cn("relative will-change-transform", className)} {...props} />
+  }
 
   return (
     <div className={cn("relative will-change-transform", className)} {...props}>
