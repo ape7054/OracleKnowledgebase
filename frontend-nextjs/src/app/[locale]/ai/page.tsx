@@ -9,7 +9,8 @@ import { AITimeline } from '@/components/AITimeline'
 import { LLMRankingTable } from '@/components/LLMRankingTable'
 import { getTranslations } from 'next-intl/server'
 import aiUpdatesData from '@/data/ai-updates.json'
-import { Bot, Construction } from 'lucide-react'
+import { Bot } from 'lucide-react'
+import { DevelopmentBadge } from '@/components/DevelopmentBadge'
 
 interface AIPageProps {
   params: Promise<{ locale: string }>
@@ -68,10 +69,7 @@ export default async function AIPage({ params }: AIPageProps) {
               </div>
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text pointer-events-auto px-4 flex items-center justify-center gap-3 flex-wrap">
                 <span>{t('ai.title')}</span>
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-bold rounded-lg shadow-lg bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white dark:bg-gradient-to-r dark:from-green-400 dark:via-teal-500 dark:to-cyan-500 dark:text-white animate-pulse [animation-duration:2s]">
-                  <Construction className="w-4 h-4" />
-                  {t('ai.status.inDevelopment')}
-                </span>
+                <DevelopmentBadge size="md" text={t('ai.status.inDevelopment')} />
               </h1>
               <p className="text-sm md:text-base lg:text-lg text-muted-foreground max-w-2xl mx-auto pointer-events-auto px-4">
                 {t('ai.subtitle')}

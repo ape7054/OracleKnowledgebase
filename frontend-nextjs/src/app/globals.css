@@ -211,6 +211,20 @@ html.dark {
   animation: spin-slow 6s linear infinite;
 }
 
+/* 增强版呼吸灯动画 - 透明度变化更明显 */
+@keyframes pulse-strong {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.animate-pulse-strong {
+  animation: pulse-strong 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
 /* Aurora 背景动画 */
 @keyframes aurora {
   from {
