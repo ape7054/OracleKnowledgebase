@@ -43,3 +43,6 @@ next-env.d.ts
 # velite
 .velite
 /public/static
+
+# 个人笔记和文档（不上传）
+/core/

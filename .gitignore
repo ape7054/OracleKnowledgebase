@@ -73,4 +73,8 @@ vendor/
 
 # 备份文件
 *.bak
-*~ 
+*~
+
+# 个人笔记和文档（不上传）
+frontend-nextjs/core/
+core/ 
