@@ -13,13 +13,13 @@ import { FileText, DynamicIcon } from '@/lib/icons'
 // 精选文章数据（可以从实际的文章数据中获取）
 const featuredArticles = [
   {
-    id: 'ramanujan-manifesto',
-    title: 'featuredArticles.manifesto.title',
-    description: 'featuredArticles.manifesto.description',
-    category: 'featuredArticles.manifesto.category',
-    readTime: 'featuredArticles.manifesto.readTime',
-    slug: 'the-ramanujan-manifesto',
-    icon: 'Flame'
+    id: 'smart-contract',
+    title: 'featuredArticles.smartContract.title',
+    description: 'featuredArticles.smartContract.description',
+    category: 'featuredArticles.smartContract.category',
+    readTime: 'featuredArticles.smartContract.readTime',
+    slug: 'smart-contract-beginner-guide',
+    icon: 'Sparkles'
   },
   {
     id: 'web-architecture',
@@ -28,7 +28,7 @@ const featuredArticles = [
     category: 'featuredArticles.webArchitecture.category',
     readTime: 'featuredArticles.webArchitecture.readTime',
     slug: 'web-architecture-evolution',
-    icon: 'Zap'
+    icon: 'Code2'
   },
   {
     id: 'dao-guide',
@@ -36,8 +36,8 @@ const featuredArticles = [
     description: 'featuredArticles.daoGuide.description',
     category: 'featuredArticles.daoGuide.category',
     readTime: 'featuredArticles.daoGuide.readTime',
-    slug: 'dao-beginner-guide',
-    icon: 'Link'
+    slug: 'dao-complete-guide',
+    icon: 'Network'
   }
 ]
 

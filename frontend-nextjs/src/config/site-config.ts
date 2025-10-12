@@ -18,17 +18,17 @@ export const siteConfig = {
   // 精选文章配置
   articles: {
     featured: {
-      manifesto: {
-        slug: "", // 拉马努金宣言文章slug（待配置）
-        category: "thinking",
+      smartContract: {
+        slug: "/zh/knowledge/smart-contract-beginner-guide", // 智能合约入门指南
+        category: "web3",
       },
       web: {
-        slug: "", // Web架构演进史文章slug（待配置）
+        slug: "/zh/knowledge/web-architecture-evolution", // Web架构演进史
         category: "tech",
       },
-      labor: {
-        slug: "", // 劳动维权文章slug（待配置）
-        category: "tools",
+      dao: {
+        slug: "/zh/knowledge/dao-complete-guide", // DAO完全指南
+        category: "web3",
       },
     },
   },

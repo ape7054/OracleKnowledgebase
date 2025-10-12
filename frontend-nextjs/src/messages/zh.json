@@ -64,23 +64,23 @@
     "title": "核心内容",
     "subtitle": "代表性文章，展现思维深度与知识广度",
     "articles": {
-      "manifesto": {
-        "title": "拉马努金的复仇：一份去中心化人才共和国宣言",
-        "description": "当天才因英语不及格被扼杀，当学生为无意义的学分奔波，当教育沦为驯化工具——是时候改变了。这不是改良，是革命。",
-        "tag": "思想",
-        "readTime": "12 分钟"
+      "smartContract": {
+        "title": "智能合约入门指南：会自动执行的数字合同",
+        "description": "想象一个永远不会违约的合同，一个不需要律师就能自动执行的协议——这就是智能合约。",
+        "tag": "Web3入门",
+        "readTime": "30 分钟"
       },
       "web": {
         "title": "Web架构演进史：从静态页面到去中心化应用",
-        "description": "一文读懂三十年变迁：从Apache到智能合约，从中心化数据库到IPFS。理解我们今天所处的技术坐标，预见明天的架构演进。",
-        "tag": "技术",
-        "readTime": "25 分钟"
+        "description": "从简单的HTML页面到复杂的分布式系统，Web架构的每一次演进都重新定义了我们与数字世界的交互方式。",
+        "tag": "Web3开发",
+        "readTime": "60 分钟"
       },
-      "labor": {
-        "title": "DAO完全指南：重塑组织的未来",
-        "description": "深入探索去中心化自治组织如何改变传统公司治理模式，开启协作新纪元。",
-        "tag": "Web3",
-        "readTime": "20 分钟"
+      "dao": {
+        "title": "DAO完全指南：去中心化治理的革命",
+        "description": "从'公司制'到'DAO制'：当区块链遇见组织管理，权力如何重新分配？",
+        "tag": "Web3进阶",
+        "readTime": "40 分钟"
       }
     },
     "moreLink": "查看更多精选文章 →"
@@ -425,23 +425,23 @@
       "title": "内容精选",
       "readMore": "阅读更多",
       "viewAll": "浏览知识库",
-      "manifesto": {
-        "title": "拉马努金的复仇：去中心化人才共和国宣言",
-        "description": "当天才因英语不及格被扼杀，当学生为无意义的学分奔波，当教育沦为驯化工具——是时候改变了。",
-        "category": "思想",
-        "readTime": "12 分钟"
+      "smartContract": {
+        "title": "智能合约入门指南：会自动执行的数字合同",
+        "description": "想象一个永远不会违约的合同，一个不需要律师就能自动执行的协议——这就是智能合约。",
+        "category": "Web3入门",
+        "readTime": "30 分钟"
       },
       "webArchitecture": {
         "title": "Web架构演进史：从静态页面到去中心化应用",
-        "description": "一文读懂三十年变迁：从Apache到智能合约，理解我们今天所处的技术坐标。",
-        "category": "技术",
-        "readTime": "25 分钟"
+        "description": "从简单的HTML页面到复杂的分布式系统，Web架构的每一次演进都重新定义了我们与数字世界的交互方式。",
+        "category": "Web3开发",
+        "readTime": "60 分钟"
       },
       "daoGuide": {
-        "title": "DAO完全指南：重塑组织的未来",
-        "description": "深入探索去中心化自治组织如何改变传统公司治理模式，开启协作新纪元。",
-        "category": "Web3",
-        "readTime": "20 分钟"
+        "title": "DAO完全指南：去中心化治理的革命",
+        "description": "从'公司制'到'DAO制'：当区块链遇见组织管理，权力如何重新分配？",
+        "category": "Web3进阶",
+        "readTime": "40 分钟"
       }
     }
   },
