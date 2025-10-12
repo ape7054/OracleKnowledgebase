@@ -11,6 +11,9 @@ import { AnimatedGradientText } from '@/components/ui/animated-gradient-text'
 import { useTranslations, useLocale } from 'next-intl'
 import { Brain, Code2, Calculator, Lightbulb, BookOpen, DollarSign, Calendar } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useIsMobile } from '@/hooks/use-mobile'
+import { useReducedMotion } from '@/hooks/use-reduced-motion'
+import { useIntersectionObserver } from '@/hooks/use-intersection-observer'
 
 interface LLMRankingCardProps {
   model: LLMRanking
@@ -21,19 +24,32 @@ interface LLMRankingCardProps {
 export function LLMRankingCard({ model, rank, isTopRanked = false }: LLMRankingCardProps) {
   const t = useTranslations('ai.ranking')
   const locale = useLocale()
+  
+  // 性能优化：检测设备类型、用户偏好和视口状态
+  const isMobile = useIsMobile()
+  const prefersReducedMotion = useReducedMotion()
+  const { ref, isInView } = useIntersectionObserver({ threshold: 0.1 })
+  
+  // 仅在桌面端、用户未禁用动画、且卡片在视口内时启用重型动画
+  const enableHeavyAnimations = isTopRanked && !isMobile && !prefersReducedMotion && isInView
 
   return (
-    <Card className={cn(
-      "relative group hover:shadow-xl transition-all duration-300 hover:scale-[1.01] overflow-hidden",
-      isTopRanked && "border-primary/50 bg-gradient-to-br from-primary/5 to-transparent"
-    )}>
-      {/* 榜首特效 */}
+    <Card 
+      ref={ref}
+      className={cn(
+        "relative group hover:shadow-xl transition-all duration-300 hover:scale-[1.01] overflow-hidden",
+        isTopRanked && "border-primary/50 bg-gradient-to-br from-primary/5 to-transparent"
+      )}
+    >
+      {/* 榜首特效 - 边框动画（性能影响较小，保留） */}
       {isTopRanked && <BorderBeam size={250} duration={12} delay={9} />}
-      {isTopRanked && (
+      
+      {/* 粒子特效 - 仅在桌面端且在视口内时启用 */}
+      {enableHeavyAnimations && (
         <div className="absolute inset-0 pointer-events-none">
           <SparklesCore
-            particleDensity={800}
-            speed={1.2}
+            particleDensity={80}
+            speed={0.8}
             particleColor="#FFD700"
             className="opacity-50"
             background="transparent"
