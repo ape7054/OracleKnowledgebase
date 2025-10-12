@@ -242,11 +242,11 @@ export default function AboutPage() {
                 {/* Warp Background - 动态光束动画，强化行动号召 */}
                 <WarpBackground 
                   className="absolute inset-0 opacity-60 group-hover:opacity-75 transition-opacity duration-500"
-                  perspective={300}
-                  beamsPerSide={12}
-                  beamSize={3}
+                  perspective={200}
+                  beamsPerSide={6}
+                  beamSize={8}
                   beamDelayMin={0}
-                  beamDelayMax={9}
+                  beamDelayMax={10}
                   beamDuration={4}
                   gridColor="hsl(var(--primary) / 0.4)"
                 />
