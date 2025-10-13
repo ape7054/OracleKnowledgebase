@@ -31,7 +31,7 @@ export function HeroSection() {
     <MatrixBackground 
       className="h-auto min-h-[500px] md:min-h-[600px] border-b border-border/40"
       speed={0.8}
-      density={1.5}
+      density={4}
       brightness={0.6}
       greenIntensity={0.8}
       variation={0.8}
