@@ -1,42 +1,48 @@
 /**
- * Device detection utilities
- * Detects if the user is on a mobile device
+ * 设备检测工具函数
+ * 用于判断当前设备类型，决定使用哪个版本的 Matrix Rain 组件
  */
 
+/**
+ * 检测是否为移动设备
+ * @returns {boolean} true 表示移动设备，false 表示桌面设备
+ */
 export function isMobileDevice(): boolean {
-  // Server-side rendering check
+  // 服务端渲染时返回 false
   if (typeof window === 'undefined') {
     return false;
   }
 
-  // Check user agent for mobile devices
-  const userAgent = navigator.userAgent || navigator.vendor || (window as Window & { opera?: string }).opera || '';
-  const mobileRegex = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini|mobile|tablet/i;
-  const isMobileUA = mobileRegex.test(userAgent.toLowerCase());
-
-  // Check for touch support
-  const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-
-  // Check screen width (mobile typically < 768px)
+  // 检测 User Agent
+  const userAgent = navigator.userAgent.toLowerCase();
+  const mobileKeywords = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini|mobile|tablet/i;
+  
+  // 检测触摸支持
+  const hasTouchScreen = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  
+  // 检测屏幕宽度（小于 768px 视为移动设备）
   const isSmallScreen = window.innerWidth < 768;
-
-  // Consider it mobile if it matches UA pattern OR (has touch AND small screen)
-  return isMobileUA || (hasTouch && isSmallScreen);
+  
+  return mobileKeywords.test(userAgent) || (hasTouchScreen && isSmallScreen);
 }
 
-export function isTouchDevice(): boolean {
+/**
+ * 获取设备信息（用于调试）
+ */
+export function getDeviceInfo() {
   if (typeof window === 'undefined') {
-    return false;
+    return {
+      isMobile: false,
+      screenWidth: 0,
+      userAgent: '',
+    };
   }
-  
-  return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-}
 
-export function getScreenWidth(): number {
-  if (typeof window === 'undefined') {
-    return 1920; // Default desktop width for SSR
-  }
-  
-  return window.innerWidth;
+  return {
+    isMobile: isMobileDevice(),
+    screenWidth: window.innerWidth,
+    userAgent: navigator.userAgent,
+    hasTouchScreen: 'ontouchstart' in window,
+  };
 }
 

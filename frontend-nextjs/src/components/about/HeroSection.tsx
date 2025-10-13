@@ -28,15 +28,15 @@ export function HeroSection() {
   const avatarSrc = theme === 'light' ? '/avatar_hack_light.png' : '/avatar_hack.png'
 
   return (
-    <MatrixBackground 
-      className="h-auto min-h-[500px] md:min-h-[600px] border-b border-border/40"
-      speed={0.8}
-      density={1.5}
-      brightness={0.6}
-      greenIntensity={0.8}
-      variation={0.8}
-      showDebugInfo={false}
-    >
+      <MatrixBackground 
+        className="h-auto min-h-[500px] md:min-h-[600px] border-b border-border/40"
+        speed={0.8}
+        density={1.5}
+        brightness={0.6}
+        greenIntensity={0.8}
+        variation={0.8}
+        showDebugInfo={false}
+      >
       <motion.div 
         className="relative z-10 py-12 md:py-16 lg:py-24 w-full"
         initial="initial"

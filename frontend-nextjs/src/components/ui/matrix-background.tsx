@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils";
 import React, { ReactNode, useEffect, useState } from "react";
 import { MatrixRain } from "./matrix-rain";
-import { MatrixRainMobile } from "./matrix-rain-mobile";
+import { MatrixRainCSS } from "./matrix-rain-css";
 import { isMobileDevice } from "@/lib/device-detection";
 
 interface MatrixBackgroundProps extends React.HTMLProps<HTMLDivElement> {
@@ -52,7 +52,7 @@ export const MatrixBackground = ({
   ...props
 }: MatrixBackgroundProps) => {
   const [isDark, setIsDark] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
+  const [useCSSVersion, setUseCSSVersion] = useState(false);
 
   useEffect(() => {
     // 检测当前主题
@@ -73,8 +73,8 @@ export const MatrixBackground = ({
   }, []);
 
   useEffect(() => {
-    // 检测是否为移动设备
-    setIsMobile(isMobileDevice());
+    // 检测设备类型，决定使用哪个版本
+    setUseCSSVersion(isMobileDevice());
   }, []);
 
   return (
@@ -89,15 +89,17 @@ export const MatrixBackground = ({
       )}
       {...props}
     >
-      {/* Matrix Rain Background - Auto switch between WebGL and CSS version */}
+      {/* Matrix Rain Background */}
       <div className="absolute inset-0 overflow-hidden">
-        {isMobile ? (
-          <MatrixRainMobile
+        {useCSSVersion ? (
+          <MatrixRainCSS
             speed={speed}
             density={density}
             brightness={brightness}
             greenIntensity={greenIntensity}
+            variation={variation}
             isDarkMode={isDark}
+            showDebugInfo={showDebugInfo}
             className="w-full h-full"
           />
         ) : (
