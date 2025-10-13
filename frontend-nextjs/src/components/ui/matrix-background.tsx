@@ -3,6 +3,8 @@
 import { cn } from "@/lib/utils";
 import React, { ReactNode, useEffect, useState } from "react";
 import { MatrixRain } from "./matrix-rain";
+import { MatrixRainMobile } from "./matrix-rain-mobile";
+import { isMobileDevice } from "@/lib/device-detection";
 
 interface MatrixBackgroundProps extends React.HTMLProps<HTMLDivElement> {
   children: ReactNode;
@@ -36,11 +38,6 @@ interface MatrixBackgroundProps extends React.HTMLProps<HTMLDivElement> {
    * @default false
    */
   showDebugInfo?: boolean;
-  /**
-   * Enable test mode (simplified shader for debugging)
-   * @default false
-   */
-  testMode?: boolean;
 }
 
 export const MatrixBackground = ({
@@ -52,10 +49,10 @@ export const MatrixBackground = ({
   greenIntensity = 1.0,
   variation = 1.0,
   showDebugInfo = false,
-  testMode = false,
   ...props
 }: MatrixBackgroundProps) => {
   const [isDark, setIsDark] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     // 检测当前主题
@@ -75,6 +72,11 @@ export const MatrixBackground = ({
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    // 检测是否为移动设备
+    setIsMobile(isMobileDevice());
+  }, []);
+
   return (
     <div
       className={cn(
@@ -87,19 +89,29 @@ export const MatrixBackground = ({
       )}
       {...props}
     >
-      {/* Matrix Rain Background */}
+      {/* Matrix Rain Background - Auto switch between WebGL and CSS version */}
       <div className="absolute inset-0 overflow-hidden">
-        <MatrixRain
-          speed={speed}
-          density={density}
-          brightness={brightness}
-          greenIntensity={greenIntensity}
-          variation={variation}
-          isDarkMode={isDark}
-          showDebugInfo={showDebugInfo}
-          testMode={testMode}
-          className="w-full h-full"
-        />
+        {isMobile ? (
+          <MatrixRainMobile
+            speed={speed}
+            density={density}
+            brightness={brightness}
+            greenIntensity={greenIntensity}
+            isDarkMode={isDark}
+            className="w-full h-full"
+          />
+        ) : (
+          <MatrixRain
+            speed={speed}
+            density={density}
+            brightness={brightness}
+            greenIntensity={greenIntensity}
+            variation={variation}
+            isDarkMode={isDark}
+            showDebugInfo={showDebugInfo}
+            className="w-full h-full"
+          />
+        )}
       </div>
       
       {/* Content Layer */}

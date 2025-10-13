@@ -45,12 +45,6 @@ export interface MatrixRainProps extends React.HTMLAttributes<HTMLDivElement> {
    * @default false
    */
   showDebugInfo?: boolean;
-
-  /**
-   * Enable test mode (simplified shader for debugging)
-   * @default false
-   */
-  testMode?: boolean;
 }
 
 // Vertex shader - simple pass-through
@@ -74,7 +68,6 @@ const fragmentShaderSource = `
   uniform float u_greenIntensity;
   uniform float u_variation;
   uniform float u_isDarkMode;
-  uniform float u_testMode;
 
   // Hash function for pseudo-random values
   float hash(vec2 p) {
@@ -116,26 +109,6 @@ const fragmentShaderSource = `
     // Normalize coordinates
     vec2 uv = gl_FragCoord.xy / iResolution.xy;
 
-    // TEST MODE: Simplified rendering for debugging
-    if (u_testMode > 0.5) {
-      float columnWidth = 20.0 / u_density;
-      float totalColumns = iResolution.x / columnWidth;
-      float columnIndex = floor(uv.x * totalColumns);
-      
-      // Simple scrolling effect
-      float scroll = iTime * u_speed;
-      float pattern = mod(uv.y * 10.0 + scroll, 1.0);
-      float visibility = pattern < 0.5 ? 1.0 : 0.3;
-      
-      // Alternate column colors for debugging
-      float colorShift = mod(columnIndex, 2.0) * 0.2;
-      vec3 color = vec3(0.0, 0.8 + colorShift, 0.0);
-      
-      gl_FragColor = vec4(color * visibility * u_brightness, 1.0);
-      return;
-    }
-
-    // NORMAL MODE: Original complex logic
     // Create column grid based on density - FIXED for mobile
     float columnWidth = 20.0 / u_density;
     float totalColumns = iResolution.x / columnWidth;
@@ -274,7 +247,6 @@ export const MatrixRain = forwardRef<HTMLDivElement, MatrixRainProps>(
       variation = 1.0,
       isDarkMode = true,
       showDebugInfo = false,
-      testMode = false,
       ...props
     },
     ref
@@ -302,7 +274,6 @@ export const MatrixRain = forwardRef<HTMLDivElement, MatrixRainProps>(
       u_greenIntensity: WebGLUniformLocation | null;
       u_variation: WebGLUniformLocation | null;
       u_isDarkMode: WebGLUniformLocation | null;
-      u_testMode: WebGLUniformLocation | null;
     }>({
       iTime: null,
       iResolution: null,
@@ -312,7 +283,6 @@ export const MatrixRain = forwardRef<HTMLDivElement, MatrixRainProps>(
       u_greenIntensity: null,
       u_variation: null,
       u_isDarkMode: null,
-      u_testMode: null,
     });
 
     useEffect(() => {
@@ -414,7 +384,6 @@ export const MatrixRain = forwardRef<HTMLDivElement, MatrixRainProps>(
         u_greenIntensity: gl.getUniformLocation(program, 'u_greenIntensity'),
         u_variation: gl.getUniformLocation(program, 'u_variation'),
         u_isDarkMode: gl.getUniformLocation(program, 'u_isDarkMode'),
-        u_testMode: gl.getUniformLocation(program, 'u_testMode'),
       };
 
       // Create a buffer for the rectangle
@@ -480,7 +449,6 @@ export const MatrixRain = forwardRef<HTMLDivElement, MatrixRainProps>(
         gl.uniform1f(uniformsRef.current.u_greenIntensity, greenIntensity);
         gl.uniform1f(uniformsRef.current.u_variation, variation);
         gl.uniform1f(uniformsRef.current.u_isDarkMode, isDarkMode ? 1.0 : 0.0);
-        gl.uniform1f(uniformsRef.current.u_testMode, testMode ? 1.0 : 0.0);
 
         // Draw
         gl.drawArrays(gl.TRIANGLES, 0, 6);
@@ -511,7 +479,7 @@ export const MatrixRain = forwardRef<HTMLDivElement, MatrixRainProps>(
       return () => {
         clearTimeout(timeoutId);
       };
-    }, [speed, density, brightness, greenIntensity, variation, isDarkMode, testMode]);
+    }, [speed, density, brightness, greenIntensity, variation, isDarkMode]);
 
     return (
       <div ref={ref} className={cn('relative w-full h-full', className)} {...props}>
