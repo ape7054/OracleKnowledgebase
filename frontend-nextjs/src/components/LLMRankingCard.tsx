@@ -1,12 +1,13 @@
 'use client'
 
+import dynamic from 'next/dynamic'
+import { useMemo } from 'react'
 import { LLMRanking, getBadgeInfo } from '@/config/llm-rankings'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { NumberTicker } from '@/components/ui/number-ticker'
 import { BorderBeam } from '@/components/ui/border-beam'
-import { SparklesCore } from '@/components/ui/sparkles'
 import { AnimatedGradientText } from '@/components/ui/animated-gradient-text'
 import { useTranslations, useLocale } from 'next-intl'
 import { Brain, Code2, Calculator, Lightbulb, BookOpen, DollarSign, Calendar } from 'lucide-react'
@@ -14,6 +15,11 @@ import { cn } from '@/lib/utils'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { useReducedMotion } from '@/hooks/use-reduced-motion'
 import { useIntersectionObserver } from '@/hooks/use-intersection-observer'
+
+const SparklesCore = dynamic(
+  () => import('@/components/ui/sparkles').then((mod) => mod.SparklesCore),
+  { ssr: false, loading: () => null }
+)
 
 interface LLMRankingCardProps {
   model: LLMRanking
@@ -31,7 +37,31 @@ export function LLMRankingCard({ model, rank, isTopRanked = false }: LLMRankingC
   const { ref, isInView } = useIntersectionObserver({ threshold: 0.1 })
   
   // 仅在桌面端、用户未禁用动画、且卡片在视口内时启用重型动画
-  const enableHeavyAnimations = isTopRanked && !isMobile && !prefersReducedMotion && isInView
+  const shouldShowParticles = isTopRanked && !prefersReducedMotion && isInView
+
+  const sparkleProps = useMemo(() => {
+    if (!shouldShowParticles) {
+      return null
+    }
+
+    if (isMobile) {
+      return {
+        particleDensity: 60,
+        speed: 0.45,
+        minSize: 0.75,
+        maxSize: 2.2,
+        className: 'opacity-45',
+      }
+    }
+
+    return {
+      particleDensity: 80,
+      speed: 0.8,
+      minSize: 1,
+      maxSize: 3,
+      className: 'opacity-50',
+    }
+  }, [isMobile, shouldShowParticles])
 
   return (
     <Card 
@@ -44,15 +74,13 @@ export function LLMRankingCard({ model, rank, isTopRanked = false }: LLMRankingC
       {/* 榜首特效 - 边框动画（性能影响较小，保留） */}
       {isTopRanked && <BorderBeam size={250} duration={12} delay={9} />}
       
-      {/* 粒子特效 - 仅在桌面端且在视口内时启用 */}
-      {enableHeavyAnimations && (
+      {/* 粒子特效 - 桌面端为高密度版本，移动端启用轻量版 */}
+      {sparkleProps && (
         <div className="absolute inset-0 pointer-events-none">
           <SparklesCore
-            particleDensity={80}
-            speed={0.8}
-            particleColor="#FFD700"
-            className="opacity-50"
             background="transparent"
+            particleColor="#FFD700"
+            {...sparkleProps}
           />
         </div>
       )}

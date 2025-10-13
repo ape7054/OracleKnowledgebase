@@ -1,31 +1,73 @@
 "use client";
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 
+const BREAKPOINTS = {
+  sm: 768,
+  md: 1024,
+  lg: 1440,
+};
+
+type GridSize = {
+  rows: number;
+  cols: number;
+};
+
+const DEFAULT_GRID: GridSize = { rows: 36, cols: 27 };
+
+const computeGrid = (width?: number): GridSize => {
+  if (!width) return DEFAULT_GRID;
+
+  if (width < BREAKPOINTS.sm) {
+    return { rows: 24, cols: 18 };
+  }
+
+  if (width < BREAKPOINTS.md) {
+    return { rows: 48, cols: 36 };
+  }
+
+  if (width < BREAKPOINTS.lg) {
+    return { rows: 72, cols: 54 };
+  }
+
+  return { rows: 96, cols: 72 };
+};
+
+const COLORS = [
+  "#93c5fd",
+  "#f9a8d4",
+  "#86efac",
+  "#fde047",
+  "#fca5a5",
+  "#d8b4fe",
+  "#93c5fd",
+  "#a5b4fc",
+  "#c4b5fd",
+];
+
+const getRandomColor = () => COLORS[Math.floor(Math.random() * COLORS.length)];
+
 export const BoxesCore = ({ className, ...rest }: { className?: string }) => {
-  const rows = new Array(200).fill(1);
-  const cols = new Array(150).fill(1);
-  const colors = [
-    "#93c5fd",
-    "#f9a8d4",
-    "#86efac",
-    "#fde047",
-    "#fca5a5",
-    "#d8b4fe",
-    "#93c5fd",
-    "#a5b4fc",
-    "#c4b5fd",
-  ];
-  const getRandomColor = () => {
-    return colors[Math.floor(Math.random() * colors.length)];
-  };
+  const [gridSize, setGridSize] = useState<GridSize>(DEFAULT_GRID);
+
+  useEffect(() => {
+    const updateGrid = () => setGridSize(computeGrid(window.innerWidth));
+
+    updateGrid();
+    window.addEventListener("resize", updateGrid, { passive: true });
+
+    return () => window.removeEventListener("resize", updateGrid);
+  }, []);
+
+  const rows = useMemo(() => Array.from({ length: gridSize.rows }), [gridSize.rows]);
+  const cols = useMemo(() => Array.from({ length: gridSize.cols }), [gridSize.cols]);
 
   return (
     <div
       style={{
         transform: `translate(0%,-20%) skewX(-48deg) skewY(14deg) scale(1.2) rotate(0deg) translateZ(0)`,
-        pointerEvents: 'none',
+        pointerEvents: "none",
       }}
       className={cn(
         "absolute -top-1/4 left-1/4 z-0 flex h-[160%] w-[160%] -translate-x-1/2 -translate-y-1/2 p-4",
@@ -35,8 +77,8 @@ export const BoxesCore = ({ className, ...rest }: { className?: string }) => {
     >
       {rows.map((_, i) => (
         <motion.div
-          key={`row` + i}
-          style={{ pointerEvents: 'auto' }}
+          key={`row-${i}`}
+          style={{ pointerEvents: "auto" }}
           className="relative h-8 w-16 border-l border-slate-600"
         >
           {cols.map((_, j) => (
@@ -48,8 +90,8 @@ export const BoxesCore = ({ className, ...rest }: { className?: string }) => {
               animate={{
                 transition: { duration: 2 },
               }}
-              key={`col` + j}
-              style={{ pointerEvents: 'auto' }}
+              key={`col-${i}-${j}`}
+              style={{ pointerEvents: "auto" }}
               className="relative h-8 w-16 border-t border-r border-slate-600"
             >
               {j % 2 === 0 && i % 2 === 0 ? (
