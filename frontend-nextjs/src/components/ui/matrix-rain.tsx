@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, forwardRef } from 'react';
+import React, { useEffect, useRef, forwardRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 
 export interface MatrixRainProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -39,6 +39,12 @@ export interface MatrixRainProps extends React.HTMLAttributes<HTMLDivElement> {
    * @default true
    */
   isDarkMode?: boolean;
+
+  /**
+   * Show debug information overlay
+   * @default false
+   */
+  showDebugInfo?: boolean;
 }
 
 // Vertex shader - simple pass-through
@@ -238,6 +244,7 @@ export const MatrixRain = forwardRef<HTMLDivElement, MatrixRainProps>(
       greenIntensity = 1.0,
       variation = 1.0,
       isDarkMode = true,
+      showDebugInfo = false,
       ...props
     },
     ref
@@ -247,6 +254,15 @@ export const MatrixRain = forwardRef<HTMLDivElement, MatrixRainProps>(
     const programRef = useRef<WebGLProgram | null>(null);
     const animationFrameRef = useRef<number>(0);
     const startTimeRef = useRef<number>(Date.now());
+    
+    // Debug info state
+    const [debugInfo, setDebugInfo] = useState({
+      canvasSize: '0x0',
+      webglStatus: 'Initializing...',
+      vendor: '',
+      renderer: '',
+      error: '',
+    });
     const     uniformsRef = useRef<{
       iTime: WebGLUniformLocation | null;
       iResolution: WebGLUniformLocation | null;
@@ -275,11 +291,30 @@ export const MatrixRain = forwardRef<HTMLDivElement, MatrixRainProps>(
       const initWebGL = () => {
         // Verify canvas has valid dimensions
         const rect = canvas.getBoundingClientRect();
+        const sizeStr = `${Math.floor(rect.width)}x${Math.floor(rect.height)}`;
+        
+        setDebugInfo(prev => ({
+          ...prev,
+          canvasSize: sizeStr,
+          webglStatus: 'Checking dimensions...',
+        }));
+        
         if (rect.width === 0 || rect.height === 0) {
           console.warn('[Matrix Rain] Canvas has zero dimensions, retrying...');
+          setDebugInfo(prev => ({
+            ...prev,
+            webglStatus: 'Zero dimensions, retrying...',
+            error: 'Canvas size is 0x0',
+          }));
           setTimeout(initWebGL, 100);
           return;
         }
+
+        setDebugInfo(prev => ({
+          ...prev,
+          webglStatus: 'Creating WebGL context...',
+          error: '',
+        }));
 
         // Initialize WebGL context with mobile-friendly options
         const gl = canvas.getContext('webgl', {
@@ -292,13 +327,29 @@ export const MatrixRain = forwardRef<HTMLDivElement, MatrixRainProps>(
 
         if (!gl) {
           console.error('[Matrix Rain] WebGL not supported');
+          setDebugInfo(prev => ({
+            ...prev,
+            webglStatus: 'WebGL NOT SUPPORTED',
+            error: 'WebGL context creation failed',
+          }));
           return;
         }
 
+        const vendor = gl.getParameter(gl.VENDOR) as string;
+        const renderer = gl.getParameter(gl.RENDERER) as string;
+
         console.log('[Matrix Rain] WebGL initialized successfully', {
-          canvasSize: `${rect.width}x${rect.height}`,
-          vendor: gl.getParameter(gl.VENDOR),
-          renderer: gl.getParameter(gl.RENDERER),
+          canvasSize: sizeStr,
+          vendor,
+          renderer,
+        });
+
+        setDebugInfo({
+          canvasSize: sizeStr,
+          webglStatus: 'SUCCESS',
+          vendor,
+          renderer,
+          error: '',
         });
 
         glRef.current = gl;
@@ -434,6 +485,45 @@ export const MatrixRain = forwardRef<HTMLDivElement, MatrixRainProps>(
           ref={canvasRef}
           className="absolute inset-0 w-full h-full block"
         />
+        
+        {/* Debug Info Overlay */}
+        {showDebugInfo && (
+          <div className="absolute top-2 right-2 bg-black/80 text-green-400 p-3 rounded-lg text-xs font-mono z-50 max-w-[280px] border border-green-500/30">
+            <div className="font-bold text-green-300 mb-2 text-sm">Matrix Rain Debug</div>
+            <div className="space-y-1">
+              <div className="flex justify-between gap-2">
+                <span className="text-gray-400">Canvas:</span>
+                <span className={debugInfo.canvasSize === '0x0' ? 'text-red-400' : 'text-green-400'}>
+                  {debugInfo.canvasSize}
+                </span>
+              </div>
+              <div className="flex justify-between gap-2">
+                <span className="text-gray-400">WebGL:</span>
+                <span className={debugInfo.webglStatus === 'SUCCESS' ? 'text-green-400' : 'text-yellow-400'}>
+                  {debugInfo.webglStatus}
+                </span>
+              </div>
+              {debugInfo.vendor && (
+                <div className="flex justify-between gap-2">
+                  <span className="text-gray-400">GPU:</span>
+                  <span className="text-green-400 text-right break-all">{debugInfo.vendor}</span>
+                </div>
+              )}
+              {debugInfo.renderer && (
+                <div className="pt-1 border-t border-green-500/20">
+                  <div className="text-gray-400 text-[10px]">Renderer:</div>
+                  <div className="text-green-400 break-all text-[10px]">{debugInfo.renderer}</div>
+                </div>
+              )}
+              {debugInfo.error && (
+                <div className="pt-1 border-t border-red-500/20">
+                  <div className="text-red-400 font-bold">Error:</div>
+                  <div className="text-red-300 text-[10px]">{debugInfo.error}</div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     );
   }

@@ -35,6 +35,7 @@ export function HeroSection() {
       brightness={0.6}
       greenIntensity={0.8}
       variation={0.8}
+      showDebugInfo={true}
     >
       <motion.div 
         className="relative z-10 py-12 md:py-16 lg:py-24 w-full"

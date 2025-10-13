@@ -31,6 +31,11 @@ interface MatrixBackgroundProps extends React.HTMLProps<HTMLDivElement> {
    * @default 1.0
    */
   variation?: number;
+  /**
+   * Show debug information overlay
+   * @default false
+   */
+  showDebugInfo?: boolean;
 }
 
 export const MatrixBackground = ({
@@ -41,6 +46,7 @@ export const MatrixBackground = ({
   brightness = 1.0,
   greenIntensity = 1.0,
   variation = 1.0,
+  showDebugInfo = false,
   ...props
 }: MatrixBackgroundProps) => {
   const [isDark, setIsDark] = useState(true);
@@ -84,6 +90,7 @@ export const MatrixBackground = ({
           greenIntensity={greenIntensity}
           variation={variation}
           isDarkMode={isDark}
+          showDebugInfo={showDebugInfo}
           className="w-full h-full"
         />
       </div>
