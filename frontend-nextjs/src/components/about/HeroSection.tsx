@@ -35,7 +35,7 @@ export function HeroSection() {
             {/* 头像 */}
             <motion.div variants={fadeIn} className="flex justify-center">
               <AnimatedAvatarFallback 
-                src="/avatar_nft.png" 
+                src="/avatar_hack.png" 
                 alt="Avatar"
                 size={160}
                 className="w-[120px] h-[120px] md:w-40 md:h-40"
