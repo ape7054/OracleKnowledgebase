@@ -1,31 +1,7 @@
 'use client';
 
-import React, { useEffect, useRef, forwardRef, useState } from 'react';
+import React, { useEffect, useRef, forwardRef } from 'react';
 import { cn } from '@/lib/utils';
-
-// WebGL 支持检测函数
-function detectWebGLSupport(): { webgl: boolean; webgl2: boolean; error?: string } {
-  try {
-    const canvas = document.createElement('canvas');
-    
-    // 检测 WebGL 1.0
-    const webgl = !!(canvas.getContext('webgl') || canvas.getContext('experimental-webgl'));
-    
-    // 检测 WebGL 2.0
-    const webgl2 = !!canvas.getContext('webgl2');
-    
-    // 清理
-    canvas.remove();
-    
-    return { webgl, webgl2 };
-  } catch (error) {
-    return { 
-      webgl: false, 
-      webgl2: false, 
-      error: error instanceof Error ? error.message : 'Unknown error'
-    };
-  }
-}
 
 export interface MatrixRainProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
@@ -63,12 +39,6 @@ export interface MatrixRainProps extends React.HTMLAttributes<HTMLDivElement> {
    * @default true
    */
   isDarkMode?: boolean;
-
-  /**
-   * Pause the animation to save battery
-   * @default false
-   */
-  isPaused?: boolean;
 }
 
 // Vertex shader - simple pass-through
@@ -267,7 +237,6 @@ export const MatrixRain = forwardRef<HTMLDivElement, MatrixRainProps>(
       greenIntensity = 1.0,
       variation = 1.0,
       isDarkMode = true,
-      isPaused = false,
       ...props
     },
     ref
@@ -277,10 +246,6 @@ export const MatrixRain = forwardRef<HTMLDivElement, MatrixRainProps>(
     const programRef = useRef<WebGLProgram | null>(null);
     const animationFrameRef = useRef<number>(0);
     const startTimeRef = useRef<number>(Date.now());
-    
-    // WebGL 支持状态
-    const [webglSupported, setWebglSupported] = useState<boolean | null>(null);
-    const [webglError, setWebglError] = useState<string | null>(null);
     const     uniformsRef = useRef<{
       iTime: WebGLUniformLocation | null;
       iResolution: WebGLUniformLocation | null;
@@ -305,72 +270,12 @@ export const MatrixRain = forwardRef<HTMLDivElement, MatrixRainProps>(
       const canvas = canvasRef.current;
       if (!canvas) return;
 
-      // 检测 WebGL 支持
-      const webglSupport = detectWebGLSupport();
-      
-      if (!webglSupport.webgl) {
-        console.warn('WebGL not supported on this device:', webglSupport.error);
-        setWebglSupported(false);
-        setWebglError(webglSupport.error || 'WebGL not available');
-        return;
-      }
-
-      // 尝试初始化 WebGL 上下文，使用多种方式
-      let gl: WebGLRenderingContext | null = null;
-      
-      try {
-        // 尝试标准 webgl 上下文
-        gl = canvas.getContext('webgl', {
-          alpha: true,
-          antialias: false, // 移动端关闭抗锯齿以提高性能
-          depth: false,
-          stencil: false,
-          preserveDrawingBuffer: false,
-          powerPreference: 'default', // 使用默认功耗设置
-          failIfMajorPerformanceCaveat: false // 允许软件渲染
-        });
-        
-        // 如果失败，尝试 experimental-webgl
-        if (!gl) {
-          gl = canvas.getContext('experimental-webgl', {
-            alpha: true,
-            antialias: false,
-            depth: false,
-            stencil: false,
-            preserveDrawingBuffer: false,
-            powerPreference: 'default',
-            failIfMajorPerformanceCaveat: false
-          }) as WebGLRenderingContext | null;
-        }
-      } catch (error) {
-        console.error('Failed to create WebGL context:', error);
-        setWebglSupported(false);
-        setWebglError(error instanceof Error ? error.message : 'Context creation failed');
-        return;
-      }
-
+      // Initialize WebGL context
+      const gl = canvas.getContext('webgl');
       if (!gl) {
-        console.error('WebGL context creation failed - no context returned');
-        setWebglSupported(false);
-        setWebglError('WebGL context creation failed');
+        console.error('WebGL not supported');
         return;
       }
-
-      // 检测基本的 WebGL 功能
-      try {
-        // 测试基本的 GL 调用
-        gl.getParameter(gl.VERSION);
-        gl.getParameter(gl.RENDERER);
-        
-        setWebglSupported(true);
-        setWebglError(null);
-      } catch (error) {
-        console.error('WebGL functionality test failed:', error);
-        setWebglSupported(false);
-        setWebglError('WebGL functionality test failed');
-        return;
-      }
-
       glRef.current = gl;
 
       // Create shaders
@@ -451,12 +356,6 @@ export const MatrixRain = forwardRef<HTMLDivElement, MatrixRainProps>(
       const render = () => {
         if (!gl || !programRef.current) return;
 
-        if (isPaused) {
-          // If paused, just schedule the next frame without rendering
-          animationFrameRef.current = requestAnimationFrame(render);
-          return;
-        }
-
         const currentTime = (Date.now() - startTimeRef.current) / 1000;
 
         // Update uniforms
@@ -490,171 +389,20 @@ export const MatrixRain = forwardRef<HTMLDivElement, MatrixRainProps>(
         if (vertexShader) gl.deleteShader(vertexShader);
         if (fragmentShader) gl.deleteShader(fragmentShader);
       };
-    }, [speed, density, brightness, greenIntensity, variation, isDarkMode, isPaused]);
-
-    // 渲染降级方案或 WebGL 版本
-    if (webglSupported === false) {
-      return (
-        <MatrixFallback
-          ref={ref}
-          className={className}
-          isDarkMode={isDarkMode}
-          speed={speed}
-          density={density}
-          brightness={brightness}
-          error={webglError}
-          {...props}
-        />
-      );
-    }
+    }, [speed, density, brightness, greenIntensity, variation, isDarkMode]);
 
     return (
       <div ref={ref} className={cn('relative w-full h-full', className)} {...props}>
         <canvas
           ref={canvasRef}
-          className={cn(
-            'absolute inset-0 w-full h-full block transition-opacity duration-300 ease-in-out',
-            webglSupported === null ? 'opacity-0' : 'opacity-100'
-          )}
+          className="absolute inset-0 w-full h-full block"
         />
-        
-        {/* WebGL 加载中或失败时的占位符 */}
-        {webglSupported === null && (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-green-400 text-sm opacity-60">
-              Loading Matrix...
-            </div>
-          </div>
-        )}
       </div>
     );
   }
 );
 
 MatrixRain.displayName = 'MatrixRain';
-
-// 纯 CSS 降级方案组件
-interface MatrixFallbackProps extends React.HTMLAttributes<HTMLDivElement> {
-  isDarkMode?: boolean;
-  speed?: number;
-  density?: number;
-  brightness?: number;
-  error?: string | null;
-}
-
-const MatrixFallback = forwardRef<HTMLDivElement, MatrixFallbackProps>(
-  ({ className, isDarkMode = true, speed = 1.0, density = 1.0, brightness = 1.0, error, ...props }, ref) => {
-    const [columns, setColumns] = useState<number[]>([]);
-    
-    useEffect(() => {
-      const updateColumns = () => {
-        const columnWidth = 20;
-        const numColumns = Math.floor(window.innerWidth / columnWidth) * density;
-        setColumns(Array.from({ length: Math.floor(numColumns) }, (_, i) => i));
-      };
-      
-      updateColumns();
-      window.addEventListener('resize', updateColumns);
-      return () => window.removeEventListener('resize', updateColumns);
-    }, [density]);
-
-    const animationDuration = `${3 / speed}s`;
-    const opacity = brightness;
-
-    return (
-      <div 
-        ref={ref} 
-        className={cn(
-          'relative w-full h-full overflow-hidden',
-          isDarkMode ? 'bg-black' : 'bg-white',
-          className
-        )} 
-        {...props}
-      >
-        {/* CSS Matrix Rain */}
-        <div className="absolute inset-0">
-          {columns.map((col) => (
-            <MatrixColumn
-              key={col}
-              column={col}
-              isDarkMode={isDarkMode}
-              animationDuration={animationDuration}
-              opacity={opacity}
-            />
-          ))}
-        </div>
-        
-        {/* 开发模式错误信息 */}
-        {process.env.NODE_ENV === 'development' && error && (
-          <div className="absolute bottom-4 left-4 bg-red-900/80 text-red-200 text-xs px-2 py-1 rounded max-w-xs">
-            WebGL Error: {error}
-          </div>
-        )}
-        
-        {/* 降级提示 */}
-        <div className="absolute top-4 right-4 text-xs opacity-50 text-green-400">
-          CSS Mode
-        </div>
-      </div>
-    );
-  }
-);
-
-MatrixFallback.displayName = 'MatrixFallback';
-
-// Matrix 列组件
-interface MatrixColumnProps {
-  column: number;
-  isDarkMode: boolean;
-  animationDuration: string;
-  opacity: number;
-}
-
-const MatrixColumn: React.FC<MatrixColumnProps> = ({ 
-  column, 
-  isDarkMode, 
-  animationDuration, 
-  opacity 
-}) => {
-  const characters = ['0', '1', '0', '1', '0', '1'];
-  const columnHeight = Math.floor(Math.random() * 15) + 8;
-  const delay = Math.random() * 3;
-  
-  // 使用 CSS 变量来避免内联样式
-  const columnStyle = {
-    '--matrix-column-left': `${column * 20}px`,
-    '--matrix-animation-delay': `${delay}s`,
-    '--matrix-animation-duration': animationDuration,
-    '--matrix-column-opacity': opacity,
-  } as React.CSSProperties;
-  
-  return (
-    <div
-      className="matrix-column"
-      style={columnStyle}
-    >
-      {Array.from({ length: columnHeight }, (_, i) => {
-        const charStyle = {
-          '--matrix-char-opacity': 1 - (i / columnHeight) * 0.7,
-          '--matrix-char-delay': `${delay + i * 0.05}s`,
-        } as React.CSSProperties;
-        
-        return (
-          <div
-            key={i}
-            className={cn(
-              'select-none text-center matrix-char',
-              isDarkMode ? 'text-green-400' : 'text-gray-700'
-            )}
-            style={charStyle}
-          >
-            {characters[Math.floor(Math.random() * characters.length)]}
-          </div>
-        );
-      })}
-    </div>
-  );
-};
 
 export default MatrixRain;
 
