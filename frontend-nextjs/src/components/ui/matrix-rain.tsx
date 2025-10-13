@@ -141,7 +141,8 @@ const fragmentShaderSource = `
 
     // Create random column heights and gaps
     float columnHash = hash(vec2(grid.x, floor(scrollY / 30.0)));
-    float columnActive = step(0.1, columnHash);
+    // Mobile fix: make all columns active (was: step(0.1, columnHash))
+    float columnActive = 1.0;
 
     // Combine character visibility
     float visibility = char * trailFade * columnActive * u_brightness;
