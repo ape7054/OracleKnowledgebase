@@ -81,7 +81,7 @@ export function ProjectCarousel() {
         >
           <CarouselContent>
             {/* 精选项目 */}
-            {featuredProjects.map((project, index) => (
+            {featuredProjects.map((project) => (
               <CarouselItem key={project.id} className="md:basis-1/2 lg:basis-1/3">
                 <motion.div
                   initial="initial"
@@ -273,7 +273,7 @@ export function ProjectCarousel() {
             ))}
             
             {/* GitHub 真实仓库 */}
-            {githubRepos.map((repo, index) => (
+            {githubRepos.map((repo) => (
               <CarouselItem key={`github-${repo.name}`} className="md:basis-1/2 lg:basis-1/3">
                 <motion.div
                   initial="initial"

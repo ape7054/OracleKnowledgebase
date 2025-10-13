@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Calendar, Clock, Eye, Tag } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface ArticleMetadata {
   publishDate?: string;
@@ -77,9 +78,11 @@ export function ArticleSidebar({ metadata, relatedArticles }: ArticleSidebarProp
           <CardContent>
             <div className="flex items-center gap-3">
               {author.avatar ? (
-                <img
+                <Image
                   src={author.avatar}
                   alt={author.name}
+                  width={40}
+                  height={40}
                   className="h-10 w-10 rounded-full"
                 />
               ) : (

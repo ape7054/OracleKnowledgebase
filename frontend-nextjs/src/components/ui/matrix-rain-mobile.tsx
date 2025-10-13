@@ -48,7 +48,6 @@ export const MatrixRainMobile = forwardRef<HTMLDivElement, MatrixRainMobileProps
       density = 1.0,
       brightness = 1.0,
       greenIntensity = 1.0,
-      isDarkMode = true,
       ...props
     },
     ref
