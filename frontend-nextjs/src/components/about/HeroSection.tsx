@@ -11,6 +11,7 @@ import { fadeInUp, fadeIn, staggerContainer } from '@/lib/motion'
 import { AnimatedAvatarFallback } from './AnimatedAvatarFallback'
 import { AnimatedGradientText } from '@/components/ui/animated-gradient-text'
 import { ContainerTextFlip } from '@/components/ui/container-text-flip'
+import { useTheme } from 'next-themes'
 
 const iconMap = {
   Github,
@@ -21,6 +22,10 @@ const iconMap = {
 
 export function HeroSection() {
   const t = useTranslations('about')
+  const { theme } = useTheme()
+  
+  // 根据主题选择头像
+  const avatarSrc = theme === 'light' ? '/avatar_hack_light.png' : '/avatar_hack.png'
 
   return (
     <AuroraBackground className="h-auto min-h-[500px] md:min-h-[600px] border-b border-border/40">
@@ -35,7 +40,7 @@ export function HeroSection() {
             {/* 头像 */}
             <motion.div variants={fadeIn} className="flex justify-center">
               <AnimatedAvatarFallback 
-                src="/avatar_hack.png" 
+                src={avatarSrc} 
                 alt="Avatar"
                 size={160}
                 className="w-[120px] h-[120px] md:w-40 md:h-40"
