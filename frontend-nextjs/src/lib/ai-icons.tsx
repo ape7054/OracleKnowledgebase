@@ -13,14 +13,12 @@ import {
   Layers,           // Stable Diffusion
   Wand2,            // Leonardo AI, Magic
   Film,             // Runway
-  Cpu,              // Infrastructure
   Database,         // Pinecone
   Link2,            // LangChain
   Cloud,            // Replicate
   Users,            // Hugging Face
   Zap,              // Meta/Llama
   FlaskConical,     // Research
-  BookOpen,         // Documentation
   Rocket,           // Vercel
   Terminal,         // Replit
   type LucideIcon,

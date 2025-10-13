@@ -16,7 +16,6 @@ import {
   Brain, 
   ClipboardList, 
   Wrench, 
-  Flame, 
   Zap, 
   Scale,
   FileText,

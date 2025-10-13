@@ -5,7 +5,6 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Search, Folder, X, BookOpen, Library, FileText, Link2, Code2, Microscope, Scale, Smartphone, Atom, SortAsc, Tag as TagIcon } from 'lucide-react'
 import { type Article } from '#site/content'

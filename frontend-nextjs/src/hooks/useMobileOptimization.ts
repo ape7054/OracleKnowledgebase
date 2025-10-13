@@ -43,6 +43,20 @@ function detectMobile(): boolean {
   return hasMobileKeyword || (hasSmallScreen && hasTouchSupport);
 }
 
+// 定义 Network Information API 类型
+interface NetworkInformation {
+  effectiveType?: '4g' | '3g' | '2g' | 'slow-2g';
+  downlink?: number;
+  rtt?: number;
+  saveData?: boolean;
+}
+
+interface NavigatorWithConnection extends Navigator {
+  connection?: NetworkInformation;
+  mozConnection?: NetworkInformation;
+  webkitConnection?: NetworkInformation;
+}
+
 // 检测低电量模式（仅限支持的浏览器）
 function detectLowPowerMode(): boolean {
   if (typeof window === 'undefined') return false;
@@ -54,8 +68,9 @@ function detectLowPowerMode(): boolean {
   }
   
   // 基于连接速度推测
-  const connection = (navigator as any).connection;
-  if (connection) {
+  const nav = navigator as NavigatorWithConnection;
+  const connection = nav.connection || nav.mozConnection || nav.webkitConnection;
+  if (connection && connection.effectiveType) {
     const slowConnections = ['slow-2g', '2g', '3g'];
     return slowConnections.includes(connection.effectiveType);
   }
