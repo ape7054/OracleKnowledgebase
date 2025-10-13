@@ -12,6 +12,7 @@ import { AnimatedAvatarFallback } from './AnimatedAvatarFallback'
 import { AnimatedGradientText } from '@/components/ui/animated-gradient-text'
 import { ContainerTextFlip } from '@/components/ui/container-text-flip'
 import { useTheme } from 'next-themes'
+import { useEffect, useState } from 'react'
 
 const iconMap = {
   Github,
@@ -23,20 +24,28 @@ const iconMap = {
 export function HeroSection() {
   const t = useTranslations('about')
   const { theme } = useTheme()
+  const [useCSSVersion, setUseCSSVersion] = useState(false)
   
   // 根据主题选择头像
   const avatarSrc = theme === 'light' ? '/avatar_hack_light.png' : '/avatar_hack.png'
 
+  // 检测移动设备，自动选择合适的渲染引擎
+  useEffect(() => {
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+    setUseCSSVersion(isMobile)
+  }, [])
+
   return (
-      <MatrixBackground 
-        className="h-auto min-h-[500px] md:min-h-[600px] border-b border-border/40"
-        speed={0.8}
-        density={1.5}
-        brightness={0.6}
-        greenIntensity={0.8}
-        variation={0.8}
-        showDebugInfo={false}
-      >
+    <MatrixBackground 
+      className="h-auto min-h-[500px] md:min-h-[600px] border-b border-border/40"
+      speed={0.8}
+      density={1.5}
+      brightness={0.6}
+      greenIntensity={0.8}
+      variation={0.8}
+      showDebugInfo={false}
+      useCSSVersion={useCSSVersion}
+    >
       <motion.div 
         className="relative z-10 py-12 md:py-16 lg:py-24 w-full"
         initial="initial"

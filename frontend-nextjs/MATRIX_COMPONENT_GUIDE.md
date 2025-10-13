@@ -5,15 +5,13 @@
 ## 📦 已创建的文件
 
 ### 核心组件
-- ✅ `src/components/ui/matrix-rain.tsx` - WebGL 渲染版本（桌面端）
-- ✅ `src/components/ui/matrix-rain-css.tsx` - CSS 动画版本（移动端）
-- ✅ `src/components/ui/matrix-background.tsx` - 智能切换包装组件
-- ✅ `src/lib/device-detection.ts` - 设备检测工具
+- ✅ `src/components/ui/matrix-rain.tsx` - 核心 WebGL 渲染组件
+- ✅ `src/components/ui/matrix-background.tsx` - 易用的包装组件
 
 ### 文档和示例
-- ✅ `src/app/[locale]/demo/matrix-demo/page.tsx` - 交互式演示页面
+- ✅ `src/components/ui/matrix-usage-example.tsx` - 使用示例代码
+- ✅ `src/app/matrix-demo/page.tsx` - 交互式演示页面
 - ✅ `docs/matrix-rain-component.md` - 完整文档
-- ✅ `MOBILE_WEBGL_FIX.md` - 移动端修复文档
 
 ## 🚀 立即体验
 
@@ -27,46 +25,16 @@ pnpm dev
 ### 2. 访问演示页面
 打开浏览器访问：
 ```
-http://localhost:3000/zh/demo/matrix-demo
-# 或英文版
-http://localhost:3000/en/demo/matrix-demo
+http://localhost:3000/matrix-demo
 ```
 
-你将看到一个交互式演示页面，可以实时调整所有参数，并测试 WebGL 和 CSS 两个版本！
-
-## 🌟 双版本架构
-
-组件现在拥有两个版本，**自动智能切换**：
-
-### 🖥️ WebGL 版本（桌面端）
-- **文件**: `matrix-rain.tsx`
-- **技术**: WebGL + GLSL Shader
-- **优势**: 
-  - 🎨 视觉效果极佳
-  - ⚡ GPU 加速渲染
-  - 🎯 完美的随机性和流畅度
-
-### 📱 CSS 版本（移动端）
-- **文件**: `matrix-rain-css.tsx`
-- **技术**: 纯 CSS 动画
-- **优势**:
-  - ✅ 100% 兼容性
-  - 🔋 低电量消耗
-  - 📉 稳定的性能
-
-### 🤖 自动切换逻辑
-`MatrixBackground` 组件会自动检测设备类型：
-- 检测 User Agent（手机关键词）
-- 检测触摸屏支持
-- 检测屏幕宽度（< 768px）
-
-**无需手动配置，开箱即用！**
+你将看到一个交互式演示页面，可以实时调整所有参数！
 
 ## 💡 三种使用方式
 
-### 方式 1: 使用 MatrixBackground（强烈推荐）
+### 方式 1: 使用 MatrixBackground（推荐）
 
-最简单的使用方式，自动适配桌面和移动端：
+最简单的使用方式，类似 AuroraBackground：
 
 ```tsx
 import { MatrixBackground } from '@/components/ui/matrix-background';
@@ -82,44 +50,19 @@ export function MyPage() {
 }
 ```
 
-**效果**：
-- 🖥️ 桌面访问 → WebGL 版本（流畅绚丽）
-- 📱 移动访问 → CSS 版本（稳定可靠）
+### 方式 2: 直接使用 MatrixRain
 
-### 方式 2: 直接使用特定版本
-
-如果需要强制使用某个版本：
+如果需要更多控制：
 
 ```tsx
-// WebGL 版本（桌面端推荐）
 import { MatrixRain } from '@/components/ui/matrix-rain';
 
-export function DesktopPage() {
+export function MyPage() {
   return (
     <div className="relative min-h-screen bg-black">
-      <MatrixRain 
-        className="absolute inset-0" 
-        isDarkMode={true}
-      />
+      <MatrixRain className="absolute inset-0" />
       <div className="relative z-10 container mx-auto px-4">
-        <h1 className="text-4xl text-white">WebGL Version</h1>
-      </div>
-    </div>
-  );
-}
-
-// CSS 版本（移动端推荐）
-import { MatrixRainCSS } from '@/components/ui/matrix-rain-css';
-
-export function MobilePage() {
-  return (
-    <div className="relative min-h-screen bg-black">
-      <MatrixRainCSS 
-        className="absolute inset-0" 
-        isDarkMode={true}
-      />
-      <div className="relative z-10 container mx-auto px-4">
-        <h1 className="text-4xl text-white">CSS Version</h1>
+        <h1 className="text-4xl text-white">Your Content</h1>
       </div>
     </div>
   );
@@ -224,10 +167,8 @@ http://localhost:3000/zh/demo/matrix-demo
 |------|----------------------|-----------|
 | React 版本 | ❌ 仅支持 18 | ✅ 支持 19 |
 | 依赖冲突 | ❌ react-shaders | ✅ 无冲突 |
-| 视觉效果 | ✅ 优秀 | ✅ 相同或更好 |
+| 视觉效果 | ✅ 优秀 | ✅ 相同 |
 | 性能 | ✅ 好 | ✅ 更好 |
-| 移动端兼容 | ⚠️ 不稳定 | ✅ 完美兼容 |
-| 双版本切换 | ❌ 无 | ✅ WebGL + CSS |
 | 可配置性 | ✅ 5 个参数 | ✅ 5 个参数 |
 | 主题适配 | ❌ 仅深色 | ✅ 深色+浅色 |
 | TypeScript | ✅ 支持 | ✅ 完整支持 |
@@ -235,148 +176,65 @@ http://localhost:3000/zh/demo/matrix-demo
 
 ## 🔧 技术实现
 
-### WebGL 版本（桌面端）
-- **WebGL API**: 使用原生 WebGL，无第三方依赖
-- **GLSL Shader**: 高质量着色器代码
+- **WebGL**: 使用原生 WebGL API，无第三方依赖
+- **GLSL Shader**: 保留了原始的高质量着色器代码
 - **性能优化**: 
   - requestAnimationFrame 动画循环
   - 防抖的 resize 处理
   - 自动资源清理
-  - GPU 加速渲染
-
-### CSS 版本（移动端）
-- **纯 CSS 动画**: 无 JavaScript 渲染逻辑
-- **性能优化**:
-  - `will-change: transform` GPU 提示
-  - `transform` 替代 `top/left`
-  - 列数自动限制（20-40 列）
-  - 随机延迟和速度分布
-- **视觉效果**:
-  - `text-shadow` 绿色发光
-  - 渐变透明度拖尾
-  - 随机 0/1 字符
-
-### 共同特性
 - **React 集成**: 
   - 使用 Hooks 管理生命周期
   - forwardRef 支持
   - 完整的 TypeScript 类型
-- **设备检测**:
-  - User Agent 检测
-  - 触摸屏检测
-  - 屏幕尺寸检测
 
 ## 📝 下一步
 
-1. **测试演示页面**: 访问 `/zh/demo/matrix-demo` 体验效果
-2. **测试移动端**: 在真实手机上打开部署的网站查看 CSS 版本
-3. **集成到项目**: 在你的页面中使用 MatrixBackground
-4. **自定义参数**: 调整参数找到最适合的效果
-5. **查看文档**: 阅读 `docs/matrix-rain-component.md` 了解更多
+1. **测试演示页面**: 访问 `/matrix-demo` 体验效果
+2. **集成到项目**: 在你的页面中使用 MatrixBackground
+3. **自定义参数**: 调整参数找到最适合的效果
+4. **查看文档**: 阅读 `docs/matrix-rain-component.md` 了解更多
 
 ## ❓ 常见问题
 
 ### Q: 为什么看不到效果？
-A: 组件会自动选择版本。桌面端使用 WebGL，移动端使用 CSS。确保浏览器支持基本的 CSS 动画或 WebGL。
-
-### Q: 如何知道当前使用的是哪个版本？
-A: 设置 `showDebugInfo={true}`，右上角会显示版本信息（"WebGL Version" 或 "CSS Version"）。
+A: 确保你的浏览器支持 WebGL。打开浏览器控制台查看是否有错误信息。
 
 ### Q: 性能有问题怎么办？
-A: 
-- 移动端已自动使用轻量级的 CSS 版本
-- 桌面端可降低 `density` 和 `variation` 参数
-- 减小容器尺寸
+A: 尝试降低 `density` 和 `variation` 参数，或减小容器尺寸。
 
 ### Q: 可以改变颜色吗？
-A: 
-- WebGL 版本：修改 `matrix-rain.tsx` 中的 shader 颜色定义
-- CSS 版本：修改 `matrix-rain-css.tsx` 中的 `colorStyle` 配置
-
-### Q: 如何强制使用某个版本？
-A: 直接导入并使用 `MatrixRain`（WebGL）或 `MatrixRainCSS`（CSS），而不是 `MatrixBackground`。
-
-### Q: 移动端效果和桌面端不一样？
-A: 正常现象！两个版本技术不同：
-- WebGL：GPU shader 渲染，随机性更强
-- CSS：CSS 动画，固定列随机生成
-- 两者视觉效果相似，但并非完全一致
+A: 当前版本使用经典的绿色 Matrix 风格。如需其他颜色，可以修改 GLSL shader 中的颜色定义。
 
 ### Q: 如何在 HeroSection 中使用？
 A: 只需将 `AuroraBackground` 替换为 `MatrixBackground` 即可，保持其他代码不变。
 
 ## 📱 移动端测试
 
-### 🎯 测试方法
+### 重要提示
+修复已实施移动端 WebGL 兼容性优化。在部署后请务必在真实移动设备上测试：
 
-#### 方法 1: 访问演示页面
-1. 部署你的网站
-2. 在手机上访问 `/zh/demo/matrix-demo`
-3. 点击 **Auto / WebGL / CSS** 按钮切换版本
-4. 查看右上角调试信息确认当前版本
+1. **访问部署的网站**（而非 localhost）
+2. **打开关于页面** (`/zh/about` 或 `/en/about`)
+3. **查看 Hero 区域** - 应该能看到完整的 Matrix 代码雨效果
 
-#### 方法 2: 访问关于页面
-1. 在手机上访问 `/zh/about` 或 `/en/about`
-2. 查看 Hero 区域的 Matrix 代码雨效果
-3. 应该能看到稳定流畅的 CSS 动画版本
+### 远程调试（可选）
+使用 Chrome Remote Debugging 查看移动端控制台日志：
 
-### 🔍 预期效果
+**正常日志**：
+```
+[Matrix Rain] WebGL initialized successfully { canvasSize: "390x300", ... }
+[Matrix Rain] Canvas resized: 390x300
+```
 
-**移动端（CSS 版本）**：
-- ✅ 20-40 列代码雨
-- ✅ 流畅的下落动画
-- ✅ 绿色发光效果
-- ✅ 60fps 稳定运行
-- ✅ 右上角显示 "CSS Version"
-
-**桌面端（WebGL 版本）**：
-- ✅ 根据 density 计算列数
-- ✅ GPU 加速渲染
-- ✅ 更强的随机性和视觉效果
-- ✅ 右上角显示 "WebGL Version"
-
-### 🐛 调试技巧
-
-1. **启用调试信息**：
-   ```tsx
-   <MatrixBackground showDebugInfo={true} />
-   ```
-
-2. **查看控制台**（Chrome Remote Debugging）：
-   - 连接手机到电脑
-   - 打开 `chrome://inspect`
-   - 查看移动端控制台日志
-
-3. **强制使用 CSS 版本测试**：
-   ```tsx
-   <MatrixRainCSS showDebugInfo={true} />
-   ```
+**详细信息**：查看 `MOBILE_WEBGL_FIX.md` 文档
 
 ## 🎉 完成！
 
-你现在拥有了一个**企业级的双版本 Matrix 代码雨组件**：
+你现在拥有了一个专业级的 Matrix 代码雨组件：
+- ✅ 完全兼容 React 19
+- ✅ 零依赖冲突
+- ✅ 移动端 WebGL 优化
+- ✅ 深色/浅色主题适配
 
-### ✅ 核心特性
-- **React 19** 完全兼容
-- **零依赖冲突** 无第三方 shader 库
-- **双版本架构** WebGL (桌面) + CSS (移动)
-- **自动切换** 智能设备检测
-- **主题适配** 深色/浅色自动切换
-
-### ✅ 技术优势
-- **桌面端**: WebGL GPU 加速，极致视觉效果
-- **移动端**: CSS 动画，100% 兼容性
-- **性能优化**: 分别针对桌面和移动优化
-- **开发体验**: 完整 TypeScript 类型，详细文档
-
-### 🚀 立即开始
-```tsx
-import { MatrixBackground } from '@/components/ui/matrix-background';
-
-<MatrixBackground>
-  {/* 你的内容 */}
-</MatrixBackground>
-```
-
-就这么简单！享受编码吧！ 🎨💻📱
+享受编码吧！ 🚀📱
 

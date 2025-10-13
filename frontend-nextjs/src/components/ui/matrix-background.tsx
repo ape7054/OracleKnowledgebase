@@ -4,7 +4,6 @@ import { cn } from "@/lib/utils";
 import React, { ReactNode, useEffect, useState } from "react";
 import { MatrixRain } from "./matrix-rain";
 import { MatrixRainCSS } from "./matrix-rain-css";
-import { isMobileDevice } from "@/lib/device-detection";
 
 interface MatrixBackgroundProps extends React.HTMLProps<HTMLDivElement> {
   children: ReactNode;
@@ -38,6 +37,11 @@ interface MatrixBackgroundProps extends React.HTMLProps<HTMLDivElement> {
    * @default false
    */
   showDebugInfo?: boolean;
+  /**
+   * Use CSS version instead of WebGL
+   * @default false
+   */
+  useCSSVersion?: boolean;
 }
 
 export const MatrixBackground = ({
@@ -49,10 +53,10 @@ export const MatrixBackground = ({
   greenIntensity = 1.0,
   variation = 1.0,
   showDebugInfo = false,
+  useCSSVersion = false,
   ...props
 }: MatrixBackgroundProps) => {
   const [isDark, setIsDark] = useState(true);
-  const [useCSSVersion, setUseCSSVersion] = useState(false);
 
   useEffect(() => {
     // 检测当前主题
@@ -70,11 +74,6 @@ export const MatrixBackground = ({
     });
     
     return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    // 检测设备类型，决定使用哪个版本
-    setUseCSSVersion(isMobileDevice());
   }, []);
 
   return (
@@ -99,7 +98,6 @@ export const MatrixBackground = ({
             greenIntensity={greenIntensity}
             variation={variation}
             isDarkMode={isDark}
-            showDebugInfo={showDebugInfo}
             className="w-full h-full"
           />
         ) : (

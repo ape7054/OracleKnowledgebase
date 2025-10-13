@@ -4,21 +4,51 @@ import React, { useMemo, forwardRef } from 'react';
 import { cn } from '@/lib/utils';
 
 export interface MatrixRainCSSProps extends React.HTMLAttributes<HTMLDivElement> {
+  /**
+   * Digital rain speed
+   * @default 1.0
+   */
   speed?: number;
+
+  /**
+   * Rain density and column count
+   * @default 1.0
+   */
   density?: number;
+
+  /**
+   * Character brightness and contrast
+   * @default 1.0
+   */
   brightness?: number;
+
+  /**
+   * Green color intensity
+   * @default 1.0
+   */
   greenIntensity?: number;
+
+  /**
+   * Character variation and randomness
+   * @default 1.0
+   */
   variation?: number;
+
+  /**
+   * Whether to use dark mode colors
+   * @default true
+   */
   isDarkMode?: boolean;
-  showDebugInfo?: boolean;
 }
 
-// 生成随机 0 或 1
-const randomChar = () => Math.random() > 0.5 ? '0' : '1';
+// Matrix 字符池：0, 1 和日文片假名
+const MATRIX_CHARS = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
 
-// 生成一列的字符
-const generateColumn = (charCount: number) => {
-  return Array.from({ length: charCount }, () => randomChar());
+// 生成随机字符串
+const generateRandomString = (length: number): string => {
+  return Array.from({ length }, () => 
+    MATRIX_CHARS[Math.floor(Math.random() * MATRIX_CHARS.length)]
+  ).join('');
 };
 
 export const MatrixRainCSS = forwardRef<HTMLDivElement, MatrixRainCSSProps>(
@@ -31,121 +61,119 @@ export const MatrixRainCSS = forwardRef<HTMLDivElement, MatrixRainCSSProps>(
       greenIntensity = 1.0,
       variation = 1.0,
       isDarkMode = true,
-      showDebugInfo = false,
       ...props
     },
     ref
   ) => {
-    // 计算列数（移动端限制在 20-40 列）
+    // 计算列数（基于 density）
     const columnCount = useMemo(() => {
-      const baseColumns = Math.floor(density * 25);
-      return Math.max(20, Math.min(40, baseColumns));
+      // 基础列数 × density，限制在合理范围
+      const baseColumns = 20;
+      const count = Math.floor(baseColumns * density);
+      return Math.min(Math.max(count, 10), 50); // 10-50 列
     }, [density]);
 
-    // 每列的字符数
-    const charsPerColumn = 25;
-
-    // 生成列数据（使用 useMemo 避免重复生成）
+    // 生成列数据
     const columns = useMemo(() => {
-      return Array.from({ length: columnCount }, (_, i) => ({
-        id: i,
-        chars: generateColumn(charsPerColumn),
-        // 随机延迟 0-5s
-        delay: Math.random() * 5,
-        // 基础时长 8-15s，受 speed 影响
-        duration: (8 + Math.random() * 7) / speed,
-        // 随机起始位置
-        offset: Math.random() * 100,
-      }));
-    }, [columnCount, speed]);
-
-    // 颜色配置
-    const colorStyle = useMemo(() => {
-      if (isDarkMode) {
-        const intensity = Math.floor(greenIntensity * 255);
+      return Array.from({ length: columnCount }, (_, i) => {
+        const charCount = 15 + Math.floor(Math.random() * 15); // 15-30 字符
+        const chars = generateRandomString(charCount);
+        const animationDelay = Math.random() * 5; // 0-5s 延迟
+        const animationDuration = (8 + Math.random() * 12) / speed; // 基础 8-20s ÷ speed
+        
         return {
-          color: `rgb(0, ${intensity}, 0)`,
-          textShadow: `0 0 ${5 * greenIntensity}px rgb(0, ${intensity}, 0)`,
+          id: i,
+          chars,
+          animationDelay,
+          animationDuration,
+          left: (i / columnCount) * 100, // 百分比位置
+        };
+      });
+    }, [columnCount, speed, variation]);
+
+    // 颜色计算
+    const getColors = () => {
+      if (isDarkMode) {
+        const greenValue = Math.round(255 * greenIntensity);
+        return {
+          bright: `rgb(200, ${greenValue}, 200)`,      // 亮绿色（leading）
+          normal: `rgb(0, ${Math.round(greenValue * 0.8)}, 0)`,  // 正常绿色
+          dim: `rgb(0, ${Math.round(greenValue * 0.4)}, 0)`,     // 暗绿色（尾部）
         };
       } else {
+        // 浅色模式：深色字符
         return {
-          color: '#1a1a1a',
-          textShadow: '0 0 2px rgba(0, 0, 0, 0.5)',
+          bright: 'rgb(40, 40, 40)',
+          normal: 'rgb(80, 80, 80)',
+          dim: 'rgb(160, 160, 160)',
         };
       }
-    }, [isDarkMode, greenIntensity]);
+    };
+
+    const colors = getColors();
 
     return (
       <div
         ref={ref}
         className={cn('relative w-full h-full overflow-hidden', className)}
+        style={{
+          backgroundColor: isDarkMode ? '#000' : '#fff',
+        }}
         {...props}
       >
-        {/* 调试信息 */}
-        {showDebugInfo && (
-          <div className="absolute top-2 right-2 bg-black/80 text-green-400 p-3 rounded-lg text-xs font-mono z-50 border border-green-500/30">
-            <div className="font-bold text-green-300 mb-2">CSS Version</div>
-            <div className="space-y-1">
-              <div>Columns: {columnCount}</div>
-              <div>Speed: {speed.toFixed(1)}x</div>
-              <div>Density: {density.toFixed(1)}</div>
-            </div>
-          </div>
-        )}
-
-        {/* Matrix 列 - Dynamic inline styles required for animation */}
         {columns.map((column) => (
           <div
             key={column.id}
-            className="matrix-column absolute top-0 font-mono text-sm md:text-base leading-tight"
+            className="absolute top-0 font-mono text-sm leading-tight"
             style={{
-              left: `${(column.id / columnCount) * 100}%`,
-              width: `${100 / columnCount}%`,
-              animation: `matrixFall ${column.duration}s linear ${column.delay}s infinite`,
+              left: `${column.left}%`,
+              animation: `matrixFall ${column.animationDuration}s linear infinite`,
+              animationDelay: `${column.animationDelay}s`,
               willChange: 'transform',
-              transform: `translateY(-${column.offset}%)`,
+              opacity: brightness,
             }}
           >
-            {column.chars.map((char, charIndex) => (
-              <div
-                key={charIndex}
-                className="matrix-char text-center"
-                style={{
-                  ...colorStyle,
-                  opacity: brightness * (1 - (charIndex / charsPerColumn) * 0.7),
-                }}
-              >
-                {char}
-              </div>
-            ))}
+            {column.chars.split('').map((char, idx) => {
+              // 渐变效果：顶部字符亮，底部字符暗
+              const isLeading = idx < 3;
+              const isTrailing = idx > column.chars.length - 5;
+              const color = isLeading ? colors.bright : isTrailing ? colors.dim : colors.normal;
+              const opacity = isLeading ? 1.0 : isTrailing ? 0.3 : 0.8;
+              
+              return (
+                <div
+                  key={idx}
+                  style={{
+                    color,
+                    opacity,
+                    textShadow: isLeading 
+                      ? `0 0 ${5 * brightness}px ${color}, 0 0 ${10 * brightness}px ${color}`
+                      : `0 0 ${3 * brightness}px ${color}`,
+                  }}
+                >
+                  {char}
+                </div>
+              );
+            })}
           </div>
         ))}
 
-        {/* CSS 动画定义 */}
         <style jsx>{`
           @keyframes matrixFall {
-            0% {
+            from {
               transform: translateY(-100%);
               opacity: 0;
             }
-            10% {
+            5% {
               opacity: 1;
             }
-            90% {
+            95% {
               opacity: 1;
             }
-            100% {
+            to {
               transform: translateY(100vh);
               opacity: 0;
             }
-          }
-
-          .matrix-column {
-            pointer-events: none;
-          }
-
-          .matrix-char {
-            user-select: none;
           }
         `}</style>
       </div>
