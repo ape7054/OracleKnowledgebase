@@ -24,10 +24,10 @@ function easeOutCubic(t: number): number {
 export function IconCloud({ icons, images }: IconCloudProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [iconPositions, setIconPositions] = useState<Icon[]>([])
-  const [rotation, setRotation] = useState({ x: 0, y: 0 })
   const [isDragging, setIsDragging] = useState(false)
   const [lastMousePos, setLastMousePos] = useState({ x: 0, y: 0 })
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+  const [canvasSize, setCanvasSize] = useState({ width: 700, height: 310 })
   const [targetRotation, setTargetRotation] = useState<{
     x: number
     y: number
@@ -38,9 +38,27 @@ export function IconCloud({ icons, images }: IconCloudProps) {
     duration: number
   } | null>(null)
   const animationFrameRef = useRef<number>(0)
-  const rotationRef = useRef(rotation)
+  const rotationRef = useRef({ x: 0, y: 0 })
   const iconCanvasesRef = useRef<HTMLCanvasElement[]>([])
   const imagesLoadedRef = useRef<boolean[]>([])
+
+  // Handle responsive canvas size
+  useEffect(() => {
+    const updateCanvasSize = () => {
+      const width = window.innerWidth
+      if (width < 768) {
+        // Mobile: larger square-ish canvas
+        setCanvasSize({ width: Math.min(width - 48, 600), height: 500 })
+      } else {
+        // Desktop: wide canvas
+        setCanvasSize({ width: 700, height: 310 })
+      }
+    }
+
+    updateCanvasSize()
+    window.addEventListener('resize', updateCanvasSize)
+    return () => window.removeEventListener('resize', updateCanvasSize)
+  }, [])
 
   // Create icon canvases once when icons/images change
   useEffect(() => {
@@ -49,10 +67,16 @@ export function IconCloud({ icons, images }: IconCloudProps) {
     const items = icons || images || []
     imagesLoadedRef.current = new Array(items.length).fill(false)
 
+    const isMobile = window.innerWidth < 768
+    const iconSize = isMobile ? 80 : 50
+    const iconRadius = isMobile ? 40 : 20
+    const iconDisplaySize = isMobile ? 80 : 40
+    const svgScale = isMobile ? 1.2 : 0.6
+
     const newIconCanvases = items.map((item, index) => {
       const offscreen = document.createElement("canvas")
-      offscreen.width = 200
-      offscreen.height = 200
+      offscreen.width = iconSize
+      offscreen.height = iconSize
       const offCtx = offscreen.getContext("2d")
 
       if (offCtx) {
@@ -66,18 +90,18 @@ export function IconCloud({ icons, images }: IconCloudProps) {
 
             // Create circular clipping path
             offCtx.beginPath()
-            offCtx.arc(50, 50, 50, 0, Math.PI * 2)
+            offCtx.arc(iconRadius, iconRadius, iconRadius, 0, Math.PI * 2)
             offCtx.closePath()
             offCtx.clip()
 
             // Draw the image
-            offCtx.drawImage(img, 0, 0, 100, 100)
+            offCtx.drawImage(img, 0, 0, iconDisplaySize, iconDisplaySize)
 
             imagesLoadedRef.current[index] = true
           }
         } else {
           // Handle SVG icons
-          offCtx.scale(1.5, 1.5)
+          offCtx.scale(svgScale, svgScale)
           const svgString = renderToString(item as React.ReactElement)
           const img = new Image()
           img.src = "data:image/svg+xml;base64," + btoa(svgString)
@@ -100,6 +124,11 @@ export function IconCloud({ icons, images }: IconCloudProps) {
     const newIcons: Icon[] = []
     const numIcons = items.length || 20
 
+    // Calculate sphere radius based on canvas size
+    // Mobile gets larger radius relative to height
+    const isMobile = canvasSize.width < 768
+    const sphereRadius = isMobile ? 130 : 110
+
     // Fibonacci sphere parameters
     const offset = 2 / numIcons
     const increment = Math.PI * (3 - Math.sqrt(5))
@@ -113,16 +142,16 @@ export function IconCloud({ icons, images }: IconCloudProps) {
       const z = Math.sin(phi) * r
 
       newIcons.push({
-        x: x * 220,
-        y: y * 220,
-        z: z * 220,
+        x: x * sphereRadius,
+        y: y * sphereRadius,
+        z: z * sphereRadius,
         scale: 1,
         opacity: 1,
         id: i,
       })
     }
     setIconPositions(newIcons)
-  }, [icons, images])
+  }, [icons, images, canvasSize])
 
   // Handle mouse events
   const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -149,7 +178,8 @@ export function IconCloud({ icons, images }: IconCloudProps) {
       const screenY = canvasRef.current!.height / 2 + rotatedY
 
       const scale = (rotatedZ + 500) / 650
-      const radius = 50 * scale
+      const isMobile = canvasSize.width < 768
+      const radius = (isMobile ? 40 : 20) * scale
       const dx = x - screenX
       const dy = y - screenY
 
@@ -207,6 +237,49 @@ export function IconCloud({ icons, images }: IconCloudProps) {
   }
 
   const handleMouseUp = () => {
+    setIsDragging(false)
+  }
+
+  // Touch event handlers for mobile
+  const handleTouchStart = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    if (e.touches.length === 1) {
+      const touch = e.touches[0]
+      const rect = canvasRef.current?.getBoundingClientRect()
+      if (!rect) return
+      
+      setIsDragging(true)
+      setLastMousePos({ x: touch.clientX, y: touch.clientY })
+      
+      // Update mouse position for rotation speed calculation
+      const x = touch.clientX - rect.left
+      const y = touch.clientY - rect.top
+      setMousePos({ x, y })
+    }
+  }
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    if (e.touches.length === 1 && isDragging) {
+      const touch = e.touches[0]
+      const rect = canvasRef.current?.getBoundingClientRect()
+      if (rect) {
+        const x = touch.clientX - rect.left
+        const y = touch.clientY - rect.top
+        setMousePos({ x, y })
+      }
+
+      const deltaX = touch.clientX - lastMousePos.x
+      const deltaY = touch.clientY - lastMousePos.y
+
+      rotationRef.current = {
+        x: rotationRef.current.x + deltaY * 0.002,
+        y: rotationRef.current.y + deltaX * 0.002,
+      }
+
+      setLastMousePos({ x: touch.clientX, y: touch.clientY })
+    }
+  }
+
+  const handleTouchEnd = () => {
     setIsDragging(false)
   }
 
@@ -268,6 +341,10 @@ export function IconCloud({ icons, images }: IconCloudProps) {
         .sort((a, b) => a.rotatedZ - b.rotatedZ) // Sort back to front
 
       // Render icons from back to front
+      const isMobile = canvas.width < 768
+      const iconRenderSize = isMobile ? 80 : 40
+      const iconRenderRadius = iconRenderSize / 2
+
       sortedIcons.forEach(({ icon, index, rotatedX, rotatedY, rotatedZ }) => {
         const scale = (rotatedZ + 500) / 650
         const opacity = Math.max(0.4, Math.min(1, (rotatedZ + 350) / 550))
@@ -283,18 +360,24 @@ export function IconCloud({ icons, images }: IconCloudProps) {
             iconCanvasesRef.current[index] &&
             imagesLoadedRef.current[index]
           ) {
-            ctx.drawImage(iconCanvasesRef.current[index], -50, -50, 100, 100)
+            ctx.drawImage(
+              iconCanvasesRef.current[index], 
+              -iconRenderRadius, 
+              -iconRenderRadius, 
+              iconRenderSize, 
+              iconRenderSize
+            )
           }
         } else {
           // Show numbered circles if no icons/images are provided
           ctx.beginPath()
-          ctx.arc(0, 0, 50, 0, Math.PI * 2)
+          ctx.arc(0, 0, iconRenderRadius, 0, Math.PI * 2)
           ctx.fillStyle = "#4444ff"
           ctx.fill()
           ctx.fillStyle = "white"
           ctx.textAlign = "center"
           ctx.textBaseline = "middle"
-          ctx.font = "40px Arial"
+          ctx.font = `${isMobile ? 32 : 16}px Arial`
           ctx.fillText(`${icon.id + 1}`, 0, 0)
         }
 
@@ -310,18 +393,21 @@ export function IconCloud({ icons, images }: IconCloudProps) {
         cancelAnimationFrame(animationFrameRef.current)
       }
     }
-  }, [icons, images, iconPositions, isDragging, mousePos, targetRotation])
+  }, [icons, images, iconPositions, isDragging, mousePos, targetRotation, canvasSize])
 
   return (
     <canvas
       ref={canvasRef}
-      width={700}
-      height={550}
+      width={canvasSize.width}
+      height={canvasSize.height}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
-      className="rounded-lg w-full h-full"
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+      className="rounded-lg w-full h-auto max-w-full"
       aria-label="Interactive 3D Icon Cloud"
       role="img"
     />

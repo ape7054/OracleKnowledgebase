@@ -162,7 +162,7 @@ export function SkillMatrix() {
               </div>
 
               {/* 技能分类统计 */}
-              <div className="mt-8 pt-6 px-6 md:px-10 border-t border-border/50">
+              <div className="pt-6 px-6 md:px-10 border-t border-border/50">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
                   {categoryStats.map((category, index) => {
                     const config = categoryConfig[category.id as keyof typeof categoryConfig]
