@@ -157,10 +157,8 @@ export function SkillMatrix() {
           {/* Icon Cloud 展示 */}
           <Card className="border border-border/50 bg-card/50 backdrop-blur shadow-lg overflow-hidden">
             <CardContent className="p-0">
-              <div className="flex justify-center items-center min-h-[700px] md:min-h-[1000px]">
-                <div className="w-full h-full flex items-center justify-center">
-                  <IconCloud icons={allIcons} />
-                </div>
+              <div className="flex justify-center items-center">
+                <IconCloud icons={allIcons} />
               </div>
 
               {/* 技能分类统计 */}

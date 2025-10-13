@@ -51,8 +51,8 @@ export function IconCloud({ icons, images }: IconCloudProps) {
 
     const newIconCanvases = items.map((item, index) => {
       const offscreen = document.createElement("canvas")
-      offscreen.width = 150
-      offscreen.height = 150
+      offscreen.width = 200
+      offscreen.height = 200
       const offCtx = offscreen.getContext("2d")
 
       if (offCtx) {
@@ -66,12 +66,12 @@ export function IconCloud({ icons, images }: IconCloudProps) {
 
             // Create circular clipping path
             offCtx.beginPath()
-            offCtx.arc(75, 75, 75, 0, Math.PI * 2)
+            offCtx.arc(50, 50, 50, 0, Math.PI * 2)
             offCtx.closePath()
             offCtx.clip()
 
             // Draw the image
-            offCtx.drawImage(img, 0, 0, 150, 150)
+            offCtx.drawImage(img, 0, 0, 100, 100)
 
             imagesLoadedRef.current[index] = true
           }
@@ -113,9 +113,9 @@ export function IconCloud({ icons, images }: IconCloudProps) {
       const z = Math.sin(phi) * r
 
       newIcons.push({
-        x: x * 280,
-        y: y * 280,
-        z: z * 280,
+        x: x * 220,
+        y: y * 220,
+        z: z * 220,
         scale: 1,
         opacity: 1,
         id: i,
@@ -149,7 +149,7 @@ export function IconCloud({ icons, images }: IconCloudProps) {
       const screenY = canvasRef.current!.height / 2 + rotatedY
 
       const scale = (rotatedZ + 500) / 650
-      const radius = 75 * scale
+      const radius = 50 * scale
       const dx = x - screenX
       const dy = y - screenY
 
@@ -283,18 +283,18 @@ export function IconCloud({ icons, images }: IconCloudProps) {
             iconCanvasesRef.current[index] &&
             imagesLoadedRef.current[index]
           ) {
-            ctx.drawImage(iconCanvasesRef.current[index], -75, -75, 150, 150)
+            ctx.drawImage(iconCanvasesRef.current[index], -50, -50, 100, 100)
           }
         } else {
           // Show numbered circles if no icons/images are provided
           ctx.beginPath()
-          ctx.arc(0, 0, 75, 0, Math.PI * 2)
+          ctx.arc(0, 0, 50, 0, Math.PI * 2)
           ctx.fillStyle = "#4444ff"
           ctx.fill()
           ctx.fillStyle = "white"
           ctx.textAlign = "center"
           ctx.textBaseline = "middle"
-          ctx.font = "60px Arial"
+          ctx.font = "40px Arial"
           ctx.fillText(`${icon.id + 1}`, 0, 0)
         }
 
@@ -315,8 +315,8 @@ export function IconCloud({ icons, images }: IconCloudProps) {
   return (
     <canvas
       ref={canvasRef}
-      width={1000}
-      height={1000}
+      width={700}
+      height={550}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
