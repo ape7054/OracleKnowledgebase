@@ -208,9 +208,33 @@ A: 当前版本使用经典的绿色 Matrix 风格。如需其他颜色，可以
 ### Q: 如何在 HeroSection 中使用？
 A: 只需将 `AuroraBackground` 替换为 `MatrixBackground` 即可，保持其他代码不变。
 
+## 📱 移动端测试
+
+### 重要提示
+修复已实施移动端 WebGL 兼容性优化。在部署后请务必在真实移动设备上测试：
+
+1. **访问部署的网站**（而非 localhost）
+2. **打开关于页面** (`/zh/about` 或 `/en/about`)
+3. **查看 Hero 区域** - 应该能看到完整的 Matrix 代码雨效果
+
+### 远程调试（可选）
+使用 Chrome Remote Debugging 查看移动端控制台日志：
+
+**正常日志**：
+```
+[Matrix Rain] WebGL initialized successfully { canvasSize: "390x300", ... }
+[Matrix Rain] Canvas resized: 390x300
+```
+
+**详细信息**：查看 `MOBILE_WEBGL_FIX.md` 文档
+
 ## 🎉 完成！
 
-你现在拥有了一个专业级的 Matrix 代码雨组件，完全兼容 React 19，没有任何依赖冲突！
+你现在拥有了一个专业级的 Matrix 代码雨组件：
+- ✅ 完全兼容 React 19
+- ✅ 零依赖冲突
+- ✅ 移动端 WebGL 优化
+- ✅ 深色/浅色主题适配
 
-享受编码吧！ 🚀
+享受编码吧！ 🚀📱
 

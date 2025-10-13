@@ -3,7 +3,6 @@
 import { cn } from "@/lib/utils";
 import React, { ReactNode, useEffect, useState } from "react";
 import { MatrixRain } from "./matrix-rain";
-import { isMobileDevice, getOptimalMatrixParams } from "@/lib/device-detection";
 
 interface MatrixBackgroundProps extends React.HTMLProps<HTMLDivElement> {
   children: ReactNode;
@@ -45,7 +44,6 @@ export const MatrixBackground = ({
   ...props
 }: MatrixBackgroundProps) => {
   const [isDark, setIsDark] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     // 检测当前主题
@@ -65,21 +63,6 @@ export const MatrixBackground = ({
     return () => observer.disconnect();
   }, []);
 
-  useEffect(() => {
-    // 检测是否为移动设备
-    setIsMobile(isMobileDevice());
-  }, []);
-
-  // 获取优化参数 - 仅在用户未自定义时应用移动优化
-  const optimalParams = getOptimalMatrixParams();
-  const finalParams = {
-    speed: speed === 1.0 && isMobile ? optimalParams.speed : speed,
-    density: density === 1.0 && isMobile ? optimalParams.density : density,
-    brightness: brightness === 1.0 && isMobile ? optimalParams.brightness : brightness,
-    greenIntensity: greenIntensity === 1.0 && isMobile ? optimalParams.greenIntensity : greenIntensity,
-    variation: variation === 1.0 && isMobile ? optimalParams.variation : variation,
-  };
-
   return (
     <div
       className={cn(
@@ -95,11 +78,11 @@ export const MatrixBackground = ({
       {/* Matrix Rain Background */}
       <div className="absolute inset-0 overflow-hidden">
         <MatrixRain
-          speed={finalParams.speed}
-          density={finalParams.density}
-          brightness={finalParams.brightness}
-          greenIntensity={finalParams.greenIntensity}
-          variation={finalParams.variation}
+          speed={speed}
+          density={density}
+          brightness={brightness}
+          greenIntensity={greenIntensity}
+          variation={variation}
           isDarkMode={isDark}
           className="w-full h-full"
         />

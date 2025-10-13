@@ -2,7 +2,6 @@
 
 import React, { useEffect, useRef, forwardRef } from 'react';
 import { cn } from '@/lib/utils';
-import { getOptimalPixelRatio } from '@/lib/device-detection';
 
 export interface MatrixRainProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
@@ -53,6 +52,7 @@ const vertexShaderSource = `
 // Fragment shader - Matrix digital rain effect
 const fragmentShaderSource = `
   precision mediump float;
+  precision mediump int;
 
   uniform float iTime;
   uniform vec2 iResolution;
@@ -271,13 +271,37 @@ export const MatrixRain = forwardRef<HTMLDivElement, MatrixRainProps>(
       const canvas = canvasRef.current;
       if (!canvas) return;
 
-      // Initialize WebGL context
-      const gl = canvas.getContext('webgl');
-      if (!gl) {
-        console.error('WebGL not supported');
-        return;
-      }
-      glRef.current = gl;
+      // Delay initialization to ensure canvas has correct dimensions
+      const initWebGL = () => {
+        // Verify canvas has valid dimensions
+        const rect = canvas.getBoundingClientRect();
+        if (rect.width === 0 || rect.height === 0) {
+          console.warn('[Matrix Rain] Canvas has zero dimensions, retrying...');
+          setTimeout(initWebGL, 100);
+          return;
+        }
+
+        // Initialize WebGL context with mobile-friendly options
+        const gl = canvas.getContext('webgl', {
+          alpha: true,
+          antialias: false, // Disable for better mobile compatibility
+          powerPreference: 'default', // Use default power preference
+          failIfMajorPerformanceCaveat: false, // Allow software rendering
+          preserveDrawingBuffer: false,
+        });
+
+        if (!gl) {
+          console.error('[Matrix Rain] WebGL not supported');
+          return;
+        }
+
+        console.log('[Matrix Rain] WebGL initialized successfully', {
+          canvasSize: `${rect.width}x${rect.height}`,
+          vendor: gl.getParameter(gl.VENDOR),
+          renderer: gl.getParameter(gl.RENDERER),
+        });
+
+        glRef.current = gl;
 
       // Create shaders
       const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
@@ -317,7 +341,8 @@ export const MatrixRain = forwardRef<HTMLDivElement, MatrixRainProps>(
       const positions = [-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1];
       gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
-      // Setup rendering - will be properly sized by resizeCanvas
+      // Setup rendering
+      gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
       gl.clearColor(0, 0, 0, 1);
       gl.clear(gl.COLOR_BUFFER_BIT);
 
@@ -326,22 +351,21 @@ export const MatrixRain = forwardRef<HTMLDivElement, MatrixRainProps>(
       gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
       gl.vertexAttribPointer(positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);
 
-      // Resize handler with optimal pixel ratio
+      // Resize handler with improved dimension calculation
       const resizeCanvas = () => {
         if (!canvas || !gl) return;
 
-        const displayWidth = canvas.clientWidth;
-        const displayHeight = canvas.clientHeight;
-        
-        // Use optimal pixel ratio for mobile devices
-        const pixelRatio = getOptimalPixelRatio();
-        const width = Math.floor(displayWidth * pixelRatio);
-        const height = Math.floor(displayHeight * pixelRatio);
+        // Use getBoundingClientRect for accurate dimensions
+        const rect = canvas.getBoundingClientRect();
+        const displayWidth = Math.max(1, Math.floor(rect.width));
+        const displayHeight = Math.max(1, Math.floor(rect.height));
 
-        if (canvas.width !== width || canvas.height !== height) {
-          canvas.width = width;
-          canvas.height = height;
-          gl.viewport(0, 0, width, height);
+        if (canvas.width !== displayWidth || canvas.height !== displayHeight) {
+          canvas.width = displayWidth;
+          canvas.height = displayHeight;
+          gl.viewport(0, 0, displayWidth, displayHeight);
+          
+          console.log('[Matrix Rain] Canvas resized:', `${displayWidth}x${displayHeight}`);
         }
       };
 
@@ -381,18 +405,26 @@ export const MatrixRain = forwardRef<HTMLDivElement, MatrixRainProps>(
 
       render();
 
-      // Cleanup
+        // Cleanup
+        return () => {
+          window.removeEventListener('resize', handleResize);
+          clearTimeout(resizeTimeout);
+          if (animationFrameRef.current) {
+            cancelAnimationFrame(animationFrameRef.current);
+          }
+          if (gl && programRef.current) {
+            gl.deleteProgram(programRef.current);
+          }
+          if (vertexShader) gl.deleteShader(vertexShader);
+          if (fragmentShader) gl.deleteShader(fragmentShader);
+        };
+      };
+
+      // Start initialization with a small delay for mobile devices
+      const timeoutId = setTimeout(initWebGL, 50);
+
       return () => {
-        window.removeEventListener('resize', handleResize);
-        clearTimeout(resizeTimeout);
-        if (animationFrameRef.current) {
-          cancelAnimationFrame(animationFrameRef.current);
-        }
-        if (gl && programRef.current) {
-          gl.deleteProgram(programRef.current);
-        }
-        if (vertexShader) gl.deleteShader(vertexShader);
-        if (fragmentShader) gl.deleteShader(fragmentShader);
+        clearTimeout(timeoutId);
       };
     }, [speed, density, brightness, greenIntensity, variation, isDarkMode]);
 
