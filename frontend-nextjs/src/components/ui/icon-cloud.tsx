@@ -68,10 +68,10 @@ export function IconCloud({ icons, images }: IconCloudProps) {
     imagesLoadedRef.current = new Array(items.length).fill(false)
 
     const isMobile = window.innerWidth < 768
-    const iconSize = isMobile ? 15 : 70
-    const iconRadius = isMobile ? 25 : 20
-    const iconDisplaySize = isMobile ? 20 : 40
-    const svgScale = isMobile ? 0.5 : 0.6
+    const iconSize = isMobile ? 40 : 70
+    const iconRadius = isMobile ? 20 : 20
+    const iconDisplaySize = isMobile ? 40 : 40
+    const svgScale = isMobile ? 0.6 : 0.6
 
     const newIconCanvases = items.map((item, index) => {
       const offscreen = document.createElement("canvas")
@@ -179,7 +179,7 @@ export function IconCloud({ icons, images }: IconCloudProps) {
 
       const scale = (rotatedZ + 500) / 650
       const isMobile = canvasSize.width < 768
-      const radius = (isMobile ? 25 : 20) * scale
+      const radius = (isMobile ? 20 : 20) * scale
       const dx = x - screenX
       const dy = y - screenY
 
@@ -342,7 +342,7 @@ export function IconCloud({ icons, images }: IconCloudProps) {
 
       // Render icons from back to front
       const isMobile = canvas.width < 768
-      const iconRenderSize = isMobile ? 20 : 40
+      const iconRenderSize = isMobile ? 40 : 40
       const iconRenderRadius = iconRenderSize / 2
 
       sortedIcons.forEach(({ icon, index, rotatedX, rotatedY, rotatedZ }) => {
@@ -377,7 +377,7 @@ export function IconCloud({ icons, images }: IconCloudProps) {
           ctx.fillStyle = "white"
           ctx.textAlign = "center"
           ctx.textBaseline = "middle"
-          ctx.font = `${isMobile ? 20 : 16}px Arial`
+          ctx.font = "16px Arial"
           ctx.fillText(`${icon.id + 1}`, 0, 0)
         }
 
