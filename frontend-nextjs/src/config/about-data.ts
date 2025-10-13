@@ -157,14 +157,14 @@ export const skills: Skill[] = [
     id: 'vue',
     name: 'Vue.js',
     category: 'frontend',
-    proficiency: 75,
+    proficiency: 56,
     yearsOfExperience: 1.5
   },
   {
     id: 'uniapp',
     name: 'UniApp',
     category: 'frontend',
-    proficiency: 70,
+    proficiency: 46,
     yearsOfExperience: 1
   },
   // 后端 (目标平均: 77%)

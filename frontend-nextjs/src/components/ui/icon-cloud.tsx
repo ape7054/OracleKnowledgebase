@@ -28,6 +28,7 @@ export function IconCloud({ icons, images }: IconCloudProps) {
   const [lastMousePos, setLastMousePos] = useState({ x: 0, y: 0 })
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const [canvasSize, setCanvasSize] = useState({ width: 700, height: 310 })
+  const [pixelRatio, setPixelRatio] = useState(1)
   const [targetRotation, setTargetRotation] = useState<{
     x: number
     y: number
@@ -42,10 +43,13 @@ export function IconCloud({ icons, images }: IconCloudProps) {
   const iconCanvasesRef = useRef<HTMLCanvasElement[]>([])
   const imagesLoadedRef = useRef<boolean[]>([])
 
-  // Handle responsive canvas size
+  // Handle responsive canvas size and pixel ratio
   useEffect(() => {
     const updateCanvasSize = () => {
       const width = window.innerWidth
+      const dpr = window.devicePixelRatio || 1
+      setPixelRatio(dpr)
+      
       if (width < 768) {
         // Mobile: larger square-ish canvas
         setCanvasSize({ width: Math.min(width - 48, 600), height: 500 })
@@ -68,10 +72,12 @@ export function IconCloud({ icons, images }: IconCloudProps) {
     imagesLoadedRef.current = new Array(items.length).fill(false)
 
     const isMobile = window.innerWidth < 768
-    const iconSize = isMobile ? 80 : 80  // 离屏canvas尺寸，越大越清晰
-    const iconRadius = isMobile ? 40 : 40  // 需要与iconSize匹配
-    const iconDisplaySize = isMobile ? 80 : 80
-    const svgScale = isMobile ? 1.2 : 1.2  // SVG缩放比例
+    const dpr = window.devicePixelRatio || 1
+    // 使用更高分辨率的离屏canvas以获得更清晰的效果
+    const iconSize = (isMobile ? 120 : 160) * dpr  // 离屏canvas尺寸，使用devicePixelRatio倍数
+    const iconRadius = iconSize / 2  // 需要与iconSize匹配
+    const iconDisplaySize = iconSize
+    const svgScale = (isMobile ? 1.8 : 2.4) * dpr  // SVG缩放比例，适配高DPI
 
     const newIconCanvases = items.map((item, index) => {
       const offscreen = document.createElement("canvas")
@@ -174,8 +180,8 @@ export function IconCloud({ icons, images }: IconCloudProps) {
       const rotatedZ = icon.x * sinY + icon.z * cosY
       const rotatedY = icon.y * cosX + rotatedZ * sinX
 
-      const screenX = canvasRef.current!.width / 2 + rotatedX
-      const screenY = canvasRef.current!.height / 2 + rotatedY
+      const screenX = canvasSize.width / 2 + rotatedX
+      const screenY = canvasSize.height / 2 + rotatedY
 
       const scale = (rotatedZ + 500) / 650
       const isMobile = canvasSize.width < 768
@@ -289,11 +295,19 @@ export function IconCloud({ icons, images }: IconCloudProps) {
     const ctx = canvas?.getContext("2d")
     if (!canvas || !ctx) return
 
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
+    // Set up high-DPI canvas
+    const dpr = pixelRatio
+    canvas.width = canvasSize.width * dpr
+    canvas.height = canvasSize.height * dpr
+    canvas.style.width = canvasSize.width + 'px'
+    canvas.style.height = canvasSize.height + 'px'
+    ctx.scale(dpr, dpr)
 
-      const centerX = canvas.width / 2
-      const centerY = canvas.height / 2
+    const animate = () => {
+      ctx.clearRect(0, 0, canvasSize.width, canvasSize.height)
+
+      const centerX = canvasSize.width / 2
+      const centerY = canvasSize.height / 2
       const maxDistance = Math.sqrt(centerX * centerX + centerY * centerY)
       const dx = mousePos.x - centerX
       const dy = mousePos.y - centerY
@@ -319,8 +333,8 @@ export function IconCloud({ icons, images }: IconCloudProps) {
         }
       } else if (!isDragging) {
         rotationRef.current = {
-          x: rotationRef.current.x + (dy / canvas.height) * speed,
-          y: rotationRef.current.y + (dx / canvas.width) * speed,
+          x: rotationRef.current.x + (dy / canvasSize.height) * speed,
+          y: rotationRef.current.y + (dx / canvasSize.width) * speed,
         }
       }
 
@@ -341,7 +355,7 @@ export function IconCloud({ icons, images }: IconCloudProps) {
         .sort((a, b) => a.rotatedZ - b.rotatedZ) // Sort back to front
 
       // Render icons from back to front
-      const isMobile = canvas.width < 768
+      const isMobile = canvasSize.width < 768
       const iconRenderSize = isMobile ? 40 : 40
       const iconRenderRadius = iconRenderSize / 2
 
@@ -350,7 +364,7 @@ export function IconCloud({ icons, images }: IconCloudProps) {
         const opacity = Math.max(0.4, Math.min(1, (rotatedZ + 350) / 550))
 
         ctx.save()
-        ctx.translate(canvas.width / 2 + rotatedX, canvas.height / 2 + rotatedY)
+        ctx.translate(canvasSize.width / 2 + rotatedX, canvasSize.height / 2 + rotatedY)
         ctx.scale(scale, scale)
         ctx.globalAlpha = opacity
 
@@ -393,13 +407,11 @@ export function IconCloud({ icons, images }: IconCloudProps) {
         cancelAnimationFrame(animationFrameRef.current)
       }
     }
-  }, [icons, images, iconPositions, isDragging, mousePos, targetRotation, canvasSize])
+  }, [icons, images, iconPositions, isDragging, mousePos, targetRotation, canvasSize, pixelRatio])
 
   return (
     <canvas
       ref={canvasRef}
-      width={canvasSize.width}
-      height={canvasSize.height}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
