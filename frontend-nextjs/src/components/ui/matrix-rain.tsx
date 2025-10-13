@@ -109,9 +109,10 @@ const fragmentShaderSource = `
     // Normalize coordinates
     vec2 uv = gl_FragCoord.xy / iResolution.xy;
 
-    // Create column grid based on density
+    // Create column grid based on density - FIXED for mobile
     float columnWidth = 20.0 / u_density;
-    vec2 grid = vec2(floor(uv.x * columnWidth), uv.y);
+    float totalColumns = iResolution.x / columnWidth;
+    vec2 grid = vec2(floor(uv.x * totalColumns), uv.y);
 
     // Time with speed control
     float time = iTime * u_speed;
