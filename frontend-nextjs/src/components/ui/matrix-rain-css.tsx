@@ -89,7 +89,7 @@ export const MatrixRainCSS = forwardRef<HTMLDivElement, MatrixRainCSSProps>(
           left: (i / columnCount) * 100, // 百分比位置
         };
       });
-    }, [columnCount, speed, variation]);
+    }, [columnCount, speed]);
 
     // 颜色计算
     const getColors = () => {
@@ -98,14 +98,14 @@ export const MatrixRainCSS = forwardRef<HTMLDivElement, MatrixRainCSSProps>(
         return {
           bright: `rgb(200, ${greenValue}, 200)`,      // 亮绿色（leading）
           normal: `rgb(0, ${Math.round(greenValue * 0.8)}, 0)`,  // 正常绿色
-          dim: `rgb(0, ${Math.round(greenValue * 0.4)}, 0)`,     // 暗绿色（尾部）
+          dim: `rgb(0, ${Math.round(greenValue * 0.65)}, 0)`,     // 暗绿色（尾部）- 提高亮度
         };
       } else {
         // 浅色模式：深色字符
         return {
           bright: 'rgb(40, 40, 40)',
           normal: 'rgb(80, 80, 80)',
-          dim: 'rgb(160, 160, 160)',
+          dim: 'rgb(130, 130, 130)',  // 提高亮度
         };
       }
     };
@@ -133,26 +133,28 @@ export const MatrixRainCSS = forwardRef<HTMLDivElement, MatrixRainCSSProps>(
               opacity: brightness,
             }}
           >
-            {column.chars.split('').map((char, idx) => {
-              // 渐变效果：顶部字符亮，底部字符暗
-              const isLeading = idx < 3;
-              const isTrailing = idx > column.chars.length - 5;
-              const color = isLeading ? colors.bright : isTrailing ? colors.dim : colors.normal;
-              const opacity = isLeading ? 1.0 : isTrailing ? 0.3 : 0.8;
+             {column.chars.split('').map((char, idx) => {
+               // 渐变效果：顶部字符亮，底部字符暗
+               const isLeading = idx < 3;
+               const isTrailing = idx > column.chars.length - 5;
+               const color = isLeading ? colors.bright : isTrailing ? colors.dim : colors.normal;
+               const opacity = isLeading ? 1.0 : isTrailing ? 0.55 : 0.8;  // 提高尾部透明度
               
               return (
-                <div
-                  key={idx}
-                  style={{
-                    color,
-                    opacity,
-                    textShadow: isLeading 
-                      ? `0 0 ${5 * brightness}px ${color}, 0 0 ${10 * brightness}px ${color}`
-                      : `0 0 ${3 * brightness}px ${color}`,
-                  }}
-                >
-                  {char}
-                </div>
+                 <div
+                   key={idx}
+                   style={{
+                     color,
+                     opacity,
+                     textShadow: isLeading 
+                       ? `0 0 ${5 * brightness}px ${color}, 0 0 ${10 * brightness}px ${color}`
+                       : isTrailing
+                         ? `0 0 ${4 * brightness}px ${color}`  // 尾部也增加发光
+                         : `0 0 ${3 * brightness}px ${color}`,
+                   }}
+                 >
+                   {char}
+                 </div>
               );
             })}
           </div>
