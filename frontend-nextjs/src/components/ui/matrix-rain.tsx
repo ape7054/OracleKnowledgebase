@@ -39,6 +39,12 @@ export interface MatrixRainProps extends React.HTMLAttributes<HTMLDivElement> {
    * @default true
    */
   isDarkMode?: boolean;
+
+  /**
+   * Pause the animation to save battery
+   * @default false
+   */
+  isPaused?: boolean;
 }
 
 // Vertex shader - simple pass-through
@@ -237,6 +243,7 @@ export const MatrixRain = forwardRef<HTMLDivElement, MatrixRainProps>(
       greenIntensity = 1.0,
       variation = 1.0,
       isDarkMode = true,
+      isPaused = false,
       ...props
     },
     ref
@@ -356,6 +363,12 @@ export const MatrixRain = forwardRef<HTMLDivElement, MatrixRainProps>(
       const render = () => {
         if (!gl || !programRef.current) return;
 
+        if (isPaused) {
+          // If paused, just schedule the next frame without rendering
+          animationFrameRef.current = requestAnimationFrame(render);
+          return;
+        }
+
         const currentTime = (Date.now() - startTimeRef.current) / 1000;
 
         // Update uniforms
@@ -389,7 +402,7 @@ export const MatrixRain = forwardRef<HTMLDivElement, MatrixRainProps>(
         if (vertexShader) gl.deleteShader(vertexShader);
         if (fragmentShader) gl.deleteShader(fragmentShader);
       };
-    }, [speed, density, brightness, greenIntensity, variation, isDarkMode]);
+    }, [speed, density, brightness, greenIntensity, variation, isDarkMode, isPaused]);
 
     return (
       <div ref={ref} className={cn('relative w-full h-full', className)} {...props}>

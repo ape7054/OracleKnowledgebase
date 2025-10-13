@@ -5,6 +5,7 @@ import { MatrixRain } from '@/components/ui/matrix-rain';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { useTheme } from 'next-themes';
+import { useMobileOptimization } from '@/hooks/useMobileOptimization';
 
 export default function MatrixDemoPage() {
   const [speed, setSpeed] = useState(1.0);
@@ -13,7 +14,10 @@ export default function MatrixDemoPage() {
   const [greenIntensity, setGreenIntensity] = useState(1.0);
   const [variation, setVariation] = useState(1.0);
   const [useWrapper, setUseWrapper] = useState(true);
+  const [enableMobileOpt, setEnableMobileOpt] = useState(true);
+  const [forceLowPower, setForceLowPower] = useState(false);
   const { theme, setTheme } = useTheme();
+  const mobileOpt = useMobileOptimization();
 
   return (
     <div className="min-h-screen">
@@ -24,6 +28,8 @@ export default function MatrixDemoPage() {
           brightness={brightness}
           greenIntensity={greenIntensity}
           variation={variation}
+          enableMobileOptimization={enableMobileOpt}
+          forceLowPowerMode={forceLowPower}
           className="min-h-screen"
         >
           <div className="container mx-auto px-4 py-12">
@@ -50,6 +56,11 @@ export default function MatrixDemoPage() {
                 setUseWrapper={setUseWrapper}
                 theme={theme}
                 setTheme={setTheme}
+                enableMobileOpt={enableMobileOpt}
+                setEnableMobileOpt={setEnableMobileOpt}
+                forceLowPower={forceLowPower}
+                setForceLowPower={setForceLowPower}
+                mobileOpt={mobileOpt}
               />
             </div>
           </div>
@@ -88,6 +99,11 @@ export default function MatrixDemoPage() {
                 setUseWrapper={setUseWrapper}
                 theme={theme}
                 setTheme={setTheme}
+                enableMobileOpt={enableMobileOpt}
+                setEnableMobileOpt={setEnableMobileOpt}
+                forceLowPower={forceLowPower}
+                setForceLowPower={setForceLowPower}
+                mobileOpt={mobileOpt}
               />
             </div>
           </div>
@@ -112,6 +128,11 @@ function ControlPanel({
   setUseWrapper,
   theme,
   setTheme,
+  enableMobileOpt,
+  setEnableMobileOpt,
+  forceLowPower,
+  setForceLowPower,
+  mobileOpt,
 }: {
   speed: number;
   setSpeed: (v: number) => void;
@@ -127,6 +148,11 @@ function ControlPanel({
   setUseWrapper: (v: boolean) => void;
   theme: string | undefined;
   setTheme: (theme: string) => void;
+  enableMobileOpt: boolean;
+  setEnableMobileOpt: (v: boolean) => void;
+  forceLowPower: boolean;
+  setForceLowPower: (v: boolean) => void;
+  mobileOpt: ReturnType<typeof useMobileOptimization>;
 }) {
   const resetDefaults = () => {
     setSpeed(1.0);
@@ -212,6 +238,35 @@ function ControlPanel({
         >
           {theme === 'dark' ? '🌞 Light Mode' : '🌙 Dark Mode'}
         </Button>
+        
+        <Button 
+          onClick={() => setEnableMobileOpt(!enableMobileOpt)}
+          variant="outline"
+          className="w-full border-green-500/50 text-green-400 hover:bg-green-500/10"
+        >
+          {enableMobileOpt ? '📱 Mobile Opt: ON' : '📱 Mobile Opt: OFF'}
+        </Button>
+        
+        <Button 
+          onClick={() => setForceLowPower(!forceLowPower)}
+          variant="outline"
+          className="w-full border-green-500/50 text-green-400 hover:bg-green-500/10"
+        >
+          {forceLowPower ? '🔋 Low Power: ON' : '🔋 Low Power: OFF'}
+        </Button>
+      </div>
+
+      {/* Mobile optimization status */}
+      <div className="pt-4 border-t border-green-500/30">
+        <h3 className="text-sm font-semibold text-green-400 mb-2">Mobile Status</h3>
+        <div className="space-y-1 text-xs text-green-300">
+          <div>Device: {mobileOpt.isMobile ? '📱 Mobile' : '💻 Desktop'}</div>
+          <div>Performance: {mobileOpt.performanceLevel.toUpperCase()}</div>
+          <div>Optimization: {mobileOpt.shouldOptimize ? '✅ Active' : '❌ Inactive'}</div>
+          {mobileOpt.isLowPowerMode && (
+            <div className="text-yellow-400">⚡ Low Power Mode</div>
+          )}
+        </div>
       </div>
 
       <div className="pt-4 border-t border-green-500/30">
@@ -272,6 +327,38 @@ function ControlPanel({
             className="border-green-500/50 text-green-400 hover:bg-green-500/10"
           >
             Subtle
+          </Button>
+          <Button
+            onClick={() => {
+              // Mobile Performance Preset
+              setSpeed(0.6);
+              setDensity(0.5);
+              setBrightness(0.7);
+              setGreenIntensity(0.8);
+              setVariation(0.4);
+              setEnableMobileOpt(true);
+            }}
+            variant="outline"
+            size="sm"
+            className="border-green-500/50 text-green-400 hover:bg-green-500/10"
+          >
+            📱 Mobile
+          </Button>
+          <Button
+            onClick={() => {
+              // Battery Saver Preset
+              setSpeed(0.3);
+              setDensity(0.3);
+              setBrightness(0.5);
+              setGreenIntensity(0.6);
+              setVariation(0.2);
+              setForceLowPower(true);
+            }}
+            variant="outline"
+            size="sm"
+            className="border-green-500/50 text-green-400 hover:bg-green-500/10"
+          >
+            🔋 Battery
           </Button>
         </div>
       </div>
