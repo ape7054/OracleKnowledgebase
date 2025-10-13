@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, forwardRef } from 'react';
 import { cn } from '@/lib/utils';
+import { getOptimalPixelRatio } from '@/lib/device-detection';
 
 export interface MatrixRainProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
@@ -316,8 +317,7 @@ export const MatrixRain = forwardRef<HTMLDivElement, MatrixRainProps>(
       const positions = [-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1];
       gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
-      // Setup rendering
-      gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+      // Setup rendering - will be properly sized by resizeCanvas
       gl.clearColor(0, 0, 0, 1);
       gl.clear(gl.COLOR_BUFFER_BIT);
 
@@ -326,17 +326,22 @@ export const MatrixRain = forwardRef<HTMLDivElement, MatrixRainProps>(
       gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
       gl.vertexAttribPointer(positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);
 
-      // Resize handler
+      // Resize handler with optimal pixel ratio
       const resizeCanvas = () => {
         if (!canvas || !gl) return;
 
         const displayWidth = canvas.clientWidth;
         const displayHeight = canvas.clientHeight;
+        
+        // Use optimal pixel ratio for mobile devices
+        const pixelRatio = getOptimalPixelRatio();
+        const width = Math.floor(displayWidth * pixelRatio);
+        const height = Math.floor(displayHeight * pixelRatio);
 
-        if (canvas.width !== displayWidth || canvas.height !== displayHeight) {
-          canvas.width = displayWidth;
-          canvas.height = displayHeight;
-          gl.viewport(0, 0, canvas.width, canvas.height);
+        if (canvas.width !== width || canvas.height !== height) {
+          canvas.width = width;
+          canvas.height = height;
+          gl.viewport(0, 0, width, height);
         }
       };
 

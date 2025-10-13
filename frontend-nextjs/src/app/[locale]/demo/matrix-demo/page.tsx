@@ -3,8 +3,9 @@
 import { MatrixBackground } from '@/components/ui/matrix-background';
 import { MatrixRain } from '@/components/ui/matrix-rain';
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
+import { isMobileDevice, getOptimalPixelRatio, getOptimalMatrixParams } from '@/lib/device-detection';
 
 export default function MatrixDemoPage() {
   const [speed, setSpeed] = useState(1.0);
@@ -14,6 +15,21 @@ export default function MatrixDemoPage() {
   const [variation, setVariation] = useState(1.0);
   const [useWrapper, setUseWrapper] = useState(true);
   const { theme, setTheme } = useTheme();
+  
+  // Device detection
+  const [deviceInfo, setDeviceInfo] = useState({
+    isMobile: false,
+    pixelRatio: 1,
+    screenWidth: 0,
+  });
+
+  useEffect(() => {
+    setDeviceInfo({
+      isMobile: isMobileDevice(),
+      pixelRatio: getOptimalPixelRatio(),
+      screenWidth: window.innerWidth,
+    });
+  }, []);
 
   return (
     <div className="min-h-screen">
@@ -50,6 +66,7 @@ export default function MatrixDemoPage() {
                 setUseWrapper={setUseWrapper}
                 theme={theme}
                 setTheme={setTheme}
+                deviceInfo={deviceInfo}
               />
             </div>
           </div>
@@ -88,6 +105,7 @@ export default function MatrixDemoPage() {
                 setUseWrapper={setUseWrapper}
                 theme={theme}
                 setTheme={setTheme}
+                deviceInfo={deviceInfo}
               />
             </div>
           </div>
@@ -112,6 +130,7 @@ function ControlPanel({
   setUseWrapper,
   theme,
   setTheme,
+  deviceInfo,
 }: {
   speed: number;
   setSpeed: (v: number) => void;
@@ -127,6 +146,11 @@ function ControlPanel({
   setUseWrapper: (v: boolean) => void;
   theme: string | undefined;
   setTheme: (theme: string) => void;
+  deviceInfo: {
+    isMobile: boolean;
+    pixelRatio: number;
+    screenWidth: number;
+  };
 }) {
   const resetDefaults = () => {
     setSpeed(1.0);
@@ -212,6 +236,29 @@ function ControlPanel({
         >
           {theme === 'dark' ? '🌞 Light Mode' : '🌙 Dark Mode'}
         </Button>
+      </div>
+
+      {/* Device Information */}
+      <div className="pt-4 border-t border-green-500/30">
+        <h3 className="text-sm font-semibold text-green-400 mb-2">Device Info</h3>
+        <div className="space-y-1 text-xs text-green-300">
+          <div className="flex justify-between">
+            <span>Type:</span>
+            <span className="font-mono">{deviceInfo.isMobile ? '📱 Mobile' : '💻 Desktop'}</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Screen Width:</span>
+            <span className="font-mono">{deviceInfo.screenWidth}px</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Pixel Ratio:</span>
+            <span className="font-mono">{deviceInfo.pixelRatio.toFixed(1)}x</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Optimization:</span>
+            <span className="font-mono">{deviceInfo.isMobile ? '✅ Active' : '⏸️ Inactive'}</span>
+          </div>
+        </div>
       </div>
 
       <div className="pt-4 border-t border-green-500/30">
