@@ -2,7 +2,7 @@
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { AuroraBackground } from "@/components/ui/aurora-background"
+import { MatrixBackground } from "@/components/ui/matrix-background"
 import { socialLinks } from "@/config/about-data"
 import { Github, Mail, Twitter, Linkedin } from 'lucide-react'
 import { useTranslations } from 'next-intl'
@@ -28,7 +28,14 @@ export function HeroSection() {
   const avatarSrc = theme === 'light' ? '/avatar_hack_light.png' : '/avatar_hack.png'
 
   return (
-    <AuroraBackground className="h-auto min-h-[500px] md:min-h-[600px] border-b border-border/40">
+    <MatrixBackground 
+      className="h-auto min-h-[500px] md:min-h-[600px] border-b border-border/40"
+      speed={0.8}
+      density={0.7}
+      brightness={0.6}
+      greenIntensity={0.8}
+      variation={0.8}
+    >
       <motion.div 
         className="relative z-10 py-12 md:py-16 lg:py-24 w-full"
         initial="initial"
@@ -116,7 +123,7 @@ export function HeroSection() {
           </div>
         </div>
       </motion.div>
-    </AuroraBackground>
+    </MatrixBackground>
   )
 }
 
