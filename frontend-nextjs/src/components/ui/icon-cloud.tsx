@@ -68,10 +68,10 @@ export function IconCloud({ icons, images }: IconCloudProps) {
     imagesLoadedRef.current = new Array(items.length).fill(false)
 
     const isMobile = window.innerWidth < 768
-    const iconSize = isMobile ? 40 : 70
-    const iconRadius = isMobile ? 20 : 20
-    const iconDisplaySize = isMobile ? 40 : 40
-    const svgScale = isMobile ? 0.6 : 0.6
+    const iconSize = isMobile ? 80 : 80  // 离屏canvas尺寸，越大越清晰
+    const iconRadius = isMobile ? 40 : 40  // 需要与iconSize匹配
+    const iconDisplaySize = isMobile ? 80 : 80
+    const svgScale = isMobile ? 1.2 : 1.2  // SVG缩放比例
 
     const newIconCanvases = items.map((item, index) => {
       const offscreen = document.createElement("canvas")
