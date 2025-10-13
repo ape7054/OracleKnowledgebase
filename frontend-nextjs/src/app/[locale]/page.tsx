@@ -111,15 +111,27 @@ export default async function Home({ params }: HomeProps) {
         className="relative overflow-hidden isolate min-h-[85vh] md:min-h-screen flex flex-col"
         aria-label="Hero section"
       >
-        {/* Sparkles 背景效果 */}
+        {/* Sparkles 背景效果 - 增强版本 */}
         <div className="absolute inset-0 w-full h-full" aria-hidden="true">
           <OptimizedSparkles
             id="tsparticles"
             minSize={1}
-            maxSize={5}
-            speed={2}
-            particleDensity={20}
-            particleColor="#888888"
+            maxSize={6}
+            speed={3}
+            particleDensity={70}
+            particleColor="#8b5cf6"
+          />
+        </div>
+        
+        {/* 额外的闪烁层 - 创造深度效果 */}
+        <div className="absolute inset-0 w-full h-full opacity-40" aria-hidden="true">
+          <OptimizedSparkles
+            id="tsparticles-secondary"
+            minSize={0.5}
+            maxSize={3}
+            speed={1.5}
+            particleDensity={50}
+            particleColor="#3b82f6"
           />
         </div>
         
@@ -512,15 +524,27 @@ export default async function Home({ params }: HomeProps) {
         className="relative py-12 md:py-16 lg:py-24 overflow-hidden"
         aria-label="Call to action"
       >
-        {/* Sparkles 背景效果 - 更柔和的版本 */}
+        {/* Sparkles 背景效果 - 增强版本 */}
         <div className="absolute inset-0 w-full h-full" aria-hidden="true">
           <OptimizedSparkles
             id="tsparticles-cta"
             minSize={1}
-            maxSize={3}
-            particleDensity={30}
-            particleColor="#666666"
-            speed={2}
+            maxSize={5}
+            particleDensity={80}
+            particleColor="#8b5cf6"
+            speed={3}
+          />
+        </div>
+        
+        {/* 额外的闪烁层 - 创造深度效果 */}
+        <div className="absolute inset-0 w-full h-full opacity-40" aria-hidden="true">
+          <OptimizedSparkles
+            id="tsparticles-cta-secondary"
+            minSize={0.5}
+            maxSize={2}
+            particleDensity={50}
+            particleColor="#3b82f6"
+            speed={1.5}
           />
         </div>
         
