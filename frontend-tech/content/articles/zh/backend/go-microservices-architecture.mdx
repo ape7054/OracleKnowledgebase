@@ -1,0 +1,348 @@
+---
+title: Go 微服务架构实践
+description: 从零构建Go微服务，包括API设计、数据库操作、JWT认证、WebSocket实时通信等完整实现
+date: 2025-10-14
+category: backend
+tags: [Go, Gin, GORM, WebSocket, JWT, 微服务]
+author: Tech Showcase
+---
+
+# Go 微服务架构实践
+
+使用 Go 语言构建高性能微服务，本文涵盖完整的技术栈和最佳实践。
+
+## 项目架构
+
+```
+backend-go/
+├── cmd/
+│   └── main.go              # 应用入口
+├── internal/
+│   ├── api/                 # API 路由和处理器
+│   │   ├── handlers.go
+│   │   ├── middleware.go
+│   │   └── auth_handler.go
+│   ├── database/            # 数据库配置
+│   │   └── database.go
+│   ├── models/              # 数据模型
+│   │   ├── user.go
+│   │   └── trade.go
+│   ├── services/            # 业务逻辑
+│   │   └── user_service.go
+│   └── websocket/           # WebSocket 服务
+│       ├── hub.go
+│       └── client.go
+└── go.mod
+```
+
+## 核心技术栈
+
+### 1. Gin Web 框架
+
+```go
+package main
+
+import (
+    "github.com/gin-gonic/gin"
+    "net/http"
+)
+
+func main() {
+    router := gin.Default()
+    
+    // CORS 中间件
+    router.Use(func(c *gin.Context) {
+        c.Header("Access-Control-Allow-Origin", "*")
+        c.Header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+        c.Header("Access-Control-Allow-Headers", "Origin, Content-Type, Authorization")
+        
+        if c.Request.Method == "OPTIONS" {
+            c.AbortWithStatus(204)
+            return
+        }
+        
+        c.Next()
+    })
+    
+    // 路由组
+    api := router.Group("/api")
+    {
+        api.GET("/health", healthCheck)
+        api.POST("/users", createUser)
+        api.GET("/users/:id", getUser)
+    }
+    
+    router.Run(":8080")
+}
+
+func healthCheck(c *gin.Context) {
+    c.JSON(http.StatusOK, gin.H{
+        "status": "healthy",
+        "version": "1.0.0",
+    })
+}
+```
+
+### 2. GORM 数据库操作
+
+```go
+package database
+
+import (
+    "gorm.io/driver/mysql"
+    "gorm.io/gorm"
+    "log"
+)
+
+var DB *gorm.DB
+
+func Init() {
+    dsn := "user:password@tcp(127.0.0.1:3306)/dbname?charset=utf8mb4&parseTime=True&loc=Local"
+    
+    var err error
+    DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+    if err != nil {
+        log.Fatal("Failed to connect to database:", err)
+    }
+    
+    // 自动迁移
+    DB.AutoMigrate(&User{}, &Trade{})
+    
+    log.Println("Database connected successfully")
+}
+
+// 模型定义
+type User struct {
+    gorm.Model
+    Username     string `gorm:"type:varchar(100);uniqueIndex;not null"`
+    Email        string `gorm:"type:varchar(100);uniqueIndex"`
+    PasswordHash string `gorm:"type:varchar(255);not null"`
+}
+```
+
+### 3. JWT 认证
+
+```go
+package api
+
+import (
+    "github.com/gin-gonic/gin"
+    "github.com/golang-jwt/jwt/v5"
+    "net/http"
+    "time"
+)
+
+var jwtSecret = []byte("your-secret-key")
+
+type Claims struct {
+    UserID uint   `json:"user_id"`
+    Username string `json:"username"`
+    jwt.RegisteredClaims
+}
+
+// 生成 JWT Token
+func generateToken(userID uint, username string) (string, error) {
+    claims := Claims{
+        UserID:   userID,
+        Username: username,
+        RegisteredClaims: jwt.RegisteredClaims{
+            ExpiresAt: jwt.NewNumericDate(time.Now().Add(72 * time.Hour)),
+            IssuedAt:  jwt.NewNumericDate(time.Now()),
+        },
+    }
+    
+    token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+    return token.SignedString(jwtSecret)
+}
+
+// 验证中间件
+func AuthMiddleware() gin.HandlerFunc {
+    return func(c *gin.Context) {
+        tokenString := c.GetHeader("Authorization")
+        if tokenString == "" {
+            c.JSON(http.StatusUnauthorized, gin.H{"error": "Authorization header required"})
+            c.Abort()
+            return
+        }
+        
+        // 解析 token
+        claims := &Claims{}
+        token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+            return jwtSecret, nil
+        })
+        
+        if err != nil || !token.Valid {
+            c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
+            c.Abort()
+            return
+        }
+        
+        // 将用户信息存入上下文
+        c.Set("userID", claims.UserID)
+        c.Set("username", claims.Username)
+        c.Next()
+    }
+}
+```
+
+### 4. WebSocket 实时通信
+
+```go
+package websocket
+
+import (
+    "github.com/gorilla/websocket"
+    "github.com/gin-gonic/gin"
+    "net/http"
+)
+
+var upgrader = websocket.Upgrader{
+    CheckOrigin: func(r *http.Request) bool {
+        return true
+    },
+}
+
+type Hub struct {
+    clients    map[*Client]bool
+    broadcast  chan []byte
+    register   chan *Client
+    unregister chan *Client
+}
+
+type Client struct {
+    hub  *Hub
+    conn *websocket.Conn
+    send chan []byte
+}
+
+func NewHub() *Hub {
+    return &Hub{
+        broadcast:  make(chan []byte),
+        register:   make(chan *Client),
+        unregister: make(chan *Client),
+        clients:    make(map[*Client]bool),
+    }
+}
+
+func (h *Hub) Run() {
+    for {
+        select {
+        case client := <-h.register:
+            h.clients[client] = true
+        case client := <-h.unregister:
+            if _, ok := h.clients[client]; ok {
+                delete(h.clients, client)
+                close(client.send)
+            }
+        case message := <-h.broadcast:
+            for client := range h.clients {
+                select {
+                case client.send <- message:
+                default:
+                    close(client.send)
+                    delete(h.clients, client)
+                }
+            }
+        }
+    }
+}
+
+func (h *Hub) HandleWebSocket(c *gin.Context) {
+    conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
+    if err != nil {
+        return
+    }
+    
+    client := &Client{hub: h, conn: conn, send: make(chan []byte, 256)}
+    client.hub.register <- client
+    
+    go client.writePump()
+    go client.readPump()
+}
+```
+
+## 最佳实践
+
+### 1. 错误处理
+
+```go
+type APIError struct {
+    Code    int    `json:"code"`
+    Message string `json:"message"`
+}
+
+func handleError(c *gin.Context, code int, message string) {
+    c.JSON(code, APIError{
+        Code:    code,
+        Message: message,
+    })
+}
+```
+
+### 2. 日志记录
+
+```go
+import "log"
+
+func logRequest(c *gin.Context) {
+    log.Printf("[%s] %s - %s", c.Request.Method, c.Request.URL.Path, c.ClientIP())
+}
+```
+
+### 3. 环境配置
+
+```go
+import (
+    "github.com/joho/godotenv"
+    "os"
+)
+
+func init() {
+    godotenv.Load()
+}
+
+func getEnv(key, defaultValue string) string {
+    value := os.Getenv(key)
+    if value == "" {
+        return defaultValue
+    }
+    return value
+}
+```
+
+## 性能优化
+
+1. **连接池配置**：优化数据库连接池大小
+2. **并发控制**：使用 goroutine 和 channel 进行并发处理
+3. **缓存策略**：使用 Redis 缓存热点数据
+4. **限流保护**：实现 rate limiting 防止滥用
+
+## 部署建议
+
+```dockerfile
+FROM golang:1.22-alpine AS builder
+WORKDIR /app
+COPY go.mod go.sum ./
+RUN go mod download
+COPY . .
+RUN CGO_ENABLED=0 GOOS=linux go build -o main cmd/main.go
+
+FROM alpine:latest
+WORKDIR /root/
+COPY --from=builder /app/main .
+EXPOSE 8080
+CMD ["./main"]
+```
+
+## 总结
+
+Go 微服务架构提供：
+
+- ⚡ 高性能并发处理
+- 🔒 类型安全和编译检查
+- 📦 简洁的依赖管理
+- 🚀 快速的编译和部署
+- 💪 强大的标准库支持
+
+掌握这些技术，你就能构建生产级的微服务应用！
+

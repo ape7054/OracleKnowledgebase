@@ -1,0 +1,424 @@
+---
+title: 全栈应用架构设计
+description: 前后端分离架构、微服务设计模式、数据库设计原则、API设计规范等架构设计最佳实践
+date: 2025-10-14
+category: architecture
+tags: [架构设计, 微服务, API设计, 数据库设计, 最佳实践]
+author: Tech Showcase
+---
+
+# 全栈应用架构设计
+
+深入探讨现代全栈应用的架构设计原则和最佳实践。
+
+## 整体架构
+
+```
+┌─────────────────────────────────────────────┐
+│              Client Layer                    │
+│  Next.js 15 (React 19 + TypeScript)         │
+│  - SSR/SSG 混合渲染                          │
+│  - 客户端状态管理                             │
+│  - UI 组件库 (shadcn/ui)                     │
+└─────────────────────────────────────────────┘
+                    ↓ HTTPS
+┌─────────────────────────────────────────────┐
+│           Reverse Proxy Layer                │
+│  Nginx                                       │
+│  - 负载均衡                                   │
+│  - SSL 终止                                   │
+│  - 静态资源缓存                               │
+└─────────────────────────────────────────────┘
+                    ↓
+        ┌──────────┴──────────┐
+        ↓                     ↓
+┌──────────────┐      ┌──────────────┐
+│   Frontend   │      │   Backend    │
+│   Service    │      │   Service    │
+│   (Next.js)  │      │   (Go + Gin) │
+└──────────────┘      └──────────────┘
+                              ↓
+                    ┌─────────┴─────────┐
+                    ↓                   ↓
+            ┌──────────────┐    ┌──────────────┐
+            │   Database   │    │  WebSocket   │
+            │   (MySQL)    │    │    Hub       │
+            └──────────────┘    └──────────────┘
+```
+
+## 前端架构
+
+### 1. 目录结构
+
+```
+src/
+├── app/                    # Next.js App Router
+│   ├── [locale]/          # 国际化路由
+│   │   ├── page.tsx       # 首页
+│   │   ├── about/         # 关于页面
+│   │   └── knowledge/     # 文档页面
+│   ├── layout.tsx         # 根布局
+│   └── globals.css        # 全局样式
+├── components/            # 可复用组件
+│   ├── ui/               # UI 基础组件
+│   └── ...               # 业务组件
+├── config/               # 配置文件
+├── hooks/                # 自定义 Hooks
+├── lib/                  # 工具函数
+└── messages/             # 国际化文案
+```
+
+### 2. 组件设计原则
+
+#### 单一职责原则
+
+```tsx
+// ❌ 不好的设计
+function UserDashboard() {
+  // 混合了数据获取、业务逻辑和UI
+  const [users, setUsers] = useState([])
+  const [loading, setLoading] = useState(false)
+  
+  useEffect(() => {
+    fetchUsers().then(setUsers)
+  }, [])
+  
+  return (/* 复杂的 UI */)
+}
+
+// ✅ 好的设计
+function UserDashboard() {
+  const { users, loading } = useUsers()
+  
+  return <UserList users={users} loading={loading} />
+}
+```
+
+#### 组件组合
+
+```tsx
+// 使用 Compound Component Pattern
+<Card>
+  <CardHeader>
+    <CardTitle>标题</CardTitle>
+    <CardDescription>描述</CardDescription>
+  </CardHeader>
+  <CardContent>
+    内容区域
+  </CardContent>
+  <CardFooter>
+    <Button>操作</Button>
+  </CardFooter>
+</Card>
+```
+
+### 3. 状态管理策略
+
+```tsx
+// 服务端状态 - 使用 React Server Components
+async function ProductList() {
+  const products = await fetchProducts()
+  return <ProductGrid products={products} />
+}
+
+// 客户端状态 - 使用 useState
+'use client'
+function Counter() {
+  const [count, setCount] = useState(0)
+  return <button onClick={() => setCount(c => c + 1)}>{count}</button>
+}
+
+// 全局状态 - 使用 Context
+const ThemeContext = createContext<ThemeContextType>({})
+
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const [theme, setTheme] = useState<'light' | 'dark'>('light')
+  
+  return (
+    <ThemeContext.Provider value={{ theme, setTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  )
+}
+```
+
+## 后端架构
+
+### 1. 分层架构
+
+```go
+// Handler Layer - 处理 HTTP 请求
+func (h *UserHandler) CreateUser(c *gin.Context) {
+    var req CreateUserRequest
+    if err := c.ShouldBindJSON(&req); err != nil {
+        c.JSON(400, gin.H{"error": err.Error()})
+        return
+    }
+    
+    user, err := h.service.CreateUser(req)
+    if err != nil {
+        c.JSON(500, gin.H{"error": err.Error()})
+        return
+    }
+    
+    c.JSON(200, user)
+}
+
+// Service Layer - 业务逻辑
+func (s *UserService) CreateUser(req CreateUserRequest) (*User, error) {
+    // 验证
+    if err := s.validateUser(req); err != nil {
+        return nil, err
+    }
+    
+    // 密码哈希
+    hash, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+    if err != nil {
+        return nil, err
+    }
+    
+    // 创建用户
+    user := &User{
+        Username:     req.Username,
+        Email:        req.Email,
+        PasswordHash: string(hash),
+    }
+    
+    return s.repo.Create(user)
+}
+
+// Repository Layer - 数据访问
+func (r *UserRepository) Create(user *User) (*User, error) {
+    if err := r.db.Create(user).Error; err != nil {
+        return nil, err
+    }
+    return user, nil
+}
+```
+
+### 2. 中间件架构
+
+```go
+func main() {
+    router := gin.Default()
+    
+    // 全局中间件
+    router.Use(CORSMiddleware())
+    router.Use(LoggingMiddleware())
+    router.Use(RecoveryMiddleware())
+    
+    // 公开路由
+    public := router.Group("/api")
+    {
+        public.POST("/auth/login", authHandler.Login)
+        public.POST("/auth/register", authHandler.Register)
+    }
+    
+    // 需要认证的路由
+    protected := router.Group("/api")
+    protected.Use(AuthMiddleware(jwtSecret))
+    {
+        protected.GET("/profile", userHandler.GetProfile)
+        protected.PUT("/profile", userHandler.UpdateProfile)
+    }
+}
+```
+
+## 数据库设计
+
+### 1. 数据模型设计
+
+```go
+// 用户模型
+type User struct {
+    gorm.Model
+    Username     string    `gorm:"type:varchar(100);uniqueIndex;not null"`
+    Email        string    `gorm:"type:varchar(100);uniqueIndex"`
+    PasswordHash string    `gorm:"type:varchar(255);not null"`
+    Profile      Profile   `gorm:"foreignKey:UserID"`
+    Trades       []Trade   `gorm:"foreignKey:UserID"`
+}
+
+// 交易模型
+type Trade struct {
+    ID        uint      `gorm:"primaryKey"`
+    UserID    uint      `gorm:"not null;index"`
+    Symbol    string    `gorm:"type:varchar(20);not null"`
+    Type      string    `gorm:"type:varchar(10);not null"`
+    Price     string    `gorm:"type:varchar(50);not null"`
+    Amount    string    `gorm:"type:varchar(50);not null"`
+    Status    string    `gorm:"type:varchar(20);default:'completed'"`
+    CreatedAt time.Time
+    UpdatedAt time.Time
+}
+```
+
+### 2. 索引优化
+
+```go
+// 添加索引
+type Trade struct {
+    UserID uint `gorm:"index"`                          // 单列索引
+    Symbol string `gorm:"index:idx_symbol_created"`     // 复合索引
+    CreatedAt time.Time `gorm:"index:idx_symbol_created"`
+}
+
+// 唯一索引
+type User struct {
+    Email string `gorm:"uniqueIndex"`
+}
+```
+
+### 3. 查询优化
+
+```go
+// 预加载关联数据
+db.Preload("Profile").Preload("Trades").Find(&users)
+
+// 选择特定字段
+db.Select("id", "username", "email").Find(&users)
+
+// 分页查询
+db.Offset(offset).Limit(limit).Find(&users)
+```
+
+## API 设计规范
+
+### 1. RESTful API 设计
+
+```
+GET    /api/users           # 获取用户列表
+GET    /api/users/:id       # 获取单个用户
+POST   /api/users           # 创建用户
+PUT    /api/users/:id       # 更新用户
+DELETE /api/users/:id       # 删除用户
+
+GET    /api/users/:id/trades    # 获取用户的交易记录
+POST   /api/users/:id/trades    # 创建交易记录
+```
+
+### 2. 响应格式统一
+
+```go
+// 成功响应
+{
+    "success": true,
+    "data": {
+        "id": 1,
+        "username": "john"
+    }
+}
+
+// 错误响应
+{
+    "success": false,
+    "error": {
+        "code": "INVALID_INPUT",
+        "message": "用户名已存在"
+    }
+}
+
+// 分页响应
+{
+    "success": true,
+    "data": [...],
+    "pagination": {
+        "page": 1,
+        "limit": 20,
+        "total": 100
+    }
+}
+```
+
+### 3. 版本控制
+
+```go
+// URL 版本控制
+/api/v1/users
+/api/v2/users
+
+// Header 版本控制
+Accept: application/vnd.api+json;version=1
+```
+
+## 安全架构
+
+### 1. 认证和授权
+
+```go
+// JWT 认证
+type Claims struct {
+    UserID uint   `json:"user_id"`
+    Role   string `json:"role"`
+    jwt.RegisteredClaims
+}
+
+// RBAC 授权
+func RequireRole(role string) gin.HandlerFunc {
+    return func(c *gin.Context) {
+        userRole, _ := c.Get("role")
+        if userRole != role {
+            c.JSON(403, gin.H{"error": "Forbidden"})
+            c.Abort()
+            return
+        }
+        c.Next()
+    }
+}
+```
+
+### 2. 输入验证
+
+```go
+type CreateUserRequest struct {
+    Username string `json:"username" binding:"required,min=3,max=50"`
+    Email    string `json:"email" binding:"required,email"`
+    Password string `json:"password" binding:"required,min=8"`
+}
+```
+
+### 3. 安全头部
+
+```nginx
+add_header X-Frame-Options "SAMEORIGIN";
+add_header X-Content-Type-Options "nosniff";
+add_header X-XSS-Protection "1; mode=block";
+add_header Strict-Transport-Security "max-age=31536000";
+```
+
+## 性能优化
+
+### 1. 前端优化
+
+- 代码分割和懒加载
+- 图片优化（Next.js Image）
+- SSR/SSG 混合渲染
+- CDN 加速静态资源
+
+### 2. 后端优化
+
+- 数据库连接池
+- Redis 缓存热点数据
+- goroutine 并发处理
+- 数据库查询优化
+
+### 3. 网络优化
+
+- Gzip 压缩
+- HTTP/2
+- 持久连接
+- 负载均衡
+
+## 总结
+
+良好的架构设计应该：
+
+- 🎯 **清晰的分层**：职责明确，易于维护
+- 📦 **模块化**：高内聚，低耦合
+- 🔒 **安全性**：多层防护，纵深防御
+- ⚡ **高性能**：合理的缓存和优化策略
+- 🔄 **可扩展**：易于添加新功能
+- 🛡️ **容错性**：优雅的错误处理
+
+掌握这些原则，你就能设计出优秀的全栈应用架构！
+

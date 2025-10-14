@@ -1,0 +1,107 @@
+[
+  {
+    "id": "eth-001",
+    "projectId": "ethereum",
+    "date": "2024-10-03",
+    "type": "tech",
+    "title": {
+      "en": "Ethereum Pectra Upgrade Scheduled for Q1 2025",
+      "zh": "以太坊 Pectra 升级计划于 2025 年 Q1 进行"
+    },
+    "summary": {
+      "en": "Ethereum developers have announced the Pectra upgrade timeline, which includes EIP-7251 (max effective balance increase) and EIP-7702 (account abstraction improvements). This upgrade aims to improve validator experience and transaction efficiency.",
+      "zh": "以太坊开发者公布了 Pectra 升级时间表，包括 EIP-7251（最大有效余额增加）和 EIP-7702（账户抽象改进）。此次升级旨在改善验证者体验和交易效率。"
+    },
+    "sourceUrl": "https://ethereum.org"
+  },
+  {
+    "id": "eth-002",
+    "projectId": "ethereum",
+    "date": "2024-09-28",
+    "type": "regulatory",
+    "title": {
+      "en": "SEC Delays Ethereum ETF Options Decision",
+      "zh": "美国 SEC 延期以太坊 ETF 期权决定"
+    },
+    "summary": {
+      "en": "The U.S. Securities and Exchange Commission has delayed its decision on Ethereum ETF options applications, extending the review period to evaluate potential market impact and investor protection measures.",
+      "zh": "美国证券交易委员会推迟了以太坊 ETF 期权申请的决定，延长审查期以评估潜在市场影响和投资者保护措施。"
+    },
+    "sourceUrl": ""
+  },
+  {
+    "id": "sol-001",
+    "projectId": "solana",
+    "date": "2024-10-01",
+    "type": "tech",
+    "title": {
+      "en": "Firedancer Testnet Launch Achieves 1M TPS",
+      "zh": "Firedancer 测试网上线，实现 100 万 TPS"
+    },
+    "summary": {
+      "en": "Jump Crypto's Firedancer validator client has successfully launched on testnet, achieving over 1 million transactions per second. This new implementation promises to significantly improve Solana's network performance and reliability.",
+      "zh": "Jump Crypto 的 Firedancer 验证者客户端已在测试网成功上线，实现了每秒超过 100 万笔交易。这一新实现有望显著提升 Solana 网络性能和可靠性。"
+    },
+    "sourceUrl": "https://jumpcrypto.com"
+  },
+  {
+    "id": "sol-002",
+    "projectId": "solana",
+    "date": "2024-09-25",
+    "type": "ecosystem",
+    "title": {
+      "en": "Solana Mobile Chapter 2 Pre-orders Exceed 100K",
+      "zh": "Solana Mobile Chapter 2 预订量突破 10 万台"
+    },
+    "summary": {
+      "en": "The second-generation Solana Saga phone has surpassed 100,000 pre-orders, demonstrating strong community support for Web3-native mobile devices and expanding the ecosystem's reach to mobile users.",
+      "zh": "第二代 Solana Saga 手机预订量已超过 10 万台，展示了社区对 Web3 原生移动设备的强力支持，并将生态系统扩展到移动用户。"
+    },
+    "sourceUrl": ""
+  },
+  {
+    "id": "arb-001",
+    "projectId": "arbitrum",
+    "date": "2024-09-30",
+    "type": "tech",
+    "title": {
+      "en": "Arbitrum Stylus: Support for Rust and C++ Smart Contracts",
+      "zh": "Arbitrum Stylus：支持 Rust 和 C++ 智能合约"
+    },
+    "summary": {
+      "en": "Arbitrum has launched Stylus on mainnet, enabling developers to write smart contracts in Rust, C++, and other WASM-compatible languages alongside Solidity, offering 10x performance improvements and lower gas costs.",
+      "zh": "Arbitrum 在主网上推出了 Stylus，使开发者能够使用 Rust、C++ 和其他 WASM 兼容语言编写智能合约，与 Solidity 并行，提供 10 倍性能提升和更低的 Gas 费用。"
+    },
+    "sourceUrl": "https://arbitrum.io"
+  },
+  {
+    "id": "pol-001",
+    "projectId": "polygon",
+    "date": "2024-09-27",
+    "type": "ecosystem",
+    "title": {
+      "en": "Polygon 2.0 Roadmap: Transitioning to zkEVM-based Architecture",
+      "zh": "Polygon 2.0 路线图：过渡到基于 zkEVM 的架构"
+    },
+    "summary": {
+      "en": "Polygon has unveiled its 2.0 roadmap, focusing on transitioning the entire ecosystem to zero-knowledge proof technology. The upgrade includes the POL token migration and a unified liquidity layer across all Polygon chains.",
+      "zh": "Polygon 公布了其 2.0 路线图，重点是将整个生态系统过渡到零知识证明技术。升级包括 POL 代币迁移和跨所有 Polygon 链的统一流动性层。"
+    },
+    "sourceUrl": ""
+  },
+  {
+    "id": "avax-001",
+    "projectId": "avalanche",
+    "date": "2024-09-26",
+    "type": "ecosystem",
+    "title": {
+      "en": "Avalanche9000 Upgrade Reduces Subnet Creation Costs by 99%",
+      "zh": "Avalanche9000 升级将子网创建成本降低 99%"
+    },
+    "summary": {
+      "en": "The upcoming Avalanche9000 upgrade will dramatically reduce the cost of launching and maintaining subnets, making it more accessible for developers to build custom blockchain solutions on Avalanche.",
+      "zh": "即将到来的 Avalanche9000 升级将大幅降低启动和维护子网的成本，使开发者更容易在 Avalanche 上构建定制区块链解决方案。"
+    },
+    "sourceUrl": "https://www.avax.network"
+  }
+]

@@ -1,0 +1,224 @@
+---
+title: Next.js App Router 完全指南
+description: 深入理解 Next.js 15 的 App Router 架构，掌握服务端组件、客户端组件、数据获取、缓存策略等核心概念
+date: 2025-10-14
+category: frontend
+tags: [Next.js, React, App Router, SSR, TypeScript]
+author: Tech Showcase
+---
+
+# Next.js App Router 完全指南
+
+Next.js 15 引入的 App Router 是一个革命性的架构变化，它基于 React Server Components，为我们提供了更强大的数据获取、路由和渲染能力。
+
+## 核心概念
+
+### 1. 服务端组件 vs 客户端组件
+
+在 App Router 中，默认所有组件都是服务端组件（Server Components）：
+
+```tsx
+// app/page.tsx - 服务端组件（默认）
+export default async function Page() {
+  const data = await fetch('https://api.example.com/data')
+  const json = await data.json()
+  
+  return <div>{json.title}</div>
+}
+```
+
+需要交互时使用客户端组件：
+
+```tsx
+'use client'
+
+import { useState } from 'react'
+
+export default function Counter() {
+  const [count, setCount] = useState(0)
+  
+  return (
+    <button onClick={() => setCount(count + 1)}>
+      Count: {count}
+    </button>
+  )
+}
+```
+
+### 2. 路由系统
+
+App Router 使用文件系统路由：
+
+```
+app/
+├── page.tsx                 # /
+├── about/
+│   └── page.tsx            # /about
+├── blog/
+│   ├── page.tsx            # /blog
+│   └── [slug]/
+│       └── page.tsx        # /blog/:slug
+└── api/
+    └── users/
+        └── route.ts        # /api/users
+```
+
+### 3. 数据获取
+
+在服务端组件中直接使用 async/await：
+
+```tsx
+async function getData() {
+  const res = await fetch('https://api.example.com/data', {
+    next: { revalidate: 3600 } // 缓存1小时
+  })
+  
+  if (!res.ok) throw new Error('Failed to fetch data')
+  
+  return res.json()
+}
+
+export default async function Page() {
+  const data = await getData()
+  
+  return <main>{/* 渲染数据 */}</main>
+}
+```
+
+### 4. 布局系统
+
+使用 `layout.tsx` 创建共享布局：
+
+```tsx
+// app/layout.tsx
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="zh">
+      <body>
+        <nav>{/* 导航栏 */}</nav>
+        {children}
+        <footer>{/* 页脚 */}</footer>
+      </body>
+    </html>
+  )
+}
+```
+
+## 实战技巧
+
+### 1. 缓存策略
+
+```tsx
+// 静态生成 - 构建时生成
+export const dynamic = 'force-static'
+
+// 服务端渲染 - 每次请求都渲染
+export const dynamic = 'force-dynamic'
+
+// 增量静态再生成 - 定期重新验证
+export const revalidate = 60 // 60秒
+```
+
+### 2. 元数据优化
+
+```tsx
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'My Page',
+  description: 'Page description',
+  openGraph: {
+    title: 'My Page',
+    description: 'Page description',
+    images: ['/og-image.png'],
+  },
+}
+```
+
+### 3. 加载和错误处理
+
+```tsx
+// loading.tsx - 加载状态
+export default function Loading() {
+  return <div>Loading...</div>
+}
+
+// error.tsx - 错误处理
+'use client'
+
+export default function Error({
+  error,
+  reset,
+}: {
+  error: Error
+  reset: () => void
+}) {
+  return (
+    <div>
+      <h2>出错了！</h2>
+      <button onClick={() => reset()}>重试</button>
+    </div>
+  )
+}
+```
+
+## 性能优化
+
+### 1. 代码分割
+
+App Router 自动进行代码分割，每个路由段都会被单独打包。
+
+### 2. 图片优化
+
+使用 Next.js Image 组件：
+
+```tsx
+import Image from 'next/image'
+
+export default function Page() {
+  return (
+    <Image
+      src="/hero.png"
+      alt="Hero"
+      width={1200}
+      height={600}
+      priority
+    />
+  )
+}
+```
+
+### 3. 字体优化
+
+使用 next/font 自动优化字体：
+
+```tsx
+import { Inter } from 'next/font/google'
+
+const inter = Inter({ subsets: ['latin'] })
+
+export default function Layout({ children }) {
+  return (
+    <html className={inter.className}>
+      <body>{children}</body>
+    </html>
+  )
+}
+```
+
+## 总结
+
+Next.js App Router 提供了：
+
+- 🚀 更快的首屏加载
+- 💻 更好的开发体验
+- 🔄 流式渲染支持
+- 📦 自动代码分割
+- 🎯 更灵活的数据获取
+
+掌握这些概念，你就能构建高性能的现代 Web 应用！
+

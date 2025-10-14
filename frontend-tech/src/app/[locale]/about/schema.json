@@ -1,0 +1,44 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Oracle",
+  "jobTitle": "Full-Stack Developer & Web3 Explorer",
+  "description": "A full-stack developer with expertise in blockchain technology, DeFi, and decentralized applications. Experienced in Rust, Solana, Next.js, and modern web technologies.",
+  "url": "https://your-domain.com/about",
+  "image": "https://your-domain.com/avatar.png",
+  "sameAs": [
+    "https://github.com/ape7054",
+    "https://x.com/ency_146904",
+    "https://linkedin.com/in/ency-146904"
+  ],
+  "knowsAbout": [
+    "Full-Stack Development",
+    "Web3",
+    "Blockchain",
+    "DeFi",
+    "Solana",
+    "Rust Programming",
+    "Next.js",
+    "TypeScript",
+    "Smart Contracts",
+    "Quantitative Trading"
+  ],
+  "alumniOf": {
+    "@type": "Organization",
+    "name": "Your University"
+  },
+  "worksFor": {
+    "@type": "Organization",
+    "name": "DeFi Quantitative Trading Team"
+  },
+  "hasOccupation": {
+    "@type": "Occupation",
+    "name": "Full-Stack Developer",
+    "occupationLocation": {
+      "@type": "Country",
+      "name": "China"
+    },
+    "skills": "React, Next.js, TypeScript, Rust, Solana, Web3, DeFi, Smart Contracts"
+  }
+}
+

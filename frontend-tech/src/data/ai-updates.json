@@ -1,0 +1,153 @@
+[
+  {
+    "id": "ai-001",
+    "projectId": "openai",
+    "date": "2024-10-03",
+    "type": "tech",
+    "title": {
+      "en": "OpenAI Launches Canvas for ChatGPT",
+      "zh": "OpenAI 为 ChatGPT 推出 Canvas 功能"
+    },
+    "summary": {
+      "en": "OpenAI introduces Canvas, a new interface for ChatGPT that enables collaborative editing of writing and code. This feature allows for inline suggestions and iterative refinement.",
+      "zh": "OpenAI 推出 Canvas，这是 ChatGPT 的新界面，支持协作编辑文本和代码。此功能允许内联建议和迭代改进。"
+    },
+    "sourceUrl": "https://openai.com/blog/introducing-canvas"
+  },
+  {
+    "id": "ai-002",
+    "projectId": "anthropic",
+    "date": "2024-09-28",
+    "type": "tech",
+    "title": {
+      "en": "Claude 3.5 Sonnet Achieves Top Ranking on Chatbot Arena",
+      "zh": "Claude 3.5 Sonnet 在 Chatbot Arena 中排名第一"
+    },
+    "summary": {
+      "en": "Anthropic's Claude 3.5 Sonnet has claimed the top spot on the Chatbot Arena leaderboard with an Elo rating of 1324, surpassing GPT-4 and other leading models.",
+      "zh": "Anthropic 的 Claude 3.5 Sonnet 以 1324 的 Elo 评分在 Chatbot Arena 排行榜中位居榜首，超越了 GPT-4 和其他领先模型。"
+    },
+    "sourceUrl": "https://lmsys.org/blog"
+  },
+  {
+    "id": "ai-003",
+    "projectId": "gemini",
+    "date": "2024-09-25",
+    "type": "industry",
+    "title": {
+      "en": "Google Integrates Gemini AI into Gmail and Docs",
+      "zh": "Google 将 Gemini AI 集成到 Gmail 和 Docs"
+    },
+    "summary": {
+      "en": "Google announces deep integration of Gemini 1.5 Pro into Google Workspace, enabling AI-powered writing assistance, document summarization, and email drafting across Gmail and Docs.",
+      "zh": "Google 宣布将 Gemini 1.5 Pro 深度集成到 Google Workspace，在 Gmail 和 Docs 中实现 AI 驱动的写作辅助、文档摘要和电子邮件起草功能。"
+    },
+    "sourceUrl": ""
+  },
+  {
+    "id": "ai-004",
+    "projectId": "midjourney",
+    "date": "2024-09-20",
+    "type": "tech",
+    "title": {
+      "en": "Midjourney V6.1 Released with Improved Text Rendering",
+      "zh": "Midjourney V6.1 发布，文字渲染能力大幅提升"
+    },
+    "summary": {
+      "en": "Midjourney releases version 6.1 with significantly improved text rendering capabilities, allowing for more accurate and aesthetically pleasing text in generated images.",
+      "zh": "Midjourney 发布 6.1 版本，文字渲染能力显著提升，可在生成的图像中呈现更准确、更美观的文字效果。"
+    },
+    "sourceUrl": "https://www.midjourney.com"
+  },
+  {
+    "id": "ai-005",
+    "projectId": "llama",
+    "date": "2024-09-15",
+    "type": "ecosystem",
+    "title": {
+      "en": "Llama 3.1 405B Surpasses 10 Million Downloads",
+      "zh": "Llama 3.1 405B 下载量突破 1000 万次"
+    },
+    "summary": {
+      "en": "Meta's open-source Llama 3.1 405B model has been downloaded over 10 million times, becoming the most popular open-source LLM. The model is being widely adopted by enterprises and researchers.",
+      "zh": "Meta 开源的 Llama 3.1 405B 模型下载量已超过 1000 万次，成为最受欢迎的开源 LLM。该模型被企业和研究人员广泛采用。"
+    },
+    "sourceUrl": "https://llama.meta.com"
+  },
+  {
+    "id": "ai-006",
+    "projectId": "deepseek",
+    "date": "2024-09-10",
+    "type": "tech",
+    "title": {
+      "en": "DeepSeek V2.5 Achieves 89% on HumanEval at 1/20th the Cost",
+      "zh": "DeepSeek V2.5 在 HumanEval 上达到 89%，成本仅为竞品的 1/20"
+    },
+    "summary": {
+      "en": "DeepSeek releases V2.5 with exceptional coding performance (89% on HumanEval) at unprecedented low pricing - $0.14 per million input tokens, disrupting the LLM pricing landscape.",
+      "zh": "DeepSeek 发布 V2.5，在 HumanEval 上取得出色的编程性能（89%），价格极低 - 每百万输入 token 仅需 0.14 美元，颠覆了 LLM 定价格局。"
+    },
+    "sourceUrl": "https://www.deepseek.com"
+  },
+  {
+    "id": "ai-007",
+    "projectId": "cursor",
+    "date": "2024-09-05",
+    "type": "funding",
+    "title": {
+      "en": "Cursor Raises $60M Series A at $400M Valuation",
+      "zh": "Cursor 完成 6000 万美元 A 轮融资，估值 4 亿美元"
+    },
+    "summary": {
+      "en": "AI coding editor Cursor announces $60M Series A funding led by Andreessen Horowitz, reaching a $400M valuation. The company reports over 30,000 paid subscribers.",
+      "zh": "AI 代码编辑器 Cursor 宣布完成由 Andreessen Horowitz 领投的 6000 万美元 A 轮融资，估值达 4 亿美元。公司报告拥有超过 3 万名付费订阅者。"
+    },
+    "sourceUrl": ""
+  },
+  {
+    "id": "ai-008",
+    "projectId": "stable-diffusion",
+    "date": "2024-08-28",
+    "type": "application",
+    "title": {
+      "en": "Stable Diffusion 3 Medium Released as Open Source",
+      "zh": "Stable Diffusion 3 Medium 开源发布"
+    },
+    "summary": {
+      "en": "Stability AI releases Stable Diffusion 3 Medium under an open license, featuring 2B parameters and significantly improved prompt following and text rendering compared to SD XL.",
+      "zh": "Stability AI 以开源许可证发布 Stable Diffusion 3 Medium，拥有 20 亿参数，相比 SD XL 在提示词理解和文字渲染方面有显著改进。"
+    },
+    "sourceUrl": "https://stability.ai"
+  },
+  {
+    "id": "ai-009",
+    "projectId": "qwen",
+    "date": "2024-08-22",
+    "type": "tech",
+    "title": {
+      "en": "Alibaba Releases Qwen 2.5 Family with Enhanced Coding",
+      "zh": "阿里发布 Qwen 2.5 系列，编程能力大幅增强"
+    },
+    "summary": {
+      "en": "Alibaba Cloud unveils Qwen 2.5 series (0.5B to 72B parameters), with significant improvements in coding, math, and instruction following. The 72B model rivals GPT-4 on several benchmarks.",
+      "zh": "阿里云推出 Qwen 2.5 系列（0.5B 至 72B 参数），在编程、数学和指令遵循方面大幅改进。72B 模型在多个基准测试中媲美 GPT-4。"
+    },
+    "sourceUrl": "https://qwenlm.github.io"
+  },
+  {
+    "id": "ai-010",
+    "projectId": "huggingface",
+    "date": "2024-08-15",
+    "type": "ecosystem",
+    "title": {
+      "en": "Hugging Face Reaches 500,000 Models Milestone",
+      "zh": "Hugging Face 平台模型数量突破 50 万"
+    },
+    "summary": {
+      "en": "Hugging Face celebrates reaching 500,000 models on its platform, cementing its position as the largest open-source AI model hub. The platform now serves 5 million AI developers worldwide.",
+      "zh": "Hugging Face 庆祝平台模型数量突破 50 万，巩固了其作为最大开源 AI 模型中心的地位。该平台目前为全球 500 万 AI 开发者提供服务。"
+    },
+    "sourceUrl": "https://huggingface.co"
+  }
+]
+

@@ -1,0 +1,470 @@
+---
+title: Docker 容器化部署指南
+description: 多阶段构建优化、Docker Compose编排、Nginx配置、生产环境部署最佳实践
+date: 2025-10-14
+category: devops
+tags: [Docker, Docker Compose, Nginx, 部署, DevOps]
+author: Tech Showcase
+---
+
+# Docker 容器化部署指南
+
+使用 Docker 和 Docker Compose 实现应用的容器化部署，提升开发效率和部署一致性。
+
+## Docker 基础
+
+### 1. Dockerfile 最佳实践
+
+#### 多阶段构建（Go 后端）
+
+```dockerfile
+# 阶段1: 构建
+FROM golang:1.22-alpine AS builder
+
+WORKDIR /app
+
+# 复制依赖文件
+COPY go.mod go.sum ./
+RUN go mod download
+
+# 复制源代码
+COPY . .
+
+# 编译二进制文件
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main cmd/main.go
+
+# 阶段2: 运行
+FROM alpine:latest
+
+RUN apk --no-cache add ca-certificates
+
+WORKDIR /root/
+
+# 从构建阶段复制二进制文件
+COPY --from=builder /app/main .
+
+# 暴露端口
+EXPOSE 8080
+
+# 启动应用
+CMD ["./main"]
+```
+
+#### 多阶段构建（Next.js 前端）
+
+```dockerfile
+# 阶段1: 依赖安装
+FROM node:20-alpine AS deps
+
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+RUN npm ci
+
+# 阶段2: 构建
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+RUN npm run build
+
+# 阶段3: 运行
+FROM node:20-alpine AS runner
+
+WORKDIR /app
+
+ENV NODE_ENV production
+
+# 创建非root用户
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+# 复制必要文件
+COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
+
+EXPOSE 3000
+
+ENV PORT 3000
+
+CMD ["node", "server.js"]
+```
+
+### 2. .dockerignore 文件
+
+```
+# 前端
+node_modules
+.next
+.git
+.env.local
+npm-debug.log*
+
+# 后端
+vendor
+*.exe
+*.test
+.env
+```
+
+## Docker Compose 编排
+
+### 完整的 docker-compose.yml
+
+```yaml
+version: '3.8'
+
+services:
+  # MySQL 数据库
+  db:
+    image: mysql:8.0
+    container_name: app-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # phpMyAdmin - 数据库管理
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:5.2
+    container_name: app-phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: ${DB_USER}
+      PMA_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "8081:80"
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  # Go 后端服务
+  backend:
+    build:
+      context: ./backend-go
+      dockerfile: Dockerfile
+    image: app-backend:latest
+    container_name: app-backend
+    restart: unless-stopped
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - SERVER_PORT=8080
+      - JWT_SECRET=${JWT_SECRET}
+      - GIN_MODE=release
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Next.js 前端服务
+  frontend:
+    build:
+      context: ./frontend-nextjs
+      dockerfile: Dockerfile
+    image: app-frontend:latest
+    container_name: app-frontend
+    restart: unless-stopped
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:8080
+      - NODE_ENV=production
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+
+  # Nginx 反向代理
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: app-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - app-network
+
+volumes:
+  mysql-data:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge
+```
+
+## Nginx 配置
+
+### nginx.conf
+
+```nginx
+events {
+    worker_connections 1024;
+}
+
+http {
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+
+    # 日志格式
+    log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+                    '$status $body_bytes_sent "$http_referer" '
+                    '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log /var/log/nginx/access.log main;
+    error_log /var/log/nginx/error.log warn;
+
+    sendfile on;
+    tcp_nopush on;
+    tcp_nodelay on;
+    keepalive_timeout 65;
+    types_hash_max_size 2048;
+
+    # Gzip 压缩
+    gzip on;
+    gzip_vary on;
+    gzip_proxied any;
+    gzip_comp_level 6;
+    gzip_types text/plain text/css text/xml text/javascript 
+               application/json application/javascript application/xml+rss;
+
+    # 上游服务器
+    upstream frontend {
+        server frontend:3000;
+    }
+
+    upstream backend {
+        server backend:8080;
+    }
+
+    # HTTP 服务器
+    server {
+        listen 80;
+        server_name your-domain.com;
+
+        # 前端
+        location / {
+            proxy_pass http://frontend;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection 'upgrade';
+            proxy_set_header Host $host;
+            proxy_cache_bypass $http_upgrade;
+        }
+
+        # 后端 API
+        location /api {
+            proxy_pass http://backend;
+            proxy_http_version 1.1;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        # WebSocket
+        location /ws {
+            proxy_pass http://backend;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+        }
+
+        # 静态资源缓存
+        location ~* \.(jpg|jpeg|png|gif|ico|css|js)$ {
+            expires 1y;
+            add_header Cache-Control "public, immutable";
+        }
+    }
+}
+```
+
+## 环境变量管理
+
+### .env 文件
+
+```bash
+# 数据库配置
+DB_ROOT_PASSWORD=rootpassword
+DB_NAME=app_db
+DB_USER=app_user
+DB_PASSWORD=securepassword
+
+# JWT 配置
+JWT_SECRET=your-super-secret-jwt-key
+
+# 应用配置
+NODE_ENV=production
+NEXT_PUBLIC_API_URL=https://api.your-domain.com
+```
+
+## 常用命令
+
+### 构建和启动
+
+```bash
+# 构建所有服务
+docker-compose build
+
+# 启动所有服务
+docker-compose up -d
+
+# 查看日志
+docker-compose logs -f
+
+# 停止所有服务
+docker-compose down
+
+# 停止并删除卷
+docker-compose down -v
+```
+
+### 调试和维护
+
+```bash
+# 进入容器
+docker-compose exec backend sh
+docker-compose exec frontend sh
+
+# 查看容器状态
+docker-compose ps
+
+# 重启服务
+docker-compose restart backend
+
+# 查看资源使用
+docker stats
+```
+
+## 生产环境部署
+
+### 1. 安全检查清单
+
+- ✅ 使用非 root 用户运行容器
+- ✅ 定期更新基础镜像
+- ✅ 使用环境变量管理敏感信息
+- ✅ 启用 HTTPS（Let's Encrypt）
+- ✅ 配置防火墙规则
+- ✅ 实施备份策略
+
+### 2. 性能优化
+
+```dockerfile
+# 减小镜像大小
+FROM alpine:latest
+
+# 使用构建缓存
+COPY go.mod go.sum ./
+RUN go mod download
+
+# 多阶段构建
+FROM builder AS final
+```
+
+### 3. 健康检查
+
+```yaml
+healthcheck:
+  test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+  interval: 30s
+  timeout: 10s
+  retries: 3
+  start_period: 40s
+```
+
+### 4. 日志管理
+
+```yaml
+logging:
+  driver: "json-file"
+  options:
+    max-size: "10m"
+    max-file: "3"
+```
+
+## 监控和维护
+
+### 1. 资源限制
+
+```yaml
+deploy:
+  resources:
+    limits:
+      cpus: '0.5'
+      memory: 512M
+    reservations:
+      cpus: '0.25'
+      memory: 256M
+```
+
+### 2. 自动重启
+
+```yaml
+restart: unless-stopped
+```
+
+### 3. 备份策略
+
+```bash
+# 备份数据库
+docker-compose exec db mysqldump -u root -p$DB_ROOT_PASSWORD $DB_NAME > backup.sql
+
+# 恢复数据库
+docker-compose exec -T db mysql -u root -p$DB_ROOT_PASSWORD $DB_NAME < backup.sql
+```
+
+## 总结
+
+Docker 容器化部署提供：
+
+- 🚀 一致的开发和生产环境
+- 📦 简化的部署流程
+- 🔄 快速的回滚能力
+- 🎯 资源隔离和限制
+- 🛡️ 提升安全性
+
+掌握这些技术，你就能实现专业的应用部署！
+
