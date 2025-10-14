@@ -24,9 +24,9 @@ export interface Project {
 
 export const projects: Project[] = [
   {
-    id: 'learning-stack',
-    title: 'projects.learningStack.title',
-    description: 'projects.learningStack.description',
+    id: 'oracle-knowledgebase',
+    title: 'projects.oracleKnowledgebase.title',
+    description: 'projects.oracleKnowledgebase.description',
     tech: ['Next.js', 'React', 'TypeScript', 'TailwindCSS', 'MDX'],
     links: {
       demo: 'https://kb.ency.asia/',
@@ -35,8 +35,8 @@ export const projects: Project[] = [
     category: 'frontend',
     featured: true,
     achievements: [
-      'projects.learningStack.achievement1',
-      'projects.learningStack.achievement2'
+      'projects.oracleKnowledgebase.achievement1',
+      'projects.oracleKnowledgebase.achievement2'
     ]
   },
   {

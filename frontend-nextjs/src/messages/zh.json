@@ -354,7 +354,7 @@
         "achievement1": "自动化交易策略执行",
         "achievement2": "实时市场监控和提醒"
       },
-      "learningStack": {
+      "oracleKnowledgebase": {
         "title": "知识管理平台",
         "description": "基于Next.js构建的个人知识管理系统，支持MDX文章和现代化UI",
         "achievement1": "系统化的知识组织和展示",

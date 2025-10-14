@@ -354,8 +354,8 @@
         "achievement1": "Automated trading strategy execution",
         "achievement2": "Real-time market monitoring and alerts"
       },
-      "learningStack": {
-        "title": "Learning Stack Platform",
+      "oracleKnowledgebase": {
+        "title": "Oracle Knowledge Base",
         "description": "Personal knowledge management system built with Next.js, featuring MDX articles and modern UI",
         "achievement1": "Systematic knowledge organization and presentation",
         "achievement2": "Modern frontend tech stack implementation"
@@ -652,8 +652,8 @@
       "achievement1": "Achieved millisecond-level trade execution",
       "achievement2": "Supports multiple trading strategy configurations"
     },
-    "learningStack": {
-      "title": "Learning Stack Knowledge Base",
+    "oracleKnowledgebase": {
+      "title": "Oracle Knowledge Base",
       "description": "Modern personal knowledge management system based on Next.js",
       "achievement1": "Supports MDX format article management",
       "achievement2": "Complete internationalization support"
