@@ -42,6 +42,7 @@ import { ContainerTextFlip } from '@/components/ui/container-text-flip'
 import { IconCloud } from '@/components/ui/icon-cloud'
 import { SparklesCore } from '@/components/ui/sparkles'
 import { WarpBackground } from '@/components/ui/warp-background'
+import { Meteors } from '@/components/ui/meteors'
 import { ChevronDown } from 'lucide-react'
 import { useRef } from 'react'
 
@@ -74,6 +75,47 @@ export const componentCategories = {
 } as const
 
 export const showcaseComponents: ComponentItem[] = [
+  // 特色动效组件 - Meteors
+  {
+    id: 'meteors',
+    name: 'Meteors',
+    category: 'animations',
+    description: '流星雨效果，动态背景装饰组件',
+    component: ({ theme }: { theme?: string }) => (
+      <div className={`relative w-full h-64 overflow-hidden rounded-lg ${
+        theme === "dark"
+          ? "bg-gradient-to-br from-slate-950 to-slate-900"
+          : "bg-gradient-to-br from-slate-200 to-slate-300"
+      }`}>
+        <Meteors number={30} />
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div className="text-center">
+            <h3 className={`text-2xl font-bold mb-2 ${
+              theme === "dark" ? "text-white" : "text-slate-900"
+            }`}>流星雨效果</h3>
+            <p className={theme === "dark" ? "text-slate-400" : "text-slate-600"}>
+              动态背景装饰组件
+            </p>
+          </div>
+        </div>
+      </div>
+    ),
+    codeExample: `import { Meteors } from '@/components/ui/meteors'
+
+<div className="relative h-64 overflow-hidden bg-gradient-to-br from-slate-950 to-slate-900">
+  <Meteors number={30} />
+  <div className="absolute inset-0 flex items-center justify-center">
+    <h3 className="text-2xl font-bold text-white">流星雨效果</h3>
+  </div>
+</div>`,
+    variants: [
+      { 
+        name: '默认(30个)', 
+        props: {},
+        description: '默认配置，30个流星'
+      },
+    ]
+  },
   // 基础组件
   {
     id: 'button',

@@ -76,12 +76,10 @@ export default function Dashboard() {
 
   // 计算每行显示的列数（响应式）
   const getColumnsCount = useCallback(() => {
-    if (typeof window === 'undefined') return 4
+    if (typeof window === 'undefined') return 2
     const width = window.innerWidth
-    if (width < 768) return 1 // mobile
-    if (width < 1024) return 2 // tablet
-    if (width < 1280) return 3 // laptop
-    return 4 // desktop
+    if (width < 768) return 1 // mobile - 单列
+    return 2 // desktop - 两列
   }, [])
 
   const [columnsCount, setColumnsCount] = useState(getColumnsCount())
@@ -104,12 +102,33 @@ export default function Dashboard() {
     return rows
   }, [currentComponents, columnsCount])
 
-  // 虚拟滚动器配置
+  // 动态计算每行的高度（根据每个组件的预期高度）
+  const getRowHeight = useCallback((index: number) => {
+    const row = rowsData[index]
+    if (!row || row.length === 0) return 500
+    
+    // 计算该行中每个组件的预期高度，取最大值
+    const heights = row.map(component => {
+      const hasVariants = component.variants && component.variants.length > 0
+      // 有variants的卡片需要额外空间显示变体选择按钮
+      // Avatar、Skeleton等简单组件即使没有variants，高度也相对较小（420px）
+      return hasVariants ? 630 : 
+             (component.id === 'avatar' || component.id === 'skeleton' || component.id === 'separator') ? 420 : 
+             480
+    })
+    
+    return Math.max(...heights)
+  }, [rowsData])
+
+  // 虚拟滚动器配置 - 启用自动测量实际高度
   const rowVirtualizer = useVirtualizer({
     count: rowsData.length,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 450, // 估计每行高度
+    estimateSize: getRowHeight, // 初始估算高度
     overscan: 2, // 预渲染2行
+    measureElement: typeof window !== 'undefined' && navigator.userAgent.indexOf('Firefox') === -1
+      ? (element) => element?.getBoundingClientRect().height // 自动测量实际高度
+      : undefined, // Firefox不支持自动测量，使用估算
   })
 
   // Simulate data loading - optimized loading time
@@ -502,7 +521,7 @@ export default function Dashboard() {
                               ref={parentRef}
                               className="relative"
                               style={{ 
-                                height: '600px',
+                                height: '800px',
                                 overflow: 'auto',
                               }}
                             >
@@ -518,16 +537,17 @@ export default function Dashboard() {
                                   return (
                                     <div
                                       key={virtualRow.index}
+                                      data-index={virtualRow.index}
+                                      ref={rowVirtualizer.measureElement}
                                       style={{
                                         position: 'absolute',
                                         top: 0,
                                         left: 0,
                                         width: '100%',
-                                        height: `${virtualRow.size}px`,
                                         transform: `translateY(${virtualRow.start}px)`,
                                       }}
                                     >
-                                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-6">
+                                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-6">
                                         {rowComponents.map((component) => (
                                           <ComponentShowcaseCard 
                                             key={component.id} 

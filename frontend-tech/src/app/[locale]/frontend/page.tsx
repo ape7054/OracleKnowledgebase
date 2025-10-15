@@ -10,6 +10,8 @@ import { AnimatedGradientText } from '@/components/ui/animated-gradient-text';
 import { SiteHeader } from '@/components/SiteHeader';
 import { DevelopmentBadge } from '@/components/DevelopmentBadge';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { BorderBeam } from '@/components/ui/border-beam';
+import { SparklesCore } from '@/components/ui/sparkles';
 import CountUp from 'react-countup';
 import {
   Code2,
@@ -159,10 +161,42 @@ export default function DemoPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
             {demoCards.map((card) => {
               const Icon = card.icon;
+              const isShowcase = card.id === 'showcase';
+              
               return (
                 <Link key={card.id} href={card.href} className="block group">
-                  <Card className="h-full border-2 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10">
-                    <CardContent className="p-6 space-y-4">
+                  <Card className={`h-full border-2 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 ${
+                    isShowcase ? 'relative overflow-hidden' : ''
+                  }`}>
+                    {/* Sparkles 特效 - 仅用于 showcase 卡片 */}
+                    {isShowcase && (
+                      <div className="absolute inset-0 pointer-events-none">
+                        <SparklesCore
+                          id="showcase-sparkles"
+                          background="transparent"
+                          minSize={1.2}
+                          maxSize={5.6}
+                          particleDensity={80}
+                          className="w-full h-full"
+                          particleColor="#ff8c00"
+                          speed={0.5}
+                        />
+                      </div>
+                    )}
+                    
+                    {/* BorderBeam 特效 - 仅用于 showcase 卡片 */}
+                    {isShowcase && (
+                      <BorderBeam
+                        size={300}
+                        duration={8}
+                        delay={0}
+                        colorFrom="#ff8c00"
+                        colorTo="#ff6b00"
+                        borderWidth={2}
+                      />
+                    )}
+                    
+                    <CardContent className="p-6 space-y-4 relative z-10">
                       <div className={`inline-flex p-3 rounded-lg bg-gradient-to-br ${card.gradient}`}>
                         <Icon className={`h-8 w-8 ${card.color}`} />
                       </div>

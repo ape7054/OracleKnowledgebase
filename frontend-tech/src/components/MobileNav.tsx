@@ -33,6 +33,7 @@ export function MobileNav() {
     { href: `/${locale}`, label: t('home') },
     { href: `/${locale}/knowledge`, label: t('knowledge') },
     { href: `/${locale}/frontend`, label: t('demo') },
+    { href: `/${locale}/backend`, label: t('backend') },
     { href: `/${locale}/web3`, label: t('web3') },
     { href: `/${locale}/ai`, label: t('ai') },
     { href: `/${locale}/tools`, label: t('tools') },

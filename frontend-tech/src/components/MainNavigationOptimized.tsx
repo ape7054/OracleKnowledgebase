@@ -33,6 +33,9 @@ export function MainNavigationOptimized() {
         <Link href={`/${locale}/frontend`} className="text-sm font-medium" prefetch={true}>
           {t('demo')}
         </Link>
+        <Link href={`/${locale}/backend`} className="text-sm font-medium" prefetch={true}>
+          {t('backend')}
+        </Link>
         <Link href={`/${locale}/web3`} className="text-sm font-medium" prefetch={true}>
           {t('web3')}
         </Link>
@@ -75,6 +78,15 @@ export function MainNavigationOptimized() {
           <NavigationMenuLink asChild>
             <Link href={`/${locale}/frontend`} className={navigationMenuTriggerStyle()} prefetch={true}>
               {t('demo')}
+            </Link>
+          </NavigationMenuLink>
+        </NavigationMenuItem>
+
+        {/* Backend Lab */}
+        <NavigationMenuItem>
+          <NavigationMenuLink asChild>
+            <Link href={`/${locale}/backend`} className={navigationMenuTriggerStyle()} prefetch={true}>
+              {t('backend')}
             </Link>
           </NavigationMenuLink>
         </NavigationMenuItem>

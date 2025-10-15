@@ -4,8 +4,9 @@
     "articles": "技术文档",
     "knowledge": "技术文档",
     "demo": "前端实验室",
-    "web3": "Web3技术",
-    "ai": "AI技术",
+    "backend": "后端实验室",
+    "web3": "Web3",
+    "ai": "AI",
     "tools": "工具导航",
     "about": "技术栈详解",
     "github": "GitHub",
@@ -419,6 +420,31 @@
         "achievement2": "代码高亮和语法检查"
       }
     }
+  },
+  "backend": {
+    "title": "后端技术实验室",
+    "subtitle": "Go 微服务、API 设计、Rust 高性能开发",
+    "totalProjects": "{count} 个项目",
+    "status": {
+      "inDevelopment": "开发中"
+    },
+    "allCategories": "全部分类",
+    "timeline": "时间线",
+    "categories": {
+      "microservices": "微服务架构",
+      "api-design": "API 设计",
+      "rust": "Rust 开发",
+      "database": "数据库技术"
+    },
+    "updateTypes": {
+      "tech": "技术更新",
+      "performance": "性能优化",
+      "security": "安全更新",
+      "feature": "新特性",
+      "other": "其他"
+    },
+    "daysAgo": "{days} 天前",
+    "visitWebsite": "访问网站"
   },
   "web3": {
     "title": "Web3 技术研究",

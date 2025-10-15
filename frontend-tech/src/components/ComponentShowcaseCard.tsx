@@ -88,6 +88,21 @@ const ComponentShowcaseCardInner = ({ component }: ComponentShowcaseCardProps) =
     try {
       const ComponentToRender = component.component
       
+      // 特殊处理：如果是全宽度预览组件（如 Meteors），不需要额外的容器
+      const isFullWidthPreview = component.id === 'meteors' || component.category === 'animations'
+      
+      if (isFullWidthPreview && component.id === 'meteors') {
+        return (
+          <div className={`overflow-hidden rounded-lg border ${
+            theme === "dark"
+              ? "bg-slate-900 border-slate-700/50"
+              : "bg-slate-200 border-slate-300/50"
+          }`}>
+            <ComponentToRender {...currentProps} theme={theme} />
+          </div>
+        )
+      }
+      
       return (
         <div className={`flex items-center justify-center min-h-[120px] p-6 rounded-lg border ${
           theme === "dark"
