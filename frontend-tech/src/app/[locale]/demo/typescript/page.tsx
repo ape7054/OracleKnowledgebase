@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { SiteHeader } from '@/components/SiteHeader';
-import { FileCode, CheckCircle2, AlertCircle } from 'lucide-react';
+import { FileCode, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 

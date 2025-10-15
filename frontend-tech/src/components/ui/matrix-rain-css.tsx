@@ -59,7 +59,7 @@ export const MatrixRainCSS = forwardRef<HTMLDivElement, MatrixRainCSSProps>(
       density = 1.0,
       brightness = 1.0,
       greenIntensity = 1.0,
-      variation = 1.0,
+      variation = 1.0, // eslint-disable-line @typescript-eslint/no-unused-vars
       isDarkMode = true,
       ...props
     },

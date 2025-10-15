@@ -13,7 +13,7 @@ import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { SiteHeader } from '@/components/SiteHeader';
 import { useTranslations } from 'next-intl';
-import { Grid3x3, Check, Copy, Code2 } from 'lucide-react';
+import { Grid3x3, Check, Copy } from 'lucide-react';
 import Link from 'next/link';
 
 export default function ComponentsPage() {
@@ -349,7 +349,7 @@ export default function ComponentsPage() {
                   <AccordionItem value="item-3">
                     <AccordionTrigger>Is it animated?</AccordionTrigger>
                     <AccordionContent>
-                      Yes. It's animated by default with smooth transitions.
+                      Yes. It&apos;s animated by default with smooth transitions.
                     </AccordionContent>
                   </AccordionItem>
                 </Accordion>

@@ -11,7 +11,6 @@ import { useTranslations } from 'next-intl';
 import {
   Sparkles,
   Play,
-  RotateCcw,
   MousePointer,
   ArrowRight,
   Heart,
