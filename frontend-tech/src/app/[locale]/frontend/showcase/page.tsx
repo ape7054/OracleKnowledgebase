@@ -39,6 +39,7 @@ import { Badge } from "@/components/ui/badge"
 import { ComponentShowcaseCard } from "@/components/ComponentShowcaseCard"
 import { getComponentsByCategory, componentCategories } from "@/config/showcase-components"
 import { DevelopmentBadge } from "@/components/DevelopmentBadge"
+import { Toaster } from "@/components/ui/toaster"
 
 export default function Dashboard() {
   const t = useTranslations("frontend.showcase")
@@ -798,8 +799,11 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-                  </div>
-                </div>
+      </div>
+      
+      {/* Toast通知组件 */}
+      <Toaster />
+    </div>
   )
 }
 

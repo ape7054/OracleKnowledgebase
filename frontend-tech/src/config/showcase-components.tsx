@@ -25,6 +25,25 @@ import { NumberTicker } from '@/components/ui/number-ticker'
 import { Marquee } from '@/components/ui/marquee'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { DevelopmentBadge } from '@/components/DevelopmentBadge'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuList, NavigationMenuTrigger } from '@/components/ui/navigation-menu'
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable'
+import { toast } from '@/hooks/use-toast'
+import { ChartContainer, ChartTooltip } from '@/components/ui/chart'
+import { Bar, BarChart, XAxis, YAxis } from 'recharts'
+import { AnimatedBeam } from '@/components/ui/animated-beam'
+import { AuroraBackground } from '@/components/ui/aurora-background'
+import { ContainerTextFlip } from '@/components/ui/container-text-flip'
+import { IconCloud } from '@/components/ui/icon-cloud'
+import { SparklesCore } from '@/components/ui/sparkles'
+import { WarpBackground } from '@/components/ui/warp-background'
+import { ChevronDown } from 'lucide-react'
+import { useRef } from 'react'
 
 export interface ComponentItem {
   id: string
@@ -655,6 +674,575 @@ import { Card, CardContent } from '@/components/ui/card'
     codeExample: `import { DevelopmentBadge } from '@/components/DevelopmentBadge'
 
 <DevelopmentBadge text="开发中" />`
+  },
+
+  // 表单/交互组件 - 新增
+  {
+    id: 'select',
+    name: 'Select',
+    category: 'forms',
+    description: '下拉选择组件，支持单选',
+    component: () => (
+      <Select defaultValue="apple">
+        <SelectTrigger className="w-[180px]">
+          <SelectValue placeholder="选择一个水果" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="apple">苹果</SelectItem>
+          <SelectItem value="banana">香蕉</SelectItem>
+          <SelectItem value="orange">橙子</SelectItem>
+          <SelectItem value="grape">葡萄</SelectItem>
+        </SelectContent>
+      </Select>
+    ),
+    codeExample: `import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+
+<Select defaultValue="apple">
+  <SelectTrigger className="w-[180px]">
+    <SelectValue placeholder="选择一个水果" />
+  </SelectTrigger>
+  <SelectContent>
+    <SelectItem value="apple">苹果</SelectItem>
+    <SelectItem value="banana">香蕉</SelectItem>
+    <SelectItem value="orange">橙子</SelectItem>
+  </SelectContent>
+</Select>`
+  },
+  {
+    id: 'dropdown-menu',
+    name: 'Dropdown Menu',
+    category: 'forms',
+    description: '下拉菜单组件，用于操作菜单',
+    component: () => (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline">打开菜单</Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem>个人资料</DropdownMenuItem>
+          <DropdownMenuItem>设置</DropdownMenuItem>
+          <DropdownMenuItem>帮助</DropdownMenuItem>
+          <DropdownMenuItem className="text-destructive">退出登录</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    ),
+    codeExample: `import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { Button } from '@/components/ui/button'
+
+<DropdownMenu>
+  <DropdownMenuTrigger asChild>
+    <Button variant="outline">打开菜单</Button>
+  </DropdownMenuTrigger>
+  <DropdownMenuContent>
+    <DropdownMenuItem>个人资料</DropdownMenuItem>
+    <DropdownMenuItem>设置</DropdownMenuItem>
+    <DropdownMenuItem>退出登录</DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>`
+  },
+  {
+    id: 'popover',
+    name: 'Popover',
+    category: 'forms',
+    description: '气泡弹出框组件，用于显示浮层内容',
+    component: () => (
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button variant="outline">打开弹出框</Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-80">
+          <div className="space-y-2">
+            <h4 className="font-medium leading-none">提示信息</h4>
+            <p className="text-sm text-muted-foreground">
+              这是一个弹出框组件，可以用来显示额外的信息或操作。
+            </p>
+          </div>
+        </PopoverContent>
+      </Popover>
+    ),
+    codeExample: `import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Button } from '@/components/ui/button'
+
+<Popover>
+  <PopoverTrigger asChild>
+    <Button variant="outline">打开弹出框</Button>
+  </PopoverTrigger>
+  <PopoverContent className="w-80">
+    <div className="space-y-2">
+      <h4 className="font-medium">提示信息</h4>
+      <p className="text-sm text-muted-foreground">
+        这是弹出框的内容
+      </p>
+    </div>
+  </PopoverContent>
+</Popover>`
+  },
+  {
+    id: 'collapsible',
+    name: 'Collapsible',
+    category: 'forms',
+    description: '可折叠组件，用于显示/隐藏内容',
+    component: function CollapsibleDemo() {
+      const [isOpen, setIsOpen] = React.useState(false)
+      return (
+        <Collapsible open={isOpen} onOpenChange={setIsOpen} className="w-full max-w-sm space-y-2">
+          <div className="flex items-center justify-between space-x-4">
+            <h4 className="text-sm font-semibold">@peduarte starred 3 repositories</h4>
+            <CollapsibleTrigger asChild>
+              <Button variant="ghost" size="sm" className="w-9 p-0">
+                <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                <span className="sr-only">Toggle</span>
+              </Button>
+            </CollapsibleTrigger>
+          </div>
+          <div className="rounded-md border px-4 py-3 text-sm">
+            @radix-ui/primitives
+          </div>
+          <CollapsibleContent className="space-y-2">
+            <div className="rounded-md border px-4 py-3 text-sm">
+              @radix-ui/colors
+            </div>
+            <div className="rounded-md border px-4 py-3 text-sm">
+              @stitches/react
+            </div>
+          </CollapsibleContent>
+        </Collapsible>
+      )
+    },
+    codeExample: `import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
+import { Button } from '@/components/ui/button'
+
+const [isOpen, setIsOpen] = useState(false)
+
+<Collapsible open={isOpen} onOpenChange={setIsOpen}>
+  <CollapsibleTrigger asChild>
+    <Button variant="ghost" size="sm">
+      Toggle
+    </Button>
+  </CollapsibleTrigger>
+  <CollapsibleContent>
+    隐藏的内容
+  </CollapsibleContent>
+</Collapsible>`
+  },
+
+  // 布局组件 - 新增
+  {
+    id: 'sheet',
+    name: 'Sheet',
+    category: 'layout',
+    description: '抽屉/侧边栏组件，从边缘滑入',
+    component: () => (
+      <Sheet>
+        <SheetTrigger asChild>
+          <Button variant="outline">打开侧边栏</Button>
+        </SheetTrigger>
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>侧边栏标题</SheetTitle>
+            <SheetDescription>
+              这是一个从右侧滑入的侧边栏组件。
+            </SheetDescription>
+          </SheetHeader>
+          <div className="py-4">
+            <p className="text-sm text-muted-foreground">侧边栏内容区域</p>
+          </div>
+        </SheetContent>
+      </Sheet>
+    ),
+    codeExample: `import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import { Button } from '@/components/ui/button'
+
+<Sheet>
+  <SheetTrigger asChild>
+    <Button variant="outline">打开侧边栏</Button>
+  </SheetTrigger>
+  <SheetContent>
+    <SheetHeader>
+      <SheetTitle>侧边栏标题</SheetTitle>
+      <SheetDescription>
+        侧边栏描述信息
+      </SheetDescription>
+    </SheetHeader>
+    {/* 侧边栏内容 */}
+  </SheetContent>
+</Sheet>`
+  },
+  {
+    id: 'scroll-area',
+    name: 'Scroll Area',
+    category: 'layout',
+    description: '滚动区域组件，提供自定义滚动条',
+    component: () => (
+      <ScrollArea className="h-[200px] w-full max-w-sm rounded-md border p-4">
+        <div className="space-y-4">
+          {Array.from({ length: 20 }).map((_, i) => (
+            <div key={i} className="text-sm">
+              滚动项目 {i + 1}
+            </div>
+          ))}
+        </div>
+      </ScrollArea>
+    ),
+    codeExample: `import { ScrollArea } from '@/components/ui/scroll-area'
+
+<ScrollArea className="h-[200px] w-full rounded-md border p-4">
+  <div className="space-y-4">
+    {Array.from({ length: 20 }).map((_, i) => (
+      <div key={i}>滚动项目 {i + 1}</div>
+    ))}
+  </div>
+</ScrollArea>`
+  },
+  {
+    id: 'navigation-menu',
+    name: 'Navigation Menu',
+    category: 'navigation',
+    description: '导航菜单组件，支持下拉子菜单',
+    component: () => (
+      <NavigationMenu>
+        <NavigationMenuList>
+          <NavigationMenuItem>
+            <NavigationMenuTrigger>产品</NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <div className="grid gap-3 p-4 w-[400px]">
+                <div className="space-y-1">
+                  <h4 className="text-sm font-medium">产品A</h4>
+                  <p className="text-sm text-muted-foreground">产品A的描述信息</p>
+                </div>
+                <div className="space-y-1">
+                  <h4 className="text-sm font-medium">产品B</h4>
+                  <p className="text-sm text-muted-foreground">产品B的描述信息</p>
+                </div>
+              </div>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <NavigationMenuTrigger>解决方案</NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <div className="grid gap-3 p-4 w-[400px]">
+                <div className="space-y-1">
+                  <h4 className="text-sm font-medium">企业方案</h4>
+                  <p className="text-sm text-muted-foreground">面向企业的解决方案</p>
+                </div>
+              </div>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
+    ),
+    codeExample: `import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuList, NavigationMenuTrigger } from '@/components/ui/navigation-menu'
+
+<NavigationMenu>
+  <NavigationMenuList>
+    <NavigationMenuItem>
+      <NavigationMenuTrigger>产品</NavigationMenuTrigger>
+      <NavigationMenuContent>
+        <div className="grid gap-3 p-4 w-[400px]">
+          <div>产品内容</div>
+        </div>
+      </NavigationMenuContent>
+    </NavigationMenuItem>
+  </NavigationMenuList>
+</NavigationMenu>`
+  },
+  {
+    id: 'resizable',
+    name: 'Resizable',
+    category: 'layout',
+    description: '可调整大小的面板组件',
+    component: () => (
+      <ResizablePanelGroup direction="horizontal" className="min-h-[200px] max-w-md rounded-lg border">
+        <ResizablePanel defaultSize={50}>
+          <div className="flex h-full items-center justify-center p-6">
+            <span className="font-semibold">左侧面板</span>
+          </div>
+        </ResizablePanel>
+        <ResizableHandle />
+        <ResizablePanel defaultSize={50}>
+          <div className="flex h-full items-center justify-center p-6">
+            <span className="font-semibold">右侧面板</span>
+          </div>
+        </ResizablePanel>
+      </ResizablePanelGroup>
+    ),
+    codeExample: `import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable'
+
+<ResizablePanelGroup direction="horizontal" className="min-h-[200px] rounded-lg border">
+  <ResizablePanel defaultSize={50}>
+    <div className="p-6">左侧面板</div>
+  </ResizablePanel>
+  <ResizableHandle />
+  <ResizablePanel defaultSize={50}>
+    <div className="p-6">右侧面板</div>
+  </ResizablePanel>
+</ResizablePanelGroup>`
+  },
+
+  // 反馈组件 - 新增
+  {
+    id: 'toast',
+    name: 'Toast',
+    category: 'feedback',
+    description: '消息提示组件，用于显示通知',
+    component: () => (
+      <Button
+        variant="outline"
+        onClick={() => {
+          toast({
+            title: "通知标题",
+            description: "这是一条消息提示的内容。",
+          })
+        }}
+      >
+        显示提示
+      </Button>
+    ),
+    codeExample: `import { toast } from '@/hooks/use-toast'
+import { Button } from '@/components/ui/button'
+
+// 在页面中添加 <Toaster /> 组件
+import { Toaster } from '@/components/ui/toaster'
+
+<Button
+  onClick={() => {
+    toast({
+      title: "通知标题",
+      description: "这是一条消息提示的内容。",
+    })
+  }}
+>
+  显示提示
+</Button>
+
+// 在页面底部添加
+<Toaster />`
+  },
+
+  // 数据展示 - 新增
+  {
+    id: 'chart',
+    name: 'Chart',
+    category: 'data',
+    description: '图表组件，支持多种图表类型',
+    component: function ChartDemo() {
+      const chartData = [
+        { name: '一月', value: 400 },
+        { name: '二月', value: 300 },
+        { name: '三月', value: 600 },
+        { name: '四月', value: 800 },
+        { name: '五月', value: 500 },
+      ]
+      const chartConfig = {
+        value: {
+          label: '数值',
+          color: 'hsl(var(--primary))',
+        },
+      }
+      return (
+        <ChartContainer config={chartConfig} className="h-[200px] w-full max-w-sm">
+          <BarChart data={chartData}>
+            <XAxis dataKey="name" />
+            <YAxis />
+            <ChartTooltip />
+            <Bar dataKey="value" fill="var(--color-value)" />
+          </BarChart>
+        </ChartContainer>
+      )
+    },
+    codeExample: `import { ChartContainer, ChartTooltip } from '@/components/ui/chart'
+import { Bar, BarChart, XAxis, YAxis } from 'recharts'
+
+const chartData = [
+  { name: '一月', value: 400 },
+  { name: '二月', value: 300 },
+  { name: '三月', value: 600 },
+]
+
+const chartConfig = {
+  value: { label: '数值', color: 'hsl(var(--primary))' }
+}
+
+<ChartContainer config={chartConfig} className="h-[200px]">
+  <BarChart data={chartData}>
+    <XAxis dataKey="name" />
+    <YAxis />
+    <ChartTooltip />
+    <Bar dataKey="value" fill="var(--color-value)" />
+  </BarChart>
+</ChartContainer>`
+  },
+
+  // 动画组件 - 新增
+  {
+    id: 'animated-beam',
+    name: 'Animated Beam',
+    category: 'animations',
+    description: '动画光束连接效果',
+    component: function AnimatedBeamDemo() {
+      const containerRef = useRef<HTMLDivElement>(null)
+      const div1Ref = useRef<HTMLDivElement>(null)
+      const div2Ref = useRef<HTMLDivElement>(null)
+      
+      return (
+        <div ref={containerRef} className="relative w-full h-[200px] flex items-center justify-between p-8">
+          <div ref={div1Ref} className="w-16 h-16 rounded-full bg-primary flex items-center justify-center">
+            A
+          </div>
+          <div ref={div2Ref} className="w-16 h-16 rounded-full bg-primary flex items-center justify-center">
+            B
+          </div>
+          <AnimatedBeam
+            containerRef={containerRef}
+            fromRef={div1Ref}
+            toRef={div2Ref}
+            curvature={0}
+            duration={3}
+          />
+        </div>
+      )
+    },
+    codeExample: `import { AnimatedBeam } from '@/components/ui/animated-beam'
+import { useRef } from 'react'
+
+const containerRef = useRef<HTMLDivElement>(null)
+const fromRef = useRef<HTMLDivElement>(null)
+const toRef = useRef<HTMLDivElement>(null)
+
+<div ref={containerRef} className="relative">
+  <div ref={fromRef}>起点</div>
+  <div ref={toRef}>终点</div>
+  <AnimatedBeam
+    containerRef={containerRef}
+    fromRef={fromRef}
+    toRef={toRef}
+  />
+</div>`
+  },
+  {
+    id: 'aurora-background',
+    name: 'Aurora Background',
+    category: 'animations',
+    description: '极光背景动画效果',
+    component: () => (
+      <AuroraBackground className="h-[200px] w-full rounded-lg">
+        <div className="relative z-10 flex items-center justify-center h-full">
+          <h3 className="text-2xl font-bold text-white">极光效果</h3>
+        </div>
+      </AuroraBackground>
+    ),
+    codeExample: `import { AuroraBackground } from '@/components/ui/aurora-background'
+
+<AuroraBackground className="h-[400px]">
+  <div className="relative z-10">
+    <h1>极光背景内容</h1>
+  </div>
+</AuroraBackground>`
+  },
+  {
+    id: 'container-text-flip',
+    name: 'Container Text Flip',
+    category: 'animations',
+    description: '容器文字翻转动画',
+    component: () => (
+      <div className="flex items-center gap-2">
+        <span>我是一个</span>
+        <ContainerTextFlip
+          words={['开发者', '设计师', '创造者', '梦想家']}
+          interval={2000}
+          className="text-primary"
+        />
+      </div>
+    ),
+    codeExample: `import { ContainerTextFlip } from '@/components/ui/container-text-flip'
+
+<ContainerTextFlip
+  words={['开发者', '设计师', '创造者']}
+  interval={2000}
+  className="text-primary"
+/>`
+  },
+  {
+    id: 'icon-cloud',
+    name: 'Icon Cloud',
+    category: 'animations',
+    description: '3D图标云旋转效果',
+    component: function IconCloudDemo() {
+      const icons = Array.from({ length: 20 }).map((_, i) => (
+        <div key={i} className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-xs">
+          {i + 1}
+        </div>
+      ))
+      return (
+        <div className="h-[200px] w-full flex items-center justify-center">
+          <IconCloud icons={icons} />
+        </div>
+      )
+    },
+    codeExample: `import { IconCloud } from '@/components/ui/icon-cloud'
+
+const icons = [
+  <ReactIcon key="react" />,
+  <NextIcon key="next" />,
+  // 更多图标...
+]
+
+<IconCloud icons={icons} />`
+  },
+  {
+    id: 'sparkles',
+    name: 'Sparkles',
+    category: 'animations',
+    description: '粒子闪烁特效组件',
+    component: () => (
+      <div className="relative h-[200px] w-full max-w-sm rounded-lg border bg-slate-950 flex items-center justify-center overflow-hidden">
+        <SparklesCore
+          id="sparkles-demo"
+          background="transparent"
+          minSize={1}
+          maxSize={3}
+          particleDensity={120}
+          className="absolute inset-0"
+          particleColor="#60A5FA"
+          speed={1}
+        />
+        <span className="relative z-10 text-lg font-semibold text-white">闪烁效果</span>
+      </div>
+    ),
+    codeExample: `import { SparklesCore } from '@/components/ui/sparkles'
+
+<div className="relative">
+  <SparklesCore
+    id="sparkles"
+    background="transparent"
+    minSize={1}
+    maxSize={3}
+    particleDensity={120}
+    speed={1}
+    particleColor="#60A5FA"
+  />
+  <div className="relative z-10">内容</div>
+</div>`
+  },
+  {
+    id: 'warp-background',
+    name: 'Warp Background',
+    category: 'animations',
+    description: '曲速背景动画效果',
+    component: () => (
+      <WarpBackground className="h-[200px] w-full rounded-lg">
+        <div className="relative z-10 flex items-center justify-center h-full">
+          <h3 className="text-2xl font-bold">曲速效果</h3>
+        </div>
+      </WarpBackground>
+    ),
+    codeExample: `import { WarpBackground } from '@/components/ui/warp-background'
+
+<WarpBackground className="h-[400px]">
+  <div className="relative z-10">
+    <h1>曲速背景内容</h1>
+  </div>
+</WarpBackground>`
   }
 ]
 
