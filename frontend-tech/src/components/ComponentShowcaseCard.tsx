@@ -13,12 +13,11 @@ interface ComponentShowcaseCardProps {
   component: ComponentItem
 }
 
-export const ComponentShowcaseCard = memo(({ component }: ComponentShowcaseCardProps) => {
+const ComponentShowcaseCardInner = ({ component }: ComponentShowcaseCardProps) => {
   const { theme } = useTheme()
   const [copied, setCopied] = useState(false)
   const [selectedVariant, setSelectedVariant] = useState(0)
   const [codeExpanded, setCodeExpanded] = useState(false)
-  const [isVisible, setIsVisible] = useState(false)
   const [shouldRender, setShouldRender] = useState(false)
   const cardRef = useRef<HTMLDivElement>(null)
 
@@ -28,7 +27,6 @@ export const ComponentShowcaseCard = memo(({ component }: ComponentShowcaseCardP
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setIsVisible(true)
             // 延迟渲染，避免同时渲染过多组件
             setTimeout(() => setShouldRender(true), 100)
           }
@@ -299,7 +297,11 @@ export const ComponentShowcaseCard = memo(({ component }: ComponentShowcaseCardP
       </CardContent>
     </Card>
   )
-}, (prevProps, nextProps) => {
+}
+
+ComponentShowcaseCardInner.displayName = 'ComponentShowcaseCard'
+
+export const ComponentShowcaseCard = memo(ComponentShowcaseCardInner, (prevProps, nextProps) => {
   // 自定义比较函数：只有当 component id 改变时才重新渲染
   return prevProps.component.id === nextProps.component.id
 })

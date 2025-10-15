@@ -3,8 +3,6 @@
  * 用于管理技术、开发、AI、Web3 等领域的常用网站
  */
 
-import { LucideIcon } from 'lucide-react'
-
 export interface Tool {
   id: string
   name: string
