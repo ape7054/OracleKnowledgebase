@@ -470,7 +470,7 @@ const response = await api.get<GetUsersResponse>('/api/users');
                 Every file in this project is written in TypeScript with full type safety.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/demo">
+                <Link href="/frontend">
                   <Button size="lg" variant="outline">
                     Back to Demos
                   </Button>

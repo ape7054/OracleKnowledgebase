@@ -3,7 +3,7 @@
     "home": "首页",
     "articles": "技术文档",
     "knowledge": "技术文档",
-    "demo": "技术展示",
+    "demo": "前端技术",
     "web3": "Web3技术",
     "ai": "AI技术",
     "tools": "工具导航",
@@ -454,8 +454,94 @@
       "development": "开发工具",
       "ai": "AI 工具",
       "web3": "Web3",
+      "blockchain": "区块链",
       "design": "设计资源",
-      "learning": "学习平台"
+      "learning": "学习平台",
+      "productivity": "效率工具"
+    },
+    "development": "开发中",
+    "sort": {
+      "label": "排序方式",
+      "default": "默认排序",
+      "name": "按名称",
+      "category": "按分类"
+    },
+    "dialog": {
+      "category": "分类",
+      "tags": "标签",
+      "officialSite": "访问官网"
+    },
+    "visitWebsite": "访问网站",
+    "items": {
+      "github": {
+        "description": "全球最大的代码托管平台，支持版本控制和协作开发"
+      },
+      "stackoverflow": {
+        "description": "程序员问答社区，解决编程难题的最佳平台"
+      },
+      "vercel": {
+        "description": "Next.js 官方部署平台，提供极速的全球 CDN 服务"
+      },
+      "npm": {
+        "description": "Node.js 包管理工具，JavaScript 生态系统的核心"
+      },
+      "chatgpt": {
+        "description": "OpenAI 推出的 AI 聊天助手，支持多种任务和编程辅助"
+      },
+      "claude": {
+        "description": "Anthropic 开发的 AI 助手，擅长深度对话和分析"
+      },
+      "midjourney": {
+        "description": "强大的 AI 图像生成工具，创造令人惊艳的艺术作品"
+      },
+      "huggingface": {
+        "description": "AI 模型社区平台，提供海量开源机器学习模型"
+      },
+      "etherscan": {
+        "description": "以太坊区块链浏览器，查询交易和智能合约"
+      },
+      "uniswap": {
+        "description": "去中心化交易所，以太坊上最大的 DEX 平台"
+      },
+      "metamask": {
+        "description": "最流行的 Web3 钱包，连接区块链应用的桥梁"
+      },
+      "opensea": {
+        "description": "全球最大的 NFT 交易市场"
+      },
+      "solana": {
+        "description": "高性能区块链平台，支持快速和低成本交易"
+      },
+      "binance": {
+        "description": "全球领先的加密货币交易所"
+      },
+      "coinmarketcap": {
+        "description": "加密货币市场数据和价格追踪平台"
+      },
+      "figma": {
+        "description": "现代协作设计工具，UI/UX 设计师的首选"
+      },
+      "dribbble": {
+        "description": "设计师作品展示和灵感分享社区"
+      },
+      "behance": {
+        "description": "Adobe 旗下的创意作品展示平台"
+      },
+      "mdn": {
+        "description": "权威的 Web 技术文档，前端开发者必备"
+      },
+      "freecodecamp": {
+        "description": "免费编程学习平台，提供全栈开发课程"
+      },
+      "leetcode": {
+        "description": "算法练习平台，程序员面试必备刷题网站"
+      },
+      "notion": {
+        "description": "all-in-one 工作空间，笔记、文档、项目管理一体化"
+      },
+      "linear": {
+        "description": "现代化的项目管理和问题追踪工具"
+      }
     }
   },
   "ai": {
@@ -514,12 +600,12 @@
     }
   },
   "demo": {
-    "title": "技术能力实验室",
+    "title": "作品集",
     "subtitle": "70+组件 | React 19 | Next.js 15 | TypeScript | Tailwind CSS | WebGL",
     "description": "通过实际演示展示前端开发能力和工程实践",
     "hero": {
-      "title": "技术能力实验室",
-      "subtitle": "Interactive Tech Demos & Showcase"
+      "title": "作品集",
+      "subtitle": "Technical Portfolio"
     },
     "cards": {
       "components": {

@@ -262,7 +262,7 @@ export default function PerformancePage() {
                     <ArrowRight className="h-5 w-5" />
                   </Button>
                 </Link>
-                <Link href="/demo">
+                <Link href="/frontend">
                   <Button size="lg" variant="outline" className="gap-2">
                     Back to Demos
                   </Button>

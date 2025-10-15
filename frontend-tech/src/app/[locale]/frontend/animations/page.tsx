@@ -379,7 +379,7 @@ export default function AnimationsPage() {
                 Check out other interactive demonstrations of modern web technologies.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/demo">
+                <Link href="/frontend">
                   <Button size="lg" variant="outline">
                     Back to Demos
                   </Button>

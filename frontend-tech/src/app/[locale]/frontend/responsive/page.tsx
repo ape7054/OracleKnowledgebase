@@ -251,7 +251,7 @@ export default function ResponsivePage() {
                 Every page in this project is fully responsive and optimized for all screen sizes.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/demo">
+                <Link href="/frontend">
                   <Button size="lg" variant="outline">
                     Back to Demos
                   </Button>

@@ -30,7 +30,7 @@ export function MainNavigationOptimized() {
         <Link href={`/${locale}/knowledge`} className="text-sm font-medium" prefetch={true}>
           {t('knowledge')}
         </Link>
-        <Link href={`/${locale}/demo`} className="text-sm font-medium" prefetch={true}>
+        <Link href={`/${locale}/frontend`} className="text-sm font-medium" prefetch={true}>
           {t('demo')}
         </Link>
         <Link href={`/${locale}/web3`} className="text-sm font-medium" prefetch={true}>
@@ -73,7 +73,7 @@ export function MainNavigationOptimized() {
         {/* Demo Lab */}
         <NavigationMenuItem>
           <NavigationMenuLink asChild>
-            <Link href={`/${locale}/demo`} className={navigationMenuTriggerStyle()} prefetch={true}>
+            <Link href={`/${locale}/frontend`} className={navigationMenuTriggerStyle()} prefetch={true}>
               {t('demo')}
             </Link>
           </NavigationMenuLink>

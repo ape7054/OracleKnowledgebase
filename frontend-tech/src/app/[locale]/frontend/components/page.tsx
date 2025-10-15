@@ -369,7 +369,7 @@ export default function ComponentsPage() {
                 This is just a preview. The project includes 70+ fully functional components.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/demo">
+                <Link href="/frontend">
                   <Button size="lg" variant="outline">
                     Back to Demos
                   </Button>

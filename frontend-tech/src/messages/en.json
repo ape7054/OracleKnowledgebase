@@ -301,8 +301,94 @@
       "development": "Development",
       "ai": "AI Tools",
       "web3": "Web3",
+      "blockchain": "Blockchain",
       "design": "Design",
-      "learning": "Learning"
+      "learning": "Learning",
+      "productivity": "Productivity"
+    },
+    "development": "In Development",
+    "sort": {
+      "label": "Sort by",
+      "default": "Default",
+      "name": "Name",
+      "category": "Category"
+    },
+    "dialog": {
+      "category": "Category",
+      "tags": "Tags",
+      "officialSite": "Visit Website"
+    },
+    "visitWebsite": "Visit Website",
+    "items": {
+      "github": {
+        "description": "The world's largest code hosting platform with version control and collaboration"
+      },
+      "stackoverflow": {
+        "description": "Q&A community for programmers to solve coding challenges"
+      },
+      "vercel": {
+        "description": "Official Next.js deployment platform with lightning-fast global CDN"
+      },
+      "npm": {
+        "description": "Node.js package manager, core of the JavaScript ecosystem"
+      },
+      "chatgpt": {
+        "description": "OpenAI's AI chat assistant supporting various tasks and coding help"
+      },
+      "claude": {
+        "description": "Anthropic's AI assistant excelling in deep conversations and analysis"
+      },
+      "midjourney": {
+        "description": "Powerful AI image generation tool creating stunning artworks"
+      },
+      "huggingface": {
+        "description": "AI model community platform with massive open-source ML models"
+      },
+      "etherscan": {
+        "description": "Ethereum blockchain explorer for transactions and smart contracts"
+      },
+      "uniswap": {
+        "description": "Decentralized exchange, the largest DEX on Ethereum"
+      },
+      "metamask": {
+        "description": "Most popular Web3 wallet connecting blockchain applications"
+      },
+      "opensea": {
+        "description": "World's largest NFT marketplace"
+      },
+      "solana": {
+        "description": "High-performance blockchain platform with fast and low-cost transactions"
+      },
+      "binance": {
+        "description": "World's leading cryptocurrency exchange"
+      },
+      "coinmarketcap": {
+        "description": "Cryptocurrency market data and price tracking platform"
+      },
+      "figma": {
+        "description": "Modern collaborative design tool, the go-to choice for UI/UX designers"
+      },
+      "dribbble": {
+        "description": "Designer portfolio and inspiration sharing community"
+      },
+      "behance": {
+        "description": "Adobe's creative work showcase platform"
+      },
+      "mdn": {
+        "description": "Authoritative web technology documentation, essential for frontend developers"
+      },
+      "freecodecamp": {
+        "description": "Free coding learning platform offering full-stack development courses"
+      },
+      "leetcode": {
+        "description": "Algorithm practice platform, essential for programming interviews"
+      },
+      "notion": {
+        "description": "All-in-one workspace for notes, docs, and project management"
+      },
+      "linear": {
+        "description": "Modern project management and issue tracking tool"
+      }
     }
   },
   "ai": {
@@ -361,12 +447,12 @@
     }
   },
   "demo": {
-    "title": "Tech Demo Lab",
+    "title": "Portfolio",
     "subtitle": "70+ Components | React 19 | Next.js 15 | TypeScript | Tailwind CSS | WebGL",
     "description": "Showcase frontend development skills through interactive demos",
     "hero": {
-      "title": "Tech Demo Lab",
-      "subtitle": "Interactive Tech Demos & Showcase"
+      "title": "Portfolio",
+      "subtitle": "Technical Portfolio"
     },
     "cards": {
       "components": {
@@ -465,7 +551,7 @@
         "navigation": "Navigation",
         "data": "Data Display"
       },
-      "demo": "Demo",
+      "demo": "Frontend Tech",
       "code": "Code",
       "props": "Props",
       "copy": "Copy",
