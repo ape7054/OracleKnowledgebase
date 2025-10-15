@@ -146,13 +146,15 @@ export function IconCloud({ icons, images }: IconCloudProps) {
           }
         } else {
           // 🎯 处理React SVG图标组件
-          offCtx.scale(svgScale, svgScale)  // 先放大，确保清晰度
           const svgString = renderToString(item as React.ReactElement)  // 将React组件转为SVG字符串
           const img = new Image()
           img.src = "data:image/svg+xml;base64," + btoa(svgString)  // 转为base64数据URL
           img.onload = () => {
+            offCtx.save()  // 保存当前状态
             offCtx.clearRect(0, 0, offscreen.width, offscreen.height)
+            offCtx.scale(svgScale, svgScale)  // 在清除后重新应用缩放
             offCtx.drawImage(img, 0, 0)
+            offCtx.restore()  // 恢复状态
             imagesLoadedRef.current[index] = true  // 标记为已加载
           }
         }

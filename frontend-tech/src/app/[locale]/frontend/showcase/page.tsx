@@ -191,7 +191,11 @@ export default function Dashboard() {
 
       <div className="container mx-auto p-4 relative z-10">
         {/* Header */}
-        <header className="flex flex-col space-y-4 py-4 border-b border-slate-700/50 mb-6">
+        <header className={`sticky top-0 z-50 flex flex-col space-y-4 py-4 border-b mb-6 backdrop-blur-xl transition-colors duration-300 ${
+          theme === "dark"
+            ? "bg-gradient-to-br from-black/90 to-slate-900/90 border-slate-700/50"
+            : "bg-gradient-to-br from-slate-50/90 to-slate-200/90 border-slate-300/50"
+        }`}>
           {/* Return Button and Title */}
           <div className="flex items-center space-x-4">
             <Button
@@ -280,7 +284,7 @@ export default function Dashboard() {
         <div className="grid grid-cols-12 gap-6">
           {/* Sidebar */}
           <div className="col-span-12 md:col-span-3 lg:col-span-2">
-            <div className="md:sticky md:top-6 md:max-h-[calc(100vh-4rem)] md:overflow-y-auto">
+            <div className="md:sticky md:top-32 md:max-h-[calc(100vh-10rem)] md:overflow-y-auto">
               <Card className={`transition-colors ${
                 theme === "dark" 
                   ? "bg-slate-900/95 border-slate-700/50" 
@@ -660,33 +664,33 @@ export default function Dashboard() {
                   <CardHeader className="pb-2">
                     <CardTitle className={`flex items-center text-base ${theme === "dark" ? "text-slate-100" : "text-slate-900"}`}>
                       <Activity className="mr-2 h-5 w-5 text-green-500" />
-                      Component Stats
+                      组件统计
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
                       <div className="flex items-center justify-between">
-                        <div className="text-sm text-slate-400">UI Components</div>
-                        <Badge className="bg-green-500/20 text-green-400 border-green-500/50">70+ Ready</Badge>
+                        <div className="text-sm text-slate-400">UI 组件</div>
+                        <Badge className="bg-green-500/20 text-green-400 border-green-500/50">70+ 就绪</Badge>
                       </div>
                       <div className="flex items-center justify-between">
-                        <div className="text-sm text-slate-400">TypeScript Support</div>
+                        <div className="text-sm text-slate-400">TypeScript 支持</div>
                         <Badge className="bg-green-500/20 text-green-400 border-green-500/50">100%</Badge>
                       </div>
                       <div className="flex items-center justify-between">
-                        <div className="text-sm text-slate-400">Accessibility</div>
+                        <div className="text-sm text-slate-400">可访问性</div>
                         <Badge className="bg-green-500/20 text-green-400 border-green-500/50">WCAG 2.1</Badge>
                       </div>
                       <div className="flex items-center justify-between">
-                        <div className="text-sm text-slate-400">Documentation</div>
+                        <div className="text-sm text-slate-400">文档</div>
                         <div className="text-sm text-cyan-400">
-                          Updated <span className="text-slate-500">12 min ago</span>
+                          更新于 <span className="text-slate-500">12 分钟前</span>
                         </div>
                       </div>
 
                       <div className="pt-2 mt-2 border-t border-slate-700/50">
                         <div className="flex items-center justify-between mb-2">
-                          <div className="text-sm font-medium">Completion Rate</div>
+                          <div className="text-sm font-medium">完成率</div>
                           <div className="text-sm text-cyan-400">{securityLevel}%</div>
                         </div>
                         <Progress value={securityLevel} className="h-2 bg-slate-700">
@@ -708,36 +712,36 @@ export default function Dashboard() {
                   <CardHeader className="pb-2">
                     <CardTitle className={`flex items-center text-base ${theme === "dark" ? "text-slate-100" : "text-slate-900"}`}>
                       <Bell className="mr-2 h-5 w-5 text-amber-500" />
-                      Recent Updates
+                      最近更新
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
                       <AlertItem
-                        title="Tooltip Component Updated"
+                        title="Tooltip 组件已更新"
                         time="14:32:12"
-                        description="Added new positioning options and animations"
+                        description="添加了新的定位选项和动画效果"
                         type="info"
                         theme={theme}
                       />
                       <AlertItem
-                        title="Dialog Performance Improved"
+                        title="Dialog 性能提升"
                         time="13:45:06"
-                        description="Reduced initial render time by 40%"
+                        description="首次渲染时间减少 40%"
                         type="success"
                         theme={theme}
                       />
                       <AlertItem
-                        title="New Component: DatePicker"
+                        title="新组件：DatePicker"
                         time="09:12:45"
-                        description="Full-featured date picker with range selection"
+                        description="全功能日期选择器，支持范围选择"
                         type="update"
                         theme={theme}
                       />
                       <AlertItem
-                        title="Accessibility Enhanced"
+                        title="可访问性增强"
                         time="04:30:00"
-                        description="All components now WCAG 2.1 compliant"
+                        description="所有组件现已符合 WCAG 2.1 标准"
                         type="success"
                         theme={theme}
                       />
@@ -755,42 +759,42 @@ export default function Dashboard() {
                 <CardHeader className="pb-2 flex flex-row items-center justify-between">
                   <CardTitle className={`flex items-center text-base ${theme === "dark" ? "text-slate-100" : "text-slate-900"}`}>
                     <Database className="mr-2 h-5 w-5 text-blue-500" />
-                    Recently Added Components
+                    最近添加的组件
                   </CardTitle>
                   <Badge variant="outline" className={theme === "dark"
                     ? "bg-slate-800/50 text-blue-400 border-blue-500/50"
                     : "bg-blue-50 text-blue-600 border-blue-300"
                   }>
-                    4 New This Week
+                    本周新增 4 个
                   </Badge>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
                     <CommunicationItem
                       sender="DatePicker"
-                      time="Today"
-                      message="Full-featured date picker with range selection, time zones, and custom formatting options."
+                      time="今天"
+                      message="全功能日期选择器，支持范围选择、时区和自定义格式选项。"
                       unread
                       theme={theme}
                     />
                     <CommunicationItem
                       sender="DataTable"
-                      time="Yesterday"
-                      message="Advanced data table with sorting, filtering, pagination, and virtualization for large datasets."
+                      time="昨天"
+                      message="高级数据表，支持排序、筛选、分页以及大数据集虚拟化。"
                       unread
                       theme={theme}
                     />
                     <CommunicationItem
                       sender="CommandPalette"
-                      time="2 days ago"
-                      message="Fast command palette with fuzzy search, keyboard shortcuts, and custom actions."
+                      time="2 天前"
+                      message="快速命令面板，支持模糊搜索、键盘快捷键和自定义操作。"
                       unread
                       theme={theme}
                     />
                     <CommunicationItem
                       sender="ColorPicker"
-                      time="3 days ago"
-                      message="Beautiful color picker with multiple formats, eyedropper, and saved palettes."
+                      time="3 天前"
+                      message="精美的颜色选择器，支持多种格式、取色器和保存调色板。"
                       unread
                       theme={theme}
                     />
@@ -800,7 +804,7 @@ export default function Dashboard() {
                   <div className="flex items-center w-full space-x-2">
                     <input
                       type="text"
-                      placeholder="Search components..."
+                      placeholder="搜索组件..."
                       className={`flex-1 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-cyan-500 border ${
                         theme === "dark"
                           ? "bg-slate-800/50 border-slate-700/50 text-slate-100"

@@ -43,7 +43,7 @@ import { IconCloud } from '@/components/ui/icon-cloud'
 import { SparklesCore } from '@/components/ui/sparkles'
 import { WarpBackground } from '@/components/ui/warp-background'
 import { Meteors } from '@/components/ui/meteors'
-import { ChevronDown } from 'lucide-react'
+import { ChevronDown, Code, Database, Globe, Layers, Zap, Cloud, Cpu, Server, Terminal, Package, GitBranch, Smartphone, Monitor, Tablet, Coffee, Heart, Star, Sun, Moon } from 'lucide-react'
 import { useRef } from 'react'
 
 export interface ComponentItem {
@@ -1210,11 +1210,27 @@ const toRef = useRef<HTMLDivElement>(null)
     category: 'animations',
     description: '3D图标云旋转效果',
     component: function IconCloudDemo() {
-      const icons = Array.from({ length: 20 }).map((_, i) => (
-        <div key={i} className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-xs">
-          {i + 1}
-        </div>
-      ))
+      const icons = [
+        <Code key="code" className="w-8 h-8" stroke="#3b82f6" />,
+        <Database key="database" className="w-8 h-8" stroke="#22c55e" />,
+        <Globe key="globe" className="w-8 h-8" stroke="#06b6d4" />,
+        <Layers key="layers" className="w-8 h-8" stroke="#a855f7" />,
+        <Zap key="zap" className="w-8 h-8" stroke="#eab308" />,
+        <Cloud key="cloud" className="w-8 h-8" stroke="#60a5fa" />,
+        <Cpu key="cpu" className="w-8 h-8" stroke="#ef4444" />,
+        <Server key="server" className="w-8 h-8" stroke="#94a3b8" />,
+        <Terminal key="terminal" className="w-8 h-8" stroke="#4ade80" />,
+        <Package key="package" className="w-8 h-8" stroke="#f97316" />,
+        <GitBranch key="git" className="w-8 h-8" stroke="#c084fc" />,
+        <Smartphone key="smartphone" className="w-8 h-8" stroke="#ec4899" />,
+        <Monitor key="monitor" className="w-8 h-8" stroke="#6366f1" />,
+        <Tablet key="tablet" className="w-8 h-8" stroke="#14b8a6" />,
+        <Coffee key="coffee" className="w-8 h-8" stroke="#f59e0b" />,
+        <Heart key="heart" className="w-8 h-8" stroke="#f87171" />,
+        <Star key="star" className="w-8 h-8" stroke="#facc15" />,
+        <Sun key="sun" className="w-8 h-8" stroke="#fb923c" />,
+        <Moon key="moon" className="w-8 h-8" stroke="#94a3b8" />,
+      ]
       return (
         <div className="h-[200px] w-full flex items-center justify-center">
           <IconCloud icons={icons} />
@@ -1222,10 +1238,12 @@ const toRef = useRef<HTMLDivElement>(null)
       )
     },
     codeExample: `import { IconCloud } from '@/components/ui/icon-cloud'
+import { Code, Database, Globe } from 'lucide-react'
 
 const icons = [
-  <ReactIcon key="react" />,
-  <NextIcon key="next" />,
+  <Code key="code" className="w-8 h-8" stroke="#3b82f6" />,
+  <Database key="database" className="w-8 h-8" stroke="#22c55e" />,
+  <Globe key="globe" className="w-8 h-8" stroke="#06b6d4" />,
   // 更多图标...
 ]
 
