@@ -9,6 +9,7 @@ import { MatrixBackground } from '@/components/ui/matrix-background';
 import { AnimatedGradientText } from '@/components/ui/animated-gradient-text';
 import { SiteHeader } from '@/components/SiteHeader';
 import { DevelopmentBadge } from '@/components/DevelopmentBadge';
+import { useIsMobile } from '@/hooks/use-mobile';
 import CountUp from 'react-countup';
 import {
   Code2,
@@ -26,6 +27,7 @@ import { siteConfig } from '@/config/site-config';
 export default function DemoPage() {
   const locale = useLocale();
   const t = useTranslations();
+  const isMobile = useIsMobile();
 
   const demoCards = [
     {
@@ -84,6 +86,7 @@ export default function DemoPage() {
           speed={0.8}
           density={1.5}
           brightness={0.4}
+          useCSSVersion={isMobile}
           className="absolute inset-0"
         >
           <div className="relative z-10 container mx-auto px-4 py-20 text-center">
