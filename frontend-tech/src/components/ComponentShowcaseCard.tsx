@@ -1,23 +1,26 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useMemo, useCallback, memo } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Check, Copy, Code2, Eye, ChevronDown, ChevronUp } from 'lucide-react'
 import { type ComponentItem } from '@/config/showcase-components'
+import { useTheme } from 'next-themes'
 
 interface ComponentShowcaseCardProps {
   component: ComponentItem
 }
 
-export function ComponentShowcaseCard({ component }: ComponentShowcaseCardProps) {
+export const ComponentShowcaseCard = memo(({ component }: ComponentShowcaseCardProps) => {
+  const { theme } = useTheme()
   const [copied, setCopied] = useState(false)
   const [selectedVariant, setSelectedVariant] = useState(0)
   const [codeExpanded, setCodeExpanded] = useState(false)
 
-  const copyCode = async () => {
+  // 使用 useCallback 缓存函数
+  const copyCode = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(component.codeExample)
       setCopied(true)
@@ -25,53 +28,72 @@ export function ComponentShowcaseCard({ component }: ComponentShowcaseCardProps)
     } catch (error) {
       console.error('Failed to copy code:', error)
     }
-  }
+  }, [component.codeExample])
 
-  // 获取当前变体的props
-  const getCurrentProps = () => {
+  // 使用 useMemo 缓存当前变体的 props
+  const currentProps = useMemo(() => {
     if (component.variants && component.variants[selectedVariant]) {
       return component.variants[selectedVariant].props
     }
     return component.props || {}
-  }
+  }, [component.variants, component.props, selectedVariant])
 
-  // 渲染组件预览
-  const renderComponentPreview = () => {
+  // 使用 useMemo 缓存渲染的组件预览
+  const componentPreview = useMemo(() => {
     try {
       const ComponentToRender = component.component
-      const props = getCurrentProps()
       
       return (
-        <div className="flex items-center justify-center min-h-[120px] p-6 bg-slate-800/30 rounded-lg border border-slate-700/50 backdrop-blur-sm">
-          <ComponentToRender {...props} />
+        <div className={`flex items-center justify-center min-h-[120px] p-6 rounded-lg border backdrop-blur-sm ${
+          theme === "dark"
+            ? "bg-slate-800/30 border-slate-700/50"
+            : "bg-slate-100/30 border-slate-300/50"
+        }`}>
+          <ComponentToRender {...currentProps} />
         </div>
       )
     } catch (error) {
       console.error('Error rendering component:', error)
       return (
-        <div className="flex items-center justify-center min-h-[120px] p-6 bg-slate-800/30 rounded-lg border border-slate-700/50 backdrop-blur-sm">
-          <div className="text-center text-slate-400">
+        <div className={`flex items-center justify-center min-h-[120px] p-6 rounded-lg border backdrop-blur-sm ${
+          theme === "dark"
+            ? "bg-slate-800/30 border-slate-700/50"
+            : "bg-slate-100/30 border-slate-300/50"
+        }`}>
+          <div className={`text-center ${theme === "dark" ? "text-slate-400" : "text-slate-600"}`}>
             <Code2 className="h-8 w-8 mx-auto mb-2" />
             <p className="text-sm">预览错误</p>
           </div>
         </div>
       )
     }
-  }
+  }, [component.component, currentProps, theme])
 
   return (
-    <Card className="bg-slate-900/50 border-slate-700/50 backdrop-blur-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group h-full">
+    <Card className={`backdrop-blur-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group h-full ${
+      theme === "dark"
+        ? "bg-slate-900/50 border-slate-700/50"
+        : "bg-white/70 border-slate-300/50"
+    }`}>
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="space-y-2">
-            <CardTitle className="text-xl text-slate-100 group-hover:text-cyan-400 transition-colors">
+            <CardTitle className={`text-xl transition-colors ${
+              theme === "dark"
+                ? "text-slate-100 group-hover:text-cyan-400"
+                : "text-slate-900 group-hover:text-cyan-600"
+            }`}>
               {component.name}
             </CardTitle>
-            <CardDescription className="text-slate-400 text-sm">
+            <CardDescription className={`text-sm ${theme === "dark" ? "text-slate-400" : "text-slate-600"}`}>
               {component.description}
             </CardDescription>
           </div>
-          <Badge variant="outline" className="bg-slate-800/50 text-cyan-400 border-cyan-500/50 text-xs">
+          <Badge variant="outline" className={`text-xs ${
+            theme === "dark"
+              ? "bg-slate-800/50 text-cyan-400 border-cyan-500/50"
+              : "bg-cyan-50 text-cyan-600 border-cyan-300"
+          }`}>
             {component.category}
           </Badge>
         </div>
@@ -79,17 +101,25 @@ export function ComponentShowcaseCard({ component }: ComponentShowcaseCardProps)
 
       <CardContent className="space-y-4">
         <Tabs defaultValue="preview" className="w-full">
-          <TabsList className="bg-slate-800/50 p-1 w-full">
+          <TabsList className={`p-1 w-full ${theme === "dark" ? "bg-slate-800/50" : "bg-slate-200/50"}`}>
             <TabsTrigger
               value="preview"
-              className="data-[state=active]:bg-slate-700 data-[state=active]:text-cyan-400 flex-1 gap-2"
+              className={`flex-1 gap-2 ${
+                theme === "dark"
+                  ? "data-[state=active]:bg-slate-700 data-[state=active]:text-cyan-400"
+                  : "data-[state=active]:bg-white data-[state=active]:text-cyan-600"
+              }`}
             >
               <Eye className="h-4 w-4" />
               预览
             </TabsTrigger>
             <TabsTrigger
               value="code"
-              className="data-[state=active]:bg-slate-700 data-[state=active]:text-cyan-400 flex-1 gap-2"
+              className={`flex-1 gap-2 ${
+                theme === "dark"
+                  ? "data-[state=active]:bg-slate-700 data-[state=active]:text-cyan-400"
+                  : "data-[state=active]:bg-white data-[state=active]:text-cyan-600"
+              }`}
             >
               <Code2 className="h-4 w-4" />
               代码
@@ -101,7 +131,7 @@ export function ComponentShowcaseCard({ component }: ComponentShowcaseCardProps)
             {/* 变体选择 */}
             {component.variants && component.variants.length > 0 && (
               <div className="space-y-2">
-                <h4 className="text-sm font-medium text-slate-300">变体选择</h4>
+                <h4 className={`text-sm font-medium ${theme === "dark" ? "text-slate-300" : "text-slate-800"}`}>变体选择</h4>
                 <div className="flex flex-wrap gap-2">
                   {component.variants.map((variant, index) => (
                     <Button
@@ -112,7 +142,9 @@ export function ComponentShowcaseCard({ component }: ComponentShowcaseCardProps)
                       className={`text-xs ${
                         selectedVariant === index
                           ? 'bg-cyan-600 hover:bg-cyan-700 text-white'
-                          : 'border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-cyan-400'
+                          : theme === "dark"
+                            ? 'border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-cyan-400'
+                            : 'border-slate-300 text-slate-700 hover:bg-slate-200 hover:text-cyan-600'
                       }`}
                     >
                       {variant.name}
@@ -123,11 +155,15 @@ export function ComponentShowcaseCard({ component }: ComponentShowcaseCardProps)
             )}
 
             {/* 预览区域 */}
-            {renderComponentPreview()}
+            {componentPreview}
 
             {/* 当前变体描述 */}
             {component.variants && component.variants[selectedVariant]?.description && (
-              <div className="text-xs text-slate-400 bg-slate-800/30 rounded-md p-2 border border-slate-700/30">
+              <div className={`text-xs rounded-md p-2 border ${
+                theme === "dark"
+                  ? "text-slate-400 bg-slate-800/30 border-slate-700/30"
+                  : "text-slate-600 bg-slate-100/30 border-slate-300/30"
+              }`}>
                 {component.variants[selectedVariant].description}
               </div>
             )}
@@ -137,12 +173,16 @@ export function ComponentShowcaseCard({ component }: ComponentShowcaseCardProps)
           <TabsContent value="code" className="space-y-4 mt-4">
             <div className="relative">
               <div className="flex items-center justify-between mb-2">
-                <h4 className="text-sm font-medium text-slate-300">使用示例</h4>
+                <h4 className={`text-sm font-medium ${theme === "dark" ? "text-slate-300" : "text-slate-800"}`}>使用示例</h4>
                 <Button
                   size="sm"
                   variant="ghost"
                   onClick={copyCode}
-                  className="text-xs text-slate-400 hover:text-cyan-400 hover:bg-slate-700"
+                  className={`text-xs ${
+                    theme === "dark"
+                      ? "text-slate-400 hover:text-cyan-400 hover:bg-slate-700"
+                      : "text-slate-600 hover:text-cyan-600 hover:bg-slate-200"
+                  }`}
                 >
                   {copied ? (
                     <>
@@ -158,24 +198,36 @@ export function ComponentShowcaseCard({ component }: ComponentShowcaseCardProps)
                 </Button>
               </div>
               
-              <div className="bg-slate-900/80 rounded-lg border border-slate-700/50 overflow-hidden">
+              <div className={`rounded-lg border overflow-hidden ${
+                theme === "dark"
+                  ? "bg-slate-900/80 border-slate-700/50"
+                  : "bg-slate-100/80 border-slate-300/50"
+              }`}>
                 <div 
                   className={`transition-all duration-300 ${
                     codeExpanded ? 'max-h-none' : 'max-h-32'
                   } overflow-hidden`}
                 >
-                  <pre className="p-4 text-xs text-slate-300 overflow-x-auto">
+                  <pre className={`p-4 text-xs overflow-x-auto ${theme === "dark" ? "text-slate-300" : "text-slate-800"}`}>
                     <code>{component.codeExample}</code>
                   </pre>
                 </div>
                 
                 {/* 展开/折叠按钮 */}
-                <div className="border-t border-slate-700/50 bg-slate-800/50">
+                <div className={`border-t ${
+                  theme === "dark"
+                    ? "border-slate-700/50 bg-slate-800/50"
+                    : "border-slate-300/50 bg-slate-200/50"
+                }`}>
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => setCodeExpanded(!codeExpanded)}
-                    className="w-full text-xs text-slate-400 hover:text-cyan-400 hover:bg-slate-700/50 rounded-none"
+                    className={`w-full text-xs rounded-none ${
+                      theme === "dark"
+                        ? "text-slate-400 hover:text-cyan-400 hover:bg-slate-700/50"
+                        : "text-slate-600 hover:text-cyan-600 hover:bg-slate-200/50"
+                    }`}
                   >
                     {codeExpanded ? (
                       <>
@@ -197,4 +249,7 @@ export function ComponentShowcaseCard({ component }: ComponentShowcaseCardProps)
       </CardContent>
     </Card>
   )
-}
+}, (prevProps, nextProps) => {
+  // 自定义比较函数：只有当 component id 改变时才重新渲染
+  return prevProps.component.id === nextProps.component.id
+})

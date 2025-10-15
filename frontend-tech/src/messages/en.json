@@ -456,10 +456,10 @@
     },
     "cards": {
       "showcase": {
-        "title": "Futuristic Dashboard",
-        "description": "Real-time system monitoring panel with CPU, memory, network visualization",
-        "count": "Live Monitoring",
-        "highlights": "Particle effects, Performance charts, System management"
+        "title": "Component Showcase",
+        "description": "Interactive demo platform for 70+ reusable components, showcasing modern UI library and business components",
+        "count": "Live Preview",
+        "highlights": "Interactive preview, Code examples, Theme switching"
       },
       "animations": {
         "title": "Animations",
@@ -637,6 +637,9 @@
       "noComponents": "No components found",
       "tryDifferentSearch": "Try a different search term",
       "backToList": "Back to list",
+      "backToFrontend": "Back to Frontend",
+      "loadMore": "Load More",
+      "allLoaded": "All Loaded",
       "categories": {
         "ui": "UI Components",
         "business": "Business Components",
