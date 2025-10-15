@@ -81,8 +81,8 @@ export function IconCloud({ icons, images }: IconCloudProps) {
         // 移动端：更方正的Canvas，适合竖屏查看
         setCanvasSize({ width: Math.min(width - 48, 600), height: 500 })
       } else {
-        // 桌面端：宽屏Canvas，适合横屏查看
-        setCanvasSize({ width: 700, height: 310 })
+        // 桌面端：宽屏Canvas，适合横屏查看 - 增加高度以更好展示3D效果
+        setCanvasSize({ width: 700, height: 400 })
       }
     }
 
@@ -108,10 +108,10 @@ export function IconCloud({ icons, images }: IconCloudProps) {
      * - 图标更模糊但性能更好：减少基数
      * - SVG图标大小：调整 svgScale 倍数
      */
-    const iconSize = (isMobile ? 120 : 160) * dpr        // 离屏canvas物理尺寸（越大越清晰，但占用更多内存）
+    const iconSize = (isMobile ? 180 : 240) * dpr        // 离屏canvas物理尺寸（越大越清晰，但占用更多内存）- 增大提升清晰度
     const iconRadius = iconSize / 2                      // 圆形裁剪半径
     const iconDisplaySize = iconSize                     // 显示尺寸（与物理尺寸相同）
-    const svgScale = (isMobile ? 1.8 : 2.4) * dpr       // SVG缩放倍数（适配高DPI屏幕）
+    const svgScale = (isMobile ? 2.5 : 3.2) * dpr       // SVG缩放倍数（适配高DPI屏幕）- 增大让图标更清晰
 
     /**
      * 🎨 为每个图标创建高质量的离屏Canvas
@@ -179,7 +179,7 @@ export function IconCloud({ icons, images }: IconCloudProps) {
      * - 球面太大：减少数值让图标更靠近中心
      */
     const isMobile = canvasSize.width < 768
-    const sphereRadius = isMobile ? 130 : 110  // 3D球面的半径
+    const sphereRadius = isMobile ? 150 : 140  // 3D球面的半径 - 增大让图标更分散
 
     /**
      * 📐 Fibonacci螺旋算法参数
@@ -251,7 +251,7 @@ export function IconCloud({ icons, images }: IconCloudProps) {
       // 计算图标的视觉大小（距离越远越小）
       const scale = (rotatedZ + 500) / 650
       const isMobile = canvasSize.width < 768
-      const radius = (isMobile ? 20 : 20) * scale  // 💡 调整点击区域大小
+      const radius = (isMobile ? 30 : 40) * scale  // 💡 调整点击区域大小 - 增大以便更容易点击
       const dx = x - screenX
       const dy = y - screenY
 
@@ -470,7 +470,7 @@ export function IconCloud({ icons, images }: IconCloudProps) {
        * 🎨 渲染所有图标（从后往前）
        */
       const isMobile = canvasSize.width < 768
-      const iconRenderSize = isMobile ? 40 : 40  // 💡 调整图标显示大小
+      const iconRenderSize = isMobile ? 60 : 80  // 💡 调整图标显示大小 - 增大以提升可见性
       const iconRenderRadius = iconRenderSize / 2
 
       sortedIcons.forEach(({ icon, index, rotatedX, rotatedY, rotatedZ }) => {

@@ -1232,7 +1232,7 @@ const toRef = useRef<HTMLDivElement>(null)
         <Moon key="moon" className="w-8 h-8" stroke="#94a3b8" />,
       ]
       return (
-        <div className="h-[200px] w-full flex items-center justify-center">
+        <div className="h-[420px] w-full flex items-center justify-center">
           <IconCloud icons={icons} />
         </div>
       )
