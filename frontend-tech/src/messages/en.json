@@ -3,6 +3,7 @@
     "home": "Home",
     "articles": "Tech Docs",
     "knowledge": "Tech Docs",
+    "demo": "Demo Lab",
     "web3": "Web3 Tech",
     "ai": "AI Tech",
     "tools": "Tools",
@@ -357,6 +358,199 @@
       "dataSource": "Data Source: Based on public LLM benchmarks and performance tests",
       "inDevelopment": "Beta Testing",
       "betaNotice": "Data for reference only, continuously updating"
+    }
+  },
+  "demo": {
+    "title": "Tech Demo Lab",
+    "subtitle": "70+ Components | React 19 | Next.js 15 | TypeScript | Tailwind CSS | WebGL",
+    "description": "Showcase frontend development skills through interactive demos",
+    "hero": {
+      "title": "Tech Demo Lab",
+      "subtitle": "Interactive Tech Demos & Showcase"
+    },
+    "cards": {
+      "components": {
+        "title": "Component Library",
+        "description": "70+ reusable components built with shadcn/ui + Radix UI",
+        "count": "70+ Components",
+        "highlights": "Button, Card, Dialog, Form, Select, etc."
+      },
+      "animations": {
+        "title": "Animations",
+        "description": "Smooth animations powered by Framer Motion",
+        "count": "15+ Animations",
+        "highlights": "Page transitions, scroll triggers, hover effects"
+      },
+      "performance": {
+        "title": "Performance",
+        "description": "Lighthouse 95+ score, <1.5s initial load",
+        "count": "95+ Score",
+        "highlights": "Code splitting, lazy loading, image optimization"
+      },
+      "matrix": {
+        "title": "Matrix Effect",
+        "description": "WebGL Shader vs CSS animation comparison",
+        "count": "2 Implementations",
+        "highlights": "Adjustable parameters, real-time switching"
+      },
+      "responsive": {
+        "title": "Responsive Design",
+        "description": "Perfect adaptation for desktop and mobile",
+        "count": "All Devices",
+        "highlights": "Breakpoint switching, touch gestures"
+      },
+      "typescript": {
+        "title": "TypeScript",
+        "description": "Type-safe code practices",
+        "count": "100% Coverage",
+        "highlights": "Type inference, generics usage"
+      }
+    },
+    "stats": {
+      "components": "70+",
+      "animations": "15+",
+      "lighthouse": "95+",
+      "coverage": "100%"
+    },
+    "cta": {
+      "explore": "Explore Demo",
+      "viewCode": "View Code",
+      "backToHome": "Back to Home",
+      "readyToExplore": "Ready to Explore More?",
+      "checkoutDescription": "Check out the source code on GitHub or view the complete technical documentation."
+    },
+    "techStack": {
+      "title": "Built With Modern Stack",
+      "react": {
+        "name": "React 19",
+        "desc": "Latest React"
+      },
+      "nextjs": {
+        "name": "Next.js 15",
+        "desc": "App Router"
+      },
+      "typescript": {
+        "name": "TypeScript",
+        "desc": "Type Safe"
+      },
+      "tailwind": {
+        "name": "Tailwind CSS",
+        "desc": "Utility First"
+      },
+      "framerMotion": {
+        "name": "Framer Motion",
+        "desc": "Animations"
+      },
+      "shadcn": {
+        "name": "shadcn/ui",
+        "desc": "Components"
+      },
+      "radix": {
+        "name": "Radix UI",
+        "desc": "Primitives"
+      },
+      "recharts": {
+        "name": "Recharts",
+        "desc": "Charts"
+      }
+    },
+    "components": {
+      "title": "Component Library",
+      "subtitle": "shadcn/ui + Radix UI Component Collection",
+      "categories": {
+        "buttons": "Buttons",
+        "forms": "Forms",
+        "layout": "Layout",
+        "feedback": "Feedback",
+        "navigation": "Navigation",
+        "data": "Data Display"
+      },
+      "demo": "Demo",
+      "code": "Code",
+      "props": "Props",
+      "copy": "Copy",
+      "copied": "Copied"
+    },
+    "performance": {
+      "title": "Performance Optimization",
+      "subtitle": "Lighthouse Scores and Web Vitals Real-time Data",
+      "lighthouse": {
+        "title": "Lighthouse Scores",
+        "performance": "Performance",
+        "accessibility": "Accessibility",
+        "bestPractices": "Best Practices",
+        "seo": "SEO"
+      },
+      "comparison": {
+        "title": "Before & After Optimization",
+        "before": "Before",
+        "after": "After",
+        "imageOptimization": "Image Optimization",
+        "codeSplitting": "Code Splitting",
+        "lazyLoading": "Lazy Loading",
+        "loadTime": "Load Time",
+        "bundleSize": "Bundle Size"
+      },
+      "webVitals": {
+        "title": "Web Vitals",
+        "lcp": "Largest Contentful Paint (LCP)",
+        "fid": "First Input Delay (FID)",
+        "cls": "Cumulative Layout Shift (CLS)",
+        "ttfb": "Time to First Byte (TTFB)",
+        "good": "Good",
+        "needsImprovement": "Needs Improvement",
+        "poor": "Poor"
+      },
+      "techniques": {
+        "title": "Optimization Techniques",
+        "items": [
+          "Next.js Image component for optimized image loading",
+          "Dynamic imports for code splitting",
+          "React.lazy for lazy loading components",
+          "Route prefetching for faster navigation",
+          "Web Workers for complex computations",
+          "Service Workers for offline caching"
+        ]
+      }
+    },
+    "animations": {
+      "title": "Animation Showcase",
+      "subtitle": "Framer Motion Animation Library",
+      "categories": {
+        "entrance": "Entrance",
+        "hover": "Hover",
+        "scroll": "Scroll Trigger",
+        "transition": "Page Transition",
+        "gesture": "Gesture",
+        "custom": "Custom"
+      },
+      "trigger": "Trigger",
+      "reset": "Reset",
+      "replay": "Replay"
+    },
+    "responsive": {
+      "title": "Responsive Design",
+      "subtitle": "Perfect Cross-device Adaptation",
+      "devices": {
+        "mobile": "Mobile",
+        "tablet": "Tablet",
+        "desktop": "Desktop"
+      },
+      "breakpoints": {
+        "title": "Tailwind Breakpoints",
+        "sm": "640px",
+        "md": "768px",
+        "lg": "1024px",
+        "xl": "1280px",
+        "2xl": "1536px"
+      },
+      "features": {
+        "title": "Mobile Features",
+        "touch": "Touch Gestures",
+        "viewport": "Viewport Adaptation",
+        "orientation": "Orientation",
+        "performance": "Performance"
+      }
     }
   }
 }

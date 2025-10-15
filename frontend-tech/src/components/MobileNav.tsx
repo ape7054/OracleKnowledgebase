@@ -32,6 +32,7 @@ export function MobileNav() {
   const navItems = [
     { href: `/${locale}`, label: t('home') },
     { href: `/${locale}/knowledge`, label: t('knowledge') },
+    { href: `/${locale}/demo`, label: t('demo') },
     { href: `/${locale}/web3`, label: t('web3') },
     { href: `/${locale}/ai`, label: t('ai') },
     { href: `/${locale}/tools`, label: t('tools') },

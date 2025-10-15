@@ -7,7 +7,8 @@
     "dev": "velite && next dev --turbopack",
     "build": "velite && next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "deploy-check": "node scripts/pre-deploy-check.js"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.12",
