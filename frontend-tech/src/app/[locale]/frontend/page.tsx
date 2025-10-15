@@ -28,11 +28,12 @@ export default function DemoPage() {
 
   const demoCards = [
     {
-      id: 'components',
+      id: 'showcase',
       icon: Grid3x3,
-      color: 'text-blue-500',
-      gradient: 'from-blue-500/10 to-blue-600/10',
-      href: `/${locale}/frontend/components`,
+      color: 'text-orange-500',
+      gradient: 'from-orange-500/10 to-orange-600/10',
+      href: `/${locale}/frontend/showcase`,
+      featured: true,
     },
     {
       id: 'animations',
@@ -111,7 +112,7 @@ export default function DemoPage() {
             {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto mt-12">
               {[
-                { key: 'components', value: 70, suffix: '+' },
+                { key: 'showcase', value: 70, suffix: '+' },
                 { key: 'animations', value: 15, suffix: '+' },
                 { key: 'performance', value: 95, suffix: '+' },
                 { key: 'typescript', value: 100, suffix: '%' },

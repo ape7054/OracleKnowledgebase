@@ -608,11 +608,11 @@
       "subtitle": "Technical Portfolio"
     },
     "cards": {
-      "components": {
-        "title": "组件库展示",
-        "description": "70+可复用组件，基于 shadcn/ui + Radix UI 构建",
-        "count": "70+ 组件",
-        "highlights": "Button, Card, Dialog, Form, Select 等"
+      "showcase": {
+        "title": "未来科技仪表板",
+        "description": "实时系统监控面板，展示CPU、内存、网络状态和数据可视化",
+        "count": "实时监控",
+        "highlights": "粒子动画、性能图表、系统管理"
       },
       "animations": {
         "title": "动画效果",
@@ -693,23 +693,6 @@
         "desc": "图表库"
       }
     },
-    "components": {
-      "title": "组件库展示",
-      "subtitle": "shadcn/ui + Radix UI 组件集合",
-      "categories": {
-        "buttons": "按钮",
-        "forms": "表单",
-        "layout": "布局",
-        "feedback": "反馈",
-        "navigation": "导航",
-        "data": "数据展示"
-      },
-      "demo": "演示",
-      "code": "代码",
-      "props": "属性",
-      "copy": "复制",
-      "copied": "已复制"
-    },
     "performance": {
       "title": "性能优化展示",
       "subtitle": "Lighthouse 评分和 Web Vitals 实时数据",
@@ -789,6 +772,132 @@
         "viewport": "视口适配",
         "orientation": "方向切换",
         "performance": "性能优化"
+      }
+    }
+  },
+  "frontend": {
+    "showcase": {
+      "title": "组件展示系统",
+      "subtitle": "70+ 可复用组件的交互式演示平台，展示现代化 UI 组件库和业务组件",
+      "components": "组件",
+      "search": "搜索组件...",
+      "allComponents": "全部组件",
+      "preview": "预览",
+      "code": "代码",
+      "copy": "复制",
+      "copied": "已复制",
+      "variants": "变体",
+      "noComponents": "未找到组件",
+      "tryDifferentSearch": "尝试使用不同的搜索词",
+      "backToList": "返回列表",
+      "categories": {
+        "ui": "UI 基础组件",
+        "business": "业务组件",
+        "effects": "特效组件"
+      },
+      "subcategories": {
+        "form": "表单组件",
+        "layout": "布局组件",
+        "feedback": "反馈组件",
+        "navigation": "导航组件",
+        "data": "数据展示",
+        "background": "背景特效",
+        "animation": "动画特效",
+        "about": "关于页",
+        "knowledge": "知识库",
+        "project": "项目展示",
+        "common": "通用组件"
+      },
+      "variantsList": {
+        "default": "默认",
+        "secondary": "次要",
+        "destructive": "危险",
+        "outline": "轮廓",
+        "ghost": "幽灵",
+        "link": "链接"
+      },
+      "componentsList": {
+        "button": {
+          "description": "按钮组件，支持多种样式和尺寸"
+        },
+        "input": {
+          "description": "输入框组件，用于用户文本输入"
+        },
+        "select": {
+          "description": "下拉选择组件，提供选项列表"
+        },
+        "card": {
+          "description": "卡片容器组件，用于组织和展示内容"
+        },
+        "separator": {
+          "description": "分隔线组件，用于内容分隔"
+        },
+        "tabs": {
+          "description": "标签页组件，组织分层内容"
+        },
+        "accordion": {
+          "description": "手风琴折叠面板，节省空间展示内容"
+        },
+        "badge": {
+          "description": "徽章组件，用于状态标记和标签"
+        },
+        "progress": {
+          "description": "进度条组件，显示任务完成进度"
+        },
+        "skeleton": {
+          "description": "骨架屏加载占位，提升加载体验"
+        },
+        "breadcrumb": {
+          "description": "面包屑导航，显示页面层级关系"
+        },
+        "avatar": {
+          "description": "头像组件，展示用户头像"
+        },
+        "matrix": {
+          "description": "黑客帝国数字雨背景特效"
+        },
+        "aurora": {
+          "description": "极光背景特效，炫彩渐变动画"
+        },
+        "warp": {
+          "description": "曲速背景特效，3D 网格动画"
+        },
+        "borderbeam": {
+          "description": "边框光束动画，增强视觉效果"
+        },
+        "animatedbeam": {
+          "description": "连线动画，展示元素间关系"
+        },
+        "blurfade": {
+          "description": "模糊淡入动画，优雅的入场效果"
+        },
+        "sparkles": {
+          "description": "粒子特效，增加页面动感"
+        },
+        "numberticker": {
+          "description": "数字滚动动画，数据展示更生动"
+        },
+        "gradienttext": {
+          "description": "渐变文字动画，文本更醒目"
+        },
+        "marquee": {
+          "description": "跑马灯滚动，展示大量内容"
+        },
+        "animatedavatar": {
+          "description": "动画头像组件，带光束边框"
+        },
+        "techstack": {
+          "description": "技术栈跑马灯，展示技术能力"
+        },
+        "backtotop": {
+          "description": "返回顶部按钮，改善导航体验"
+        },
+        "breadcrumbs": {
+          "description": "面包屑导航组件，完整导航支持"
+        },
+        "devbadge": {
+          "description": "开发中徽章，标识开发状态"
+        }
       }
     }
   }

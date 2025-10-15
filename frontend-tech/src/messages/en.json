@@ -455,11 +455,11 @@
       "subtitle": "Technical Portfolio"
     },
     "cards": {
-      "components": {
-        "title": "Component Library",
-        "description": "70+ reusable components built with shadcn/ui + Radix UI",
-        "count": "70+ Components",
-        "highlights": "Button, Card, Dialog, Form, Select, etc."
+      "showcase": {
+        "title": "Futuristic Dashboard",
+        "description": "Real-time system monitoring panel with CPU, memory, network visualization",
+        "count": "Live Monitoring",
+        "highlights": "Particle effects, Performance charts, System management"
       },
       "animations": {
         "title": "Animations",
@@ -540,23 +540,6 @@
         "desc": "Charts"
       }
     },
-    "components": {
-      "title": "Component Library",
-      "subtitle": "shadcn/ui + Radix UI Component Collection",
-      "categories": {
-        "buttons": "Buttons",
-        "forms": "Forms",
-        "layout": "Layout",
-        "feedback": "Feedback",
-        "navigation": "Navigation",
-        "data": "Data Display"
-      },
-      "demo": "Frontend Tech",
-      "code": "Code",
-      "props": "Props",
-      "copy": "Copy",
-      "copied": "Copied"
-    },
     "performance": {
       "title": "Performance Optimization",
       "subtitle": "Lighthouse Scores and Web Vitals Real-time Data",
@@ -636,6 +619,132 @@
         "viewport": "Viewport Adaptation",
         "orientation": "Orientation",
         "performance": "Performance"
+      }
+    }
+  },
+  "frontend": {
+    "showcase": {
+      "title": "Component Showcase",
+      "subtitle": "Interactive demonstration platform for 70+ reusable components, showcasing modern UI library and business components",
+      "components": "Components",
+      "search": "Search components...",
+      "allComponents": "All Components",
+      "preview": "Preview",
+      "code": "Code",
+      "copy": "Copy",
+      "copied": "Copied",
+      "variants": "Variants",
+      "noComponents": "No components found",
+      "tryDifferentSearch": "Try a different search term",
+      "backToList": "Back to list",
+      "categories": {
+        "ui": "UI Components",
+        "business": "Business Components",
+        "effects": "Effect Components"
+      },
+      "subcategories": {
+        "form": "Form",
+        "layout": "Layout",
+        "feedback": "Feedback",
+        "navigation": "Navigation",
+        "data": "Data Display",
+        "background": "Background Effects",
+        "animation": "Animation Effects",
+        "about": "About Page",
+        "knowledge": "Knowledge Base",
+        "project": "Projects",
+        "common": "Common"
+      },
+      "variantsList": {
+        "default": "Default",
+        "secondary": "Secondary",
+        "destructive": "Destructive",
+        "outline": "Outline",
+        "ghost": "Ghost",
+        "link": "Link"
+      },
+      "componentsList": {
+        "button": {
+          "description": "Button component with multiple styles and sizes"
+        },
+        "input": {
+          "description": "Input component for text entry"
+        },
+        "select": {
+          "description": "Select component with dropdown options"
+        },
+        "card": {
+          "description": "Card container for organizing content"
+        },
+        "separator": {
+          "description": "Separator for dividing content"
+        },
+        "tabs": {
+          "description": "Tabs component for layered content"
+        },
+        "accordion": {
+          "description": "Accordion for collapsible content sections"
+        },
+        "badge": {
+          "description": "Badge component for status and labels"
+        },
+        "progress": {
+          "description": "Progress bar showing task completion"
+        },
+        "skeleton": {
+          "description": "Skeleton loading placeholder"
+        },
+        "breadcrumb": {
+          "description": "Breadcrumb navigation showing hierarchy"
+        },
+        "avatar": {
+          "description": "Avatar component for user images"
+        },
+        "matrix": {
+          "description": "Matrix digital rain background effect"
+        },
+        "aurora": {
+          "description": "Aurora background with gradient animation"
+        },
+        "warp": {
+          "description": "Warp background with 3D grid animation"
+        },
+        "borderbeam": {
+          "description": "Border beam animation effect"
+        },
+        "animatedbeam": {
+          "description": "Animated connection lines between elements"
+        },
+        "blurfade": {
+          "description": "Blur fade-in animation entrance effect"
+        },
+        "sparkles": {
+          "description": "Particle effects for dynamic pages"
+        },
+        "numberticker": {
+          "description": "Number scrolling animation for data display"
+        },
+        "gradienttext": {
+          "description": "Gradient text animation"
+        },
+        "marquee": {
+          "description": "Marquee scrolling for content display"
+        },
+        "animatedavatar": {
+          "description": "Animated avatar with beam border"
+        },
+        "techstack": {
+          "description": "Tech stack marquee showcase"
+        },
+        "backtotop": {
+          "description": "Back to top button for navigation"
+        },
+        "breadcrumbs": {
+          "description": "Breadcrumb navigation component"
+        },
+        "devbadge": {
+          "description": "Development badge for status indication"
+        }
       }
     }
   }
