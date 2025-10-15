@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useMemo, useCallback, memo } from 'react'
+import React, { useState, useMemo, useCallback, memo, useRef, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -18,6 +18,37 @@ export const ComponentShowcaseCard = memo(({ component }: ComponentShowcaseCardP
   const [copied, setCopied] = useState(false)
   const [selectedVariant, setSelectedVariant] = useState(0)
   const [codeExpanded, setCodeExpanded] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
+  const [shouldRender, setShouldRender] = useState(false)
+  const cardRef = useRef<HTMLDivElement>(null)
+
+  // Intersection Observer - 按需渲染组件预览
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true)
+            // 延迟渲染，避免同时渲染过多组件
+            setTimeout(() => setShouldRender(true), 100)
+          }
+        })
+      },
+      {
+        root: null,
+        rootMargin: '50px', // 提前50px开始加载
+        threshold: 0.1,
+      }
+    )
+
+    if (cardRef.current) {
+      observer.observe(cardRef.current)
+    }
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [])
 
   // 使用 useCallback 缓存函数
   const copyCode = useCallback(async () => {
@@ -38,16 +69,32 @@ export const ComponentShowcaseCard = memo(({ component }: ComponentShowcaseCardP
     return component.props || {}
   }, [component.variants, component.props, selectedVariant])
 
-  // 使用 useMemo 缓存渲染的组件预览
+  // 使用 useMemo 缓存渲染的组件预览 - 按需渲染优化
   const componentPreview = useMemo(() => {
+    // 如果还未进入视口，显示骨架屏
+    if (!shouldRender) {
+      return (
+        <div className={`flex items-center justify-center min-h-[120px] p-6 rounded-lg border ${
+          theme === "dark"
+            ? "bg-slate-800/50 border-slate-700/50"
+            : "bg-slate-100/50 border-slate-300/50"
+        }`}>
+          <div className="animate-pulse space-y-3 w-full">
+            <div className={`h-4 rounded ${theme === "dark" ? "bg-slate-700" : "bg-slate-300"} w-3/4 mx-auto`}></div>
+            <div className={`h-4 rounded ${theme === "dark" ? "bg-slate-700" : "bg-slate-300"} w-1/2 mx-auto`}></div>
+          </div>
+        </div>
+      )
+    }
+
     try {
       const ComponentToRender = component.component
       
       return (
-        <div className={`flex items-center justify-center min-h-[120px] p-6 rounded-lg border backdrop-blur-sm ${
+        <div className={`flex items-center justify-center min-h-[120px] p-6 rounded-lg border ${
           theme === "dark"
-            ? "bg-slate-800/30 border-slate-700/50"
-            : "bg-slate-100/30 border-slate-300/50"
+            ? "bg-slate-800/50 border-slate-700/50"
+            : "bg-slate-100/50 border-slate-300/50"
         }`}>
           <ComponentToRender {...currentProps} />
         </div>
@@ -55,10 +102,10 @@ export const ComponentShowcaseCard = memo(({ component }: ComponentShowcaseCardP
     } catch (error) {
       console.error('Error rendering component:', error)
       return (
-        <div className={`flex items-center justify-center min-h-[120px] p-6 rounded-lg border backdrop-blur-sm ${
+        <div className={`flex items-center justify-center min-h-[120px] p-6 rounded-lg border ${
           theme === "dark"
-            ? "bg-slate-800/30 border-slate-700/50"
-            : "bg-slate-100/30 border-slate-300/50"
+            ? "bg-slate-800/50 border-slate-700/50"
+            : "bg-slate-100/50 border-slate-300/50"
         }`}>
           <div className={`text-center ${theme === "dark" ? "text-slate-400" : "text-slate-600"}`}>
             <Code2 className="h-8 w-8 mx-auto mb-2" />
@@ -67,14 +114,17 @@ export const ComponentShowcaseCard = memo(({ component }: ComponentShowcaseCardP
         </div>
       )
     }
-  }, [component.component, currentProps, theme])
+  }, [component.component, currentProps, theme, shouldRender])
 
   return (
-    <Card className={`backdrop-blur-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group h-full ${
-      theme === "dark"
-        ? "bg-slate-900/50 border-slate-700/50"
-        : "bg-white/70 border-slate-300/50"
-    }`}>
+    <Card 
+      ref={cardRef}
+      className={`hover:shadow-xl transition-[transform,box-shadow] duration-300 hover:-translate-y-1 group h-full will-change-transform ${
+        theme === "dark"
+          ? "bg-slate-900/90 border-slate-700/50"
+          : "bg-white/90 border-slate-300/50"
+      }`}
+    >
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="space-y-2">
@@ -200,8 +250,8 @@ export const ComponentShowcaseCard = memo(({ component }: ComponentShowcaseCardP
               
               <div className={`rounded-lg border overflow-hidden ${
                 theme === "dark"
-                  ? "bg-slate-900/80 border-slate-700/50"
-                  : "bg-slate-100/80 border-slate-300/50"
+                  ? "bg-slate-900 border-slate-700/50"
+                  : "bg-slate-100 border-slate-300/50"
               }`}>
                 <div 
                   className={`transition-all duration-300 ${

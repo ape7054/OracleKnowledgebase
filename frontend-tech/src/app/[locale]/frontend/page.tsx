@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { MatrixBackground } from '@/components/ui/matrix-background';
 import { AnimatedGradientText } from '@/components/ui/animated-gradient-text';
 import { SiteHeader } from '@/components/SiteHeader';
+import { DevelopmentBadge } from '@/components/DevelopmentBadge';
 import CountUp from 'react-countup';
 import {
   Code2,
@@ -86,11 +87,14 @@ export default function DemoPage() {
           className="absolute inset-0"
         >
           <div className="relative z-10 container mx-auto px-4 py-20 text-center">
-            <Badge 
-              className="mb-4 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 dark:from-pink-500 dark:via-purple-500 dark:to-blue-500 text-white border-0 font-bold shadow-lg animate-pulse-strong"
-            >
-              {t('demo.subtitle')}
-            </Badge>
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <Badge 
+                className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 dark:from-pink-500 dark:via-purple-500 dark:to-blue-500 text-white border-0 font-bold shadow-lg animate-pulse-strong"
+              >
+                {t('demo.subtitle')}
+              </Badge>
+              <DevelopmentBadge size="sm" text="开发中" />
+            </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 drop-shadow-lg">
               {/* 亮色模式：深灰到深青色 */}
               <span className="dark:hidden">

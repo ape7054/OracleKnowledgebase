@@ -4,6 +4,7 @@ import { useEffect, useState, useMemo, useCallback, memo, useRef } from "react"
 import { useTheme } from "next-themes"
 import { useTranslations } from "next-intl"
 import { useParams, useRouter } from "next/navigation"
+import { useVirtualizer } from '@tanstack/react-virtual'
 import { 
   Activity,
   AlertCircle,
@@ -37,6 +38,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Badge } from "@/components/ui/badge"
 import { ComponentShowcaseCard } from "@/components/ComponentShowcaseCard"
 import { getComponentsByCategory, componentCategories } from "@/config/showcase-components"
+import { DevelopmentBadge } from "@/components/DevelopmentBadge"
 
 export default function Dashboard() {
   const t = useTranslations("frontend.showcase")
@@ -49,10 +51,9 @@ export default function Dashboard() {
   const [networkStatus, setNetworkStatus] = useState(92)
   const [securityLevel] = useState(75)
   const [isLoading, setIsLoading] = useState(true)
-  const [visibleCount, setVisibleCount] = useState(6) // Lazy loading: initially show 6 components
   const [searchQuery, setSearchQuery] = useState("")
   const [mounted, setMounted] = useState(false)
-  const loadMoreRef = useRef<HTMLDivElement>(null) // Intersection Observer ref
+  const parentRef = useRef<HTMLDivElement>(null) // 虚拟滚动容器引用
 
   // Handle mounting
   useEffect(() => {
@@ -72,6 +73,44 @@ export default function Dashboard() {
     )
   }, [selectedCategory, searchQuery])
 
+  // 计算每行显示的列数（响应式）
+  const getColumnsCount = useCallback(() => {
+    if (typeof window === 'undefined') return 4
+    const width = window.innerWidth
+    if (width < 768) return 1 // mobile
+    if (width < 1024) return 2 // tablet
+    if (width < 1280) return 3 // laptop
+    return 4 // desktop
+  }, [])
+
+  const [columnsCount, setColumnsCount] = useState(getColumnsCount())
+
+  // 监听窗口大小变化
+  useEffect(() => {
+    const handleResize = () => {
+      setColumnsCount(getColumnsCount())
+    }
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [getColumnsCount])
+
+  // 将组件分组为行
+  const rowsData = useMemo(() => {
+    const rows: Array<typeof currentComponents> = []
+    for (let i = 0; i < currentComponents.length; i += columnsCount) {
+      rows.push(currentComponents.slice(i, i + columnsCount))
+    }
+    return rows
+  }, [currentComponents, columnsCount])
+
+  // 虚拟滚动器配置
+  const rowVirtualizer = useVirtualizer({
+    count: rowsData.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 450, // 估计每行高度
+    overscan: 2, // 预渲染2行
+  })
+
   // Simulate data loading - optimized loading time
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -81,18 +120,12 @@ export default function Dashboard() {
     return () => clearTimeout(timer)
   }, [])
 
-
-  // Reset visible count when category or search changes
-  useEffect(() => {
-    setVisibleCount(6)
-  }, [selectedCategory, searchQuery])
-
-  // Simulate changing data - 进一步优化为30秒更新一次
+  // Simulate changing data - 进一步优化为60秒更新一次，减少重渲染
   useEffect(() => {
     const interval = setInterval(() => {
       setNetworkStatus(Math.floor(Math.random() * 15) + 80)
       setSystemStatus(Math.floor(Math.random() * 10) + 80)
-    }, 30000) // 优化为30秒更新一次，减少不必要的重渲染
+    }, 60000) // 优化为60秒更新一次，减少不必要的重渲染
 
     return () => clearInterval(interval)
   }, [])
@@ -106,36 +139,6 @@ export default function Dashboard() {
   const clearSearch = useCallback(() => {
     setSearchQuery("")
   }, [])
-
-  // Load more - 使用 useCallback 缓存
-  const loadMore = useCallback(() => {
-    setVisibleCount((prev) => Math.min(prev + 6, currentComponents.length))
-  }, [currentComponents.length])
-
-  // Intersection Observer 自动加载更多
-  useEffect(() => {
-    if (!loadMoreRef.current) return
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const [entry] = entries
-        if (entry.isIntersecting && visibleCount < currentComponents.length) {
-          loadMore()
-        }
-      },
-      {
-        root: null,
-        rootMargin: '100px', // 提前100px触发加载
-        threshold: 0.1,
-      }
-    )
-
-    observer.observe(loadMoreRef.current)
-
-    return () => {
-      observer.disconnect()
-    }
-  }, [loadMore, visibleCount, currentComponents.length])
 
   // Prevent hydration mismatch
   if (!mounted) {
@@ -187,11 +190,12 @@ export default function Dashboard() {
           </div>
           
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center gap-3">
               <Hexagon className="h-8 w-8 text-cyan-500" />
               <span className="text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
                 {t("title").toUpperCase()}
               </span>
+              <DevelopmentBadge size="sm" text="性能优化版" />
             </div>
 
             <div className="flex items-center space-x-3">
@@ -257,10 +261,10 @@ export default function Dashboard() {
           {/* Sidebar */}
           <div className="col-span-12 md:col-span-3 lg:col-span-2">
             <div className="md:sticky md:top-6 md:max-h-[calc(100vh-4rem)] md:overflow-y-auto">
-              <Card className={`backdrop-blur-sm transition-colors ${
+              <Card className={`transition-colors ${
                 theme === "dark" 
-                  ? "bg-slate-900/50 border-slate-700/50" 
-                  : "bg-white/70 border-slate-300/50"
+                  ? "bg-slate-900/95 border-slate-700/50" 
+                  : "bg-white/95 border-slate-300/50"
               }`}>
               <CardContent className="p-4">
                 <nav className="space-y-2">
@@ -353,10 +357,10 @@ export default function Dashboard() {
           <div className="col-span-12 md:col-span-9 lg:col-span-10">
             <div className="grid gap-6">
               {/* System overview */}
-              <Card className={`backdrop-blur-sm overflow-hidden transition-colors ${
+              <Card className={`overflow-hidden transition-colors ${
                 theme === "dark"
-                  ? "bg-slate-900/50 border-slate-700/50"
-                  : "bg-white/70 border-slate-300/50"
+                  ? "bg-slate-900/95 border-slate-700/50"
+                  : "bg-white/95 border-slate-300/50"
               }`}>
                 <CardHeader className={`border-b pb-3 ${theme === "dark" ? "border-slate-700/50" : "border-slate-300/50"}`}>
                   <div className="flex items-center justify-between">
@@ -491,44 +495,50 @@ export default function Dashboard() {
                             )}
                           </div>
 
-                          {/* 组件网格 */}
+                          {/* 组件网格 - 虚拟滚动优化 */}
                           {currentComponents.length > 0 ? (
-                            <>
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                                {currentComponents.slice(0, visibleCount).map((component) => (
-                                <ComponentShowcaseCard 
-                                  key={component.id} 
-                                  component={component} 
-                                />
-                              ))}
+                            <div 
+                              ref={parentRef}
+                              className="relative"
+                              style={{ 
+                                height: '600px',
+                                overflow: 'auto',
+                              }}
+                            >
+                              <div
+                                style={{
+                                  height: `${rowVirtualizer.getTotalSize()}px`,
+                                  width: '100%',
+                                  position: 'relative',
+                                }}
+                              >
+                                {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+                                  const rowComponents = rowsData[virtualRow.index]
+                                  return (
+                                    <div
+                                      key={virtualRow.index}
+                                      style={{
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
+                                        width: '100%',
+                                        height: `${virtualRow.size}px`,
+                                        transform: `translateY(${virtualRow.start}px)`,
+                                      }}
+                                    >
+                                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-6">
+                                        {rowComponents.map((component) => (
+                                          <ComponentShowcaseCard 
+                                            key={component.id} 
+                                            component={component} 
+                                          />
+                                        ))}
+                                      </div>
+                                    </div>
+                                  )
+                                })}
+                              </div>
                             </div>
-                              
-                              {/* Intersection Observer trigger for auto loading */}
-                              {visibleCount < currentComponents.length && (
-                                <div ref={loadMoreRef} className="flex items-center justify-center mt-8">
-                                  <Button
-                                    onClick={loadMore}
-                                    variant="outline"
-                                    className={`flex items-center gap-2 ${
-                                      theme === "dark"
-                                        ? "border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/10 hover:text-cyan-300"
-                                        : "border-cyan-600/50 text-cyan-600 hover:bg-cyan-600/10 hover:text-cyan-700"
-                                    }`}
-                                  >
-                                    <Download className="h-4 w-4" />
-                                    {t("loadMore")} ({currentComponents.length - visibleCount})
-                                  </Button>
-                                </div>
-                              )}
-                              
-                              {visibleCount >= currentComponents.length && currentComponents.length > 6 && (
-                                <div className="flex items-center justify-center h-16 mt-6">
-                                  <div className={`text-sm ${theme === "dark" ? "text-slate-500" : "text-slate-600"}`}>
-                                    {t("allLoaded")} {currentComponents.length} {t("components")}
-                                  </div>
-                                </div>
-                              )}
-                            </>
                           ) : (
                             <div className={`flex items-center justify-center h-64 rounded-lg border ${
                               theme === "dark" 
@@ -621,10 +631,10 @@ export default function Dashboard() {
 
               {/* Security & Alerts */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Card className={`backdrop-blur-sm transition-colors ${
+                <Card className={`transition-colors ${
                   theme === "dark"
-                    ? "bg-slate-900/50 border-slate-700/50"
-                    : "bg-white/70 border-slate-300/50"
+                    ? "bg-slate-900/95 border-slate-700/50"
+                    : "bg-white/95 border-slate-300/50"
                 }`}>
                   <CardHeader className="pb-2">
                     <CardTitle className={`flex items-center text-base ${theme === "dark" ? "text-slate-100" : "text-slate-900"}`}>
@@ -669,10 +679,10 @@ export default function Dashboard() {
                   </CardContent>
                 </Card>
 
-                <Card className={`backdrop-blur-sm transition-colors ${
+                <Card className={`transition-colors ${
                   theme === "dark"
-                    ? "bg-slate-900/50 border-slate-700/50"
-                    : "bg-white/70 border-slate-300/50"
+                    ? "bg-slate-900/95 border-slate-700/50"
+                    : "bg-white/95 border-slate-300/50"
                 }`}>
                   <CardHeader className="pb-2">
                     <CardTitle className={`flex items-center text-base ${theme === "dark" ? "text-slate-100" : "text-slate-900"}`}>
@@ -716,10 +726,10 @@ export default function Dashboard() {
               </div>
 
               {/* Communications */}
-              <Card className={`backdrop-blur-sm transition-colors ${
+              <Card className={`transition-colors ${
                 theme === "dark"
-                  ? "bg-slate-900/50 border-slate-700/50"
-                  : "bg-white/70 border-slate-300/50"
+                  ? "bg-slate-900/95 border-slate-700/50"
+                  : "bg-white/95 border-slate-300/50"
               }`}>
                 <CardHeader className="pb-2 flex flex-row items-center justify-between">
                   <CardTitle className={`flex items-center text-base ${theme === "dark" ? "text-slate-100" : "text-slate-900"}`}>
