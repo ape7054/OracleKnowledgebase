@@ -10,7 +10,7 @@ export const siteConfig = {
   
   // 社交媒体链接
   social: {
-    github: "https://github.com/ape7054",
+    github: "https://github.com/ape7054/OracleKnowledgebase",
     twitter: "https://x.com/ency_146904",
     email: "1469041017@qq.com",
   },

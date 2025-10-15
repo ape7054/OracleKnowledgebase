@@ -6,8 +6,67 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useTranslations } from 'next-intl'
-import { ExternalLink, Info } from 'lucide-react'
+import { 
+  ExternalLink, 
+  Info,
+  Github,
+  MessageCircleQuestion,
+  Triangle,
+  Package,
+  Bot,
+  Brain,
+  Palette,
+  Sparkles,
+  Search,
+  Waves,
+  Wallet,
+  Ship,
+  Zap,
+  TrendingUp,
+  DollarSign,
+  Figma,
+  Dribbble,
+  Paintbrush,
+  BookOpen,
+  Flame,
+  Code2,
+  FileText,
+  BarChart3,
+  type LucideIcon
+} from 'lucide-react'
 import { type Tool } from '@/config/tools'
+
+// 图标映射
+const iconMap: Record<string, LucideIcon> = {
+  Github,
+  MessageCircleQuestion,
+  Triangle,
+  Package,
+  Bot,
+  Brain,
+  Palette,
+  Sparkles,
+  Search,
+  Waves,
+  Wallet,
+  Ship,
+  Zap,
+  TrendingUp,
+  DollarSign,
+  Figma,
+  Dribbble,
+  Paintbrush,
+  BookOpen,
+  Flame,
+  Code2,
+  FileText,
+  BarChart3,
+}
+
+// 获取图标组件
+const getIcon = (iconName: string) => {
+  return iconMap[iconName] || Package
+}
 
 // 懒加载重型组件
 const Dialog = lazy(() => import("@/components/ui/dialog").then(mod => ({ default: mod.Dialog })))
@@ -55,7 +114,12 @@ function DialogWrapper({ tool, t }: { tool: Tool; t: ReturnType<typeof useTransl
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-3">
-              <span className="text-3xl">{tool.icon}</span>
+              <div className="p-2 rounded-lg bg-primary/10">
+                {(() => {
+                  const Icon = getIcon(tool.icon)
+                  return <Icon className="h-6 w-6 text-primary" />
+                })()}
+              </div>
               {tool.name}
             </DialogTitle>
             <DialogDescription className="pt-4 space-y-4">
@@ -129,7 +193,12 @@ export function ToolsGridOptimized({ tools }: ToolsGridOptimizedProps) {
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3">
                       <TooltipWrapper content={tool.name}>
-                        <div className="text-3xl cursor-help">{tool.icon}</div>
+                        <div className="p-2 rounded-lg bg-primary/10 cursor-help">
+                          {(() => {
+                            const Icon = getIcon(tool.icon)
+                            return <Icon className="h-6 w-6 text-primary" />
+                          })()}
+                        </div>
                       </TooltipWrapper>
                       <div>
                         <h3 className="font-semibold text-lg group-hover:text-primary transition-colors">
@@ -185,9 +254,9 @@ export function ToolsGridOptimized({ tools }: ToolsGridOptimizedProps) {
           </div>
         ) : (
           <div className="text-center py-16">
-            <div className="text-6xl mb-4">🔍</div>
+            <Search className="h-16 w-16 mx-auto mb-4 text-muted-foreground/50" />
             <p className="text-lg text-muted-foreground">
-              {t('tools.noResults')}
+              暂无相关工具
             </p>
           </div>
         )}

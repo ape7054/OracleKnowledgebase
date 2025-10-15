@@ -3,11 +3,13 @@
  * 用于管理技术、开发、AI、Web3 等领域的常用网站
  */
 
+import { LucideIcon } from 'lucide-react'
+
 export interface Tool {
   id: string
   name: string
   url: string
-  icon: string // emoji 图标
+  icon: string // lucide-react 图标名称
   category: ToolCategory
   tags: string[]
   descriptionKey: string // 国际化描述的 key
@@ -42,7 +44,7 @@ export const tools: Tool[] = [
     id: 'github',
     name: 'GitHub',
     url: 'https://github.com',
-    icon: '🐙',
+    icon: 'Github',
     category: 'development',
     tags: ['git', 'version-control', 'collaboration'],
     descriptionKey: 'tools.items.github.description'
@@ -51,7 +53,7 @@ export const tools: Tool[] = [
     id: 'stackoverflow',
     name: 'Stack Overflow',
     url: 'https://stackoverflow.com',
-    icon: '📚',
+    icon: 'MessageCircleQuestion',
     category: 'development',
     tags: ['qa', 'community', 'programming'],
     descriptionKey: 'tools.items.stackoverflow.description'
@@ -60,7 +62,7 @@ export const tools: Tool[] = [
     id: 'vercel',
     name: 'Vercel',
     url: 'https://vercel.com',
-    icon: '▲',
+    icon: 'Triangle',
     category: 'development',
     tags: ['hosting', 'deployment', 'nextjs'],
     descriptionKey: 'tools.items.vercel.description'
@@ -69,7 +71,7 @@ export const tools: Tool[] = [
     id: 'npm',
     name: 'npm',
     url: 'https://www.npmjs.com',
-    icon: '📦',
+    icon: 'Package',
     category: 'development',
     tags: ['packages', 'nodejs', 'javascript'],
     descriptionKey: 'tools.items.npm.description'
@@ -80,7 +82,7 @@ export const tools: Tool[] = [
     id: 'chatgpt',
     name: 'ChatGPT',
     url: 'https://chat.openai.com',
-    icon: '🤖',
+    icon: 'Bot',
     category: 'ai',
     tags: ['ai', 'chatbot', 'llm'],
     descriptionKey: 'tools.items.chatgpt.description'
@@ -89,7 +91,7 @@ export const tools: Tool[] = [
     id: 'claude',
     name: 'Claude',
     url: 'https://claude.ai',
-    icon: '🧠',
+    icon: 'Brain',
     category: 'ai',
     tags: ['ai', 'chatbot', 'llm'],
     descriptionKey: 'tools.items.claude.description'
@@ -98,7 +100,7 @@ export const tools: Tool[] = [
     id: 'midjourney',
     name: 'Midjourney',
     url: 'https://www.midjourney.com',
-    icon: '🎨',
+    icon: 'Palette',
     category: 'ai',
     tags: ['ai', 'image-generation', 'design'],
     descriptionKey: 'tools.items.midjourney.description'
@@ -107,7 +109,7 @@ export const tools: Tool[] = [
     id: 'huggingface',
     name: 'Hugging Face',
     url: 'https://huggingface.co',
-    icon: '🤗',
+    icon: 'Sparkles',
     category: 'ai',
     tags: ['ai', 'models', 'ml'],
     descriptionKey: 'tools.items.huggingface.description'
@@ -118,7 +120,7 @@ export const tools: Tool[] = [
     id: 'etherscan',
     name: 'Etherscan',
     url: 'https://etherscan.io',
-    icon: '🔍',
+    icon: 'Search',
     category: 'web3',
     tags: ['ethereum', 'blockchain', 'explorer'],
     descriptionKey: 'tools.items.etherscan.description'
@@ -127,7 +129,7 @@ export const tools: Tool[] = [
     id: 'uniswap',
     name: 'Uniswap',
     url: 'https://uniswap.org',
-    icon: '🦄',
+    icon: 'Waves',
     category: 'web3',
     tags: ['defi', 'dex', 'ethereum'],
     descriptionKey: 'tools.items.uniswap.description'
@@ -136,7 +138,7 @@ export const tools: Tool[] = [
     id: 'metamask',
     name: 'MetaMask',
     url: 'https://metamask.io',
-    icon: '🦊',
+    icon: 'Wallet',
     category: 'web3',
     tags: ['wallet', 'ethereum', 'web3'],
     descriptionKey: 'tools.items.metamask.description'
@@ -145,7 +147,7 @@ export const tools: Tool[] = [
     id: 'opensea',
     name: 'OpenSea',
     url: 'https://opensea.io',
-    icon: '🌊',
+    icon: 'Ship',
     category: 'web3',
     tags: ['nft', 'marketplace', 'ethereum'],
     descriptionKey: 'tools.items.opensea.description'
@@ -156,7 +158,7 @@ export const tools: Tool[] = [
     id: 'solana',
     name: 'Solana',
     url: 'https://solana.com',
-    icon: '⚡',
+    icon: 'Zap',
     category: 'blockchain',
     tags: ['blockchain', 'solana', 'defi'],
     descriptionKey: 'tools.items.solana.description'
@@ -165,7 +167,7 @@ export const tools: Tool[] = [
     id: 'binance',
     name: 'Binance',
     url: 'https://www.binance.com',
-    icon: '🔶',
+    icon: 'TrendingUp',
     category: 'blockchain',
     tags: ['exchange', 'crypto', 'trading'],
     descriptionKey: 'tools.items.binance.description'
@@ -174,7 +176,7 @@ export const tools: Tool[] = [
     id: 'coinmarketcap',
     name: 'CoinMarketCap',
     url: 'https://coinmarketcap.com',
-    icon: '💰',
+    icon: 'DollarSign',
     category: 'blockchain',
     tags: ['crypto', 'market', 'data'],
     descriptionKey: 'tools.items.coinmarketcap.description'
@@ -185,7 +187,7 @@ export const tools: Tool[] = [
     id: 'figma',
     name: 'Figma',
     url: 'https://www.figma.com',
-    icon: '🎨',
+    icon: 'Figma',
     category: 'design',
     tags: ['design', 'ui', 'collaboration'],
     descriptionKey: 'tools.items.figma.description'
@@ -194,7 +196,7 @@ export const tools: Tool[] = [
     id: 'dribbble',
     name: 'Dribbble',
     url: 'https://dribbble.com',
-    icon: '🏀',
+    icon: 'Dribbble',
     category: 'design',
     tags: ['design', 'inspiration', 'community'],
     descriptionKey: 'tools.items.dribbble.description'
@@ -203,7 +205,7 @@ export const tools: Tool[] = [
     id: 'behance',
     name: 'Behance',
     url: 'https://www.behance.net',
-    icon: '🎭',
+    icon: 'Paintbrush',
     category: 'design',
     tags: ['design', 'portfolio', 'adobe'],
     descriptionKey: 'tools.items.behance.description'
@@ -214,7 +216,7 @@ export const tools: Tool[] = [
     id: 'mdn',
     name: 'MDN Web Docs',
     url: 'https://developer.mozilla.org',
-    icon: '📖',
+    icon: 'BookOpen',
     category: 'learning',
     tags: ['documentation', 'web', 'javascript'],
     descriptionKey: 'tools.items.mdn.description'
@@ -223,7 +225,7 @@ export const tools: Tool[] = [
     id: 'freecodecamp',
     name: 'freeCodeCamp',
     url: 'https://www.freecodecamp.org',
-    icon: '🔥',
+    icon: 'Flame',
     category: 'learning',
     tags: ['learning', 'coding', 'free'],
     descriptionKey: 'tools.items.freecodecamp.description'
@@ -232,7 +234,7 @@ export const tools: Tool[] = [
     id: 'leetcode',
     name: 'LeetCode',
     url: 'https://leetcode.com',
-    icon: '💻',
+    icon: 'Code2',
     category: 'learning',
     tags: ['algorithm', 'interview', 'practice'],
     descriptionKey: 'tools.items.leetcode.description'
@@ -243,7 +245,7 @@ export const tools: Tool[] = [
     id: 'notion',
     name: 'Notion',
     url: 'https://www.notion.so',
-    icon: '📝',
+    icon: 'FileText',
     category: 'productivity',
     tags: ['notes', 'productivity', 'organization'],
     descriptionKey: 'tools.items.notion.description'
@@ -252,7 +254,7 @@ export const tools: Tool[] = [
     id: 'linear',
     name: 'Linear',
     url: 'https://linear.app',
-    icon: '📊',
+    icon: 'BarChart3',
     category: 'productivity',
     tags: ['project-management', 'issue-tracking', 'agile'],
     descriptionKey: 'tools.items.linear.description'
