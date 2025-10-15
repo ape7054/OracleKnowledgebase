@@ -3,7 +3,7 @@
     "home": "Home",
     "articles": "Tech Docs",
     "knowledge": "Tech Docs",
-    "demo": "Demo Lab",
+    "demo": "Frontend Lab",
     "web3": "Web3 Tech",
     "ai": "AI Tech",
     "tools": "Tools",
@@ -447,12 +447,12 @@
     }
   },
   "demo": {
-    "title": "Portfolio",
+    "title": "Frontend Lab",
     "subtitle": "70+ Components | React 19 | Next.js 15 | TypeScript | Tailwind CSS | WebGL",
     "description": "Showcase frontend development skills through interactive demos",
     "hero": {
-      "title": "Portfolio",
-      "subtitle": "Technical Portfolio"
+      "title": "Frontend Lab",
+      "subtitle": "Experimental Workshop"
     },
     "cards": {
       "showcase": {

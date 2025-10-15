@@ -3,7 +3,7 @@
     "home": "首页",
     "articles": "技术文档",
     "knowledge": "技术文档",
-    "demo": "前端技术",
+    "demo": "前端实验室",
     "web3": "Web3技术",
     "ai": "AI技术",
     "tools": "工具导航",
@@ -600,12 +600,12 @@
     }
   },
   "demo": {
-    "title": "作品集",
+    "title": "前端实验室",
     "subtitle": "70+组件 | React 19 | Next.js 15 | TypeScript | Tailwind CSS | WebGL",
     "description": "通过实际演示展示前端开发能力和工程实践",
     "hero": {
-      "title": "作品集",
-      "subtitle": "Technical Portfolio"
+      "title": "前端实验室",
+      "subtitle": "Frontend Lab"
     },
     "cards": {
       "showcase": {
