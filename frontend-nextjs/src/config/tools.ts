@@ -269,7 +269,7 @@ export function getToolsByCategory(category: ToolCategory): Tool[] {
 /**
  * 搜索工具
  */
-export function searchTools(query: string, locale: string): Tool[] {
+export function searchTools(query: string): Tool[] {
   const lowerQuery = query.toLowerCase()
   return tools.filter(tool => 
     tool.name.toLowerCase().includes(lowerQuery) ||

@@ -3,7 +3,8 @@
     "home": "首页",
     "articles": "文章",
     "knowledge": "知识库",
-    "web3": "项目研究",
+    "web3": "Web3项目研究",
+    "ai": "AI项目研究",
     "tools": "工具导航",
     "about": "关于",
     "github": "GitHub",
@@ -63,23 +64,23 @@
     "title": "核心内容",
     "subtitle": "代表性文章，展现思维深度与知识广度",
     "articles": {
-      "manifesto": {
-        "title": "拉马努金的复仇：一份去中心化人才共和国宣言",
-        "description": "当天才因英语不及格被扼杀，当学生为无意义的学分奔波，当教育沦为驯化工具——是时候改变了。这不是改良，是革命。",
-        "tag": "思想",
-        "readTime": "12 分钟"
+      "smartContract": {
+        "title": "智能合约入门指南：会自动执行的数字合同",
+        "description": "想象一个永远不会违约的合同，一个不需要律师就能自动执行的协议——这就是智能合约。",
+        "tag": "Web3入门",
+        "readTime": "30 分钟"
       },
       "web": {
         "title": "Web架构演进史：从静态页面到去中心化应用",
-        "description": "一文读懂三十年变迁：从Apache到智能合约，从中心化数据库到IPFS。理解我们今天所处的技术坐标，预见明天的架构演进。",
-        "tag": "技术",
-        "readTime": "25 分钟"
+        "description": "从简单的HTML页面到复杂的分布式系统，Web架构的每一次演进都重新定义了我们与数字世界的交互方式。",
+        "tag": "Web3开发",
+        "readTime": "60 分钟"
       },
-      "labor": {
-        "title": "DAO完全指南：重塑组织的未来",
-        "description": "深入探索去中心化自治组织如何改变传统公司治理模式，开启协作新纪元。",
-        "tag": "Web3",
-        "readTime": "20 分钟"
+      "dao": {
+        "title": "DAO完全指南：去中心化治理的革命",
+        "description": "从'公司制'到'DAO制'：当区块链遇见组织管理，权力如何重新分配？",
+        "tag": "Web3进阶",
+        "readTime": "40 分钟"
       }
     },
     "moreLink": "查看更多精选文章 →"
@@ -213,7 +214,7 @@
       },
       "github": {
         "label": "GitHub Stars",
-        "description": "开源贡献"
+        "description": "项目收藏数"
       },
       "experience": {
         "label": "工作年限",
@@ -353,7 +354,7 @@
         "achievement1": "自动化交易策略执行",
         "achievement2": "实时市场监控和提醒"
       },
-      "learningStack": {
+      "oracleKnowledgebase": {
         "title": "知识管理平台",
         "description": "基于Next.js构建的个人知识管理系统，支持MDX文章和现代化UI",
         "achievement1": "系统化的知识组织和展示",
@@ -424,23 +425,23 @@
       "title": "内容精选",
       "readMore": "阅读更多",
       "viewAll": "浏览知识库",
-      "manifesto": {
-        "title": "拉马努金的复仇：去中心化人才共和国宣言",
-        "description": "当天才因英语不及格被扼杀，当学生为无意义的学分奔波，当教育沦为驯化工具——是时候改变了。",
-        "category": "思想",
-        "readTime": "12 分钟"
+      "smartContract": {
+        "title": "智能合约入门指南：会自动执行的数字合同",
+        "description": "想象一个永远不会违约的合同，一个不需要律师就能自动执行的协议——这就是智能合约。",
+        "category": "Web3入门",
+        "readTime": "30 分钟"
       },
       "webArchitecture": {
         "title": "Web架构演进史：从静态页面到去中心化应用",
-        "description": "一文读懂三十年变迁：从Apache到智能合约，理解我们今天所处的技术坐标。",
-        "category": "技术",
-        "readTime": "25 分钟"
+        "description": "从简单的HTML页面到复杂的分布式系统，Web架构的每一次演进都重新定义了我们与数字世界的交互方式。",
+        "category": "Web3开发",
+        "readTime": "60 分钟"
       },
       "daoGuide": {
-        "title": "DAO完全指南：重塑组织的未来",
-        "description": "深入探索去中心化自治组织如何改变传统公司治理模式，开启协作新纪元。",
-        "category": "Web3",
-        "readTime": "20 分钟"
+        "title": "DAO完全指南：去中心化治理的革命",
+        "description": "从'公司制'到'DAO制'：当区块链遇见组织管理，权力如何重新分配？",
+        "category": "Web3进阶",
+        "readTime": "40 分钟"
       }
     }
   },
@@ -456,6 +457,9 @@
     "noUpdates": "暂无更新",
     "viewDetails": "查看详情",
     "visitWebsite": "访问官网",
+    "status": {
+      "inDevelopment": "开发中"
+    },
     "categories": {
       "layer1": "Layer 1",
       "layer2": "Layer 2",
@@ -570,6 +574,58 @@
       "linear": {
         "description": "现代化的项目管理工具，专为软件开发团队设计"
       }
+    }
+  },
+  "ai": {
+    "title": "AI 项目研究",
+    "subtitle": "追踪全球前沿AI项目：技术突破、行业动态、模型性能全面解析",
+    "totalProjects": "追踪 {count} 个项目",
+    "lastUpdate": "最近更新",
+    "daysAgo": "{days} 天前",
+    "allCategories": "全部分类",
+    "timeline": "动态时间线",
+    "projects": "项目列表",
+    "noUpdates": "暂无更新",
+    "viewDetails": "查看详情",
+    "visitWebsite": "访问官网",
+    "status": {
+      "inDevelopment": "开发中"
+    },
+    "categories": {
+      "dev-tools": "开发工具",
+      "image-gen": "图像生成",
+      "llm": "大语言模型",
+      "infrastructure": "AI基础设施",
+      "research": "前沿研究"
+    },
+    "updateTypes": {
+      "tech": "技术更新",
+      "industry": "行业动态",
+      "funding": "融资消息",
+      "application": "应用案例",
+      "ecosystem": "生态发展",
+      "other": "其他"
+    },
+    "ranking": {
+      "title": "大语言模型排行榜",
+      "subtitle": "基于 Chatbot Arena、HumanEval、MMLU 等权威基准测试的综合排名",
+      "overallScore": "综合评分",
+      "coding": "编程能力",
+      "math": "数学推理",
+      "reasoning": "推理能力",
+      "mmlu": "多任务理解",
+      "tokens": "上下文",
+      "openSource": "开源免费",
+      "perMillion": "每百万tokens",
+      "sortOverall": "综合排名",
+      "sortCoding": "编程能力",
+      "sortMath": "数学推理",
+      "sortReasoning": "推理能力",
+      "sortValue": "性价比",
+      "dataSource": "数据来源: Chatbot Arena (LMSYS), HumanEval, MMLU 等公开基准测试",
+      "lastUpdated": "最后更新",
+      "inDevelopment": "开发中",
+      "betaNotice": "页面持续更新中，欢迎反馈建议"
     }
   }
 } 

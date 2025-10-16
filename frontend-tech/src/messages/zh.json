@@ -1,0 +1,933 @@
+{
+  "navigation": {
+    "home": "首页",
+    "articles": "技术文档",
+    "knowledge": "技术文档",
+    "demo": "前端实验室",
+    "backend": "后端实验室",
+    "web3": "Web3",
+    "ai": "AI",
+    "tools": "工具导航",
+    "about": "技术栈详解",
+    "github": "GitHub",
+    "resume": "简历",
+    "contact": "联系",
+    "getStarted": "开始探索",
+    "theme": "主题",
+    "language": "语言"
+  },
+  "hero": {
+    "badge": "全栈技术展示平台",
+    "title": "展示现代化全栈开发能力",
+    "subtitle": "Next.js 15 + Go 微服务 + WebSocket实时通信 + Docker容器化部署。从前端到后端，从开发到部署，完整展示现代Web应用开发技术栈。",
+    "maintainedBy": "持续学习，不断精进技术能力",
+    "cta": {
+      "primary": "查看技术文档",
+      "tertiary": "技术亮点"
+    }
+  },
+  "domains": {
+    "title": "技术能力模块",
+    "subtitle": "全栈技术能力展示，涵盖前端、后端、DevOps、架构设计",
+    "cards": {
+      "tech": {
+        "title": "前端开发",
+        "description": "精通现代前端技术栈：React 19、Next.js 15、TypeScript。熟练使用 Tailwind CSS、Framer Motion 等UI框架，打造流畅的用户体验。",
+        "keywords": "React, Next.js, TypeScript, Tailwind CSS, Framer Motion",
+        "articleCount": "10+ 技术文档"
+      },
+      "web3": {
+        "title": "后端开发",
+        "description": "使用Go构建高性能微服务，熟悉 Gin 框架、GORM、JWT认证。掌握RESTful API设计、WebSocket实时通信、数据库优化。",
+        "keywords": "Go, Gin, GORM, WebSocket, MySQL, RESTful API",
+        "articleCount": "8+ 技术文档"
+      },
+      "thinking": {
+        "title": "DevOps & 部署",
+        "description": "Docker容器化、Docker Compose服务编排、Nginx反向代理。掌握CI/CD流程，实现自动化部署和运维。",
+        "keywords": "Docker, Nginx, CI/CD, 自动化部署, 容器编排",
+        "articleCount": "技术实践"
+      },
+      "product": {
+        "title": "架构设计",
+        "description": "前后端分离架构、微服务设计、数据库设计。注重代码质量、性能优化、安全防护，构建可扩展的应用系统。",
+        "keywords": "微服务架构, 数据库设计, 性能优化, 安全防护",
+        "articleCount": "架构方案"
+      },
+      "tools": {
+        "title": "性能优化",
+        "description": "SSR/SSG优化、代码分割、懒加载、缓存策略。Lighthouse评分95+，首屏加载<1.5s，提供极致的用户体验。",
+        "keywords": "性能优化, SSR, 代码分割, 缓存策略, Lighthouse",
+        "articleCount": "优化方案"
+      }
+    }
+  },
+  "featured": {
+    "title": "技术演示项目",
+    "subtitle": "通过实际项目展示技术能力和工程实践",
+    "articles": {
+      "smartContract": {
+        "title": "Next.js App Router 完全指南",
+        "description": "深入理解 Next.js 15 的 App Router 架构，掌握服务端组件、客户端组件、数据获取、缓存策略等核心概念。",
+        "tag": "前端技术",
+        "readTime": "30 分钟"
+      },
+      "web": {
+        "title": "Go 微服务架构实践",
+        "description": "从零构建Go微服务，包括API设计、数据库操作、JWT认证、WebSocket实时通信等完整实现。",
+        "tag": "后端技术",
+        "readTime": "45 分钟"
+      },
+      "dao": {
+        "title": "Docker 容器化部署指南",
+        "description": "多阶段构建优化、Docker Compose编排、Nginx配置、生产环境部署最佳实践。",
+        "tag": "DevOps",
+        "readTime": "25 分钟"
+      }
+    },
+    "moreLink": "查看更多技术文档 →"
+  },
+  "siteOrigin": {
+    "title": "项目技术亮点",
+    "subtitle": "现代化全栈技术 · 工程化实践 · 性能优化",
+    "quote": "这个项目展示了完整的现代化全栈开发能力。\n\n从前端的React 19、Next.js 15、TypeScript，到后端的Go微服务、GORM、JWT认证，再到DevOps的Docker容器化、Nginx部署，每一个环节都体现了对技术的深入理解和工程化实践。\n\n项目不仅实现了功能，更注重代码质量、性能优化、安全防护，是一个可以直接用于生产环境的完整解决方案。",
+    "principles": [
+      {
+        "title": "现代化技术栈",
+        "description": "使用最新的Next.js 15、React 19、Go 1.22等技术"
+      },
+      {
+        "title": "工程化实践",
+        "description": "TypeScript类型安全、ESLint规范、Git版本控制"
+      },
+      {
+        "title": "性能优化",
+        "description": "SSR/SSG混合渲染、代码分割、Lighthouse 95+评分"
+      },
+      {
+        "title": "容器化部署",
+        "description": "Docker多阶段构建、Docker Compose编排、生产级配置"
+      }
+    ]
+  },
+  "stats": {
+    "title": "技术数据",
+    "items": [
+      {
+        "number": "20+",
+        "label": "技术文档",
+        "description": "覆盖前后端全栈"
+      },
+      {
+        "number": "5",
+        "label": "技术领域",
+        "description": "前端/后端/DevOps/架构/性能"
+      },
+      {
+        "number": "95+",
+        "label": "Lighthouse",
+        "description": "性能评分"
+      },
+      {
+        "number": "100%",
+        "label": "TypeScript",
+        "description": "类型安全"
+      }
+    ]
+  },
+  "finalCta": {
+    "title": "探索技术文档",
+    "subtitle": "查看完整的技术栈实现和最佳实践，了解如何构建现代化的全栈应用。",
+    "primary": "浏览技术文档",
+    "secondary": "技术栈详解",
+    "links": {
+      "github": "GitHub 仓库",
+      "resume": "技术文档",
+      "contact": "联系方式"
+    }
+  },
+  "language": {
+    "chinese": "中文",
+    "english": "English"
+  },
+  "articles": {
+    "title": "技术文档",
+    "subtitle": "{count} 篇文档 · 涵盖前端、后端、DevOps 和架构设计",
+    "backToList": "返回文档列表",
+    "prevArticle": "上一篇",
+    "nextArticle": "下一篇",
+    "uncategorized": "未分类"
+  },
+  "knowledge": {
+    "title": "技术文档",
+    "subtitle": "{count} 篇文档 · 系统化记录技术学习与实践",
+    "backToList": "返回文档列表",
+    "prevItem": "上一篇",
+    "nextItem": "下一篇",
+    "uncategorized": "未分类",
+    "searchPlaceholder": "搜索技术文档...",
+    "allCategories": "全部分类",
+    "noResults": "暂无相关文档",
+    "relatedKnowledge": "相关文档"
+  },
+  "techStack": {
+    "title": "技术栈",
+    "subtitle": "构建现代化应用的强大工具"
+  },
+  "footer": {
+    "copyright": "© 2025 Tech Stack Showcase. 技术展示平台 - 展示现代化全栈开发能力。",
+    "builtWith": "使用 Next.js 15 + Go 1.22 构建",
+    "license": "MIT License",
+    "sections": {
+      "quickLinks": "快速链接",
+      "social": "社交媒体"
+    },
+    "social": {
+      "github": "GitHub",
+      "twitter": "Twitter",
+      "email": "Email"
+    }
+  },
+  "seo": {
+    "title": "Tech Stack Showcase - 全栈技术展示平台",
+    "description": "Next.js 15 + Go 微服务 + WebSocket + Docker。展示现代化全栈开发能力，包括前端、后端、DevOps、架构设计等完整技术栈。",
+    "keywords": "Next.js, React, TypeScript, Go, Docker, 全栈开发, 微服务, WebSocket, 性能优化"
+  },
+  "about": {
+    "title": "技术栈详解",
+    "subtitle": "全栈技术能力展示 - 前端 + 后端 + DevOps",
+    "flipWords": {
+      "prefix": "精通",
+      "suffix": "技术",
+      "words": ["前端开发", "后端开发", "DevOps", "架构设计"]
+    },
+    "hero": {
+      "status": "寻求技术岗位",
+      "location": "远程 / 中国"
+    },
+    "stats": {
+      "articles": {
+        "label": "技术文档",
+        "description": "前端、后端、DevOps"
+      },
+      "domains": {
+        "label": "技术领域",
+        "description": "全栈技术体系"
+      },
+      "github": {
+        "label": "GitHub Stars",
+        "description": "项目收藏数"
+      },
+      "experience": {
+        "label": "开发经验",
+        "description": "持续学习成长"
+      }
+    },
+    "techStack": {
+      "title": "技术栈",
+      "frontend": {
+        "title": "前端开发",
+        "items": "React, Next.js, TypeScript, Tailwind CSS, Framer Motion"
+      },
+      "backend": {
+        "title": "后端开发",
+        "items": "Go, Gin, GORM, WebSocket, JWT, MySQL"
+      },
+      "blockchain": {
+        "title": "DevOps",
+        "items": "Docker, Docker Compose, Nginx, CI/CD, Git"
+      },
+      "devops": {
+        "title": "架构设计",
+        "items": "微服务架构, RESTful API, 数据库设计, 性能优化"
+      },
+      "note": "掌握现代化全栈开发技术，注重代码质量、性能优化和工程化实践。"
+    },
+    "skills": {
+      "categories": {
+        "frontend": "前端开发",
+        "backend": "后端开发",
+        "blockchain": "DevOps",
+        "devops": "架构设计"
+      },
+      "experience": "使用经验",
+      "years": "年",
+      "noSkills": "暂无技能数据",
+      "proficiency": "熟练度",
+      "average": "平均",
+      "avgProficiency": "平均 {value}%",
+      "allSkills": "所有技能",
+      "radarChart": {
+        "title": "技能雷达图",
+        "description": "各技术领域综合能力评估"
+      }
+    },
+    "contact": {
+      "title": "联系方式",
+      "description": "如果你对我的技术能力感兴趣，欢迎通过以下方式联系：",
+      "email": "发送邮件"
+    },
+    "intro": {
+      "title": "个人介绍",
+      "description": "我是一名全栈开发者，专注于现代化Web应用开发。熟练掌握 Next.js、React、TypeScript 前端技术栈，以及 Go 微服务后端开发。注重代码质量、性能优化和工程化实践，致力于构建高性能、可扩展的应用系统。"
+    },
+    "journey": {
+      "title": "技术历程"
+    },
+    "timeline": {
+      "transformation": {
+        "period": "现在",
+        "title": "全栈技术深化",
+        "description": "专注于现代化全栈开发，深入学习 Next.js 15、React 19 等前端新特性，以及 Go 微服务架构设计。注重性能优化和工程化实践。",
+        "highlight1": "掌握 Next.js 15 App Router 和 React Server Components",
+        "highlight2": "熟练使用 Go 构建高性能微服务"
+      },
+      "defi": {
+        "period": "2023-2024",
+        "title": "项目经验积累",
+        "description": "参与多个技术项目开发，积累了丰富的前后端开发经验。",
+        "project1": {
+          "name": "全栈应用开发",
+          "description": "使用 Next.js + Go 构建完整的全栈应用，包括用户认证、实时通信、数据管理等功能。"
+        },
+        "project2": {
+          "name": "容器化部署",
+          "description": "使用 Docker 和 Docker Compose 实现应用的容器化部署和服务编排。"
+        }
+      },
+      "exploration": {
+        "period": "学习阶段",
+        "title": "技术探索",
+        "description": "系统学习现代Web开发技术，包括前端框架、后端架构、数据库设计等。",
+        "highlight1": "深入学习 TypeScript 和现代前端工程化",
+        "highlight2": "掌握 Docker 容器化和 CI/CD 流程"
+      }
+    },
+    "purpose": {
+      "title": "项目目的",
+      "description": "这个技术展示平台旨在展示我的全栈开发能力，包括前端、后端、DevOps 等完整技术栈。通过实际项目展示技术深度和工程实践能力。"
+    },
+    "value": {
+      "title": "技术价值",
+      "points": [
+        {
+          "title": "现代化技术栈",
+          "description": "使用最新的 Next.js 15、React 19、Go 1.22 等技术"
+        },
+        {
+          "title": "工程化实践",
+          "description": "TypeScript 类型安全、ESLint 规范、Git 版本控制"
+        },
+        {
+          "title": "性能优化",
+          "description": "SSR/SSG 混合渲染、代码分割、Lighthouse 95+ 评分"
+        },
+        {
+          "title": "容器化部署",
+          "description": "Docker 多阶段构建、服务编排、生产级配置"
+        }
+      ]
+    },
+    "content": {
+      "title": "技术方向",
+      "topics": "前端开发, 后端开发, DevOps, 架构设计, 性能优化, 容器化部署"
+    },
+    "cta": {
+      "title": "准备好了解更多？",
+      "description": "查看我的技术文档，或者返回首页了解项目详情。",
+      "articles": "浏览技术文档",
+      "home": "返回首页"
+    },
+    "featuredArticles": {
+      "title": "技术文档精选",
+      "readMore": "阅读更多",
+      "viewAll": "查看所有文档",
+      "smartContract": {
+        "title": "Next.js App Router 完全指南",
+        "description": "深入理解 Next.js 15 的 App Router 架构，掌握服务端组件、数据获取、缓存策略等核心概念。",
+        "category": "前端技术",
+        "readTime": "30 分钟"
+      },
+      "webArchitecture": {
+        "title": "Go 微服务架构实践",
+        "description": "从零构建 Go 微服务，包括 API 设计、数据库操作、JWT 认证、WebSocket 实时通信等。",
+        "category": "后端技术",
+        "readTime": "45 分钟"
+      },
+      "daoGuide": {
+        "title": "Docker 容器化部署指南",
+        "description": "多阶段构建优化、Docker Compose 编排、Nginx 配置、生产环境部署最佳实践。",
+        "category": "DevOps",
+        "readTime": "25 分钟"
+      }
+    },
+    "socialLinks": {
+      "github": {
+        "description": "查看我的开源项目和代码"
+      },
+      "email": {
+        "description": "发送邮件联系我"
+      },
+      "twitter": {
+        "description": "关注我的技术动态"
+      },
+      "linkedin": {
+        "description": "职业社交网络"
+      }
+    },
+    "projects": {
+      "title": "技术项目",
+      "viewDetails": "查看详情",
+      "viewDemo": "查看演示",
+      "techStack": "技术栈",
+      "background": "项目背景",
+      "achievements": "核心成就",
+      "challenges": "技术挑战",
+      "solutions": "解决方案",
+      "categories": {
+        "all": "全部",
+        "web3": "Web3",
+        "frontend": "前端",
+        "backend": "后端",
+        "tools": "工具"
+      },
+      "solanaBot": {
+        "title": "全栈技术展示平台",
+        "description": "使用 Next.js 15 + Go 构建的现代化全栈应用",
+        "achievement1": "Next.js 15 App Router 架构",
+        "achievement2": "Go 微服务后端",
+        "achievement3": "Docker 容器化部署",
+        "details": {
+          "background": "展示完整的全栈开发能力",
+          "challenge1": "性能优化和SEO",
+          "challenge2": "实时通信和状态管理",
+          "solution1": "使用 SSR/SSG 混合渲染优化性能",
+          "solution2": "WebSocket 实现实时数据推送",
+          "result1": "Lighthouse 95+ 性能评分",
+          "result2": "完整的技术文档体系"
+        }
+      },
+      "telegramBot": {
+        "title": "Docker 容器化项目",
+        "description": "多服务容器编排和自动化部署",
+        "achievement1": "多阶段 Docker 构建",
+        "achievement2": "Docker Compose 服务编排"
+      },
+      "oracleKnowledgebase": {
+        "title": "技术文档平台",
+        "description": "基于 MDX 的技术文档管理系统",
+        "achievement1": "Markdown/MDX 支持",
+        "achievement2": "代码高亮和语法检查"
+      }
+    }
+  },
+  "backend": {
+    "title": "后端技术实验室",
+    "subtitle": "Go 微服务、API 设计、Rust 高性能开发",
+    "totalProjects": "{count} 个项目",
+    "status": {
+      "inDevelopment": "开发中"
+    },
+    "allCategories": "全部分类",
+    "timeline": "时间线",
+    "categories": {
+      "microservices": "微服务架构",
+      "api-design": "API 设计",
+      "rust": "Rust 开发",
+      "database": "数据库技术"
+    },
+    "updateTypes": {
+      "tech": "技术更新",
+      "performance": "性能优化",
+      "security": "安全更新",
+      "feature": "新特性",
+      "other": "其他"
+    },
+    "daysAgo": "{days} 天前",
+    "visitWebsite": "访问网站"
+  },
+  "web3": {
+    "title": "Web3 技术研究",
+    "subtitle": "区块链技术、智能合约、去中心化应用开发",
+    "totalProjects": "{count} 个项目",
+    "status": {
+      "inDevelopment": "开发中"
+    },
+    "allCategories": "全部分类",
+    "timeline": "时间线",
+    "categories": {
+      "layer1": "Layer 1",
+      "layer2": "Layer 2",
+      "defi": "DeFi",
+      "infrastructure": "基础设施"
+    },
+    "updateTypes": {
+      "tech": "技术更新",
+      "regulatory": "监管动态",
+      "ecosystem": "生态进展",
+      "other": "其他"
+    },
+    "daysAgo": "{days} 天前",
+    "visitWebsite": "访问网站"
+  },
+  "tools": {
+    "title": "工具导航",
+    "subtitle": "精选开发、技术、AI、Web3 领域的优质工具与资源",
+    "searchPlaceholder": "搜索工具...",
+    "allCategories": "全部分类",
+    "totalTools": "共 {count} 个工具",
+    "categories": {
+      "development": "开发工具",
+      "ai": "AI 工具",
+      "web3": "Web3",
+      "blockchain": "区块链",
+      "design": "设计资源",
+      "learning": "学习平台",
+      "productivity": "效率工具"
+    },
+    "development": "开发中",
+    "sort": {
+      "label": "排序方式",
+      "default": "默认排序",
+      "name": "按名称",
+      "category": "按分类"
+    },
+    "dialog": {
+      "category": "分类",
+      "tags": "标签",
+      "officialSite": "访问官网"
+    },
+    "visitWebsite": "访问网站",
+    "items": {
+      "github": {
+        "description": "全球最大的代码托管平台，支持版本控制和协作开发"
+      },
+      "stackoverflow": {
+        "description": "程序员问答社区，解决编程难题的最佳平台"
+      },
+      "vercel": {
+        "description": "Next.js 官方部署平台，提供极速的全球 CDN 服务"
+      },
+      "npm": {
+        "description": "Node.js 包管理工具，JavaScript 生态系统的核心"
+      },
+      "chatgpt": {
+        "description": "OpenAI 推出的 AI 聊天助手，支持多种任务和编程辅助"
+      },
+      "claude": {
+        "description": "Anthropic 开发的 AI 助手，擅长深度对话和分析"
+      },
+      "midjourney": {
+        "description": "强大的 AI 图像生成工具，创造令人惊艳的艺术作品"
+      },
+      "huggingface": {
+        "description": "AI 模型社区平台，提供海量开源机器学习模型"
+      },
+      "etherscan": {
+        "description": "以太坊区块链浏览器，查询交易和智能合约"
+      },
+      "uniswap": {
+        "description": "去中心化交易所，以太坊上最大的 DEX 平台"
+      },
+      "metamask": {
+        "description": "最流行的 Web3 钱包，连接区块链应用的桥梁"
+      },
+      "opensea": {
+        "description": "全球最大的 NFT 交易市场"
+      },
+      "solana": {
+        "description": "高性能区块链平台，支持快速和低成本交易"
+      },
+      "binance": {
+        "description": "全球领先的加密货币交易所"
+      },
+      "coinmarketcap": {
+        "description": "加密货币市场数据和价格追踪平台"
+      },
+      "figma": {
+        "description": "现代协作设计工具，UI/UX 设计师的首选"
+      },
+      "dribbble": {
+        "description": "设计师作品展示和灵感分享社区"
+      },
+      "behance": {
+        "description": "Adobe 旗下的创意作品展示平台"
+      },
+      "mdn": {
+        "description": "权威的 Web 技术文档，前端开发者必备"
+      },
+      "freecodecamp": {
+        "description": "免费编程学习平台，提供全栈开发课程"
+      },
+      "leetcode": {
+        "description": "算法练习平台，程序员面试必备刷题网站"
+      },
+      "notion": {
+        "description": "all-in-one 工作空间，笔记、文档、项目管理一体化"
+      },
+      "linear": {
+        "description": "现代化的项目管理和问题追踪工具"
+      }
+    }
+  },
+  "ai": {
+    "title": "AI 技术研究",
+    "subtitle": "人工智能、大语言模型、机器学习技术",
+    "totalProjects": "{count} 个项目",
+    "status": {
+      "inDevelopment": "开发中"
+    },
+    "allCategories": "全部分类",
+    "timeline": "时间线",
+    "categories": {
+      "dev-tools": "开发工具",
+      "image-gen": "图像生成",
+      "llm": "大语言模型",
+      "infrastructure": "AI基础设施",
+      "research": "研究机构"
+    },
+    "updateTypes": {
+      "tech": "技术更新",
+      "industry": "行业动态",
+      "funding": "融资消息",
+      "application": "应用进展",
+      "other": "其他"
+    },
+    "daysAgo": "{days} 天前",
+    "visitWebsite": "访问网站",
+    "ranking": {
+      "title": "LLM 性能排行榜",
+      "subtitle": "最新大语言模型综合能力评估",
+      "sortOverall": "综合",
+      "sortCoding": "编程",
+      "sortMath": "数学",
+      "sortReasoning": "推理",
+      "sortValue": "性价比",
+      "rank": "排名",
+      "model": "模型",
+      "organization": "机构",
+      "overallScore": "综合",
+      "codingScore": "编程",
+      "mathScore": "数学",
+      "reasoningScore": "推理",
+      "valueScore": "性价比",
+      "coding": "编程",
+      "math": "数学",
+      "reasoning": "推理",
+      "mmlu": "知识理解",
+      "tokens": "上下文",
+      "openSource": "开源",
+      "perMillion": "每百万 tokens",
+      "lastUpdated": "更新时间",
+      "viewDetails": "查看详情",
+      "dataSource": "数据来源：基于公开的 LLM 评测基准和性能测试",
+      "inDevelopment": "Beta 测试中",
+      "betaNotice": "数据仅供参考，持续更新中"
+    }
+  },
+  "demo": {
+    "title": "前端实验室",
+    "subtitle": "70+组件 | React 19 | Next.js 15 | TypeScript | Tailwind CSS | WebGL",
+    "description": "通过实际演示展示前端开发能力和工程实践",
+    "hero": {
+      "title": "前端实验室",
+      "subtitle": "Frontend Lab"
+    },
+    "cards": {
+      "showcase": {
+        "title": "组件展示系统",
+        "description": "70+ 可复用组件的交互式演示平台，展示现代化 UI 组件库和业务组件",
+        "count": "实时预览",
+        "highlights": "交互式预览、代码示例、主题切换"
+      },
+      "animations": {
+        "title": "动画效果",
+        "description": "Framer Motion 实现流畅动画效果",
+        "count": "15+ 动画",
+        "highlights": "页面过渡、滚动触发、悬停效果"
+      },
+      "performance": {
+        "title": "性能优化",
+        "description": "Lighthouse 95+ 评分，首屏加载 <1.5s",
+        "count": "95+ 评分",
+        "highlights": "代码分割、懒加载、图片优化"
+      },
+      "matrix": {
+        "title": "Matrix 特效",
+        "description": "WebGL Shader vs CSS 动画对比",
+        "count": "2 种实现",
+        "highlights": "可调参数、实时切换"
+      },
+      "responsive": {
+        "title": "响应式设计",
+        "description": "完美适配桌面端和移动端",
+        "count": "全设备支持",
+        "highlights": "断点切换、触摸手势"
+      },
+      "typescript": {
+        "title": "TypeScript",
+        "description": "类型安全的代码实践",
+        "count": "100% 覆盖",
+        "highlights": "类型推断、泛型使用"
+      }
+    },
+    "stats": {
+      "components": "70+",
+      "animations": "15+",
+      "lighthouse": "95+",
+      "coverage": "100%"
+    },
+    "cta": {
+      "explore": "探索演示",
+      "viewCode": "查看代码",
+      "backToHome": "返回首页",
+      "readyToExplore": "准备好探索更多了吗？",
+      "checkoutDescription": "在 GitHub 上查看源代码或浏览完整的技术文档。"
+    },
+    "techStack": {
+      "title": "使用现代化技术栈构建",
+      "react": {
+        "name": "React 19",
+        "desc": "最新 React"
+      },
+      "nextjs": {
+        "name": "Next.js 15",
+        "desc": "App Router"
+      },
+      "typescript": {
+        "name": "TypeScript",
+        "desc": "类型安全"
+      },
+      "tailwind": {
+        "name": "Tailwind CSS",
+        "desc": "实用优先"
+      },
+      "framerMotion": {
+        "name": "Framer Motion",
+        "desc": "动画库"
+      },
+      "shadcn": {
+        "name": "shadcn/ui",
+        "desc": "组件库"
+      },
+      "radix": {
+        "name": "Radix UI",
+        "desc": "原始组件"
+      },
+      "recharts": {
+        "name": "Recharts",
+        "desc": "图表库"
+      }
+    },
+    "performance": {
+      "title": "性能优化展示",
+      "subtitle": "Lighthouse 评分和 Web Vitals 实时数据",
+      "lighthouse": {
+        "title": "Lighthouse 评分",
+        "performance": "性能",
+        "accessibility": "可访问性",
+        "bestPractices": "最佳实践",
+        "seo": "SEO"
+      },
+      "comparison": {
+        "title": "优化前后对比",
+        "before": "优化前",
+        "after": "优化后",
+        "imageOptimization": "图片优化",
+        "codeSplitting": "代码分割",
+        "lazyLoading": "懒加载",
+        "loadTime": "加载时间",
+        "bundleSize": "包体积"
+      },
+      "webVitals": {
+        "title": "Web Vitals",
+        "lcp": "最大内容绘制 (LCP)",
+        "fid": "首次输入延迟 (FID)",
+        "cls": "累积布局偏移 (CLS)",
+        "ttfb": "首字节时间 (TTFB)",
+        "good": "良好",
+        "needsImprovement": "需要改进",
+        "poor": "较差"
+      },
+      "techniques": {
+        "title": "优化技术",
+        "items": [
+          "Next.js Image 组件优化图片加载",
+          "动态导入实现代码分割",
+          "React.lazy 懒加载组件",
+          "路由预加载提升导航速度",
+          "Web Worker 处理复杂计算",
+          "Service Worker 离线缓存"
+        ]
+      }
+    },
+    "animations": {
+      "title": "动画效果展示",
+      "subtitle": "Framer Motion 动画库应用",
+      "categories": {
+        "entrance": "进入动画",
+        "hover": "悬停效果",
+        "scroll": "滚动触发",
+        "transition": "页面转场",
+        "gesture": "手势动画",
+        "custom": "自定义动画"
+      },
+      "trigger": "触发动画",
+      "reset": "重置",
+      "replay": "重播"
+    },
+    "responsive": {
+      "title": "响应式设计展示",
+      "subtitle": "跨设备完美适配",
+      "devices": {
+        "mobile": "手机",
+        "tablet": "平板",
+        "desktop": "桌面"
+      },
+      "breakpoints": {
+        "title": "Tailwind 断点",
+        "sm": "640px",
+        "md": "768px",
+        "lg": "1024px",
+        "xl": "1280px",
+        "2xl": "1536px"
+      },
+      "features": {
+        "title": "移动端特性",
+        "touch": "触摸手势",
+        "viewport": "视口适配",
+        "orientation": "方向切换",
+        "performance": "性能优化"
+      }
+    }
+  },
+  "frontend": {
+    "showcase": {
+      "title": "组件展示系统",
+      "subtitle": "70+ 可复用组件的交互式演示平台，展示现代化 UI 组件库和业务组件",
+      "components": "组件",
+      "search": "搜索组件...",
+      "allComponents": "全部组件",
+      "preview": "预览",
+      "code": "代码",
+      "copy": "复制",
+      "copied": "已复制",
+      "variants": "变体",
+      "noComponents": "未找到组件",
+      "tryDifferentSearch": "尝试使用不同的搜索词",
+      "backToList": "返回列表",
+      "backToFrontend": "返回前端技术",
+      "loadMore": "加载更多",
+      "allLoaded": "已加载全部",
+      "categories": {
+        "ui": "UI 基础组件",
+        "business": "业务组件",
+        "effects": "特效组件"
+      },
+      "subcategories": {
+        "form": "表单组件",
+        "layout": "布局组件",
+        "feedback": "反馈组件",
+        "navigation": "导航组件",
+        "data": "数据展示",
+        "background": "背景特效",
+        "animation": "动画特效",
+        "about": "关于页",
+        "knowledge": "知识库",
+        "project": "项目展示",
+        "common": "通用组件"
+      },
+      "variantsList": {
+        "default": "默认",
+        "secondary": "次要",
+        "destructive": "危险",
+        "outline": "轮廓",
+        "ghost": "幽灵",
+        "link": "链接"
+      },
+      "componentsList": {
+        "button": {
+          "description": "按钮组件，支持多种样式和尺寸"
+        },
+        "input": {
+          "description": "输入框组件，用于用户文本输入"
+        },
+        "select": {
+          "description": "下拉选择组件，提供选项列表"
+        },
+        "card": {
+          "description": "卡片容器组件，用于组织和展示内容"
+        },
+        "separator": {
+          "description": "分隔线组件，用于内容分隔"
+        },
+        "tabs": {
+          "description": "标签页组件，组织分层内容"
+        },
+        "accordion": {
+          "description": "手风琴折叠面板，节省空间展示内容"
+        },
+        "badge": {
+          "description": "徽章组件，用于状态标记和标签"
+        },
+        "progress": {
+          "description": "进度条组件，显示任务完成进度"
+        },
+        "skeleton": {
+          "description": "骨架屏加载占位，提升加载体验"
+        },
+        "breadcrumb": {
+          "description": "面包屑导航，显示页面层级关系"
+        },
+        "avatar": {
+          "description": "头像组件，展示用户头像"
+        },
+        "matrix": {
+          "description": "黑客帝国数字雨背景特效"
+        },
+        "aurora": {
+          "description": "极光背景特效，炫彩渐变动画"
+        },
+        "warp": {
+          "description": "曲速背景特效，3D 网格动画"
+        },
+        "borderbeam": {
+          "description": "边框光束动画，增强视觉效果"
+        },
+        "animatedbeam": {
+          "description": "连线动画，展示元素间关系"
+        },
+        "blurfade": {
+          "description": "模糊淡入动画，优雅的入场效果"
+        },
+        "sparkles": {
+          "description": "粒子特效，增加页面动感"
+        },
+        "numberticker": {
+          "description": "数字滚动动画，数据展示更生动"
+        },
+        "gradienttext": {
+          "description": "渐变文字动画，文本更醒目"
+        },
+        "marquee": {
+          "description": "跑马灯滚动，展示大量内容"
+        },
+        "animatedavatar": {
+          "description": "动画头像组件，带光束边框"
+        },
+        "techstack": {
+          "description": "技术栈跑马灯，展示技术能力"
+        },
+        "backtotop": {
+          "description": "返回顶部按钮，改善导航体验"
+        },
+        "breadcrumbs": {
+          "description": "面包屑导航组件，完整导航支持"
+        },
+        "devbadge": {
+          "description": "开发中徽章，标识开发状态"
+        }
+      }
+    }
+  }
+}

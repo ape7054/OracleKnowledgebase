@@ -16,7 +16,6 @@ import {
   Brain, 
   ClipboardList, 
   Wrench, 
-  Flame, 
   Zap, 
   Scale,
   FileText,
@@ -111,15 +110,27 @@ export default async function Home({ params }: HomeProps) {
         className="relative overflow-hidden isolate min-h-[85vh] md:min-h-screen flex flex-col"
         aria-label="Hero section"
       >
-        {/* Sparkles 背景效果 */}
+        {/* Sparkles 背景效果 - 增强版本 */}
         <div className="absolute inset-0 w-full h-full" aria-hidden="true">
           <OptimizedSparkles
             id="tsparticles"
             minSize={1}
-            maxSize={5}
-            speed={2}
-            particleDensity={20}
-            particleColor="#888888"
+            maxSize={6}
+            speed={3}
+            particleDensity={70}
+            particleColor="#8b5cf6"
+          />
+        </div>
+        
+        {/* 额外的闪烁层 - 创造深度效果 */}
+        <div className="absolute inset-0 w-full h-full opacity-40" aria-hidden="true">
+          <OptimizedSparkles
+            id="tsparticles-secondary"
+            minSize={0.5}
+            maxSize={3}
+            speed={1.5}
+            particleDensity={50}
+            particleColor="#3b82f6"
           />
         </div>
         
@@ -367,28 +378,28 @@ export default async function Home({ params }: HomeProps) {
           
           {/* 精选文章卡片 */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
-            {/* 思想代表作 */}
+            {/* Web3入门代表作 */}
             <Link 
-              href={siteConfig.articles.featured.manifesto.slug || `/${locale}/knowledge?category=${siteConfig.articles.featured.manifesto.category}`}
+              href={siteConfig.articles.featured.smartContract.slug || `/${locale}/knowledge?category=${siteConfig.articles.featured.smartContract.category}`}
               className="block group"
-              aria-label={t('featured.articles.manifesto.title')}
+              aria-label={t('featured.articles.smartContract.title')}
             >
               <Card className="border border-border/50 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300 h-full group-hover:border-primary/50">
                 <CardContent className="p-4 md:p-6 space-y-3 md:space-y-4">
                   <div className="flex items-center justify-between">
                     <Badge variant="outline" className="text-xs">
-                      {t('featured.articles.manifesto.tag')}
+                      {t('featured.articles.smartContract.tag')}
                     </Badge>
-                    <Flame className="h-5 w-5 md:h-6 md:w-6 text-orange-500" />
+                    <Rocket className="h-5 w-5 md:h-6 md:w-6 text-purple-500" />
                   </div>
                   <h3 className="text-base md:text-lg font-semibold group-hover:text-primary transition-colors">
-                    {t('featured.articles.manifesto.title')}
+                    {t('featured.articles.smartContract.title')}
                   </h3>
                   <p className="text-sm text-muted-foreground italic line-clamp-2">
-                    {t('featured.articles.manifesto.description')}
+                    {t('featured.articles.smartContract.description')}
                   </p>
                   <div className="text-xs text-muted-foreground pt-2">
-                    {t('featured.articles.manifesto.readTime')}
+                    {t('featured.articles.smartContract.readTime')}
                   </div>
                 </CardContent>
               </Card>
@@ -421,28 +432,28 @@ export default async function Home({ params }: HomeProps) {
               </Card>
             </Link>
 
-            {/* 实用代表作 */}
+            {/* Web3进阶代表作 */}
             <Link 
-              href={siteConfig.articles.featured.labor.slug || `/${locale}/knowledge?category=${siteConfig.articles.featured.labor.category}`}
+              href={siteConfig.articles.featured.dao.slug || `/${locale}/knowledge?category=${siteConfig.articles.featured.dao.category}`}
               className="block group"
-              aria-label={t('featured.articles.labor.title')}
+              aria-label={t('featured.articles.dao.title')}
             >
               <Card className="border border-border/50 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300 h-full group-hover:border-primary/50">
                 <CardContent className="p-4 md:p-6 space-y-3 md:space-y-4">
                   <div className="flex items-center justify-between">
                     <Badge variant="outline" className="text-xs">
-                      {t('featured.articles.labor.tag')}
+                      {t('featured.articles.dao.tag')}
                     </Badge>
                     <Scale className="h-5 w-5 md:h-6 md:w-6 text-blue-500" />
                   </div>
                   <h3 className="text-base md:text-lg font-semibold group-hover:text-primary transition-colors">
-                    {t('featured.articles.labor.title')}
+                    {t('featured.articles.dao.title')}
                   </h3>
                   <p className="text-sm text-muted-foreground italic line-clamp-2">
-                    {t('featured.articles.labor.description')}
+                    {t('featured.articles.dao.description')}
                   </p>
                   <div className="text-xs text-muted-foreground pt-2">
-                    {t('featured.articles.labor.readTime')}
+                    {t('featured.articles.dao.readTime')}
                   </div>
                 </CardContent>
               </Card>
@@ -512,15 +523,27 @@ export default async function Home({ params }: HomeProps) {
         className="relative py-12 md:py-16 lg:py-24 overflow-hidden"
         aria-label="Call to action"
       >
-        {/* Sparkles 背景效果 - 更柔和的版本 */}
+        {/* Sparkles 背景效果 - 增强版本 */}
         <div className="absolute inset-0 w-full h-full" aria-hidden="true">
           <OptimizedSparkles
             id="tsparticles-cta"
             minSize={1}
-            maxSize={3}
-            particleDensity={30}
-            particleColor="#666666"
-            speed={2}
+            maxSize={5}
+            particleDensity={80}
+            particleColor="#8b5cf6"
+            speed={3}
+          />
+        </div>
+        
+        {/* 额外的闪烁层 - 创造深度效果 */}
+        <div className="absolute inset-0 w-full h-full opacity-40" aria-hidden="true">
+          <OptimizedSparkles
+            id="tsparticles-cta-secondary"
+            minSize={0.5}
+            maxSize={2}
+            particleDensity={50}
+            particleColor="#3b82f6"
+            speed={1.5}
           />
         </div>
         

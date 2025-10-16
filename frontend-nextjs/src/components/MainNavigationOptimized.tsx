@@ -33,6 +33,9 @@ export function MainNavigationOptimized() {
         <Link href={`/${locale}/web3`} className="text-sm font-medium" prefetch={true}>
           {t('web3')}
         </Link>
+        <Link href={`/${locale}/ai`} className="text-sm font-medium" prefetch={true}>
+          {t('ai')}
+        </Link>
         <Link href={`/${locale}/tools`} className="text-sm font-medium" prefetch={true}>
           {t('tools')}
         </Link>
@@ -69,6 +72,15 @@ export function MainNavigationOptimized() {
           <NavigationMenuLink asChild>
             <Link href={`/${locale}/web3`} className={navigationMenuTriggerStyle()} prefetch={true}>
               {t('web3')}
+            </Link>
+          </NavigationMenuLink>
+        </NavigationMenuItem>
+
+        {/* AI Research */}
+        <NavigationMenuItem>
+          <NavigationMenuLink asChild>
+            <Link href={`/${locale}/ai`} className={navigationMenuTriggerStyle()} prefetch={true}>
+              {t('ai')}
             </Link>
           </NavigationMenuLink>
         </NavigationMenuItem>

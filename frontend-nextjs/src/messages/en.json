@@ -4,6 +4,7 @@
     "articles": "Articles",
     "knowledge": "Knowledge Base",
     "web3": "Web3 Research",
+    "ai": "AI Research",
     "tools": "Tools",
     "about": "About",
     "github": "GitHub",
@@ -63,23 +64,23 @@
     "title": "Core Content",
     "subtitle": "Representative articles showcasing depth of thinking and breadth of knowledge",
     "articles": {
-      "manifesto": {
-        "title": "Ramanujan's Revenge: A Manifesto for a Decentralized Republic of Talent",
-        "description": "When genius is killed by failing English, when students chase meaningless credits, when education becomes domestication—it's time for change. Not reform, but revolution.",
-        "tag": "Philosophy",
-        "readTime": "12 min read"
+      "smartContract": {
+        "title": "Smart Contract Beginner's Guide: Self-Executing Digital Contracts",
+        "description": "Imagine a contract that never defaults, an agreement that executes automatically without lawyers—this is smart contracts.",
+        "tag": "Web3 Basics",
+        "readTime": "30 min read"
       },
       "web": {
-        "title": "The Evolution of Web Architecture: From Static Pages to Decentralized Applications",
-        "description": "Understanding 30 years of evolution: from Apache to smart contracts, from centralized databases to IPFS. Know where we stand today, foresee tomorrow's architecture.",
-        "tag": "Technical",
-        "readTime": "25 min read"
+        "title": "Evolution of Web Architecture: From Static Pages to Decentralized Apps",
+        "description": "From simple HTML pages to complex distributed systems, each evolution of Web architecture redefines our interaction with the digital world.",
+        "tag": "Web3 Development",
+        "readTime": "60 min read"
       },
-      "labor": {
-        "title": "Complete DAO Guide: Reshaping the Future of Organizations",
-        "description": "Explore how decentralized autonomous organizations are changing traditional governance models.",
-        "tag": "Web3",
-        "readTime": "20 min read"
+      "dao": {
+        "title": "Complete DAO Guide: The Revolution of Decentralized Governance",
+        "description": "From corporate structures to DAOs: How does power redistribute when blockchain meets organizational management?",
+        "tag": "Web3 Advanced",
+        "readTime": "40 min read"
       }
     },
     "moreLink": "View More Featured Articles →"
@@ -213,7 +214,7 @@
       },
       "github": {
         "label": "GitHub Stars",
-        "description": "Open Source Contributions"
+        "description": "Project Favorites"
       },
       "experience": {
         "label": "Years of Experience",
@@ -353,8 +354,8 @@
         "achievement1": "Automated trading strategy execution",
         "achievement2": "Real-time market monitoring and alerts"
       },
-      "learningStack": {
-        "title": "Learning Stack Platform",
+      "oracleKnowledgebase": {
+        "title": "Oracle Knowledge Base",
         "description": "Personal knowledge management system built with Next.js, featuring MDX articles and modern UI",
         "achievement1": "Systematic knowledge organization and presentation",
         "achievement2": "Modern frontend tech stack implementation"
@@ -425,23 +426,23 @@
       "title": "Featured Content",
       "readMore": "Read More",
       "viewAll": "Browse Knowledge Base",
-      "manifesto": {
-        "title": "Ramanujan's Revenge: A Decentralized Republic of Talent Manifesto",
-        "description": "When genius is killed by failing English, when students chase meaningless credits—it's time for change.",
-        "category": "Philosophy",
-        "readTime": "12 min read"
+      "smartContract": {
+        "title": "Smart Contract Beginner's Guide: Self-Executing Digital Contracts",
+        "description": "Imagine a contract that never defaults, an agreement that executes automatically without lawyers—this is smart contracts.",
+        "category": "Web3 Basics",
+        "readTime": "30 min read"
       },
       "webArchitecture": {
-        "title": "Evolution of Web Architecture: From Static Pages to dApps",
-        "description": "Understanding 30 years of evolution: from Apache to smart contracts, know where we stand today.",
-        "category": "Technical",
-        "readTime": "25 min read"
+        "title": "Evolution of Web Architecture: From Static Pages to Decentralized Apps",
+        "description": "From simple HTML pages to complex distributed systems, each evolution of Web architecture redefines our interaction with the digital world.",
+        "category": "Web3 Development",
+        "readTime": "60 min read"
       },
       "daoGuide": {
-        "title": "Complete DAO Guide: Reshaping the Future of Organizations",
-        "description": "Explore how decentralized autonomous organizations are changing traditional governance models.",
-        "category": "Web3",
-        "readTime": "20 min read"
+        "title": "Complete DAO Guide: The Revolution of Decentralized Governance",
+        "description": "From corporate structures to DAOs: How does power redistribute when blockchain meets organizational management?",
+        "category": "Web3 Advanced",
+        "readTime": "40 min read"
       }
     }
   },
@@ -457,6 +458,9 @@
     "noUpdates": "No updates yet",
     "viewDetails": "View Details",
     "visitWebsite": "Visit Website",
+    "status": {
+      "inDevelopment": "In Development"
+    },
     "categories": {
       "layer1": "Layer 1",
       "layer2": "Layer 2",
@@ -573,6 +577,58 @@
       }
     }
   },
+  "ai": {
+    "title": "AI Project Research",
+    "subtitle": "Tracking cutting-edge AI projects: breakthroughs, industry trends, and comprehensive model performance analysis",
+    "totalProjects": "Tracking {count} projects",
+    "lastUpdate": "Last updated",
+    "daysAgo": "{days} days ago",
+    "allCategories": "All Categories",
+    "timeline": "Timeline",
+    "projects": "Projects",
+    "noUpdates": "No updates yet",
+    "viewDetails": "View Details",
+    "visitWebsite": "Visit Website",
+    "status": {
+      "inDevelopment": "In Development"
+    },
+    "categories": {
+      "dev-tools": "Dev Tools",
+      "image-gen": "Image Generation",
+      "llm": "Large Language Models",
+      "infrastructure": "AI Infrastructure",
+      "research": "Research"
+    },
+    "updateTypes": {
+      "tech": "Tech Update",
+      "industry": "Industry News",
+      "funding": "Funding",
+      "application": "Application",
+      "ecosystem": "Ecosystem",
+      "other": "Other"
+    },
+    "ranking": {
+      "title": "LLM Leaderboard",
+      "subtitle": "Comprehensive rankings based on Chatbot Arena, HumanEval, MMLU, and other authoritative benchmarks",
+      "overallScore": "Overall",
+      "coding": "Coding",
+      "math": "Math",
+      "reasoning": "Reasoning",
+      "mmlu": "MMLU",
+      "tokens": "Context",
+      "openSource": "Open Source",
+      "perMillion": "per 1M tokens",
+      "sortOverall": "Overall",
+      "sortCoding": "Coding",
+      "sortMath": "Math",
+      "sortReasoning": "Reasoning",
+      "sortValue": "Value",
+      "dataSource": "Data source: Chatbot Arena (LMSYS), HumanEval, MMLU, and other public benchmarks",
+      "lastUpdated": "Last updated",
+      "inDevelopment": "In Development",
+      "betaNotice": "Page is continuously updated. Feedback welcome!"
+    }
+  },
   "projects": {
     "solanaBot": {
       "title": "Solana Arbitrage Bot",
@@ -596,8 +652,8 @@
       "achievement1": "Achieved millisecond-level trade execution",
       "achievement2": "Supports multiple trading strategy configurations"
     },
-    "learningStack": {
-      "title": "Learning Stack Knowledge Base",
+    "oracleKnowledgebase": {
+      "title": "Oracle Knowledge Base",
       "description": "Modern personal knowledge management system based on Next.js",
       "achievement1": "Supports MDX format article management",
       "achievement2": "Complete internationalization support"

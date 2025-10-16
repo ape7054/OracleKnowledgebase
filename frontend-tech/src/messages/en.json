@@ -1,0 +1,780 @@
+{
+  "navigation": {
+    "home": "Home",
+    "articles": "Tech Docs",
+    "knowledge": "Tech Docs",
+    "demo": "Frontend Lab",
+    "backend": "Backend Lab",
+    "web3": "Web3",
+    "ai": "AI",
+    "tools": "Tools",
+    "about": "Tech Stack",
+    "github": "GitHub",
+    "resume": "Resume",
+    "contact": "Contact",
+    "getStarted": "Get Started",
+    "theme": "Theme",
+    "language": "Language"
+  },
+  "hero": {
+    "badge": "Full-Stack Tech Showcase",
+    "title": "Modern Full-Stack Development Capabilities",
+    "subtitle": "Next.js 15 + Go Microservices + WebSocket Real-time + Docker Deployment. From frontend to backend, from development to deployment, showcasing complete modern web application tech stack.",
+    "maintainedBy": "Continuous learning, constantly improving technical capabilities",
+    "cta": {
+      "primary": "View Tech Docs",
+      "tertiary": "Technical Highlights"
+    }
+  },
+  "domains": {
+    "title": "Technical Capabilities",
+    "subtitle": "Full-stack technical showcase covering Frontend, Backend, DevOps, and Architecture",
+    "cards": {
+      "tech": {
+        "title": "Frontend Development",
+        "description": "Master modern frontend stack: React 19, Next.js 15, TypeScript. Proficient in Tailwind CSS, Framer Motion for smooth user experiences.",
+        "keywords": "React, Next.js, TypeScript, Tailwind CSS, Framer Motion",
+        "articleCount": "10+ Tech Docs"
+      },
+      "web3": {
+        "title": "Backend Development",
+        "description": "Build high-performance microservices with Go, familiar with Gin framework, GORM, JWT auth. Master RESTful API design, WebSocket, database optimization.",
+        "keywords": "Go, Gin, GORM, WebSocket, MySQL, RESTful API",
+        "articleCount": "8+ Tech Docs"
+      },
+      "thinking": {
+        "title": "DevOps & Deployment",
+        "description": "Docker containerization, Docker Compose orchestration, Nginx reverse proxy. Master CI/CD workflows, automated deployment and operations.",
+        "keywords": "Docker, Nginx, CI/CD, Automation, Container Orchestration",
+        "articleCount": "Best Practices"
+      },
+      "product": {
+        "title": "Architecture Design",
+        "description": "Frontend-backend separation, microservice design, database design. Focus on code quality, performance optimization, security, building scalable systems.",
+        "keywords": "Microservices, Database Design, Performance, Security",
+        "articleCount": "Architecture Solutions"
+      },
+      "tools": {
+        "title": "Performance Optimization",
+        "description": "SSR/SSG optimization, code splitting, lazy loading, caching strategies. Lighthouse 95+, <1.5s first load, delivering ultimate user experience.",
+        "keywords": "Performance, SSR, Code Splitting, Caching, Lighthouse",
+        "articleCount": "Optimization Solutions"
+      }
+    }
+  },
+  "featured": {
+    "title": "Technical Demo Projects",
+    "subtitle": "Demonstrating technical capabilities through real projects",
+    "articles": {
+      "smartContract": {
+        "title": "Complete Guide to Next.js App Router",
+        "description": "Deep dive into Next.js 15 App Router architecture, master server components, client components, data fetching, caching strategies.",
+        "tag": "Frontend Tech",
+        "readTime": "30 min"
+      },
+      "web": {
+        "title": "Go Microservices Architecture Practice",
+        "description": "Build Go microservices from scratch, including API design, database operations, JWT auth, WebSocket real-time communication.",
+        "tag": "Backend Tech",
+        "readTime": "45 min"
+      },
+      "dao": {
+        "title": "Docker Containerization Deployment Guide",
+        "description": "Multi-stage build optimization, Docker Compose orchestration, Nginx configuration, production deployment best practices.",
+        "tag": "DevOps",
+        "readTime": "25 min"
+      }
+    },
+    "moreLink": "View More Tech Docs →"
+  },
+  "siteOrigin": {
+    "title": "Project Technical Highlights",
+    "subtitle": "Modern Full-Stack Tech · Engineering Practices · Performance Optimization",
+    "quote": "This project showcases complete modern full-stack development capabilities.\n\nFrom frontend React 19, Next.js 15, TypeScript, to backend Go microservices, GORM, JWT authentication, to DevOps Docker containerization, Nginx deployment, every aspect demonstrates deep technical understanding and engineering practices.\n\nThe project not only implements features but focuses on code quality, performance optimization, security protection - a complete solution ready for production.",
+    "principles": [
+      {
+        "title": "Modern Tech Stack",
+        "description": "Latest Next.js 15, React 19, Go 1.22 technologies"
+      },
+      {
+        "title": "Engineering Practices",
+        "description": "TypeScript type safety, ESLint standards, Git version control"
+      },
+      {
+        "title": "Performance Optimization",
+        "description": "SSR/SSG hybrid rendering, code splitting, Lighthouse 95+"
+      },
+      {
+        "title": "Containerized Deployment",
+        "description": "Docker multi-stage builds, Docker Compose, production config"
+      }
+    ]
+  },
+  "stats": {
+    "title": "Technical Metrics",
+    "items": [
+      {
+        "number": "20+",
+        "label": "Tech Docs",
+        "description": "Full-stack coverage"
+      },
+      {
+        "number": "5",
+        "label": "Tech Domains",
+        "description": "Frontend/Backend/DevOps/Architecture/Performance"
+      },
+      {
+        "number": "95+",
+        "label": "Lighthouse",
+        "description": "Performance Score"
+      },
+      {
+        "number": "100%",
+        "label": "TypeScript",
+        "description": "Type Safety"
+      }
+    ]
+  },
+  "finalCta": {
+    "title": "Explore Technical Documentation",
+    "subtitle": "View complete tech stack implementation and best practices, learn how to build modern full-stack applications.",
+    "primary": "Browse Tech Docs",
+    "secondary": "Tech Stack Details",
+    "links": {
+      "github": "GitHub Repo",
+      "resume": "Tech Docs",
+      "contact": "Contact"
+    }
+  },
+  "language": {
+    "chinese": "中文",
+    "english": "English"
+  },
+  "articles": {
+    "title": "Technical Documentation",
+    "subtitle": "{count} docs · Frontend, Backend, DevOps and Architecture",
+    "backToList": "Back to Docs",
+    "prevArticle": "Previous",
+    "nextArticle": "Next",
+    "uncategorized": "Uncategorized"
+  },
+  "knowledge": {
+    "title": "Technical Documentation",
+    "subtitle": "{count} docs · Systematic technical learning and practice",
+    "backToList": "Back to Docs",
+    "prevItem": "Previous",
+    "nextItem": "Next",
+    "uncategorized": "Uncategorized",
+    "searchPlaceholder": "Search docs...",
+    "allCategories": "All Categories",
+    "noResults": "No results",
+    "relatedKnowledge": "Related Docs"
+  },
+  "techStack": {
+    "title": "Tech Stack",
+    "subtitle": "Powerful tools for building modern applications"
+  },
+  "footer": {
+    "copyright": "© 2025 Tech Stack Showcase. Technical showcase platform - Modern full-stack development capabilities.",
+    "builtWith": "Built with Next.js 15 + Go 1.22",
+    "license": "MIT License",
+    "sections": {
+      "quickLinks": "Quick Links",
+      "social": "Social Media"
+    },
+    "social": {
+      "github": "GitHub",
+      "twitter": "Twitter",
+      "email": "Email"
+    }
+  },
+  "seo": {
+    "title": "Tech Stack Showcase - Full-Stack Technical Platform",
+    "description": "Next.js 15 + Go Microservices + WebSocket + Docker. Showcasing modern full-stack development capabilities including frontend, backend, DevOps, architecture design.",
+    "keywords": "Next.js, React, TypeScript, Go, Docker, Full-Stack, Microservices, WebSocket, Performance"
+  },
+  "about": {
+    "title": "Tech Stack Details",
+    "subtitle": "Full-Stack Technical Capabilities - Frontend + Backend + DevOps",
+    "flipWords": {
+      "prefix": "Expert in",
+      "suffix": "Development",
+      "words": ["Frontend", "Backend", "DevOps", "Architecture"]
+    },
+    "hero": {
+      "status": "Seeking Technical Position",
+      "location": "Remote / China"
+    },
+    "stats": {
+      "articles": {
+        "label": "Tech Docs",
+        "description": "Frontend, Backend, DevOps"
+      },
+      "domains": {
+        "label": "Tech Domains",
+        "description": "Full-stack system"
+      },
+      "github": {
+        "label": "GitHub Stars",
+        "description": "Project stars"
+      },
+      "experience": {
+        "label": "Experience",
+        "description": "Continuous growth"
+      }
+    },
+    "techStack": {
+      "title": "Tech Stack",
+      "frontend": {
+        "title": "Frontend Development",
+        "items": "React, Next.js, TypeScript, Tailwind CSS, Framer Motion"
+      },
+      "backend": {
+        "title": "Backend Development",
+        "items": "Go, Gin, GORM, WebSocket, JWT, MySQL"
+      },
+      "blockchain": {
+        "title": "DevOps",
+        "items": "Docker, Docker Compose, Nginx, CI/CD, Git"
+      },
+      "devops": {
+        "title": "Architecture Design",
+        "items": "Microservices, RESTful API, Database Design, Performance"
+      },
+      "note": "Master modern full-stack development, focus on code quality, performance optimization and engineering practices."
+    },
+    "skills": {
+      "categories": {
+        "frontend": "Frontend",
+        "backend": "Backend",
+        "blockchain": "DevOps",
+        "devops": "Architecture"
+      },
+      "experience": "Experience",
+      "years": "years",
+      "noSkills": "No skills data",
+      "proficiency": "Proficiency",
+      "average": "Average",
+      "avgProficiency": "Avg {value}%",
+      "allSkills": "All Skills",
+      "radarChart": {
+        "title": "Skills Radar",
+        "description": "Comprehensive technical capability assessment"
+      }
+    },
+    "contact": {
+      "title": "Contact",
+      "description": "If you're interested in my technical capabilities, feel free to reach out:",
+      "email": "Send Email"
+    }
+  },
+  "backend": {
+    "title": "Backend Technology Lab",
+    "subtitle": "Go Microservices, API Design, Rust Development",
+    "totalProjects": "{count} projects",
+    "status": {
+      "inDevelopment": "In Development"
+    },
+    "allCategories": "All Categories",
+    "timeline": "Timeline",
+    "categories": {
+      "microservices": "Microservices",
+      "api-design": "API Design",
+      "rust": "Rust Development",
+      "database": "Database"
+    },
+    "updateTypes": {
+      "tech": "Tech Update",
+      "performance": "Performance",
+      "security": "Security",
+      "feature": "New Feature",
+      "other": "Other"
+    },
+    "daysAgo": "{days} days ago",
+    "visitWebsite": "Visit Website"
+  },
+  "web3": {
+    "title": "Web3 Technology",
+    "subtitle": "Blockchain, Smart Contracts, DApp Development",
+    "totalProjects": "{count} projects",
+    "status": {
+      "inDevelopment": "In Development"
+    },
+    "allCategories": "All Categories",
+    "timeline": "Timeline",
+    "categories": {
+      "layer1": "Layer 1",
+      "layer2": "Layer 2",
+      "defi": "DeFi",
+      "infrastructure": "Infrastructure"
+    },
+    "updateTypes": {
+      "tech": "Tech Update",
+      "regulatory": "Regulatory",
+      "ecosystem": "Ecosystem",
+      "other": "Other"
+    },
+    "daysAgo": "{days} days ago",
+    "visitWebsite": "Visit Website"
+  },
+  "tools": {
+    "title": "Tool Navigation",
+    "subtitle": "Curated development, tech, AI, Web3 tools and resources",
+    "searchPlaceholder": "Search tools...",
+    "allCategories": "All Categories",
+    "totalTools": "{count} tools",
+    "categories": {
+      "development": "Development",
+      "ai": "AI Tools",
+      "web3": "Web3",
+      "blockchain": "Blockchain",
+      "design": "Design",
+      "learning": "Learning",
+      "productivity": "Productivity"
+    },
+    "development": "In Development",
+    "sort": {
+      "label": "Sort by",
+      "default": "Default",
+      "name": "Name",
+      "category": "Category"
+    },
+    "dialog": {
+      "category": "Category",
+      "tags": "Tags",
+      "officialSite": "Visit Website"
+    },
+    "visitWebsite": "Visit Website",
+    "items": {
+      "github": {
+        "description": "The world's largest code hosting platform with version control and collaboration"
+      },
+      "stackoverflow": {
+        "description": "Q&A community for programmers to solve coding challenges"
+      },
+      "vercel": {
+        "description": "Official Next.js deployment platform with lightning-fast global CDN"
+      },
+      "npm": {
+        "description": "Node.js package manager, core of the JavaScript ecosystem"
+      },
+      "chatgpt": {
+        "description": "OpenAI's AI chat assistant supporting various tasks and coding help"
+      },
+      "claude": {
+        "description": "Anthropic's AI assistant excelling in deep conversations and analysis"
+      },
+      "midjourney": {
+        "description": "Powerful AI image generation tool creating stunning artworks"
+      },
+      "huggingface": {
+        "description": "AI model community platform with massive open-source ML models"
+      },
+      "etherscan": {
+        "description": "Ethereum blockchain explorer for transactions and smart contracts"
+      },
+      "uniswap": {
+        "description": "Decentralized exchange, the largest DEX on Ethereum"
+      },
+      "metamask": {
+        "description": "Most popular Web3 wallet connecting blockchain applications"
+      },
+      "opensea": {
+        "description": "World's largest NFT marketplace"
+      },
+      "solana": {
+        "description": "High-performance blockchain platform with fast and low-cost transactions"
+      },
+      "binance": {
+        "description": "World's leading cryptocurrency exchange"
+      },
+      "coinmarketcap": {
+        "description": "Cryptocurrency market data and price tracking platform"
+      },
+      "figma": {
+        "description": "Modern collaborative design tool, the go-to choice for UI/UX designers"
+      },
+      "dribbble": {
+        "description": "Designer portfolio and inspiration sharing community"
+      },
+      "behance": {
+        "description": "Adobe's creative work showcase platform"
+      },
+      "mdn": {
+        "description": "Authoritative web technology documentation, essential for frontend developers"
+      },
+      "freecodecamp": {
+        "description": "Free coding learning platform offering full-stack development courses"
+      },
+      "leetcode": {
+        "description": "Algorithm practice platform, essential for programming interviews"
+      },
+      "notion": {
+        "description": "All-in-one workspace for notes, docs, and project management"
+      },
+      "linear": {
+        "description": "Modern project management and issue tracking tool"
+      }
+    }
+  },
+  "ai": {
+    "title": "AI Technology",
+    "subtitle": "Artificial Intelligence, Large Language Models, Machine Learning",
+    "totalProjects": "{count} projects",
+    "status": {
+      "inDevelopment": "In Development"
+    },
+    "allCategories": "All Categories",
+    "timeline": "Timeline",
+    "categories": {
+      "dev-tools": "Dev Tools",
+      "image-gen": "Image Generation",
+      "llm": "LLM",
+      "infrastructure": "AI Infrastructure",
+      "research": "Research"
+    },
+    "updateTypes": {
+      "tech": "Tech Update",
+      "industry": "Industry News",
+      "funding": "Funding",
+      "application": "Application",
+      "other": "Other"
+    },
+    "daysAgo": "{days} days ago",
+    "visitWebsite": "Visit Website",
+    "ranking": {
+      "title": "LLM Performance Ranking",
+      "subtitle": "Latest large language model comprehensive capability assessment",
+      "sortOverall": "Overall",
+      "sortCoding": "Coding",
+      "sortMath": "Math",
+      "sortReasoning": "Reasoning",
+      "sortValue": "Value",
+      "rank": "Rank",
+      "model": "Model",
+      "organization": "Organization",
+      "overallScore": "Overall",
+      "codingScore": "Coding",
+      "mathScore": "Math",
+      "reasoningScore": "Reasoning",
+      "valueScore": "Value",
+      "coding": "Coding",
+      "math": "Math",
+      "reasoning": "Reasoning",
+      "mmlu": "MMLU",
+      "tokens": "Context",
+      "openSource": "Open Source",
+      "perMillion": "per M tokens",
+      "lastUpdated": "Last Updated",
+      "viewDetails": "View Details",
+      "dataSource": "Data Source: Based on public LLM benchmarks and performance tests",
+      "inDevelopment": "Beta Testing",
+      "betaNotice": "Data for reference only, continuously updating"
+    }
+  },
+  "demo": {
+    "title": "Frontend Lab",
+    "subtitle": "70+ Components | React 19 | Next.js 15 | TypeScript | Tailwind CSS | WebGL",
+    "description": "Showcase frontend development skills through interactive demos",
+    "hero": {
+      "title": "Frontend Lab",
+      "subtitle": "Experimental Workshop"
+    },
+    "cards": {
+      "showcase": {
+        "title": "Component Showcase",
+        "description": "Interactive demo platform for 70+ reusable components, showcasing modern UI library and business components",
+        "count": "Live Preview",
+        "highlights": "Interactive preview, Code examples, Theme switching"
+      },
+      "animations": {
+        "title": "Animations",
+        "description": "Smooth animations powered by Framer Motion",
+        "count": "15+ Animations",
+        "highlights": "Page transitions, scroll triggers, hover effects"
+      },
+      "performance": {
+        "title": "Performance",
+        "description": "Lighthouse 95+ score, <1.5s initial load",
+        "count": "95+ Score",
+        "highlights": "Code splitting, lazy loading, image optimization"
+      },
+      "matrix": {
+        "title": "Matrix Effect",
+        "description": "WebGL Shader vs CSS animation comparison",
+        "count": "2 Implementations",
+        "highlights": "Adjustable parameters, real-time switching"
+      },
+      "responsive": {
+        "title": "Responsive Design",
+        "description": "Perfect adaptation for desktop and mobile",
+        "count": "All Devices",
+        "highlights": "Breakpoint switching, touch gestures"
+      },
+      "typescript": {
+        "title": "TypeScript",
+        "description": "Type-safe code practices",
+        "count": "100% Coverage",
+        "highlights": "Type inference, generics usage"
+      }
+    },
+    "stats": {
+      "components": "70+",
+      "animations": "15+",
+      "lighthouse": "95+",
+      "coverage": "100%"
+    },
+    "cta": {
+      "explore": "Explore Demo",
+      "viewCode": "View Code",
+      "backToHome": "Back to Home",
+      "readyToExplore": "Ready to Explore More?",
+      "checkoutDescription": "Check out the source code on GitHub or view the complete technical documentation."
+    },
+    "techStack": {
+      "title": "Built With Modern Stack",
+      "react": {
+        "name": "React 19",
+        "desc": "Latest React"
+      },
+      "nextjs": {
+        "name": "Next.js 15",
+        "desc": "App Router"
+      },
+      "typescript": {
+        "name": "TypeScript",
+        "desc": "Type Safe"
+      },
+      "tailwind": {
+        "name": "Tailwind CSS",
+        "desc": "Utility First"
+      },
+      "framerMotion": {
+        "name": "Framer Motion",
+        "desc": "Animations"
+      },
+      "shadcn": {
+        "name": "shadcn/ui",
+        "desc": "Components"
+      },
+      "radix": {
+        "name": "Radix UI",
+        "desc": "Primitives"
+      },
+      "recharts": {
+        "name": "Recharts",
+        "desc": "Charts"
+      }
+    },
+    "performance": {
+      "title": "Performance Optimization",
+      "subtitle": "Lighthouse Scores and Web Vitals Real-time Data",
+      "lighthouse": {
+        "title": "Lighthouse Scores",
+        "performance": "Performance",
+        "accessibility": "Accessibility",
+        "bestPractices": "Best Practices",
+        "seo": "SEO"
+      },
+      "comparison": {
+        "title": "Before & After Optimization",
+        "before": "Before",
+        "after": "After",
+        "imageOptimization": "Image Optimization",
+        "codeSplitting": "Code Splitting",
+        "lazyLoading": "Lazy Loading",
+        "loadTime": "Load Time",
+        "bundleSize": "Bundle Size"
+      },
+      "webVitals": {
+        "title": "Web Vitals",
+        "lcp": "Largest Contentful Paint (LCP)",
+        "fid": "First Input Delay (FID)",
+        "cls": "Cumulative Layout Shift (CLS)",
+        "ttfb": "Time to First Byte (TTFB)",
+        "good": "Good",
+        "needsImprovement": "Needs Improvement",
+        "poor": "Poor"
+      },
+      "techniques": {
+        "title": "Optimization Techniques",
+        "items": [
+          "Next.js Image component for optimized image loading",
+          "Dynamic imports for code splitting",
+          "React.lazy for lazy loading components",
+          "Route prefetching for faster navigation",
+          "Web Workers for complex computations",
+          "Service Workers for offline caching"
+        ]
+      }
+    },
+    "animations": {
+      "title": "Animation Showcase",
+      "subtitle": "Framer Motion Animation Library",
+      "categories": {
+        "entrance": "Entrance",
+        "hover": "Hover",
+        "scroll": "Scroll Trigger",
+        "transition": "Page Transition",
+        "gesture": "Gesture",
+        "custom": "Custom"
+      },
+      "trigger": "Trigger",
+      "reset": "Reset",
+      "replay": "Replay"
+    },
+    "responsive": {
+      "title": "Responsive Design",
+      "subtitle": "Perfect Cross-device Adaptation",
+      "devices": {
+        "mobile": "Mobile",
+        "tablet": "Tablet",
+        "desktop": "Desktop"
+      },
+      "breakpoints": {
+        "title": "Tailwind Breakpoints",
+        "sm": "640px",
+        "md": "768px",
+        "lg": "1024px",
+        "xl": "1280px",
+        "2xl": "1536px"
+      },
+      "features": {
+        "title": "Mobile Features",
+        "touch": "Touch Gestures",
+        "viewport": "Viewport Adaptation",
+        "orientation": "Orientation",
+        "performance": "Performance"
+      }
+    }
+  },
+  "frontend": {
+    "showcase": {
+      "title": "Component Showcase",
+      "subtitle": "Interactive demonstration platform for 70+ reusable components, showcasing modern UI library and business components",
+      "components": "Components",
+      "search": "Search components...",
+      "allComponents": "All Components",
+      "preview": "Preview",
+      "code": "Code",
+      "copy": "Copy",
+      "copied": "Copied",
+      "variants": "Variants",
+      "noComponents": "No components found",
+      "tryDifferentSearch": "Try a different search term",
+      "backToList": "Back to list",
+      "backToFrontend": "Back to Frontend",
+      "loadMore": "Load More",
+      "allLoaded": "All Loaded",
+      "categories": {
+        "ui": "UI Components",
+        "business": "Business Components",
+        "effects": "Effect Components"
+      },
+      "subcategories": {
+        "form": "Form",
+        "layout": "Layout",
+        "feedback": "Feedback",
+        "navigation": "Navigation",
+        "data": "Data Display",
+        "background": "Background Effects",
+        "animation": "Animation Effects",
+        "about": "About Page",
+        "knowledge": "Knowledge Base",
+        "project": "Projects",
+        "common": "Common"
+      },
+      "variantsList": {
+        "default": "Default",
+        "secondary": "Secondary",
+        "destructive": "Destructive",
+        "outline": "Outline",
+        "ghost": "Ghost",
+        "link": "Link"
+      },
+      "componentsList": {
+        "button": {
+          "description": "Button component with multiple styles and sizes"
+        },
+        "input": {
+          "description": "Input component for text entry"
+        },
+        "select": {
+          "description": "Select component with dropdown options"
+        },
+        "card": {
+          "description": "Card container for organizing content"
+        },
+        "separator": {
+          "description": "Separator for dividing content"
+        },
+        "tabs": {
+          "description": "Tabs component for layered content"
+        },
+        "accordion": {
+          "description": "Accordion for collapsible content sections"
+        },
+        "badge": {
+          "description": "Badge component for status and labels"
+        },
+        "progress": {
+          "description": "Progress bar showing task completion"
+        },
+        "skeleton": {
+          "description": "Skeleton loading placeholder"
+        },
+        "breadcrumb": {
+          "description": "Breadcrumb navigation showing hierarchy"
+        },
+        "avatar": {
+          "description": "Avatar component for user images"
+        },
+        "matrix": {
+          "description": "Matrix digital rain background effect"
+        },
+        "aurora": {
+          "description": "Aurora background with gradient animation"
+        },
+        "warp": {
+          "description": "Warp background with 3D grid animation"
+        },
+        "borderbeam": {
+          "description": "Border beam animation effect"
+        },
+        "animatedbeam": {
+          "description": "Animated connection lines between elements"
+        },
+        "blurfade": {
+          "description": "Blur fade-in animation entrance effect"
+        },
+        "sparkles": {
+          "description": "Particle effects for dynamic pages"
+        },
+        "numberticker": {
+          "description": "Number scrolling animation for data display"
+        },
+        "gradienttext": {
+          "description": "Gradient text animation"
+        },
+        "marquee": {
+          "description": "Marquee scrolling for content display"
+        },
+        "animatedavatar": {
+          "description": "Animated avatar with beam border"
+        },
+        "techstack": {
+          "description": "Tech stack marquee showcase"
+        },
+        "backtotop": {
+          "description": "Back to top button for navigation"
+        },
+        "breadcrumbs": {
+          "description": "Breadcrumb navigation component"
+        },
+        "devbadge": {
+          "description": "Development badge for status indication"
+        }
+      }
+    }
+  }
+}

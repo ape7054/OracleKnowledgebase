@@ -1,0 +1,78 @@
+[
+  {
+    "id": "update-001",
+    "projectId": "go-gin",
+    "date": "2024-01-15",
+    "type": "tech",
+    "title": {
+      "en": "Gin v1.10.0 Released with Performance Improvements",
+      "zh": "Gin v1.10.0 发布，性能优化显著"
+    },
+    "summary": {
+      "en": "The latest Gin framework release brings significant performance improvements and new middleware options for better request handling.",
+      "zh": "最新的 Gin 框架版本带来了显著的性能提升和新的中间件选项，提供更好的请求处理能力。"
+    },
+    "sourceUrl": "https://github.com/gin-gonic/gin"
+  },
+  {
+    "id": "update-002",
+    "projectId": "rust-lang",
+    "date": "2024-01-10",
+    "type": "feature",
+    "title": {
+      "en": "Rust 1.75 Introduces Async fn in Traits",
+      "zh": "Rust 1.75 引入 Trait 中的异步函数"
+    },
+    "summary": {
+      "en": "Rust 1.75 stable release introduces async fn in traits, a highly anticipated feature for async programming.",
+      "zh": "Rust 1.75 稳定版引入了 Trait 中的异步函数，这是异步编程期待已久的特性。"
+    },
+    "sourceUrl": "https://blog.rust-lang.org"
+  },
+  {
+    "id": "update-003",
+    "projectId": "postgresql",
+    "date": "2024-01-05",
+    "type": "security",
+    "title": {
+      "en": "PostgreSQL Security Update Released",
+      "zh": "PostgreSQL 发布安全更新"
+    },
+    "summary": {
+      "en": "Critical security patches released for PostgreSQL addressing multiple vulnerabilities.",
+      "zh": "PostgreSQL 发布关键安全补丁，修复多个漏洞。"
+    },
+    "sourceUrl": "https://www.postgresql.org/about/news/"
+  },
+  {
+    "id": "update-004",
+    "projectId": "graphql",
+    "date": "2023-12-20",
+    "type": "tech",
+    "title": {
+      "en": "GraphQL 2024 Roadmap Announced",
+      "zh": "GraphQL 2024 路线图发布"
+    },
+    "summary": {
+      "en": "The GraphQL Foundation announced the 2024 roadmap focusing on improved tooling and developer experience.",
+      "zh": "GraphQL 基金会发布 2024 路线图，重点关注改进工具和开发者体验。"
+    },
+    "sourceUrl": "https://graphql.org"
+  },
+  {
+    "id": "update-005",
+    "projectId": "redis",
+    "date": "2023-12-15",
+    "type": "performance",
+    "title": {
+      "en": "Redis 7.2 Achieves 50% Performance Boost",
+      "zh": "Redis 7.2 性能提升 50%"
+    },
+    "summary": {
+      "en": "Redis 7.2 brings massive performance improvements with optimized memory management and faster data structures.",
+      "zh": "Redis 7.2 通过优化内存管理和更快的数据结构带来了巨大的性能提升。"
+    },
+    "sourceUrl": "https://redis.io"
+  }
+]
+
