@@ -18,7 +18,7 @@ const featuredArticles = [
     description: 'featuredArticles.smartContract.description',
     category: 'featuredArticles.smartContract.category',
     readTime: 'featuredArticles.smartContract.readTime',
-    slug: 'smart-contract-beginner-guide',
+    slug: 'web3/smart-contract-beginner-guide',
     icon: 'Sparkles'
   },
   {
@@ -27,7 +27,7 @@ const featuredArticles = [
     description: 'featuredArticles.webArchitecture.description',
     category: 'featuredArticles.webArchitecture.category',
     readTime: 'featuredArticles.webArchitecture.readTime',
-    slug: 'web-architecture-evolution',
+    slug: 'web3/web-architecture-evolution',
     icon: 'Code2'
   },
   {
@@ -36,7 +36,7 @@ const featuredArticles = [
     description: 'featuredArticles.daoGuide.description',
     category: 'featuredArticles.daoGuide.category',
     readTime: 'featuredArticles.daoGuide.readTime',
-    slug: 'dao-complete-guide',
+    slug: 'web3/dao-complete-guide',
     icon: 'Network'
   }
 ]
