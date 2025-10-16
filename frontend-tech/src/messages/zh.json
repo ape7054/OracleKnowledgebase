@@ -1,14 +1,14 @@
 {
   "navigation": {
     "home": "首页",
-    "articles": "技术文档",
-    "knowledge": "技术文档",
+    "articles": "知识库",
+    "knowledge": "知识库",
     "demo": "前端实验室",
     "backend": "后端实验室",
     "web3": "Web3",
     "ai": "AI",
     "tools": "工具导航",
-    "about": "技术栈详解",
+    "about": "关于我",
     "github": "GitHub",
     "resume": "简历",
     "contact": "联系",
@@ -194,61 +194,61 @@
     "keywords": "Next.js, React, TypeScript, Go, Docker, 全栈开发, 微服务, WebSocket, 性能优化"
   },
   "about": {
-    "title": "技术栈详解",
-    "subtitle": "全栈技术能力展示 - 前端 + 后端 + DevOps",
+    "title": "关于我",
+    "subtitle": "一个专注于全栈开发、Web3 和 AI 的探索者",
     "flipWords": {
-      "prefix": "精通",
-      "suffix": "技术",
-      "words": ["前端开发", "后端开发", "DevOps", "架构设计"]
+      "prefix": "一个",
+      "suffix": "",
+      "words": ["全栈开发者", "Web3 探索者", "AI 探索者", "技术爱好者", "终身学习者"]
     },
     "hero": {
-      "status": "寻求技术岗位",
+      "status": "开放远程工作机会",
       "location": "远程 / 中国"
     },
     "stats": {
       "articles": {
-        "label": "技术文档",
-        "description": "前端、后端、DevOps"
+        "label": "知识笔记",
+        "description": "技术与思考"
       },
       "domains": {
-        "label": "技术领域",
-        "description": "全栈技术体系"
+        "label": "探索领域",
+        "description": "多元化学习"
       },
       "github": {
-        "label": "GitHub Stars",
-        "description": "项目收藏数"
+        "label": "GitHub 项目",
+        "description": "开源贡献"
       },
       "experience": {
-        "label": "开发经验",
-        "description": "持续学习成长"
+        "label": "学习旅程",
+        "description": "不断成长"
       }
     },
     "techStack": {
-      "title": "技术栈",
+      "title": "技术能力",
       "frontend": {
         "title": "前端开发",
         "items": "React, Next.js, TypeScript, Tailwind CSS, Framer Motion"
       },
       "backend": {
         "title": "后端开发",
-        "items": "Go, Gin, GORM, WebSocket, JWT, MySQL"
+        "items": "Go, Rust, GORM, WebSocket, JWT, MySQL"
       },
       "blockchain": {
-        "title": "DevOps",
-        "items": "Docker, Docker Compose, Nginx, CI/CD, Git"
+        "title": "Web3 区块链",
+        "items": "Solana, Rust, 智能合约, DeFi, gRPC"
       },
       "devops": {
-        "title": "架构设计",
-        "items": "微服务架构, RESTful API, 数据库设计, 性能优化"
+        "title": "DevOps & 工具",
+        "items": "Docker, Nginx, Git, CI/CD, Linux"
       },
-      "note": "掌握现代化全栈开发技术，注重代码质量、性能优化和工程化实践。"
+      "note": "从 Web3 到 AI，从后端到前端，持续探索技术的边界。注重实践，相信代码是最好的证明。"
     },
     "skills": {
       "categories": {
         "frontend": "前端开发",
         "backend": "后端开发",
-        "blockchain": "DevOps",
-        "devops": "架构设计"
+        "blockchain": "Web3 区块链",
+        "devops": "DevOps & 工具"
       },
       "experience": "使用经验",
       "years": "年",
@@ -259,7 +259,7 @@
       "allSkills": "所有技能",
       "radarChart": {
         "title": "技能雷达图",
-        "description": "各技术领域综合能力评估"
+        "description": "多维度技术能力评估"
       }
     },
     "contact": {
@@ -269,7 +269,7 @@
     },
     "intro": {
       "title": "个人介绍",
-      "description": "我是一名全栈开发者，专注于现代化Web应用开发。熟练掌握 Next.js、React、TypeScript 前端技术栈，以及 Go 微服务后端开发。注重代码质量、性能优化和工程化实践，致力于构建高性能、可扩展的应用系统。"
+      "description": "我是一名全栈开发者，对区块链技术和去中心化应用有着深厚的热情。从毕业后深入研究Web3技术，到成为DeFi量化交易系统开发者，我始终保持对新技术的好奇心和学习热情。在AI时代，我相信技术的边界正在被打破，而真正的价值在于我们能创造什么。"
     },
     "journey": {
       "title": "技术历程"
@@ -277,88 +277,88 @@
     "timeline": {
       "transformation": {
         "period": "现在",
-        "title": "全栈技术深化",
-        "description": "专注于现代化全栈开发，深入学习 Next.js 15、React 19 等前端新特性，以及 Go 微服务架构设计。注重性能优化和工程化实践。",
-        "highlight1": "掌握 Next.js 15 App Router 和 React Server Components",
-        "highlight2": "熟练使用 Go 构建高性能微服务"
+        "title": "AI时代的转变",
+        "description": "在日常开发中高频使用AI辅助编程，我深刻感受到AI技术正在重新定义软件开发行业。AI打破了传统技术知识的垄断壁垒，降低了跨领域学习的门槛。经过广泛的技术探索后，我决定将学习重心聚焦于前端开发，为全栈开发打下坚实基础。",
+        "highlight1": "掌握现代前端技术栈 (React/Next.js/TypeScript)",
+        "highlight2": "深度使用AI辅助开发提升效率"
       },
       "defi": {
         "period": "2023-2024",
-        "title": "项目经验积累",
-        "description": "参与多个技术项目开发，积累了丰富的前后端开发经验。",
+        "title": "DeFi量化系统开发",
+        "description": "凭借扎实的Rust基础与对区块链的深入理解，我成功加入专注于DeFi量化交易的技术团队，参与了多个高频交易系统的开发。",
         "project1": {
-          "name": "全栈应用开发",
-          "description": "使用 Next.js + Go 构建完整的全栈应用，包括用户认证、实时通信、数据管理等功能。"
+          "name": "Solana套利机器人",
+          "description": "使用Rust开发数据监听服务，通过gRPC协议监听Solana区块链池子数据，为套利策略提供实时数据支持。"
         },
         "project2": {
-          "name": "容器化部署",
-          "description": "使用 Docker 和 Docker Compose 实现应用的容器化部署和服务编排。"
+          "name": "Telegram交易机器人",
+          "description": "开发狙击跟单机器人，实现自动化交易策略执行。"
         }
       },
       "exploration": {
-        "period": "学习阶段",
-        "title": "技术探索",
-        "description": "系统学习现代Web开发技术，包括前端框架、后端架构、数据库设计等。",
-        "highlight1": "深入学习 TypeScript 和现代前端工程化",
-        "highlight2": "掌握 Docker 容器化和 CI/CD 流程"
+        "period": "毕业后",
+        "title": "探索期",
+        "description": "毕业后，我选择深入研究区块链、Web3和加密货币领域，学习Rust编程语言，并通过数字货币交易实践我对这个新兴技术的理解。虽然经历了合约爆仓的挫折，但这并未削弱我对区块链技术的信念。",
+        "highlight1": "系统学习Rust编程语言",
+        "highlight2": "深入研究区块链技术和Web3生态"
       }
     },
     "purpose": {
       "title": "项目目的",
-      "description": "这个技术展示平台旨在展示我的全栈开发能力，包括前端、后端、DevOps 等完整技术栈。通过实际项目展示技术深度和工程实践能力。"
+      "description": "创建这个知识库的初衷，是为了记录自己的思考和学习历程，构建一个属于自己的知识体系。在信息爆炸的时代，我相信系统化的知识整理和深度思考比碎片化的信息获取更有价值。这里既是我的数字大脑，也是我与志同道合者交流思想的平台。"
     },
     "value": {
-      "title": "技术价值",
+      "title": "价值主张",
       "points": [
         {
-          "title": "现代化技术栈",
-          "description": "使用最新的 Next.js 15、React 19、Go 1.22 等技术"
+          "title": "知识的系统化",
+          "description": "不止于碎片化的信息收集，而是构建完整的知识体系和思维框架"
         },
         {
-          "title": "工程化实践",
-          "description": "TypeScript 类型安全、ESLint 规范、Git 版本控制"
+          "title": "理论与实践结合",
+          "description": "每一个概念都经过实践验证，每一行代码都承载着思考"
         },
         {
-          "title": "性能优化",
-          "description": "SSR/SSG 混合渲染、代码分割、Lighthouse 95+ 评分"
+          "title": "持续学习与进化",
+          "description": "在快速变化的技术世界中保持学习，不断迭代自己的认知"
         },
         {
-          "title": "容器化部署",
-          "description": "Docker 多阶段构建、服务编排、生产级配置"
+          "title": "开放分享",
+          "description": "相信知识的价值在于流动和共享，而非垄断和封闭"
         }
       ]
     },
     "content": {
-      "title": "技术方向",
-      "topics": "前端开发, 后端开发, DevOps, 架构设计, 性能优化, 容器化部署"
+      "title": "内容方向",
+      "topics": "技术开发, Web3区块链, AI人工智能, 产品设计, 系统思维, 科学探索, 历史哲学, 教育反思"
     },
     "cta": {
-      "title": "准备好了解更多？",
-      "description": "查看我的技术文档，或者返回首页了解项目详情。",
-      "articles": "浏览技术文档",
+      "title": "准备好探索了吗？",
+      "description": "查看我的所有知识，或者返回首页了解更多关于这个知识库的信息。",
+      "articles": "浏览知识库",
       "home": "返回首页"
     },
     "featuredArticles": {
-      "title": "技术文档精选",
+      "title": "内容精选",
       "readMore": "阅读更多",
-      "viewAll": "查看所有文档",
+      "viewAll": "浏览知识库",
       "smartContract": {
-        "title": "Next.js App Router 完全指南",
-        "description": "深入理解 Next.js 15 的 App Router 架构，掌握服务端组件、数据获取、缓存策略等核心概念。",
-        "category": "前端技术",
+        "title": "智能合约入门指南：会自动执行的数字合同",
+        "description": "想象一个永远不会违约的合同，一个不需要律师就能自动执行的协议——这就是智能合约。",
+        "category": "Web3入门",
         "readTime": "30 分钟"
       },
       "webArchitecture": {
-        "title": "Go 微服务架构实践",
-        "description": "从零构建 Go 微服务，包括 API 设计、数据库操作、JWT 认证、WebSocket 实时通信等。",
-        "category": "后端技术",
-        "readTime": "45 分钟"
+        "title": "Web架构演进史：从静态页面到去中心化应用",
+        "description": "从简单的HTML页面到复杂的分布式系统，Web架构的每一次演进都重新定义了我们与数字世界的交互方式。",
+        "category": "Web3开发",
+        "readTime": "60 分钟"
       },
       "daoGuide": {
-        "title": "Docker 容器化部署指南",
-        "description": "多阶段构建优化、Docker Compose 编排、Nginx 配置、生产环境部署最佳实践。",
-        "category": "DevOps",
-        "readTime": "25 分钟"
+        "title": "DAO完全指南：去中心化治理的革命",
+        "description": "从'公司制'到'DAO制'：当区块链遇见组织管理，权力如何重新分配？",
+        "category": "Web3进阶",
+        "readTime": "40 分钟"
       }
     },
     "socialLinks": {
@@ -376,7 +376,7 @@
       }
     },
     "projects": {
-      "title": "技术项目",
+      "title": "精选项目",
       "viewDetails": "查看详情",
       "viewDemo": "查看演示",
       "techStack": "技术栈",
@@ -392,38 +392,38 @@
         "tools": "工具"
       },
       "solanaBot": {
-        "title": "全栈技术展示平台",
-        "description": "使用 Next.js 15 + Go 构建的现代化全栈应用",
-        "achievement1": "Next.js 15 App Router 架构",
-        "achievement2": "Go 微服务后端",
-        "achievement3": "Docker 容器化部署",
+        "title": "Solana套利机器人",
+        "description": "使用Rust构建的高性能数据监听服务，通过gRPC协议提供实时套利数据",
+        "achievement1": "实时监听Solana链上池子数据",
+        "achievement2": "使用Rust实现高性能数据处理",
+        "achievement3": "基于gRPC的微服务架构",
         "details": {
-          "background": "展示完整的全栈开发能力",
-          "challenge1": "性能优化和SEO",
-          "challenge2": "实时通信和状态管理",
-          "solution1": "使用 SSR/SSG 混合渲染优化性能",
-          "solution2": "WebSocket 实现实时数据推送",
-          "result1": "Lighthouse 95+ 性能评分",
-          "result2": "完整的技术文档体系"
+          "background": "为DeFi量化交易团队构建，实时捕获套利机会",
+          "challenge1": "高频实时数据处理",
+          "challenge2": "低延迟gRPC通信",
+          "solution1": "优化Rust异步运行时以实现最大吞吐量",
+          "solution2": "实现高效的gRPC流式协议",
+          "result1": "成功部署到生产交易系统",
+          "result2": "实现亚毫秒级数据延迟"
         }
       },
       "telegramBot": {
-        "title": "Docker 容器化项目",
-        "description": "多服务容器编排和自动化部署",
-        "achievement1": "多阶段 Docker 构建",
-        "achievement2": "Docker Compose 服务编排"
+        "title": "Telegram交易机器人",
+        "description": "自动化狙击交易机器人，支持实时策略执行",
+        "achievement1": "自动化交易策略执行",
+        "achievement2": "实时市场监控和提醒"
       },
       "oracleKnowledgebase": {
-        "title": "技术文档平台",
-        "description": "基于 MDX 的技术文档管理系统",
-        "achievement1": "Markdown/MDX 支持",
-        "achievement2": "代码高亮和语法检查"
+        "title": "知识管理平台",
+        "description": "基于Next.js构建的个人知识管理系统，支持MDX文章和现代化UI",
+        "achievement1": "系统化的知识组织和展示",
+        "achievement2": "现代化前端技术栈实现"
       }
     }
   },
-  "backend": {
-    "title": "后端技术实验室",
-    "subtitle": "Go 微服务、API 设计、Rust 高性能开发",
+  "web3": {
+    "title": "Web3 技术研究",
+    "subtitle": "区块链技术、智能合约、去中心化应用开发",
     "totalProjects": "{count} 个项目",
     "status": {
       "inDevelopment": "开发中"

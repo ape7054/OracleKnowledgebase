@@ -1,14 +1,14 @@
 {
   "navigation": {
     "home": "Home",
-    "articles": "Tech Docs",
-    "knowledge": "Tech Docs",
+    "articles": "Knowledge",
+    "knowledge": "Knowledge",
     "demo": "Frontend Lab",
     "backend": "Backend Lab",
     "web3": "Web3",
     "ai": "AI",
     "tools": "Tools",
-    "about": "Tech Stack",
+    "about": "About Me",
     "github": "GitHub",
     "resume": "Resume",
     "contact": "Contact",
@@ -194,61 +194,61 @@
     "keywords": "Next.js, React, TypeScript, Go, Docker, Full-Stack, Microservices, WebSocket, Performance"
   },
   "about": {
-    "title": "Tech Stack Details",
-    "subtitle": "Full-Stack Technical Capabilities - Frontend + Backend + DevOps",
+    "title": "About Me",
+    "subtitle": "Full-Stack Developer | Web3 Explorer | Tech Enthusiast",
     "flipWords": {
-      "prefix": "Expert in",
-      "suffix": "Development",
-      "words": ["Frontend", "Backend", "DevOps", "Architecture"]
+      "prefix": "I am a",
+      "suffix": "",
+      "words": ["Full-Stack Developer", "Web3 Explorer", "AI Explorer", "Tech Enthusiast", "Lifelong Learner"]
     },
     "hero": {
-      "status": "Seeking Technical Position",
+      "status": "Open to Remote Opportunities",
       "location": "Remote / China"
     },
     "stats": {
       "articles": {
-        "label": "Tech Docs",
-        "description": "Frontend, Backend, DevOps"
+        "label": "Knowledge Notes",
+        "description": "Tech & Thinking"
       },
       "domains": {
-        "label": "Tech Domains",
-        "description": "Full-stack system"
+        "label": "Exploration Areas",
+        "description": "Diverse Learning"
       },
       "github": {
-        "label": "GitHub Stars",
-        "description": "Project stars"
+        "label": "GitHub Projects",
+        "description": "Open Source"
       },
       "experience": {
-        "label": "Experience",
-        "description": "Continuous growth"
+        "label": "Learning Journey",
+        "description": "Continuous Growth"
       }
     },
     "techStack": {
-      "title": "Tech Stack",
+      "title": "Technical Skills",
       "frontend": {
         "title": "Frontend Development",
         "items": "React, Next.js, TypeScript, Tailwind CSS, Framer Motion"
       },
       "backend": {
         "title": "Backend Development",
-        "items": "Go, Gin, GORM, WebSocket, JWT, MySQL"
+        "items": "Go, Rust, GORM, WebSocket, JWT, MySQL"
       },
       "blockchain": {
-        "title": "DevOps",
-        "items": "Docker, Docker Compose, Nginx, CI/CD, Git"
+        "title": "Web3 & Blockchain",
+        "items": "Solana, Rust, Smart Contracts, DeFi, gRPC"
       },
       "devops": {
-        "title": "Architecture Design",
-        "items": "Microservices, RESTful API, Database Design, Performance"
+        "title": "DevOps & Tools",
+        "items": "Docker, Nginx, Git, CI/CD, Linux"
       },
-      "note": "Master modern full-stack development, focus on code quality, performance optimization and engineering practices."
+      "note": "From Web3 to AI, from backend to frontend, constantly exploring the boundaries of technology. Practice-oriented, believing that code is the best proof."
     },
     "skills": {
       "categories": {
         "frontend": "Frontend",
         "backend": "Backend",
-        "blockchain": "DevOps",
-        "devops": "Architecture"
+        "blockchain": "Web3 & Blockchain",
+        "devops": "DevOps & Tools"
       },
       "experience": "Experience",
       "years": "years",
@@ -259,13 +259,166 @@
       "allSkills": "All Skills",
       "radarChart": {
         "title": "Skills Radar",
-        "description": "Comprehensive technical capability assessment"
+        "description": "Multi-dimensional technical capability assessment"
       }
     },
     "contact": {
       "title": "Contact",
       "description": "If you're interested in my technical capabilities, feel free to reach out:",
       "email": "Send Email"
+    },
+    "intro": {
+      "title": "Introduction",
+      "description": "I'm a full-stack developer with a deep passion for blockchain technology and decentralized applications. From diving deep into Web3 after graduation to becoming a DeFi quantitative trading system developer, I've always maintained curiosity and enthusiasm for new technologies. In the AI era, I believe the boundaries of technology are being broken, and the real value lies in what we can create."
+    },
+    "journey": {
+      "title": "My Journey"
+    },
+    "timeline": {
+      "transformation": {
+        "period": "Present",
+        "title": "AI Era Transformation",
+        "description": "Using AI-assisted programming frequently in daily development, I've deeply felt how AI technology is redefining the software development industry. AI has broken the traditional monopoly on technical knowledge and lowered the barriers to cross-domain learning. After extensive technical exploration, I've decided to focus my learning on frontend development, laying a solid foundation for full-stack development.",
+        "highlight1": "Mastered modern frontend stack (React/Next.js/TypeScript)",
+        "highlight2": "Deeply integrated AI-assisted development for efficiency"
+      },
+      "defi": {
+        "period": "2023-2024",
+        "title": "DeFi Quantitative System Development",
+        "description": "With solid Rust fundamentals and deep understanding of blockchain, I successfully joined a technical team focused on DeFi quantitative trading, participating in the development of multiple high-frequency trading systems.",
+        "project1": {
+          "name": "Solana Arbitrage Bot",
+          "description": "Developed data monitoring service using Rust, listening to Solana blockchain pool data via gRPC protocol to provide real-time data support for arbitrage strategies."
+        },
+        "project2": {
+          "name": "Telegram Trading Bot",
+          "description": "Developed sniping and copy trading bot, implementing automated trading strategy execution."
+        }
+      },
+      "exploration": {
+        "period": "Post-Graduation",
+        "title": "Exploration Phase",
+        "description": "After graduation, I chose to deeply research blockchain, Web3, and cryptocurrency, learning Rust programming, and practicing my understanding of this emerging technology through digital currency trading. Although I experienced the setback of contract liquidation, it didn't weaken my belief in blockchain technology.",
+        "highlight1": "Systematically learned Rust programming",
+        "highlight2": "Deep dive into blockchain technology and Web3 ecosystem"
+      }
+    },
+    "purpose": {
+      "title": "Project Purpose",
+      "description": "The initial purpose of creating this knowledge base was to record my thoughts and learning journey, building my own knowledge system. In an era of information explosion, I believe systematic knowledge organization and deep thinking are more valuable than fragmented information acquisition. This is both my digital brain and a platform for exchanging ideas with like-minded people."
+    },
+    "value": {
+      "title": "Value Proposition",
+      "points": [
+        {
+          "title": "Systematization of Knowledge",
+          "description": "Not just fragmented information collection, but building a complete knowledge system and thinking framework"
+        },
+        {
+          "title": "Theory Meets Practice",
+          "description": "Every concept is verified through practice, every line of code carries thinking"
+        },
+        {
+          "title": "Continuous Learning & Evolution",
+          "description": "Maintaining learning in a rapidly changing tech world, constantly iterating cognition"
+        },
+        {
+          "title": "Open Sharing",
+          "description": "Believing the value of knowledge lies in flow and sharing, not monopoly and closure"
+        }
+      ]
+    },
+    "content": {
+      "title": "Content Focus",
+      "topics": "Tech Development, Web3 Blockchain, AI, Product Design, Systems Thinking, Science, History & Philosophy, Education"
+    },
+    "cta": {
+      "title": "Ready to Explore?",
+      "description": "Browse all my knowledge, or return to the homepage to learn more about this knowledge base.",
+      "articles": "Browse Knowledge Base",
+      "home": "Back to Home"
+    },
+    "featuredArticles": {
+      "title": "Featured Content",
+      "readMore": "Read More",
+      "viewAll": "Browse Knowledge Base",
+      "smartContract": {
+        "title": "Smart Contracts Guide: Self-Executing Digital Contracts",
+        "description": "Imagine a contract that never defaults, an agreement that executes automatically without lawyers—this is a smart contract.",
+        "category": "Web3 Intro",
+        "readTime": "30 min"
+      },
+      "webArchitecture": {
+        "title": "Evolution of Web Architecture: From Static Pages to DApps",
+        "description": "From simple HTML pages to complex distributed systems, each evolution of Web architecture has redefined how we interact with the digital world.",
+        "category": "Web3 Dev",
+        "readTime": "60 min"
+      },
+      "daoGuide": {
+        "title": "Complete DAO Guide: The Revolution of Decentralized Governance",
+        "description": "From 'corporations' to 'DAOs': When blockchain meets organizational management, how is power redistributed?",
+        "category": "Web3 Advanced",
+        "readTime": "40 min"
+      }
+    },
+    "socialLinks": {
+      "github": {
+        "description": "View my open source projects and code"
+      },
+      "email": {
+        "description": "Send me an email"
+      },
+      "twitter": {
+        "description": "Follow my tech updates"
+      },
+      "linkedin": {
+        "description": "Professional networking"
+      }
+    },
+    "projects": {
+      "title": "Featured Projects",
+      "viewDetails": "View Details",
+      "viewDemo": "View Demo",
+      "techStack": "Tech Stack",
+      "background": "Background",
+      "achievements": "Achievements",
+      "challenges": "Challenges",
+      "solutions": "Solutions",
+      "categories": {
+        "all": "All",
+        "web3": "Web3",
+        "frontend": "Frontend",
+        "backend": "Backend",
+        "tools": "Tools"
+      },
+      "solanaBot": {
+        "title": "Solana Arbitrage Bot",
+        "description": "High-performance data monitoring service built with Rust, providing real-time arbitrage data via gRPC protocol",
+        "achievement1": "Real-time monitoring of Solana on-chain pool data",
+        "achievement2": "High-performance data processing with Rust",
+        "achievement3": "gRPC-based microservice architecture",
+        "details": {
+          "background": "Built for DeFi quantitative trading team to capture arbitrage opportunities in real-time",
+          "challenge1": "High-frequency real-time data processing",
+          "challenge2": "Low-latency gRPC communication",
+          "solution1": "Optimized Rust async runtime for maximum throughput",
+          "solution2": "Implemented efficient gRPC streaming protocol",
+          "result1": "Successfully deployed to production trading system",
+          "result2": "Achieved sub-millisecond data latency"
+        }
+      },
+      "telegramBot": {
+        "title": "Telegram Trading Bot",
+        "description": "Automated sniping trading bot with real-time strategy execution",
+        "achievement1": "Automated trading strategy execution",
+        "achievement2": "Real-time market monitoring and alerts"
+      },
+      "oracleKnowledgebase": {
+        "title": "Knowledge Management Platform",
+        "description": "Personal knowledge management system built with Next.js, supporting MDX articles and modern UI",
+        "achievement1": "Systematic knowledge organization and display",
+        "achievement2": "Modern frontend tech stack implementation"
+      }
     }
   },
   "backend": {
